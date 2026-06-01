@@ -1,5 +1,7 @@
 package com.jarvis.api;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 import java.util.Map;
 
@@ -17,13 +19,11 @@ import com.jarvis.notification.NotificationService;
 /** Notification Center endpoints (spec §8). */
 @RestController
 @RequestMapping("/api/notifications")
+@RequiredArgsConstructor
 public class NotificationController {
 
     private final NotificationService notifications;
 
-    public NotificationController(NotificationService notifications) {
-        this.notifications = notifications;
-    }
 
     @GetMapping
     public List<Notification> list(@RequestParam(name = "limit", defaultValue = "50") int limit) {

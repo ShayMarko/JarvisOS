@@ -1,5 +1,7 @@
 package com.jarvis.connectors;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -14,14 +16,12 @@ import com.jarvis.error.Exceptions.NotFoundException;
  * token taken from the Secrets Vault (entry name {@code github-token}).
  */
 @Component
+@RequiredArgsConstructor
 public class GitHubConnector implements Connector {
 
     private final RestClient client = RestClient.create("https://api.github.com");
     private final ObjectMapper mapper;
 
-    public GitHubConnector(ObjectMapper mapper) {
-        this.mapper = mapper;
-    }
 
     @Override public String id() { return "github"; }
     @Override public String name() { return "GitHub"; }

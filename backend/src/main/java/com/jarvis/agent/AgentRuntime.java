@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.jarvis.ai.ChatMessage;
 import com.jarvis.ai.JarvisAiProperties;
+import com.jarvis.ai.JarvisPersonaProperties;
 import com.jarvis.ai.LanguageModel;
 import com.jarvis.ai.ModelResponse;
 import com.jarvis.ai.ToolCall;
@@ -25,11 +26,14 @@ public class AgentRuntime {
     private final LanguageModel model;
     private final ToolRegistry tools;
     private final int maxSteps;
+    private final JarvisPersonaProperties persona;
 
-    public AgentRuntime(LanguageModel model, ToolRegistry tools, JarvisAiProperties props) {
+    public AgentRuntime(LanguageModel model, ToolRegistry tools, JarvisAiProperties props,
+                        JarvisPersonaProperties persona) {
         this.model = model;
         this.tools = tools;
         this.maxSteps = props.getMaxSteps();
+        this.persona = persona;
     }
 
     public AgentRun run(AgentDefinition agent, String userMessage, String context) {
@@ -39,6 +43,10 @@ public class AgentRuntime {
     public AgentRun run(AgentDefinition agent, String userMessage, String context, List<ChatMessage> history) {
         List<ChatMessage> messages = new ArrayList<>();
         String system = agent.systemPrompt();
+        if (persona.isEnabled() && persona.getPrompt() != null && !persona.getPrompt().isBlank()) {
+            // Global JARVIS persona layered ahead of the agent's task-specific prompt.
+            system = persona.getPrompt().strip() + "\n\n" + system;
+        }
         if (context != null && !context.isBlank()) {
             system += "\n\nContext you may use:\n" + context;
         }

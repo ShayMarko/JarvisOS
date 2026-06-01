@@ -5,9 +5,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import lombok.Getter;
+
 /** A chunk of a document plus its embedding (stored as a JSON float array). */
 @Entity
 @Table(name = "kb_chunk")
+@Getter
 public class KbChunk {
 
     @Id
@@ -35,10 +38,4 @@ public class KbChunk {
         this.content = content;
         this.embedding = embedding;
     }
-
-    public String getId() { return id; }
-    public String getDocumentId() { return documentId; }
-    public int getOrdinal() { return ordinal; }
-    public String getContent() { return content; }
-    public String getEmbedding() { return embedding; }
 }

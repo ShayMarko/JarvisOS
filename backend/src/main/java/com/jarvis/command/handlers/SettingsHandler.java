@@ -1,5 +1,7 @@
 package com.jarvis.command.handlers;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -15,15 +17,12 @@ import com.jarvis.config.JarvisSecurityProperties;
 
 /** {@code /settings} — shows the current Jarvis configuration (spec §5.2). */
 @Component
+@RequiredArgsConstructor
 public class SettingsHandler implements CommandHandler {
 
     private final JarvisFileSystemProperties filesystem;
     private final JarvisSecurityProperties security;
 
-    public SettingsHandler(JarvisFileSystemProperties filesystem, JarvisSecurityProperties security) {
-        this.filesystem = filesystem;
-        this.security = security;
-    }
 
     @Override
     public CommandDefinition definition() {

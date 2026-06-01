@@ -1,5 +1,7 @@
 package com.jarvis.api;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,13 +15,11 @@ import com.jarvis.task.TaskService;
 /** Task history (spec §6, §10). */
 @RestController
 @RequestMapping("/api/tasks")
+@RequiredArgsConstructor
 public class TaskController {
 
     private final TaskService tasks;
 
-    public TaskController(TaskService tasks) {
-        this.tasks = tasks;
-    }
 
     @GetMapping
     public List<Task> recent(@RequestParam(name = "limit", defaultValue = "50") int limit) {

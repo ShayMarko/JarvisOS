@@ -7,6 +7,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * An encrypted credential in the Secrets Vault (spec §11.3). The plaintext is
  * NEVER stored or exposed; only the AES-GCM ciphertext and a short hint (last
@@ -14,6 +17,7 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "secret")
+@Getter
 public class Secret {
 
     @Id
@@ -36,6 +40,7 @@ public class Secret {
     @Column(name = "created_at")
     private Instant createdAt;
 
+    @Setter
     @Column(name = "last_accessed_at")
     private Instant lastAccessedAt;
 
@@ -53,14 +58,4 @@ public class Secret {
         this.scopes = scopes;
         this.createdAt = Instant.now();
     }
-
-    public String getId() { return id; }
-    public String getName() { return name; }
-    public String getConnector() { return connector; }
-    public String getEncryptedValue() { return encryptedValue; }
-    public String getHint() { return hint; }
-    public String getScopes() { return scopes; }
-    public Instant getCreatedAt() { return createdAt; }
-    public Instant getLastAccessedAt() { return lastAccessedAt; }
-    public void setLastAccessedAt(Instant lastAccessedAt) { this.lastAccessedAt = lastAccessedAt; }
 }

@@ -1,5 +1,7 @@
 package com.jarvis.local;
 
+import lombok.RequiredArgsConstructor;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -25,16 +27,13 @@ import com.jarvis.explorer.FileSystemService;
  * exposed as agent tools, not hard-coded routes: the agent decides when to use them.
  */
 @Service
+@RequiredArgsConstructor
 public class MacActions {
 
     private final FileSystemService fileSystem;
     private final AuditService audit;
     private final boolean mac = System.getProperty("os.name", "").toLowerCase().contains("mac");
 
-    public MacActions(FileSystemService fileSystem, AuditService audit) {
-        this.fileSystem = fileSystem;
-        this.audit = audit;
-    }
 
     public boolean isMac() {
         return mac;
@@ -45,6 +44,14 @@ public class MacActions {
         run(List.of("open", "-a", appName), null);
         audit.record("LOCAL", "open_app", appName, "OK", null);
         return "Opened " + appName + ".";
+    }
+
+    /** Open an absolute path with a specific application — e.g. a project folder in an IDE. */
+    public String openPathWith(String appName, Path absolutePath) {
+        requireMac();
+        run(List.of("open", "-a", appName, absolutePath.toString()), null);
+        audit.record("LOCAL", "open_project", absolutePath.toString(), "OK", "in " + appName);
+        return "Opened " + absolutePath.getFileName() + " in " + appName + ".";
     }
 
     /** Reveal an absolute path in Finder. */

@@ -1,5 +1,7 @@
 package com.jarvis.command.handlers;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 import java.util.Map;
 
@@ -15,13 +17,11 @@ import com.jarvis.explorer.FileSystemService;
 
 /** {@code /searchall <query>} — approved global search across the Jarvis Explorer (spec §5.2). */
 @Component
+@RequiredArgsConstructor
 public class SearchAllHandler implements CommandHandler {
 
     private final FileSystemService fileSystem;
 
-    public SearchAllHandler(FileSystemService fileSystem) {
-        this.fileSystem = fileSystem;
-    }
 
     @Override
     public CommandDefinition definition() {

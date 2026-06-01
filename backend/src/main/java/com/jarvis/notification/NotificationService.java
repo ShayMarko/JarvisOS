@@ -1,5 +1,7 @@
 package com.jarvis.notification;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -9,13 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 /** The Notification Center (spec §8). Other subsystems call {@link #notify} to surface events. */
 @Service
+@RequiredArgsConstructor
 public class NotificationService {
 
     private final NotificationRepository repository;
 
-    public NotificationService(NotificationRepository repository) {
-        this.repository = repository;
-    }
 
     public Notification notify(String type, String title, String body, String source) {
         return repository.save(new Notification(

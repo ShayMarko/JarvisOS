@@ -1,5 +1,7 @@
 package com.jarvis.connectors;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -17,14 +19,12 @@ import com.jarvis.error.Exceptions.NotFoundException;
  * separate setup step; this connector uses whatever access token is stored.
  */
 @Component
+@RequiredArgsConstructor
 public class GmailConnector implements Connector {
 
     private final RestClient client = RestClient.create("https://gmail.googleapis.com/gmail/v1");
     private final ObjectMapper mapper;
 
-    public GmailConnector(ObjectMapper mapper) {
-        this.mapper = mapper;
-    }
 
     @Override public String id() { return "gmail"; }
     @Override public String name() { return "Gmail"; }

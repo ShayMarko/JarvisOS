@@ -1,5 +1,7 @@
 package com.jarvis.api;
 
+import lombok.RequiredArgsConstructor;
+
 import java.time.Instant;
 import java.util.List;
 
@@ -29,13 +31,11 @@ import jakarta.validation.constraints.NotBlank;
 /** Memory Manager endpoints — full user control over stored memory (spec §10.1). */
 @RestController
 @RequestMapping("/api/memory")
+@RequiredArgsConstructor
 public class MemoryController {
 
     private final MemoryService memory;
 
-    public MemoryController(MemoryService memory) {
-        this.memory = memory;
-    }
 
     public record CreateRequest(
             @NotBlank String category,

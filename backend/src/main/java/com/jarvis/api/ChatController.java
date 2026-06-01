@@ -1,5 +1,7 @@
 package com.jarvis.api;
 
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,13 +15,11 @@ import jakarta.validation.constraints.NotBlank;
 /** Direct chat entry point to the Jarvis Brain (spec §6). */
 @RestController
 @RequestMapping("/api/chat")
+@RequiredArgsConstructor
 public class ChatController {
 
     private final Orchestrator orchestrator;
 
-    public ChatController(Orchestrator orchestrator) {
-        this.orchestrator = orchestrator;
-    }
 
     public record ChatRequest(@NotBlank String message, String sessionId) {}
 

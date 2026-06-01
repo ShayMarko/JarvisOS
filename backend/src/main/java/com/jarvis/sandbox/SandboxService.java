@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.jarvis.config.JarvisFileSystemProperties;
 import com.jarvis.config.JarvisLimitsProperties;
+import com.jarvis.security.RestrictionPolicy;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,7 @@ public class SandboxService {
 
     private final JarvisFileSystemProperties fsProps;
     private final JarvisLimitsProperties limits;
+    private final RestrictionPolicy policy;
     private Path sandboxRoot;
 
     @PostConstruct
@@ -53,6 +55,8 @@ public class SandboxService {
     }
 
     public SandboxResult run(String command, int timeoutSeconds) {
+        // Hard floor: a policy-denied command never runs, regardless of approval.
+        policy.assertCommandAllowed(command);
         long start = System.nanoTime();
         Path workdir = createWorkdir();
         try {

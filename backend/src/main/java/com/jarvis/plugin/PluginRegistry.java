@@ -1,5 +1,7 @@
 package com.jarvis.plugin;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,20 +23,16 @@ import com.jarvis.connectors.ConnectorRegistry;
  * later step; the extension contracts already exist.)
  */
 @Component
+@RequiredArgsConstructor
 public class PluginRegistry {
 
+    // @Lazy breaks the cycle: CommandRegistry depends on handlers that depend on this registry.
+    @Lazy
     private final CommandRegistry commands;
     private final ToolRegistry tools;
     private final ConnectorRegistry connectors;
     private final AgentRegistry agents;
 
-    public PluginRegistry(@Lazy CommandRegistry commands, ToolRegistry tools,
-                          ConnectorRegistry connectors, AgentRegistry agents) {
-        this.commands = commands;
-        this.tools = tools;
-        this.connectors = connectors;
-        this.agents = agents;
-    }
 
     public Map<String, Object> surface() {
         Map<String, Object> out = new LinkedHashMap<>();

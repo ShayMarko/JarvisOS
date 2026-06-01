@@ -1,22 +1,28 @@
 package com.jarvis.security;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Component;
+
+import com.jarvis.security.RestrictionPolicy.RiskRule;
 
 /**
  * Classifies the risk of a terminal command by pattern matching (spec §18.1
  * "terminal risk classification"). This is intentionally conservative — when in
  * doubt it rates higher, because the result only decides how much scrutiny the
  * Approval Center applies, never whether to silently run something.
+ *
+ * <p>Built-in rules are augmented by any user-defined rules from the declarative
+ * {@link RestrictionPolicy} (config-driven, no recompile needed).
  */
 @Component
 public class RiskClassifier {
 
     private record Rule(Pattern pattern, RiskLevel level) {}
 
-    private static final List<Rule> RULES = List.of(
+    private static final List<Rule> BUILT_IN = List.of(
             // Catastrophic / irreversible
             rule("\\brm\\s+-rf?\\b", RiskLevel.CRITICAL),
             rule("\\bmkfs\\b|\\bdd\\b\\s+if=|>\\s*/dev/[a-z]", RiskLevel.CRITICAL),
@@ -35,13 +41,23 @@ public class RiskClassifier {
             rule(">\\s*\\S|>>\\s*\\S", RiskLevel.MEDIUM)                // output redirection (writes files)
     );
 
+    private final List<Rule> rules;
+
+    public RiskClassifier(RestrictionPolicy policy) {
+        List<Rule> all = new ArrayList<>(BUILT_IN);
+        for (RiskRule extra : policy.riskRules()) {
+            all.add(new Rule(extra.pattern(), extra.level()));
+        }
+        this.rules = List.copyOf(all);
+    }
+
     public RiskLevel classify(String command) {
         if (command == null || command.isBlank()) {
             return RiskLevel.LOW;
         }
         String c = command.toLowerCase();
         RiskLevel highest = RiskLevel.LOW;
-        for (Rule rule : RULES) {
+        for (Rule rule : rules) {
             if (rule.pattern().matcher(c).find() && rule.level().ordinal() > highest.ordinal()) {
                 highest = rule.level();
             }

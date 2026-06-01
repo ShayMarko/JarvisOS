@@ -1,5 +1,7 @@
 package com.jarvis.api;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -26,15 +28,12 @@ import jakarta.validation.constraints.NotNull;
  */
 @RestController
 @RequestMapping("/api/files")
+@RequiredArgsConstructor
 public class FilesController {
 
     private final FileSystemService fileSystem;
     private final MacActions macActions;
 
-    public FilesController(FileSystemService fileSystem, MacActions macActions) {
-        this.fileSystem = fileSystem;
-        this.macActions = macActions;
-    }
 
     public record WriteRequest(@NotNull String path, @NotNull String content) {}
 

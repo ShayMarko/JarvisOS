@@ -1,5 +1,7 @@
 package com.jarvis.command.handlers;
 
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Component;
 
 import com.jarvis.command.CommandCategory;
@@ -11,13 +13,11 @@ import com.jarvis.task.TaskService;
 
 /** {@code /tasks} — shows recent tasks the Brain handled (spec §5.2, §6). */
 @Component
+@RequiredArgsConstructor
 public class TasksHandler implements CommandHandler {
 
     private final TaskService tasks;
 
-    public TasksHandler(TaskService tasks) {
-        this.tasks = tasks;
-    }
 
     @Override
     public CommandDefinition definition() {

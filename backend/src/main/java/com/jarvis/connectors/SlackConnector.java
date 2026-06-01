@@ -1,5 +1,7 @@
 package com.jarvis.connectors;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 import java.util.Map;
 
@@ -16,14 +18,12 @@ import com.jarvis.error.Exceptions.NotFoundException;
  * mutating call; in a later pass it will route through the Approval Center.
  */
 @Component
+@RequiredArgsConstructor
 public class SlackConnector implements Connector {
 
     private final RestClient client = RestClient.create("https://slack.com/api");
     private final ObjectMapper mapper;
 
-    public SlackConnector(ObjectMapper mapper) {
-        this.mapper = mapper;
-    }
 
     @Override public String id() { return "slack"; }
     @Override public String name() { return "Slack"; }

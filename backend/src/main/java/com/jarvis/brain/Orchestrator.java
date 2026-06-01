@@ -1,5 +1,7 @@
 package com.jarvis.brain;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +31,7 @@ import com.jarvis.task.TaskService;
  * answer with a transparent step trace. It coordinates — it does not do the work.
  */
 @Service
+@RequiredArgsConstructor
 public class Orchestrator {
 
     private static final String DEFAULT_SESSION = "default";
@@ -43,19 +46,6 @@ public class Orchestrator {
     private final ObservabilityService observability;
     private final ObjectMapper mapper;
 
-    public Orchestrator(AgentSelector selector, AgentRuntime runtime, ContextBuilder contextBuilder,
-                        ConversationService conversations, TaskService tasks, AuditService audit,
-                        ModelRouter modelRouter, ObservabilityService observability, ObjectMapper mapper) {
-        this.selector = selector;
-        this.runtime = runtime;
-        this.contextBuilder = contextBuilder;
-        this.conversations = conversations;
-        this.tasks = tasks;
-        this.audit = audit;
-        this.modelRouter = modelRouter;
-        this.observability = observability;
-        this.mapper = mapper;
-    }
 
     public ChatResponse handle(String message) {
         return handle(message, DEFAULT_SESSION);

@@ -1,5 +1,7 @@
 package com.jarvis.command.handlers;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -13,13 +15,11 @@ import com.jarvis.web.WebSearchService;
 
 /** {@code /web <query>} — keyless web search (spec §8). */
 @Component
+@RequiredArgsConstructor
 public class WebHandler implements CommandHandler {
 
     private final WebSearchService web;
 
-    public WebHandler(WebSearchService web) {
-        this.web = web;
-    }
 
     @Override
     public CommandDefinition definition() {

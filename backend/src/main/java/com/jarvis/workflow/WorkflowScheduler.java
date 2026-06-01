@@ -1,5 +1,7 @@
 package com.jarvis.workflow;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
@@ -18,6 +20,7 @@ import jakarta.annotation.PostConstruct;
  * per workflow (Spring 6-field cron: {@code sec min hour dom mon dow}).
  */
 @Component
+@RequiredArgsConstructor
 public class WorkflowScheduler {
 
     private static final Logger log = LoggerFactory.getLogger(WorkflowScheduler.class);
@@ -27,10 +30,6 @@ public class WorkflowScheduler {
     private final ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
     private final Map<String, ScheduledFuture<?>> futures = new ConcurrentHashMap<>();
 
-    public WorkflowScheduler(WorkflowRepository workflows, WorkflowEngine engine) {
-        this.workflows = workflows;
-        this.engine = engine;
-    }
 
     @PostConstruct
     void init() {

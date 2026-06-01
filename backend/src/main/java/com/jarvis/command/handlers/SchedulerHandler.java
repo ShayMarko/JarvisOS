@@ -1,5 +1,7 @@
 package com.jarvis.command.handlers;
 
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Component;
 
 import com.jarvis.command.CommandCategory;
@@ -12,13 +14,11 @@ import com.jarvis.workflow.WorkflowService;
 
 /** {@code /scheduler} — shows scheduled (cron) workflows (spec §5.2, §12). */
 @Component
+@RequiredArgsConstructor
 public class SchedulerHandler implements CommandHandler {
 
     private final WorkflowService workflows;
 
-    public SchedulerHandler(WorkflowService workflows) {
-        this.workflows = workflows;
-    }
 
     @Override
     public CommandDefinition definition() {

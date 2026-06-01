@@ -1,5 +1,7 @@
 package com.jarvis.workflow;
 
+import lombok.RequiredArgsConstructor;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,7 @@ import com.jarvis.security.RiskLevel;
  * budget before the run fails. Each step calls a real Jarvis capability.
  */
 @Service
+@RequiredArgsConstructor
 public class WorkflowEngine {
 
     private static final Logger log = LoggerFactory.getLogger(WorkflowEngine.class);
@@ -35,6 +38,8 @@ public class WorkflowEngine {
     private final WorkflowRepository workflows;
     private final WorkflowRunRepository runs;
     private final ObjectMapper mapper;
+    // @Lazy breaks the cycle: CommandEngine → registry → WorkflowsHandler → WorkflowService → this engine.
+    @Lazy
     private final CommandEngine commandEngine;
     private final Orchestrator orchestrator;
     private final ConnectorRegistry connectors;
@@ -42,20 +47,6 @@ public class WorkflowEngine {
     private final AuditService audit;
     private final com.jarvis.notification.NotificationService notifications;
 
-    public WorkflowEngine(WorkflowRepository workflows, WorkflowRunRepository runs, ObjectMapper mapper,
-                          @Lazy CommandEngine commandEngine, Orchestrator orchestrator, ConnectorRegistry connectors,
-                          ApprovalService approvals, AuditService audit,
-                          com.jarvis.notification.NotificationService notifications) {
-        this.workflows = workflows;
-        this.runs = runs;
-        this.mapper = mapper;
-        this.commandEngine = commandEngine;
-        this.orchestrator = orchestrator;
-        this.connectors = connectors;
-        this.approvals = approvals;
-        this.audit = audit;
-        this.notifications = notifications;
-    }
 
     public WorkflowRun start(Workflow wf, String trigger) {
         List<WorkflowStep> steps = parseSteps(wf);

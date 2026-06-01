@@ -1,5 +1,7 @@
 package com.jarvis.workflow;
 
+import lombok.RequiredArgsConstructor;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -13,6 +15,7 @@ import com.jarvis.error.Exceptions.NotFoundException;
 
 /** Workflow CRUD + run/history, with cron (re)scheduling on changes (spec §12). */
 @Service
+@RequiredArgsConstructor
 public class WorkflowService {
 
     private final WorkflowRepository workflows;
@@ -21,14 +24,6 @@ public class WorkflowService {
     private final WorkflowScheduler scheduler;
     private final ObjectMapper mapper;
 
-    public WorkflowService(WorkflowRepository workflows, WorkflowRunRepository runs, WorkflowEngine engine,
-                           WorkflowScheduler scheduler, ObjectMapper mapper) {
-        this.workflows = workflows;
-        this.runs = runs;
-        this.engine = engine;
-        this.scheduler = scheduler;
-        this.mapper = mapper;
-    }
 
     public List<WorkflowView> list() {
         return workflows.findAllByOrderByCreatedAtDesc().stream().map(this::toView).toList();

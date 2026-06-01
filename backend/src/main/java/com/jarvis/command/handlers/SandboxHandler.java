@@ -1,5 +1,7 @@
 package com.jarvis.command.handlers;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -13,13 +15,11 @@ import com.jarvis.sandbox.SandboxService;
 
 /** {@code /sandbox} — shows Sandbox Runtime info (spec §5.2, §11.4). */
 @Component
+@RequiredArgsConstructor
 public class SandboxHandler implements CommandHandler {
 
     private final SandboxService sandbox;
 
-    public SandboxHandler(SandboxService sandbox) {
-        this.sandbox = sandbox;
-    }
 
     @Override
     public CommandDefinition definition() {

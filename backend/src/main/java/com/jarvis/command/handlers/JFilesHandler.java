@@ -1,5 +1,7 @@
 package com.jarvis.command.handlers;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 import java.util.Map;
 
@@ -15,13 +17,11 @@ import com.jarvis.explorer.FileSystemService;
 
 /** {@code /jfiles [path]} — lists files in the Jarvis Explorer (spec §5.2, §14.1). */
 @Component
+@RequiredArgsConstructor
 public class JFilesHandler implements CommandHandler {
 
     private final FileSystemService fileSystem;
 
-    public JFilesHandler(FileSystemService fileSystem) {
-        this.fileSystem = fileSystem;
-    }
 
     @Override
     public CommandDefinition definition() {

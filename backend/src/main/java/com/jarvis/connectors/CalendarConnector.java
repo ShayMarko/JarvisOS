@@ -1,5 +1,7 @@
 package com.jarvis.connectors;
 
+import lombok.RequiredArgsConstructor;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
@@ -16,14 +18,12 @@ import com.jarvis.error.Exceptions.NotFoundException;
  * OAuth access token from the Secrets Vault (entry {@code google-calendar-token}).
  */
 @Component
+@RequiredArgsConstructor
 public class CalendarConnector implements Connector {
 
     private final RestClient client = RestClient.create("https://www.googleapis.com/calendar/v3");
     private final ObjectMapper mapper;
 
-    public CalendarConnector(ObjectMapper mapper) {
-        this.mapper = mapper;
-    }
 
     @Override public String id() { return "calendar"; }
     @Override public String name() { return "Google Calendar"; }

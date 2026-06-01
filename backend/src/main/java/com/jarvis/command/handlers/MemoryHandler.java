@@ -1,5 +1,7 @@
 package com.jarvis.command.handlers;
 
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Component;
 
 import com.jarvis.command.CommandCategory;
@@ -13,13 +15,11 @@ import java.util.List;
 
 /** {@code /memory [query]} — opens the Memory Manager (spec §5.2). */
 @Component
+@RequiredArgsConstructor
 public class MemoryHandler implements CommandHandler {
 
     private final MemoryService memory;
 
-    public MemoryHandler(MemoryService memory) {
-        this.memory = memory;
-    }
 
     @Override
     public CommandDefinition definition() {

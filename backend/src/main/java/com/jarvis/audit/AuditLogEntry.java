@@ -9,12 +9,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import lombok.Getter;
+
 /**
  * One row per meaningful Jarvis action. The spec requires a full Audit Log;
  * in Phase 1 we record every command/input that passes through the engine.
  */
 @Entity
 @Table(name = "audit_log")
+@Getter
 public class AuditLogEntry {
 
     @Id
@@ -52,12 +55,4 @@ public class AuditLogEntry {
         this.status = status;
         this.detail = detail;
     }
-
-    public Long getId() { return id; }
-    public Instant getTimestamp() { return timestamp; }
-    public String getInputType() { return inputType; }
-    public String getCommand() { return command; }
-    public String getInput() { return input; }
-    public String getStatus() { return status; }
-    public String getDetail() { return detail; }
 }

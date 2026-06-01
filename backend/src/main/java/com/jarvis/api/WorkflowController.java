@@ -1,5 +1,7 @@
 package com.jarvis.api;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -22,13 +24,11 @@ import com.jarvis.workflow.WorkflowView;
 /** Workflow Builder + runs endpoints (spec §12). */
 @RestController
 @RequestMapping("/api/workflows")
+@RequiredArgsConstructor
 public class WorkflowController {
 
     private final WorkflowService workflows;
 
-    public WorkflowController(WorkflowService workflows) {
-        this.workflows = workflows;
-    }
 
     @GetMapping
     public List<WorkflowView> list() {

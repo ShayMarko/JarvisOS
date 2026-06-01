@@ -1,5 +1,7 @@
 package com.jarvis.api;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -13,15 +15,12 @@ import com.jarvis.model.ModelRouter;
 /** Model Manager / Router info (spec §6). */
 @RestController
 @RequestMapping("/api/models")
+@RequiredArgsConstructor
 public class ModelController {
 
     private final ModelCatalog catalog;
     private final ModelRouter router;
 
-    public ModelController(ModelCatalog catalog, ModelRouter router) {
-        this.catalog = catalog;
-        this.router = router;
-    }
 
     @GetMapping
     public Map<String, Object> models() {

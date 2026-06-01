@@ -7,9 +7,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import lombok.Getter;
+
 /** An indexed document in the Knowledge Base (spec §10.2). */
 @Entity
 @Table(name = "kb_document")
+@Getter
 public class KbDocument {
 
     @Id
@@ -38,10 +41,4 @@ public class KbDocument {
         this.chunkCount = chunkCount;
         this.createdAt = Instant.now();
     }
-
-    public String getId() { return id; }
-    public String getSource() { return source; }
-    public String getTitle() { return title; }
-    public int getChunkCount() { return chunkCount; }
-    public Instant getCreatedAt() { return createdAt; }
 }

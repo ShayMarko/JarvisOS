@@ -1,5 +1,7 @@
 package com.jarvis.command.handlers;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -13,13 +15,11 @@ import com.jarvis.connectors.ConnectorRegistry;
 
 /** {@code /connectors} — shows connectors / MCPs and their health (spec §9). */
 @Component
+@RequiredArgsConstructor
 public class ConnectorsHandler implements CommandHandler {
 
     private final ConnectorRegistry registry;
 
-    public ConnectorsHandler(ConnectorRegistry registry) {
-        this.registry = registry;
-    }
 
     @Override
     public CommandDefinition definition() {

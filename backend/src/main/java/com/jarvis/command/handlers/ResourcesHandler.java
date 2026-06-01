@@ -1,5 +1,7 @@
 package com.jarvis.command.handlers;
 
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Component;
 
 import com.jarvis.command.CommandCategory;
@@ -13,13 +15,11 @@ import java.util.List;
 
 /** {@code /resources} — opens the live System Resource Dashboard (spec §5.2, §13). */
 @Component
+@RequiredArgsConstructor
 public class ResourcesHandler implements CommandHandler {
 
     private final SystemMonitorService monitor;
 
-    public ResourcesHandler(SystemMonitorService monitor) {
-        this.monitor = monitor;
-    }
 
     @Override
     public CommandDefinition definition() {

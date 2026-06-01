@@ -11,6 +11,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * A pending (or decided) request for human approval before a sensitive action
  * runs (spec §11.2 Approval Center). This row is the durable audit trail; the
@@ -18,6 +21,7 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "approval_request")
+@Getter
 public class ApprovalRequest {
 
     @Id
@@ -42,6 +46,7 @@ public class ApprovalRequest {
     @Column(length = 4000)
     private String preview;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ApprovalStatus status;
@@ -49,9 +54,11 @@ public class ApprovalRequest {
     @Column(name = "created_at")
     private Instant createdAt;
 
+    @Setter
     @Column(name = "decided_at")
     private Instant decidedAt;
 
+    @Setter
     @Column(name = "result_summary", length = 4000)
     private String resultSummary;
 
@@ -70,18 +77,4 @@ public class ApprovalRequest {
         this.status = ApprovalStatus.PENDING;
         this.createdAt = Instant.now();
     }
-
-    public String getId() { return id; }
-    public String getActionType() { return actionType; }
-    public String getTitle() { return title; }
-    public String getDescription() { return description; }
-    public RiskLevel getRiskLevel() { return riskLevel; }
-    public String getPreview() { return preview; }
-    public ApprovalStatus getStatus() { return status; }
-    public void setStatus(ApprovalStatus status) { this.status = status; }
-    public Instant getCreatedAt() { return createdAt; }
-    public Instant getDecidedAt() { return decidedAt; }
-    public void setDecidedAt(Instant decidedAt) { this.decidedAt = decidedAt; }
-    public String getResultSummary() { return resultSummary; }
-    public void setResultSummary(String resultSummary) { this.resultSummary = resultSummary; }
 }

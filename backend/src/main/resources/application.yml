@@ -54,6 +54,43 @@ jarvis:
     max-tokens: 1024
     max-steps: 4
     privacy: ${JARVIS_AI_PRIVACY:BALANCED}   # BALANCED | PRIVATE | QUALITY | CHEAP
+  # Global JARVIS personality, prepended to every agent's system prompt.
+  persona:
+    enabled: ${JARVIS_PERSONA_ENABLED:true}
+    # Uses the built-in British/dry-wit default (see JarvisPersonaProperties).
+    # Override the whole voice by setting `prompt:` to a block scalar here.
+  # Declarative restrictions policy (see JarvisPolicyProperties). Hard floor under the
+  # Approval Center: a denied command NEVER runs, even if the user would approve it.
+  policy:
+    # Case-insensitive regex patterns for commands that are forbidden outright.
+    denied-commands:
+      - "\\brm\\s+-rf?\\s+/(\\s|$)"          # rm -rf / (wipe root)
+      - ":\\(\\)\\s*\\{.*\\};"                  # fork bomb
+      - "\\bmkfs\\b"                            # format a filesystem
+      - ">\\s*/dev/(disk|sd|rdisk)"            # overwrite a raw disk device
+    # Host substrings that web fetch/search must refuse.
+    denied-hosts: []
+    #   - internal-admin.local
+    # Extra risk rules merged on top of the built-in classifier set.
+    risk-rules: []
+    #   - pattern: "\\bgit\\s+push\\s+--force\\b"
+    #     level: HIGH
+  # Project Intelligence (see JarvisProjectsProperties): scan dev folders, open in the right IDE.
+  projects:
+    scan-roots:
+      - ~/Projects
+      - ~/Developer
+      - ~/Code
+    max-depth: 2
+    default-ide: Visual Studio Code
+    ide-by-type:
+      maven: IntelliJ IDEA
+      gradle: IntelliJ IDEA
+      node: Visual Studio Code
+      python: Visual Studio Code
+      rust: Visual Studio Code
+      go: Visual Studio Code
+      xcode: Xcode
   # Tunable limits/sizes (see JarvisLimitsProperties).
   limits:
     conversation-history-turns: 10

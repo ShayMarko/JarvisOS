@@ -506,3 +506,80 @@ export function invokeConnector(id: string, actionId: string): Promise<{ result:
     body: JSON.stringify({ args: '{}' }),
   })
 }
+
+// --- Dashboard data sources -------------------------------------------------
+
+/** Live system telemetry snapshot pushed over SSE and returned by /api/status. */
+export interface MonitorSnapshot {
+  os: string
+  cpu: { availableProcessors: number; systemLoadAverage: number; processCpuLoad: number; systemCpuLoad: number }
+  memory: { totalPhysicalBytes: number; freePhysicalBytes: number; usedPhysicalBytes: number }
+  disk: { totalBytes: number; freeBytes: number; usableBytes: number }
+  runtime: { activeAgents: number; runningTasks: number; registeredAgents: number; connectorHealth: string }
+  jarvisHealth: string
+}
+
+/** Ask Jarvis (free text or a quick action) — full agent run with step trace. */
+export function chat(message: string): Promise<ChatResponse> {
+  return req<ChatResponse>('/api/chat', {
+    method: 'POST',
+    headers: jsonHeaders,
+    body: JSON.stringify({ message, sessionId }),
+  })
+}
+
+export function getTasks(limit = 20): Promise<TaskItem[]> {
+  return req<TaskItem[]>(`/api/tasks?limit=${limit}`)
+}
+
+export function getAgents(): Promise<AgentDef[]> {
+  return req<AgentDef[]>('/api/agents')
+}
+
+export function getMemoryList(query = ''): Promise<Memory[]> {
+  return req<Memory[]>(`/api/memory?q=${encodeURIComponent(query)}`)
+}
+
+export function getAudit(limit = 20): Promise<AuditEntry[]> {
+  return req<AuditEntry[]>(`/api/audit?limit=${limit}`)
+}
+
+export function getStatus(): Promise<MonitorSnapshot> {
+  return req<MonitorSnapshot>('/api/status')
+}
+
+export function getRuns(limit = 50): Promise<RunRecord[]> {
+  return req<RunRecord[]>(`/api/runs?limit=${limit}`)
+}
+
+export interface SettingsView {
+  provider: string
+  model: string
+  hasAnthropicKey: boolean
+  providers: string[]
+}
+
+export function getSettings(): Promise<SettingsView> {
+  return req<SettingsView>('/api/settings')
+}
+
+export function setProvider(provider: string, model?: string): Promise<SettingsView> {
+  return req<SettingsView>('/api/settings/provider', {
+    method: 'POST',
+    headers: jsonHeaders,
+    body: JSON.stringify({ provider, model }),
+  })
+}
+
+/** Subscribe to the live monitor SSE stream; returns the EventSource so callers can close it. */
+export function subscribeMonitor(onSnapshot: (s: MonitorSnapshot) => void): EventSource {
+  const es = new EventSource('/api/monitor/stream')
+  es.onmessage = (e) => {
+    try {
+      onSnapshot(JSON.parse(e.data) as MonitorSnapshot)
+    } catch {
+      /* ignore malformed frame */
+    }
+  }
+  return es
+}

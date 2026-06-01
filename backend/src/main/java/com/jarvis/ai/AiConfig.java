@@ -23,14 +23,12 @@ public class AiConfig {
 
     @Bean
     LanguageModel languageModel(JarvisAiProperties props, ObjectMapper mapper) {
-        boolean claude = "claude".equalsIgnoreCase(props.getProvider())
+        boolean claudeReady = "claude".equalsIgnoreCase(props.getProvider())
                 && props.getAnthropicApiKey() != null
                 && !props.getAnthropicApiKey().isBlank();
-        if (claude) {
-            log.info("Jarvis AI provider: Anthropic ({})", props.getModel());
-            return new AnthropicLanguageModel(props, mapper);
-        }
-        log.info("Jarvis AI provider: mock (offline). Set jarvis.ai.provider=claude + ANTHROPIC_API_KEY for real reasoning.");
-        return new MockLanguageModel();
+        log.info("Jarvis AI provider: {} (switchable at runtime via /api/settings).",
+                claudeReady ? "Anthropic " + props.getModel() : "mock (offline)");
+        // Live-switching adapter: chooses its backing provider per call from config.
+        return new ProviderSwitchingLanguageModel(props, mapper);
     }
 }

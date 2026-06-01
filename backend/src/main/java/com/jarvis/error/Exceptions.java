@@ -26,6 +26,13 @@ public final class Exceptions {
         }
     }
 
+    /** The action is forbidden outright by the declarative restrictions policy (never runs). */
+    public static class PolicyDeniedException extends JarvisException {
+        public PolicyDeniedException(String message) {
+            super(ErrorCode.PERMISSION_DENIED, message);
+        }
+    }
+
     /** A requested file/resource does not exist. */
     public static class NotFoundException extends JarvisException {
         public NotFoundException(String message) {

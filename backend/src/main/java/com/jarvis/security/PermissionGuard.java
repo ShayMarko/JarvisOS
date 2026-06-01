@@ -1,5 +1,7 @@
 package com.jarvis.security;
 
+import lombok.RequiredArgsConstructor;
+
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,7 @@ import jakarta.annotation.PostConstruct;
  * applies the active {@link PermissionMode}.
  */
 @Component
+@RequiredArgsConstructor
 public class PermissionGuard {
 
     /** A real location Jarvis may touch, with its permission level. */
@@ -33,10 +36,6 @@ public class PermissionGuard {
     private List<Scope> scopes;
     private List<Path> blocked;
 
-    public PermissionGuard(JarvisFileSystemProperties fsProps, JarvisSecurityProperties securityProps) {
-        this.fsProps = fsProps;
-        this.securityProps = securityProps;
-    }
 
     @PostConstruct
     public void init() {

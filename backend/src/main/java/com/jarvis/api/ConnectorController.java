@@ -1,5 +1,7 @@
 package com.jarvis.api;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,13 +17,11 @@ import com.jarvis.connectors.ConnectorRegistry;
 /** Connectors / MCPs endpoints (spec §9). */
 @RestController
 @RequestMapping("/api/connectors")
+@RequiredArgsConstructor
 public class ConnectorController {
 
     private final ConnectorRegistry registry;
 
-    public ConnectorController(ConnectorRegistry registry) {
-        this.registry = registry;
-    }
 
     public record InvokeRequest(String args) {}
 

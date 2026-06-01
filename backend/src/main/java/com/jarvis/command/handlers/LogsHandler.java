@@ -1,5 +1,7 @@
 package com.jarvis.command.handlers;
 
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Component;
 
 import com.jarvis.audit.AuditService;
@@ -13,13 +15,11 @@ import java.util.List;
 
 /** {@code /logs [limit]} — shows recent audit-log entries (spec §5.2). */
 @Component
+@RequiredArgsConstructor
 public class LogsHandler implements CommandHandler {
 
     private final AuditService audit;
 
-    public LogsHandler(AuditService audit) {
-        this.audit = audit;
-    }
 
     @Override
     public CommandDefinition definition() {

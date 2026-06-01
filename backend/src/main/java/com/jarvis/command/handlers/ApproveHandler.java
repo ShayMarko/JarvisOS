@@ -1,5 +1,7 @@
 package com.jarvis.command.handlers;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -13,13 +15,11 @@ import com.jarvis.command.CommandResult;
 
 /** {@code /approve} — opens the Approval Center (pending actions) (spec §5.2, §11.2). */
 @Component
+@RequiredArgsConstructor
 public class ApproveHandler implements CommandHandler {
 
     private final ApprovalService approval;
 
-    public ApproveHandler(ApprovalService approval) {
-        this.approval = approval;
-    }
 
     @Override
     public CommandDefinition definition() {

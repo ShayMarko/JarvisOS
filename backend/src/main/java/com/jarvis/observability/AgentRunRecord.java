@@ -7,9 +7,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import lombok.Getter;
+
 /** A durable record of one Brain/agent run for the Agent Debugger (spec §13.2). */
 @Entity
 @Table(name = "agent_run")
+@Getter
 public class AgentRunRecord {
 
     @Id
@@ -71,19 +74,4 @@ public class AgentRunRecord {
         this.stepsJson = stepsJson;
         this.createdAt = Instant.now();
     }
-
-    public String getId() { return id; }
-    public String getTaskId() { return taskId; }
-    public String getSessionId() { return sessionId; }
-    public String getAgent() { return agent; }
-    public String getModel() { return model; }
-    public String getRequest() { return request; }
-    public String getAnswer() { return answer; }
-    public String getStatus() { return status; }
-    public int getPromptTokens() { return promptTokens; }
-    public int getCompletionTokens() { return completionTokens; }
-    public double getCost() { return cost; }
-    public long getDurationMs() { return durationMs; }
-    public String getStepsJson() { return stepsJson; }
-    public Instant getCreatedAt() { return createdAt; }
 }

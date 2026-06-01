@@ -1,5 +1,7 @@
 package com.jarvis.api;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,13 +15,11 @@ import com.jarvis.explorer.FileSystemService;
 /** Scoped global search across the Jarvis Explorer (spec §5.2 /searchall). */
 @RestController
 @RequestMapping("/api/search")
+@RequiredArgsConstructor
 public class SearchController {
 
     private final FileSystemService fileSystem;
 
-    public SearchController(FileSystemService fileSystem) {
-        this.fileSystem = fileSystem;
-    }
 
     @GetMapping
     public List<FileNode> search(@RequestParam("q") String query,

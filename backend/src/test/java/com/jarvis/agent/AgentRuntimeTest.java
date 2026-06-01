@@ -7,6 +7,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.jarvis.ai.JarvisAiProperties;
+import com.jarvis.ai.JarvisPersonaProperties;
 import com.jarvis.ai.MockLanguageModel;
 import com.jarvis.ai.ToolSpec;
 import com.jarvis.ai.tools.Tool;
@@ -30,7 +31,8 @@ class AgentRuntimeTest {
     @Test
     void runsTheToolLoopAndComposesAnAnswer() {
         ToolRegistry registry = new ToolRegistry(List.of(new FakeListFiles()));
-        AgentRuntime runtime = new AgentRuntime(new MockLanguageModel(), registry, new JarvisAiProperties());
+        AgentRuntime runtime = new AgentRuntime(new MockLanguageModel(), registry,
+                new JarvisAiProperties(), new JarvisPersonaProperties());
 
         AgentDefinition agent = new AgentDefinition("File Agent", "files", "files",
                 "You are the File Agent.", List.of("list_files"), "files");

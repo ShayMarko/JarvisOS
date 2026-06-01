@@ -1,5 +1,7 @@
 package com.jarvis.approval;
 
+import lombok.RequiredArgsConstructor;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,7 @@ import com.jarvis.security.RiskLevel;
  * Task Engine (Phase 8).
  */
 @Service
+@RequiredArgsConstructor
 public class ApprovalService {
 
     private static final Logger log = LoggerFactory.getLogger(ApprovalService.class);
@@ -42,12 +45,6 @@ public class ApprovalService {
 
     private final com.jarvis.notification.NotificationService notifications;
 
-    public ApprovalService(ApprovalRepository repository, AuditService audit,
-                           com.jarvis.notification.NotificationService notifications) {
-        this.repository = repository;
-        this.audit = audit;
-        this.notifications = notifications;
-    }
 
     public ApprovalResult submit(String actionType, String title, String description,
                                  RiskLevel risk, String preview, Callable<Object> action) {

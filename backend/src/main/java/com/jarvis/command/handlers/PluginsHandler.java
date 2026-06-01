@@ -1,5 +1,7 @@
 package com.jarvis.command.handlers;
 
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Component;
 
 import com.jarvis.command.CommandCategory;
@@ -11,13 +13,11 @@ import com.jarvis.plugin.PluginRegistry;
 
 /** {@code /plugins} — show the extension surface (spec §5.2, §8). */
 @Component
+@RequiredArgsConstructor
 public class PluginsHandler implements CommandHandler {
 
     private final PluginRegistry plugins;
 
-    public PluginsHandler(PluginRegistry plugins) {
-        this.plugins = plugins;
-    }
 
     @Override
     public CommandDefinition definition() {

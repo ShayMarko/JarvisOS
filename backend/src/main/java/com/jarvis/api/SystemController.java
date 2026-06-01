@@ -1,5 +1,7 @@
 package com.jarvis.api;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 import java.util.Map;
 
@@ -15,15 +17,12 @@ import com.jarvis.system.SystemMonitorService;
 /** System monitor + audit log endpoints (spec §13, §10.x). */
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class SystemController {
 
     private final SystemMonitorService monitor;
     private final AuditService audit;
 
-    public SystemController(SystemMonitorService monitor, AuditService audit) {
-        this.monitor = monitor;
-        this.audit = audit;
-    }
 
     @GetMapping("/status")
     public Map<String, Object> status() {

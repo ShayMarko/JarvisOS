@@ -1,5 +1,7 @@
 package com.jarvis.input;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -14,13 +16,11 @@ import com.jarvis.command.CommandRegistry;
  * sandbox/model-routing classification.
  */
 @Component
+@RequiredArgsConstructor
 public class InputRouter {
 
     private final CommandRegistry registry;
 
-    public InputRouter(CommandRegistry registry) {
-        this.registry = registry;
-    }
 
     public RoutedInput route(String rawInput) {
         if (rawInput == null || rawInput.isBlank()) {

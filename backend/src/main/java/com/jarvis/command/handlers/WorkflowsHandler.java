@@ -1,5 +1,7 @@
 package com.jarvis.command.handlers;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -14,13 +16,11 @@ import com.jarvis.workflow.WorkflowService;
 
 /** {@code /workflows} — manage workflows and view recent runs (spec §5.2, §12). */
 @Component
+@RequiredArgsConstructor
 public class WorkflowsHandler implements CommandHandler {
 
     private final WorkflowService workflows;
 
-    public WorkflowsHandler(WorkflowService workflows) {
-        this.workflows = workflows;
-    }
 
     @Override
     public CommandDefinition definition() {

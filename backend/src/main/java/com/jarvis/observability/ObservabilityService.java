@@ -1,5 +1,7 @@
 package com.jarvis.observability;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,13 +14,11 @@ import com.jarvis.error.Exceptions.NotFoundException;
 
 /** Agent Debugger / Observability store (spec §13.2) + Cost/Token Monitor (§13.1). */
 @Service
+@RequiredArgsConstructor
 public class ObservabilityService {
 
     private final AgentRunRepository repository;
 
-    public ObservabilityService(AgentRunRepository repository) {
-        this.repository = repository;
-    }
 
     public AgentRunRecord record(String taskId, String sessionId, String agent, String model, String request,
                                  String answer, String status, int promptTokens, int completionTokens,

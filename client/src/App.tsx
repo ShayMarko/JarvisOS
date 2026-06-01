@@ -1,2076 +1,596 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
-  ApiError,
-  approveRequest,
-  createDir,
-  createMemory,
-  createSecret,
-  createWorkflow,
-  deleteFile,
-  deleteKbDocument,
-  deleteMemory,
-  deleteSecret,
-  deleteWorkflow,
-  denyRequest,
-  exportMemory,
-  fetchCommands,
-  getFileContent,
-  getNotifications,
-  getUnreadCount,
-  indexKb,
-  invokeConnector,
-  markNotificationsRead,
-  replayRun,
-  revealFile,
-  runCommand,
-  runWorkflow,
-  updateMemory,
-  writeFile,
-  type AgentDef,
-  type ApprovalRequest,
-  type AuditEntry,
-  type ChatResponse,
-  type CommandDefinition,
-  type CommandResult,
-  type ConnectorInfo,
-  type CostsData,
-  type FileNode,
-  type KbData,
-  type KbHit,
-  type Memory,
-  type MemoryDraft,
-  type ModelsData,
-  type NotificationItem,
-  type PluginsData,
-  type RiskLevel,
-  type RunRecord,
-  type RunView,
-  type SandboxResult,
-  type SecretDraft,
-  type SecretView,
-  type Step,
-  type TaskItem,
-  type WfStep,
-  type WfStepType,
-  type WorkflowDraft,
-  type WorkflowsData,
-  type WorkflowView,
+  chat, fetchCommands, getAgents, getAudit, getMemoryList, getNotifications,
+  getRuns, getSettings, getStatus, getTasks, getUnreadCount, markNotificationsRead,
+  runCommand, setProvider as apiSetProvider,
+} from './api'
+import type {
+  AgentDef, AuditEntry, ChatResponse, CommandDefinition, Memory, MonitorSnapshot,
+  NotificationItem, RunRecord, SettingsView, Step, TaskItem,
 } from './api'
 
-interface Entry {
-  id: number
-  input: string
-  result?: CommandResult
-  error?: string
-  pending: boolean
-}
-
-interface Toast {
-  kind: 'ok' | 'error'
-  text: string
-  traceId?: string
-}
-
-interface EditorState {
-  path: string
-  content: string
-  original: string
-  saving: boolean
-}
-
-/** File operations shared with the FilesView renderer. */
-export interface FileActions {
-  open: (path: string) => void
-  remove: (path: string, parent: string) => void
-  newFile: (base: string) => void
-  newFolder: (base: string) => void
-}
-
-/** Memory operations shared with the MemoryView renderer. */
-export interface MemoryActions {
-  add: () => void
-  edit: (m: Memory) => void
-  remove: (m: Memory) => void
-  exportAll: () => void
-}
-
-/** Approval operations shared with the ApprovalView renderer. */
-export interface ApprovalActions {
-  approve: (id: string, remember: boolean) => void
-  deny: (id: string, remember: boolean) => void
-}
-
-/** Secret operations shared with the SecretsView renderer. */
-export interface SecretActions {
-  add: () => void
-  remove: (s: SecretView) => void
-}
-
-/** Workflow operations shared with the WorkflowsView renderer. */
-export interface WorkflowActions {
-  add: () => void
-  run: (id: string) => void
-  remove: (w: WorkflowView) => void
-}
-
-interface WfEditorState {
-  draft: WorkflowDraft
-  saving: boolean
-}
-
-const blankWorkflow: WorkflowDraft = {
-  name: '',
-  description: '',
-  triggerType: 'MANUAL',
-  cron: '',
-  enabled: true,
-  steps: [],
-}
-
-interface SecretEditorState {
-  draft: SecretDraft
-  saving: boolean
-}
-
-interface MemEditorState {
-  id: string | null // null = creating
-  draft: MemoryDraft
-  saving: boolean
-}
-
-const blankMemory: MemoryDraft = {
-  category: 'preference',
-  title: '',
-  content: '',
-  source: 'manual',
-  confidence: 1,
-  sensitivity: 'NORMAL',
-  visibility: 'USER_VISIBLE',
-  enabled: true,
-}
-
-let counter = 0
-
-const join = (base: string, name: string) => (base ? `${base}/${name}` : name)
-
-/** Browser-native TTS (Web Speech API) — no key, runs on the OS voices. */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const SR: any = typeof window !== 'undefined' ? (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition : null
 function speak(text: string) {
   try {
-    const synth = window.speechSynthesis
-    if (!synth || !text) return
-    synth.cancel()
     const u = new SpeechSynthesisUtterance(text.slice(0, 600))
-    u.rate = 1.05
-    synth.speak(u)
-  } catch {
-    /* TTS unsupported */
+    const v = speechSynthesis.getVoices().find((x) => /daniel|arthur|google uk english male/i.test(x.name))
+    if (v) u.voice = v
+    u.rate = 1.02; u.pitch = 1
+    speechSynthesis.cancel(); speechSynthesis.speak(u)
+  } catch { /* speech not available */ }
+}
+
+/* ===========================================================================
+   Helpers
+=========================================================================== */
+function pct(v?: number) { return v === undefined || v === null || v < 0 || Number.isNaN(v) ? 0 : Math.round(v * 100) }
+function gb(b?: number) { return !b ? '0' : (b / 1024 ** 3).toFixed(1) }
+function ago(iso?: string | null) {
+  if (!iso) return ''
+  const d = Date.parse(iso); if (Number.isNaN(d)) return ''
+  const s = Math.max(0, (Date.now() - d) / 1000)
+  if (s < 60) return `${Math.floor(s)}s`
+  if (s < 3600) return `${Math.floor(s / 60)}m`
+  if (s < 86400) return `${Math.floor(s / 3600)}h`
+  return `${Math.floor(s / 86400)}d`
+}
+
+/* ===========================================================================
+   Sphere — three fresh concepts (line/glow, no blob, no particle burst)
+=========================================================================== */
+type SphereKind = 'gyro' | 'orbital' | 'halo'
+const CORE_GLOW = { filter: 'drop-shadow(0 0 6px var(--accent))' }
+
+function Sphere({ kind, busy, caption }: { kind: SphereKind; busy: boolean; caption: string }) {
+  return (
+    <div className={`orb${busy ? ' busy' : ''}`}>
+      <svg viewBox="0 0 200 200" aria-hidden>
+        {kind === 'gyro' && <Gyro />}
+        {kind === 'orbital' && <Orbital />}
+        {kind === 'halo' && <Halo />}
+      </svg>
+      <div className="caption">{caption}</div>
+    </div>
+  )
+}
+
+/* V1 — gyroscopic reticle: broken arcs at tilts + faint wire-globe + calm core */
+function Gyro() {
+  const merid = [
+    { rx: 56, ry: 56 }, { rx: 44, ry: 56 }, { rx: 28, ry: 56 }, { rx: 12, ry: 56 },
+    { rx: 56, ry: 44 }, { rx: 56, ry: 28 }, { rx: 56, ry: 12 },
+  ]
+  return (
+    <g stroke="currentColor">
+      <g className="spin-cw">
+        <circle className="stroke" cx="100" cy="100" r="94" strokeWidth="1" strokeDasharray="200 40 70 30" opacity="0.7" />
+      </g>
+      <g className="spin-ccw">
+        <ellipse className="stroke" cx="100" cy="100" rx="82" ry="34" strokeWidth="1" strokeDasharray="120 30" opacity="0.55" transform="rotate(32 100 100)" />
+      </g>
+      <g className="spin-mid">
+        <ellipse className="stroke" cx="100" cy="100" rx="72" ry="26" strokeWidth="1" opacity="0.4" transform="rotate(-42 100 100)" />
+      </g>
+      <g className="spin-cw" opacity="0.22">
+        {merid.map((m, i) => <ellipse key={i} className="stroke" cx="100" cy="100" rx={m.rx} ry={m.ry} strokeWidth="0.8" />)}
+        <circle className="stroke" cx="100" cy="100" r="56" strokeWidth="0.8" />
+      </g>
+      <circle className="core" cx="100" cy="100" r="6.5" fill="currentColor" style={CORE_GLOW} />
+      <circle className="core" cx="100" cy="100" r="15" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.5" />
+    </g>
+  )
+}
+
+/* V2 — orrery: thin globe + 3 tilted rings with nodes, slow precession */
+function Orbital() {
+  const rings = [0, 60, 120]
+  return (
+    <g stroke="currentColor">
+      <circle className="stroke" cx="100" cy="100" r="60" strokeWidth="0.8" opacity="0.25" />
+      <g className="spin-cw">
+        {rings.map((deg, i) => (
+          <g key={i} transform={`rotate(${deg} 100 100)`} opacity="0.6">
+            <ellipse className="stroke" cx="100" cy="100" rx="86" ry="30" strokeWidth="1" />
+            <circle cx="186" cy="100" r="3.2" fill="currentColor" style={CORE_GLOW} transform={`rotate(${deg} 100 100)`} />
+          </g>
+        ))}
+      </g>
+      <circle className="core" cx="100" cy="100" r="40" fill="currentColor" opacity="0.06" />
+      <circle className="core" cx="100" cy="100" r="7" fill="currentColor" style={CORE_GLOW} />
+    </g>
+  )
+}
+
+/* V3 — halo: single luminous ring + traveling arc + soft core (most minimal) */
+function Halo() {
+  return (
+    <g stroke="currentColor">
+      <circle className="stroke" cx="100" cy="100" r="80" strokeWidth="1.2" opacity="0.32" />
+      <g className="spin-cw">
+        <circle className="stroke" cx="100" cy="100" r="80" strokeWidth="2" strokeLinecap="round" strokeDasharray="70 432" opacity="0.95" />
+      </g>
+      <g className="spin-ccw">
+        <circle className="stroke" cx="100" cy="100" r="64" strokeWidth="1" strokeDasharray="24 400" opacity="0.6" />
+      </g>
+      <circle className="core" cx="100" cy="100" r="44" fill="currentColor" opacity="0.05" />
+      <circle className="core" cx="100" cy="100" r="6" fill="currentColor" style={CORE_GLOW} />
+    </g>
+  )
+}
+
+/* ===========================================================================
+   Floating window (draggable)
+=========================================================================== */
+type WinKind = 'today' | 'memory' | 'history' | 'settings' | 'agents' | 'logs' | 'result' | 'response'
+interface Win { key: string; kind: WinKind; title: string; subtitle: string; dim: string; x: number; y: number; z: number; payload?: unknown }
+
+function FloatingWindow({ win, onClose, onFocus, children }: { win: Win; onClose: () => void; onFocus: () => void; children: React.ReactNode }) {
+  const [pos, setPos] = useState({ x: win.x, y: win.y })
+  const drag = useRef<{ dx: number; dy: number } | null>(null)
+  const onDown = (e: React.PointerEvent) => {
+    onFocus()
+    drag.current = { dx: e.clientX - pos.x, dy: e.clientY - pos.y }
+    const move = (ev: PointerEvent) => { if (drag.current) setPos({ x: ev.clientX - drag.current.dx, y: ev.clientY - drag.current.dy }) }
+    const up = () => { drag.current = null; window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up) }
+    window.addEventListener('pointermove', move); window.addEventListener('pointerup', up)
+  }
+  const [size] = win.dim.split('×').map(Number)
+  return (
+    <div className="window fade-in" style={{ left: pos.x, top: pos.y, zIndex: win.z, width: size }} onMouseDown={onFocus}>
+      <div className="win-head" onPointerDown={onDown}>
+        <span className="pip" />
+        <span className="title">{win.title}</span>
+        <span className="subtitle">{win.subtitle}</span>
+        <span className="dim">{win.dim}</span>
+        <button className="close" onClick={onClose}>✕</button>
+      </div>
+      <div className="win-body" style={{ maxHeight: 'min(70vh, 620px)' }}>{children}</div>
+      <div className="win-resize" />
+    </div>
+  )
+}
+
+/* ---- Window contents ----------------------------------------------------- */
+
+function TodayWindow() {
+  const [text, setText] = useState<string | null>(null)
+  useEffect(() => { runCommand('/today').then((r) => setText(r.message)).catch((e) => setText(String(e))) }, [])
+  return (
+    <div className="digest-card">
+      <div className="digest-head">
+        <div><div className="t">✦ JARVIS TODAY</div><div className="s">What Jarvis has done recently</div></div>
+        <div className="w-tabs"><span className="w-tab on">24h</span><span className="w-tab">7d</span></div>
+      </div>
+      <div className="digest">{text === null ? <div className="w-empty"><span className="spin-fast">◠</span></div> : <pre>{text}</pre>}</div>
+    </div>
+  )
+}
+
+function MemoryWindow() {
+  const [items, setItems] = useState<Memory[] | null>(null)
+  const load = useCallback(() => getMemoryList().then(setItems).catch(() => setItems([])), [])
+  useEffect(() => { load() }, [load])
+  return (
+    <>
+      <div className="w-head-row"><span className="w-section-title">Trusted memory</span>
+        <button className="btn-soft" onClick={load}>⟳ Scan now</button></div>
+      {!items ? <div className="w-empty"><span className="spin-fast">◠</span></div>
+        : items.length === 0 ? <div className="w-empty"><div className="big">◈</div><div className="s">No memory yet. Tell Jarvis things to remember, or run “Scan now” to extract from recent chats.</div></div>
+        : <div className="rows">{items.map((m) => (
+            <div className="row" key={m.id}><span className="grow"><strong>{m.title}</strong> — <span style={{ color: 'var(--muted)' }}>{m.content}</span></span><span className="pill low">{m.category}</span></div>
+          ))}</div>}
+    </>
+  )
+}
+
+function runState(status: string): 'success' | 'failed' | 'running' {
+  const s = status?.toUpperCase()
+  if (s === 'ERROR' || s === 'FAILED') return 'failed'
+  if (s === 'RUNNING' || s === 'PENDING') return 'running'
+  return 'success'
+}
+function parseSteps(json: string | null): Step[] {
+  if (!json) return []
+  try { const v = JSON.parse(json); return Array.isArray(v) ? v as Step[] : [] } catch { return [] }
+}
+
+function RunRow({ run }: { run: RunRecord }) {
+  const [open, setOpen] = useState(false)
+  const steps = useMemo(() => parseSteps(run.stepsJson), [run.stepsJson])
+  const st = runState(run.status)
+  return (
+    <div className={`run-row${open ? ' open' : ''}`}>
+      <div className="head" onClick={() => setOpen((o) => !o)}>
+        <span className="chev">▶</span>
+        <span className="grow" style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{run.request}</span>
+        <span className="mono" style={{ color: 'var(--muted)', fontSize: 10 }}>{run.agent}</span>
+        <span className={`pill ${st === 'success' ? 'done' : st === 'failed' ? 'failed' : 'running'}`}>{run.status}</span>
+        <span className="when">{ago(run.createdAt)}</span>
+      </div>
+      {open && (
+        <div className="substeps">
+          {steps.length === 0 && <div className="substep"><span className="det">No recorded sub-steps.</span></div>}
+          {steps.map((s, i) => (
+            <div className="substep" key={i}><span className="kind">{s.kind}</span><span className="lbl">{s.label}{s.detail ? <span className="det"> — {s.detail}</span> : null}</span></div>
+          ))}
+          {run.answer && <div className="substep"><span className="kind">answer</span><span className="lbl" style={{ whiteSpace: 'pre-wrap' }}>{run.answer.slice(0, 400)}</span></div>}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function HistoryWindow() {
+  const [runs, setRuns] = useState<RunRecord[] | null>(null)
+  const [tab, setTab] = useState<'all' | 'running' | 'success' | 'failed'>('all')
+  const [q, setQ] = useState('')
+  useEffect(() => { getRuns(60).then(setRuns).catch(() => setRuns([])) }, [])
+  const filtered = (runs ?? []).filter((r) => (tab === 'all' || runState(r.status) === tab) && r.request.toLowerCase().includes(q.toLowerCase()))
+  return (
+    <>
+      <div className="w-search">🔍 <input placeholder="Filter by prompt text…" value={q} onChange={(e) => setQ(e.target.value)} />
+        <div className="w-tabs">{(['all', 'running', 'success', 'failed'] as const).map((t) => <button key={t} className={`w-tab${tab === t ? ' on' : ''}`} onClick={() => setTab(t)}>{t.toUpperCase()}</button>)}</div>
+        <span className="mono" style={{ color: 'var(--muted)', fontSize: 11 }}>{filtered.length}/{runs?.length ?? 0}</span>
+      </div>
+      {!runs ? <div className="w-empty"><span className="spin-fast">◠</span></div>
+        : filtered.length === 0 ? <div className="w-empty"><div className="t">No prompts yet</div><div className="s">Ask Jarvis something — like “take a screenshot and turn it into a PDF” — and the sub-step tree shows up here.</div></div>
+        : <div className="rows">{filtered.map((r) => <RunRow key={r.id} run={r} />)}</div>}
+    </>
+  )
+}
+
+function AgentsWindow() {
+  const [agents, setAgents] = useState<AgentDef[] | null>(null)
+  useEffect(() => { getAgents().then(setAgents).catch(() => setAgents([])) }, [])
+  return !agents ? <div className="w-empty"><span className="spin-fast">◠</span></div>
+    : <div className="rows">{agents.map((a) => (
+        <div className="row" key={a.slug}><span className="grow"><strong>{a.name}</strong> — <span style={{ color: 'var(--muted)' }}>{a.role}</span></span>
+          <span className="pill low">{a.category}</span></div>
+      ))}</div>
+}
+
+function LogsWindow() {
+  const [logs, setLogs] = useState<AuditEntry[] | null>(null)
+  useEffect(() => { getAudit(60).then(setLogs).catch(() => setLogs([])) }, [])
+  return !logs ? <div className="w-empty"><span className="spin-fast">◠</span></div>
+    : logs.length === 0 ? <div className="w-empty"><div className="s">No activity logged yet.</div></div>
+    : <div className="rows">{logs.map((l) => (
+        <div className="row" key={l.id}><span className={`dot-s ${l.status === 'OK' ? 'ok' : l.status === 'ERROR' ? 'bad' : 'warn'}`} />
+          <span className="grow">{l.command || l.inputType}{l.input ? ` — ${l.input}` : ''}</span><span className="when">{ago(l.timestamp)}</span></div>
+      ))}</div>
+}
+
+function pref(key: string, fallback: string): string {
+  try { return localStorage.getItem(key) ?? fallback } catch { return fallback }
+}
+function savePref(key: string, value: string) { try { localStorage.setItem(key, value) } catch { /* ignore */ } }
+
+function SettingsWindow() {
+  const [settings, setSettings] = useState<SettingsView | null>(null)
+  const [provider, setProviderState] = useState(pref('jarvis.provider', 'mock'))
+  const [model, setModel] = useState('')
+  const [stt, setStt] = useState(pref('jarvis.stt', 'whisper'))
+  const [tts, setTts] = useState(pref('jarvis.tts', 'system'))
+  const [lang, setLang] = useState(pref('jarvis.lang', 'en-US'))
+  const [voice, setVoice] = useState(pref('jarvis.voice', 'natural'))
+  const [saving, setSaving] = useState(false)
+
+  useEffect(() => { getSettings().then((s) => { setSettings(s); setProviderState(s.provider); setModel(s.model) }).catch(() => {}) }, [])
+
+  const changeProvider = (p: string) => {
+    setProviderState(p); savePref('jarvis.provider', p); setSaving(true)
+    apiSetProvider(p, model || undefined).then((s) => { setSettings(s); setModel(s.model) }).catch(() => {}).finally(() => setSaving(false))
+  }
+
+  return (
+    <>
+      <div className="cards3">
+        <div className="scard"><div className="lbl">AI PROVIDER</div><div className="big">{(settings?.provider ?? provider) === 'claude' ? 'Anthropic' : 'Mock'}</div><div className="sub">{settings?.hasAnthropicKey ? 'API key set' : 'no key · offline'}</div></div>
+        <div className="scard"><div className="lbl">STT ENGINE</div><div className="big">{stt === 'whisper' ? 'Whisper' : 'Local'}</div><div className="sub">{stt === 'whisper' ? 'cloud · accurate' : 'offline'}</div></div>
+        <div className="scard"><div className="lbl">TTS ENGINE</div><div className="big">{tts === 'system' ? 'System' : 'ElevenLabs'}</div><div className="sub">{tts === 'system' ? 'native · fastest' : 'cloud'}</div></div>
+      </div>
+
+      <div className="field"><label>AI provider {saving && <span className="spin-fast">◠</span>}</label>
+        <select value={provider} onChange={(e) => changeProvider(e.target.value)}>
+          <option value="mock">Mock (offline · no key)</option>
+          <option value="claude">Anthropic Claude (real reasoning)</option>
+        </select>
+        <div className="note">{provider === 'claude' && !settings?.hasAnthropicKey ? 'No ANTHROPIC_API_KEY set — calls fall back to the offline mock.' : 'Takes effect immediately for new requests.'}</div></div>
+      <div className="field"><label>Model</label>
+        <input value={model} onChange={(e) => setModel(e.target.value)} onBlur={() => apiSetProvider(provider, model).then(setSettings).catch(() => {})} placeholder="claude-opus-4-8" /></div>
+
+      <div className="field"><label>Speech-to-text engine</label>
+        <select value={stt} onChange={(e) => { setStt(e.target.value); savePref('jarvis.stt', e.target.value) }}>
+          <option value="whisper">OpenAI Whisper (cloud · higher accuracy)</option><option value="browser">Browser / local (offline)</option></select>
+        <div className="note">The live mic uses the browser's recognizer today; Whisper is the upgrade path.</div></div>
+      <div className="field"><label>Text-to-speech engine</label>
+        <select value={tts} onChange={(e) => { setTts(e.target.value); savePref('jarvis.tts', e.target.value) }}>
+          <option value="system">System TTS (native · fastest)</option><option value="eleven">ElevenLabs (cloud)</option></select></div>
+      <div className="field"><label>Voice language</label>
+        <select value={lang} onChange={(e) => { setLang(e.target.value); savePref('jarvis.lang', e.target.value) }}>
+          <option value="en-US">English (US)</option><option value="en-GB">English (UK)</option><option value="he-IL">Hebrew</option></select></div>
+      <div className="field"><label>Voice type</label>
+        <div className="seg">
+          <button className={voice === 'natural' ? 'on' : ''} onClick={() => { setVoice('natural'); savePref('jarvis.voice', 'natural') }}><span className="pip" />Natural</button>
+          <button className={voice === 'robotic' ? 'on' : ''} onClick={() => { setVoice('robotic'); savePref('jarvis.voice', 'robotic') }}><span className="pip" />Robotic</button>
+        </div></div>
+    </>
+  )
+}
+
+function ResultWindow({ payload }: { payload?: unknown }) {
+  const p = payload as { message?: string; data?: unknown } | undefined
+  return (<>
+    {p?.message && <div className="answer-txt" style={{ marginBottom: 14 }}>{p.message}</div>}
+    {p?.data ? <pre className="raw">{typeof p.data === 'string' ? p.data : JSON.stringify(p.data, null, 2)}</pre> : null}
+  </>)
+}
+
+function ResponseWindow({ payload }: { payload?: unknown }) {
+  const p = payload as { loading?: boolean; resp?: ChatResponse } | undefined
+  if (!p || p.loading) return <div className="w-empty"><span className="spin-fast">◠</span><div className="s">Jarvis is thinking…</div></div>
+  const r = p.resp!
+  return (<>
+    <div className="w-section-title" style={{ marginBottom: 10 }}>{r.agent} agent</div>
+    <div className="answer-txt">{r.answer}</div>
+    <div className="answer-meta"><span>model {r.model}</span><span>{r.tokens} tokens</span>{r.steps.length > 0 && <span>{r.steps.length} steps</span>}</div>
+  </>)
+}
+
+function WindowBody({ win }: { win: Win }) {
+  switch (win.kind) {
+    case 'today': return <TodayWindow />
+    case 'memory': return <MemoryWindow />
+    case 'history': return <HistoryWindow />
+    case 'agents': return <AgentsWindow />
+    case 'logs': return <LogsWindow />
+    case 'settings': return <SettingsWindow />
+    case 'result': return <ResultWindow payload={win.payload} />
+    case 'response': return <ResponseWindow payload={win.payload} />
   }
 }
 
-/** Text Jarvis should speak for a given result (answers + plain messages). */
-function spokenText(result: CommandResult): string {
-  if (result.type === 'chat') return (result.data as ChatResponse).answer
-  if (result.type === 'message' || result.type === 'sandbox') return result.message
-  return ''
+/* ===========================================================================
+   Command palette
+=========================================================================== */
+function CommandPalette({ commands, onRun, onClose }: { commands: CommandDefinition[]; onRun: (s: string) => void; onClose: () => void }) {
+  const [q, setQ] = useState(''); const [sel, setSel] = useState(0)
+  const filtered = commands.filter((c) => (c.slash + ' ' + c.description).toLowerCase().includes(q.toLowerCase())).slice(0, 40)
+  useEffect(() => setSel(0), [q])
+  return (
+    <div className="cmdk-overlay" onClick={onClose}>
+      <div className="cmdk" onClick={(e) => e.stopPropagation()}>
+        <input autoFocus placeholder="Run a command…  /today  /memory  /workflows  /policy" value={q}
+          onChange={(e) => setQ(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'ArrowDown') { e.preventDefault(); setSel((s) => Math.min(s + 1, filtered.length - 1)) }
+            else if (e.key === 'ArrowUp') { e.preventDefault(); setSel((s) => Math.max(s - 1, 0)) }
+            else if (e.key === 'Enter' && filtered[sel]) onRun(filtered[sel].slash)
+            else if (e.key === 'Escape') onClose()
+          }} />
+        <div className="cmdk-list">
+          {filtered.map((c, i) => (
+            <button key={c.slash} className={`cmdk-item${i === sel ? ' sel' : ''}`} onMouseEnter={() => setSel(i)} onClick={() => onRun(c.slash)}>
+              <span className="slash">{c.slash}</span><span className="desc">{c.description}</span></button>
+          ))}
+          {filtered.length === 0 && <div className="w-empty"><div className="s">No matching command.</div></div>}
+        </div>
+      </div>
+    </div>
+  )
 }
 
-/** Web Speech recognition factory (Chrome/Safari), or null if unsupported. */
-function newRecognition(): any {
-  const w = window as any
-  const Ctor = w.SpeechRecognition || w.webkitSpeechRecognition
-  if (!Ctor) return null
-  const r = new Ctor()
-  r.lang = 'en-US'
-  r.interimResults = false
-  return r
+/* ===========================================================================
+   App
+=========================================================================== */
+const SLASH_WINDOW: Record<string, WinKind> = {
+  '/today': 'today', '/memory': 'memory', '/tasks': 'history', '/history': 'history',
+  '/agents': 'agents', '/logs': 'logs', '/settings': 'settings',
+}
+const WIN_META: Record<WinKind, { title: string; subtitle: string; dim: string }> = {
+  today: { title: 'Jarvis Today', subtitle: 'Daily digest — counts, highlights', dim: '720×600' },
+  memory: { title: 'Memory', subtitle: 'Trusted facts', dim: '720×640' },
+  history: { title: 'Multi-step history', subtitle: 'Prompts and their sub-step trees', dim: '900×620' },
+  settings: { title: 'Settings', subtitle: 'Voice · models · privacy', dim: '880×640' },
+  agents: { title: 'Agents', subtitle: 'The roster', dim: '760×560' },
+  logs: { title: 'Activity log', subtitle: 'Recent audited actions', dim: '760×560' },
+  result: { title: 'Result', subtitle: '', dim: '720×520' },
+  response: { title: 'Jarvis', subtitle: 'Response', dim: '660×440' },
 }
 
 export default function App() {
+  const [snap, setSnap] = useState<MonitorSnapshot | null>(null)
+  const [now, setNow] = useState(new Date())
   const [commands, setCommands] = useState<CommandDefinition[]>([])
-  const [entries, setEntries] = useState<Entry[]>([])
+  const [unread, setUnread] = useState(0)
+  const [settings, setSettings] = useState<SettingsView | null>(null)
+  const [busy, setBusy] = useState(false)
   const [input, setInput] = useState('')
-  const [online, setOnline] = useState<boolean | null>(null)
-  const [toast, setToast] = useState<Toast | null>(null)
-  const [editor, setEditor] = useState<EditorState | null>(null)
-  const [memEditor, setMemEditor] = useState<MemEditorState | null>(null)
-  const [secretEditor, setSecretEditor] = useState<SecretEditorState | null>(null)
-  const [wfEditor, setWfEditor] = useState<WfEditorState | null>(null)
-  const [rtl, setRtl] = useState(false)
-  const [ttsOn, setTtsOn] = useState(false)
+  const [cmdkOpen, setCmdkOpen] = useState(false)
+  const [wins, setWins] = useState<Win[]>([])
   const [listening, setListening] = useState(false)
-  const [wakeOn, setWakeOn] = useState(false)
-  const scrollRef = useRef<HTMLDivElement>(null)
+  const [wake, setWake] = useState(false)
+  const zRef = useRef(30)
+  const wakeRef = useRef<any>(null)
+  const ttsOn = pref('jarvis.tts', 'system') !== 'off'
 
   useEffect(() => {
-    fetchCommands()
-      .then((c) => {
-        setCommands(c)
-        setOnline(true)
-      })
-      .catch(() => setOnline(false))
+    fetchCommands().then(setCommands).catch(() => {})
+    getSettings().then(setSettings).catch(() => {})
+    const poll = () => { getStatus().then(setSnap).catch(() => {}); getUnreadCount().then(setUnread).catch(() => {}) }
+    poll()
+    const s = setInterval(poll, 3000)
+    const c = setInterval(() => setNow(new Date()), 1000)
+    const k = (e: KeyboardEvent) => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); setCmdkOpen((o) => !o) } }
+    window.addEventListener('keydown', k)
+    return () => { clearInterval(s); clearInterval(c); window.removeEventListener('keydown', k) }
   }, [])
 
-  useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
-  }, [entries])
+  const focusWin = useCallback((key: string) => setWins((ws) => ws.map((w) => w.key === key ? { ...w, z: ++zRef.current } : w)), [])
+  const closeWin = useCallback((key: string) => setWins((ws) => ws.filter((w) => w.key !== key)), [])
 
-  useEffect(() => {
-    document.documentElement.dir = rtl ? 'rtl' : 'ltr'
-  }, [rtl])
-
-  function notify(kind: Toast['kind'], text: string, traceId?: string) {
-    setToast({ kind, text, traceId })
-    window.setTimeout(() => setToast(null), 5000)
-  }
-
-  function reportError(err: unknown, fallback: string) {
-    if (err instanceof ApiError) {
-      notify('error', err.message, err.traceId)
-    } else {
-      notify('error', `${fallback}: ${String(err)}`)
-    }
-  }
-
-  async function submit(raw: string) {
-    const value = raw.trim()
-    if (!value) return
-    const id = ++counter
-    setEntries((e) => [...e, { id, input: value, pending: true }])
-    setInput('')
-    try {
-      const result = await runCommand(value)
-      setOnline(true)
-      setEntries((e) => e.map((x) => (x.id === id ? { ...x, result, pending: false } : x)))
-      if (ttsOn) {
-        const toSpeak = spokenText(result)
-        if (toSpeak) speak(toSpeak)
+  const openWindow = useCallback((kind: WinKind, payload?: unknown, titleOverride?: string) => {
+    const meta = WIN_META[kind]
+    const singleton = kind !== 'result' && kind !== 'response'
+    setWins((ws) => {
+      if (singleton) {
+        const existing = ws.find((w) => w.kind === kind)
+        if (existing) return ws.map((w) => w.key === existing.key ? { ...w, z: ++zRef.current } : w)
       }
-    } catch (err) {
-      setOnline(false)
-      setEntries((e) =>
-        e.map((x) => (x.id === id ? { ...x, error: String(err), pending: false } : x)),
-      )
-    }
-  }
+      const n = ws.length
+      const key = singleton ? kind : `${kind}-${zRef.current}`
+      const win: Win = {
+        key, kind, title: titleOverride ?? meta.title, subtitle: meta.subtitle, dim: meta.dim,
+        x: 320 + (n % 4) * 36, y: 150 + (n % 4) * 30, z: ++zRef.current, payload,
+      }
+      return [...ws, win]
+    })
+    return singleton ? kind : `${kind}-${zRef.current}`
+  }, [])
 
-  function dictate() {
-    const r = newRecognition()
-    if (!r) {
-      notify('error', 'Voice input not supported in this browser')
-      return
+  const patchWin = useCallback((key: string, payload: unknown) => setWins((ws) => ws.map((w) => w.key === key ? { ...w, payload } : w)), [])
+
+  const askChat = useCallback(async (message: string, spoken = false) => {
+    setBusy(true)
+    const key = `response-${++zRef.current}`
+    setWins((ws) => [...ws, { key, kind: 'response', title: 'Jarvis', subtitle: 'Response', dim: '660×440', x: 360, y: 200, z: zRef.current, payload: { loading: true } }])
+    try {
+      const resp = await chat(message)
+      patchWin(key, { resp })
+      if (spoken && ttsOn) speak(resp.answer)
+    } catch (e) {
+      patchWin(key, { resp: { answer: `Error: ${(e as Error).message}`, agent: 'system', steps: [], taskId: '', tokens: 0, model: '-' } })
+    } finally { setBusy(false) }
+  }, [patchWin, ttsOn])
+
+  const runCmd = useCallback(async (slash: string) => {
+    setCmdkOpen(false)
+    const win = SLASH_WINDOW[slash.split(' ')[0]]
+    if (win) { openWindow(win); return }
+    try {
+      const res = await runCommand(slash)
+      openWindow('result', { message: res.message, data: res.data }, slash.split(' ')[0])
+    } catch (e) {
+      openWindow('result', { message: (e as Error).message }, slash)
     }
-    r.onstart = () => setListening(true)
+  }, [openWindow])
+
+  const submit = useCallback((text: string, spoken = false) => {
+    const t = text.trim(); if (!t) return
+    setInput('')
+    if (t.startsWith('/')) runCmd(t)
+    else askChat(t, spoken)
+  }, [runCmd, askChat])
+
+  // --- Voice -------------------------------------------------------------
+  const startPTT = useCallback(() => {
+    if (!SR) { alert('Voice input needs a Chromium-based browser (Web Speech API).'); return }
+    const r = new SR(); r.lang = pref('jarvis.lang', 'en-US'); r.interimResults = false; r.maxAlternatives = 1
+    r.onresult = (e: any) => { const t = e.results[0][0].transcript as string; submit(t, true) }
     r.onend = () => setListening(false)
     r.onerror = () => setListening(false)
-    r.onresult = (e: any) => {
-      const transcript = e.results[0][0].transcript as string
-      if (transcript) submit(transcript)
-    }
-    r.start()
-  }
+    try { r.start(); setListening(true) } catch { setListening(false) }
+  }, [submit])
 
-  // Wake-word: continuous listening that submits whatever follows "Jarvis".
-  useEffect(() => {
-    if (!wakeOn) return
-    const r = newRecognition()
-    if (!r) {
-      notify('error', 'Wake word not supported in this browser')
-      setWakeOn(false)
-      return
-    }
-    r.continuous = true
+  const toggleWake = useCallback(() => {
+    if (wakeRef.current) { wakeRef.current.stop?.(); wakeRef.current = null; setWake(false); return }
+    if (!SR) { alert('Wake-word needs a Chromium-based browser (Web Speech API).'); return }
+    const r = new SR(); r.lang = pref('jarvis.lang', 'en-US'); r.continuous = true; r.interimResults = false
     r.onresult = (e: any) => {
       const t = (e.results[e.results.length - 1][0].transcript as string).toLowerCase()
-      const idx = t.indexOf('jarvis')
-      if (idx >= 0) {
-        const cmd = t.slice(idx + 'jarvis'.length).trim()
-        if (cmd) submit(cmd)
-      }
+      const i = t.indexOf('jarvis')
+      if (i >= 0) { const cmd = t.slice(i + 6).trim(); if (cmd.length > 1) submit(cmd, true) }
     }
-    r.onend = () => {
-      // keep listening while the toggle is on
-      try {
-        r.start()
-      } catch {
-        /* already started */
-      }
-    }
-    try {
-      r.start()
-    } catch {
-      /* ignore */
-    }
-    return () => {
-      r.onend = null
-      try {
-        r.stop()
-      } catch {
-        /* ignore */
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wakeOn])
+    r.onend = () => { if (wakeRef.current) { try { r.start() } catch { /* restart race */ } } }
+    r.onerror = () => {}
+    try { r.start(); wakeRef.current = r; setWake(true) } catch { setWake(false) }
+  }, [submit])
 
-  const fileActions: FileActions = {
-    open: async (path) => {
-      try {
-        const fc = await getFileContent(path)
-        setEditor({ path: fc.path, content: fc.content, original: fc.content, saving: false })
-      } catch (err) {
-        reportError(err, 'Could not open file')
-      }
-    },
-    remove: async (path, parent) => {
-      if (!window.confirm(`Delete "${path}"? This cannot be undone.`)) return
-      try {
-        await deleteFile(path, true)
-        notify('ok', `Deleted ${path}`)
-        submit(`/jfiles ${parent}`)
-      } catch (err) {
-        reportError(err, 'Could not delete')
-      }
-    },
-    newFile: async (base) => {
-      const name = window.prompt('New file name:')
-      if (!name) return
-      try {
-        await writeFile(join(base, name), '')
-        notify('ok', `Created ${name}`)
-        submit(`/jfiles ${base}`)
-      } catch (err) {
-        reportError(err, 'Could not create file')
-      }
-    },
-    newFolder: async (base) => {
-      const name = window.prompt('New folder name:')
-      if (!name) return
-      try {
-        await createDir(join(base, name))
-        notify('ok', `Created ${name}/`)
-        submit(`/jfiles ${base}`)
-      } catch (err) {
-        reportError(err, 'Could not create folder')
-      }
-    },
-  }
-
-  async function saveEditor() {
-    if (!editor) return
-    setEditor({ ...editor, saving: true })
-    try {
-      await writeFile(editor.path, editor.content)
-      notify('ok', `Saved ${editor.path}`)
-      setEditor((e) => (e ? { ...e, original: e.content, saving: false } : e))
-    } catch (err) {
-      reportError(err, 'Could not save')
-      setEditor((e) => (e ? { ...e, saving: false } : e))
-    }
-  }
-
-  const memoryActions: MemoryActions = {
-    add: () => setMemEditor({ id: null, draft: { ...blankMemory }, saving: false }),
-    edit: (m) =>
-      setMemEditor({
-        id: m.id,
-        draft: {
-          category: m.category,
-          title: m.title,
-          content: m.content,
-          source: m.source,
-          confidence: m.confidence,
-          visibility: m.visibility,
-          sensitivity: m.sensitivity,
-          expiresAt: m.expiresAt,
-          enabled: m.enabled,
-        },
-        saving: false,
-      }),
-    remove: async (m) => {
-      if (!window.confirm(`Delete memory "${m.title}"?`)) return
-      try {
-        await deleteMemory(m.id)
-        notify('ok', `Deleted "${m.title}"`)
-        submit('/memory')
-      } catch (err) {
-        reportError(err, 'Could not delete memory')
-      }
-    },
-    exportAll: async () => {
-      try {
-        const all = await exportMemory()
-        const blob = new Blob([JSON.stringify(all, null, 2)], { type: 'application/json' })
-        const url = URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        a.href = url
-        a.download = 'jarvis-memory.json'
-        a.click()
-        URL.revokeObjectURL(url)
-        notify('ok', `Exported ${all.length} memories`)
-      } catch (err) {
-        reportError(err, 'Could not export')
-      }
-    },
-  }
-
-  async function saveMemEditor() {
-    if (!memEditor) return
-    setMemEditor({ ...memEditor, saving: true })
-    try {
-      if (memEditor.id) {
-        await updateMemory(memEditor.id, memEditor.draft)
-        notify('ok', 'Memory updated')
-      } else {
-        await createMemory(memEditor.draft)
-        notify('ok', 'Memory added')
-      }
-      setMemEditor(null)
-      submit('/memory')
-    } catch (err) {
-      reportError(err, 'Could not save memory')
-      setMemEditor((e) => (e ? { ...e, saving: false } : e))
-    }
-  }
-
-  function pushResult(input: string, result: CommandResult) {
-    const id = ++counter
-    setEntries((e) => [...e, { id, input, result, pending: false }])
-  }
-
-  const approvalActions: ApprovalActions = {
-    approve: async (id, remember) => {
-      try {
-        const decision = await approveRequest(id, remember)
-        notify('ok', `Approved ${id}`)
-        if (decision.result) {
-          pushResult(`▶ ${decision.request.title}`, {
-            status: 'OK',
-            type: 'sandbox',
-            message: 'Sandbox output',
-            data: decision.result,
-          })
-        }
-        submit('/approve')
-      } catch (err) {
-        reportError(err, 'Could not approve')
-      }
-    },
-    deny: async (id, remember) => {
-      try {
-        await denyRequest(id, remember)
-        notify('ok', `Denied ${id}`)
-        submit('/approve')
-      } catch (err) {
-        reportError(err, 'Could not deny')
-      }
-    },
-  }
-
-  const secretActions: SecretActions = {
-    add: () => setSecretEditor({ draft: { name: '', connector: '', value: '', scopes: [] }, saving: false }),
-    remove: async (s) => {
-      if (!window.confirm(`Revoke secret "${s.name}"? This deletes it permanently.`)) return
-      try {
-        await deleteSecret(s.id)
-        notify('ok', `Revoked ${s.name}`)
-        submit('/secrets')
-      } catch (err) {
-        reportError(err, 'Could not revoke')
-      }
-    },
-  }
-
-  async function saveSecretEditor() {
-    if (!secretEditor) return
-    setSecretEditor({ ...secretEditor, saving: true })
-    try {
-      await createSecret(secretEditor.draft)
-      notify('ok', 'Secret stored (encrypted)')
-      setSecretEditor(null)
-      submit('/secrets')
-    } catch (err) {
-      reportError(err, 'Could not store secret')
-      setSecretEditor((e) => (e ? { ...e, saving: false } : e))
-    }
-  }
-
-  const workflowActions: WorkflowActions = {
-    add: () => setWfEditor({ draft: { ...blankWorkflow, steps: [] }, saving: false }),
-    run: async (id) => {
-      try {
-        const run = await runWorkflow(id)
-        notify(run.status === 'FAILED' ? 'error' : 'ok', `Workflow ${run.status.toLowerCase()}`)
-        submit('/workflows')
-      } catch (err) {
-        reportError(err, 'Could not run workflow')
-      }
-    },
-    remove: async (w) => {
-      if (!window.confirm(`Delete workflow "${w.name}"?`)) return
-      try {
-        await deleteWorkflow(w.id)
-        notify('ok', `Deleted ${w.name}`)
-        submit('/workflows')
-      } catch (err) {
-        reportError(err, 'Could not delete workflow')
-      }
-    },
-  }
-
-  async function doReplay(id: string) {
-    try {
-      const r = (await replayRun(id)) as ChatResponse
-      notify('ok', `Replayed ${id}`)
-      pushResult(`▶ replay ${id}`, { status: 'OK', type: 'chat', message: r.answer, data: r })
-      submit('/debugger')
-    } catch (err) {
-      reportError(err, 'Replay failed')
-    }
-  }
-
-  const kbActions = {
-    index: async () => {
-      const path = window.prompt('Index which Explorer path? (a file or a folder, e.g. Notes)')
-      if (path === null) return
-      try {
-        await indexKb({ path })
-        notify('ok', `Indexed ${path || 'root'}`)
-        submit('/kb')
-      } catch (err) {
-        reportError(err, 'Could not index')
-      }
-    },
-    remove: async (id: string) => {
-      if (!window.confirm('Remove this document from the Knowledge Base?')) return
-      try {
-        await deleteKbDocument(id)
-        notify('ok', 'Removed from Knowledge Base')
-        submit('/kb')
-      } catch (err) {
-        reportError(err, 'Could not remove')
-      }
-    },
-  }
-
-  async function saveWfEditor() {
-    if (!wfEditor) return
-    setWfEditor({ ...wfEditor, saving: true })
-    try {
-      await createWorkflow(wfEditor.draft)
-      notify('ok', 'Workflow created')
-      setWfEditor(null)
-      submit('/workflows')
-    } catch (err) {
-      reportError(err, 'Could not create workflow')
-      setWfEditor((e) => (e ? { ...e, saving: false } : e))
-    }
-  }
-
-  const grouped = groupByCategory(commands)
-
-  return (
-    <div className="jarvis">
-      <header className="topbar">
-        <div className="brand">
-          <span className="logo">◉</span> JARVIS <span className="brand-sub">AI OS</span>
-        </div>
-        <div className="topbar-right">
-          <NotificationBell online={online !== false} />
-          <button
-            className={`dir-toggle ${ttsOn ? 'toggle-on' : ''}`}
-            onClick={() => setTtsOn((v) => !v)}
-            title="Speak answers (text-to-speech)"
-          >
-            {ttsOn ? '🔊' : '🔈'}
-          </button>
-          <button
-            className={`dir-toggle ${wakeOn ? 'toggle-on' : ''}`}
-            onClick={() => setWakeOn((v) => !v)}
-            title='Wake word — say "Jarvis …"'
-          >
-            👂{wakeOn ? ' on' : ''}
-          </button>
-          <button className="dir-toggle" onClick={() => setRtl((v) => !v)} title="Toggle layout direction">
-            {rtl ? 'RTL' : 'LTR'}
-          </button>
-          <span className="badge">Phase 11</span>
-          <span className={`status-dot ${online === false ? 'off' : online ? 'on' : ''}`} />
-          <span className="status-text">
-            {online === null ? 'connecting…' : online ? 'core online' : 'core offline'}
-          </span>
-        </div>
-      </header>
-
-      <div className="layout">
-        <aside className="sidebar">
-          <div className="sidebar-title">Commands</div>
-          {online === false && <div className="hint">Start the backend on :8088</div>}
-          {Object.entries(grouped).map(([category, cmds]) => (
-            <div key={category} className="cmd-group">
-              <div className="cmd-group-title">{category}</div>
-              {cmds.map((c) => (
-                <button key={c.slash} className="cmd-item" title={c.description} onClick={() => submit(c.slash)}>
-                  <span className="cmd-slash">{c.slash}</span>
-                  <span className="cmd-desc">{c.description}</span>
-                </button>
-              ))}
-            </div>
-          ))}
-        </aside>
-
-        <main className="console" ref={scrollRef}>
-          {entries.length === 0 && <Welcome onPick={submit} />}
-          {entries.map((entry) => (
-            <div key={entry.id} className="entry">
-              <div className="prompt-line">
-                <span className="caret">›</span> {entry.input}
-              </div>
-              {entry.pending && <div className="thinking">working…</div>}
-              {entry.error && <div className="result error">⚠ {entry.error}</div>}
-              {entry.result && (
-                <ResultView
-                  result={entry.result}
-                  onNavigate={submit}
-                  fileActions={fileActions}
-                  memoryActions={memoryActions}
-                  approvalActions={approvalActions}
-                  secretActions={secretActions}
-                  workflowActions={workflowActions}
-                  kbActions={kbActions}
-                  onReplay={doReplay}
-                />
-              )}
-            </div>
-          ))}
-        </main>
-      </div>
-
-      <form
-        className="inputbar"
-        onSubmit={(e) => {
-          e.preventDefault()
-          submit(input)
-        }}
-      >
-        <span className="input-caret">›</span>
-        <input
-          autoFocus
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Type a command (e.g. /help) or ask Jarvis…"
-          spellCheck={false}
-        />
-        <button
-          type="button"
-          className={`mic ${listening ? 'listening' : ''}`}
-          onClick={dictate}
-          title="Dictate (speech-to-text)"
-        >
-          🎤
-        </button>
-        <button type="submit">Send</button>
-      </form>
-
-      {editor && (
-        <Editor
-          editor={editor}
-          onChange={(content) => setEditor({ ...editor, content })}
-          onSave={saveEditor}
-          onClose={() => setEditor(null)}
-          onReveal={async () => {
-            try {
-              await revealFile(editor.path)
-              notify('ok', 'Opened location in Finder')
-            } catch (err) {
-              reportError(err, 'Could not open location')
-            }
-          }}
-        />
-      )}
-
-      {memEditor && (
-        <MemoryEditor
-          state={memEditor}
-          onChange={(draft) => setMemEditor({ ...memEditor, draft })}
-          onSave={saveMemEditor}
-          onClose={() => setMemEditor(null)}
-        />
-      )}
-
-      {secretEditor && (
-        <SecretEditor
-          state={secretEditor}
-          onChange={(draft) => setSecretEditor({ ...secretEditor, draft })}
-          onSave={saveSecretEditor}
-          onClose={() => setSecretEditor(null)}
-        />
-      )}
-
-      {wfEditor && (
-        <WorkflowEditor
-          state={wfEditor}
-          onChange={(draft) => setWfEditor({ ...wfEditor, draft })}
-          onSave={saveWfEditor}
-          onClose={() => setWfEditor(null)}
-        />
-      )}
-
-      {toast && (
-        <div className={`toast ${toast.kind}`} onClick={() => setToast(null)}>
-          <div>{toast.text}</div>
-          {toast.traceId && toast.traceId !== '-' && <div className="toast-trace">trace {toast.traceId}</div>}
-        </div>
-      )}
-    </div>
-  )
-}
-
-function Welcome({ onPick }: { onPick: (s: string) => void }) {
-  return (
-    <div className="welcome">
-      <h1>Welcome to Jarvis</h1>
-      <p>Your local AI operating layer. Phase 11: voice, web search & plugins — speak or type, or use a /command.</p>
-      <div className="welcome-cmds">
-        {['/help', '/plugins', '/web', '/kb', '/models', '/workflows'].map((c) => (
-          <button key={c} onClick={() => onPick(c)}>
-            {c}
-          </button>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function ResultView({
-  result,
-  onNavigate,
-  fileActions,
-  memoryActions,
-  approvalActions,
-  secretActions,
-  workflowActions,
-  kbActions,
-  onReplay,
-}: {
-  result: CommandResult
-  onNavigate: (s: string) => void
-  fileActions: FileActions
-  memoryActions: MemoryActions
-  approvalActions: ApprovalActions
-  secretActions: SecretActions
-  workflowActions: WorkflowActions
-  kbActions: { index: () => void; remove: (id: string) => void }
-  onReplay: (id: string) => void
-}) {
-  if (result.status === 'ERROR') {
-    return <div className="result error">⚠ {result.message}</div>
-  }
-  switch (result.type) {
-    case 'help':
-      return <HelpView commands={result.data as CommandDefinition[]} onPick={onNavigate} />
-    case 'files':
-      return (
-        <FilesView
-          data={result.data as { path: string; entries: FileNode[] }}
-          onNavigate={onNavigate}
-          actions={fileActions}
-        />
-      )
-    case 'chat':
-      return <ChatView chat={result.data as ChatResponse} />
-    case 'agents':
-      return <AgentsView agents={result.data as AgentDef[]} />
-    case 'tasks':
-      return <TasksView tasks={result.data as TaskItem[]} />
-    case 'models':
-      return <ModelsView data={result.data as ModelsData} />
-    case 'runs':
-      return <DebuggerView runs={result.data as RunRecord[]} onReplay={onReplay} />
-    case 'costs':
-      return <CostsView data={result.data as CostsData} />
-    case 'plugins':
-      return <PluginsView data={result.data as PluginsData} onPick={onNavigate} />
-    case 'workflows':
-      return <WorkflowsView data={result.data as WorkflowsData} actions={workflowActions} />
-    case 'connectors':
-      return <ConnectorsView connectors={result.data as ConnectorInfo[]} onNavigate={onNavigate} />
-    case 'memory':
-      return <MemoryView memories={result.data as Memory[]} actions={memoryActions} />
-    case 'kb':
-      return (
-        <KbView
-          data={result.data as KbData}
-          onSearch={(q) => onNavigate('/kb ' + q)}
-          onIndex={kbActions.index}
-          onRemove={kbActions.remove}
-        />
-      )
-    case 'status':
-      return <StatusView data={result.data as Record<string, unknown>} />
-    case 'resources':
-      return <ResourcesView initial={result.data as Record<string, unknown>} />
-    case 'approvals':
-      return <ApprovalView requests={result.data as ApprovalRequest[]} actions={approvalActions} />
-    case 'approval-pending':
-      return (
-        <ApprovalPending request={result.data as ApprovalRequest} message={result.message} onOpen={() => onNavigate('/approve')} />
-      )
-    case 'sandbox':
-      return <SandboxView result={result.data as SandboxResult} />
-    case 'secrets':
-      return <SecretsView secrets={result.data as SecretView[]} actions={secretActions} />
-    case 'logs':
-      return <LogsView entries={result.data as AuditEntry[]} />
-    case 'settings':
-      return <JsonView label={result.message} data={result.data} />
-    default:
-      return <div className="result message">{result.message}</div>
-  }
-}
-
-const STEP_ICON: Record<string, string> = {
-  intent: '🧠',
-  agent: '🤖',
-  tool: '🔧',
-  answer: '✍️',
-}
-
-function ChatView({ chat }: { chat: ChatResponse }) {
-  const [open, setOpen] = useState(false)
-  return (
-    <div className="result chat">
-      <div className="chat-answer">{chat.answer}</div>
-      <div className="chat-meta">
-        <span className="chip accent-chip">🤖 {chat.agent}</span>
-        <span className="muted small">{chat.model}</span>
-        <span className="muted small">{chat.tokens} tokens</span>
-        <button className="trace-toggle" onClick={() => setOpen((v) => !v)}>
-          {open ? 'hide' : 'show'} reasoning ({chat.steps.length})
-        </button>
-      </div>
-      {open && (
-        <ol className="trace">
-          {chat.steps.map((s: Step, i) => (
-            <li key={i}>
-              <span className="trace-icon">{STEP_ICON[s.kind] ?? '•'}</span>
-              <span className="trace-label">{s.label}</span>
-              {s.detail && <span className="trace-detail muted small">{s.detail}</span>}
-            </li>
-          ))}
-        </ol>
-      )}
-    </div>
-  )
-}
-
-function AgentsView({ agents }: { agents: AgentDef[] }) {
-  return (
-    <div className="result">
-      <div className="muted small">{agents.length} agents</div>
-      <div className="agent-grid">
-        {agents.map((a) => (
-          <div key={a.slug} className="agent-card">
-            <div className="agent-name">🤖 {a.name}</div>
-            <div className="muted small agent-role">{a.role}</div>
-            <div className="mem-badges">
-              {a.toolNames.map((t) => (
-                <span key={t} className="chip">
-                  {t}
-                </span>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function TasksView({ tasks }: { tasks: TaskItem[] }) {
-  return (
-    <div className="result">
-      <div className="muted small">{tasks.length} tasks</div>
-      {tasks.length === 0 && <div className="muted small">No tasks yet — ask Jarvis something.</div>}
-      <table className="data-table">
-        <tbody>
-          {tasks.map((t) => (
-            <tr key={t.id}>
-              <td className={`small ${t.status === 'FAILED' ? 'danger' : 'accent'}`}>{t.status}</td>
-              <td className="small">{t.agent ?? '—'}</td>
-              <td className="small">{t.request}</td>
-              <td className="muted small mono">{new Date(t.createdAt).toLocaleTimeString()}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )
-}
-
-function ConnectorsView({
-  connectors,
-  onNavigate,
-}: {
-  connectors: ConnectorInfo[]
-  onNavigate: (s: string) => void
-}) {
-  return (
-    <div className="result">
-      <div className="muted small">{connectors.length} connectors</div>
-      <div className="agent-grid">
-        {connectors.map((c) => (
-          <ConnectorCard key={c.id} connector={c} onNavigate={onNavigate} />
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function ConnectorCard({
-  connector,
-  onNavigate,
-}: {
-  connector: ConnectorInfo
-  onNavigate: (s: string) => void
-}) {
-  const [output, setOutput] = useState<string | null>(null)
-  const [busy, setBusy] = useState(false)
-
-  async function run(actionId: string) {
-    setBusy(true)
-    try {
-      const r = await invokeConnector(connector.id, actionId)
-      setOutput(r.result)
-    } catch (e) {
-      setOutput('Error: ' + String(e))
-    } finally {
-      setBusy(false)
-    }
-  }
-
-  const connected = connector.status === 'CONNECTED'
-  return (
-    <div className="agent-card">
-      <div className="mem-top">
-        <span className="agent-name">🔌 {connector.name}</span>
-        <span className={`chip ${connected ? 'risk-low' : ''}`}>{connector.status}</span>
-      </div>
-      <div className="muted small agent-role">{connector.category}</div>
-      <div className="file-toolbar connector-actions">
-        {connector.actions.map((a) => (
-          <button key={a.id} disabled={busy} title={a.description} onClick={() => run(a.id)}>
-            {a.name}
-          </button>
-        ))}
-      </div>
-      {!connected && connector.requiredSecret && (
-        <button className="trace-toggle" onClick={() => onNavigate('/secrets')}>
-          Connect → store “{connector.requiredSecret}”
-        </button>
-      )}
-      {output && <pre className="json sandbox-output">{output}</pre>}
-    </div>
-  )
-}
-
-const RUN_STATUS_CLASS: Record<string, string> = {
-  DONE: 'risk-low',
-  RUNNING: 'risk-medium',
-  PAUSED: 'risk-medium',
-  FAILED: 'sensitive',
-  AWAITING_APPROVAL: 'risk-medium',
-}
-
-function WorkflowsView({ data, actions }: { data: WorkflowsData; actions: WorkflowActions }) {
-  return (
-    <div className="result">
-      <div className="file-header">
-        <span className="muted small">{data.workflows.length} workflows</span>
-        <span className="file-toolbar">
-          <button onClick={actions.add}>+ New workflow</button>
-        </span>
-      </div>
-      {data.workflows.length === 0 && <div className="muted small">No workflows yet. Click “+ New workflow”.</div>}
-      <div className="mem-list">
-        {data.workflows.map((w) => (
-          <div key={w.id} className="mem-card">
-            <div className="mem-top">
-              <span className="mem-title">⚙ {w.name}</span>
-              <span className="mem-badges">
-                <span className="chip">{w.triggerType}</span>
-                {w.cron && <span className="chip mono">{w.cron}</span>}
-                {w.scheduled && <span className="chip risk-low">scheduled</span>}
-              </span>
-            </div>
-            <div className="mem-meta muted small">
-              <span>{w.steps.length} steps: {w.steps.map((s) => s.type).join(' → ')}</span>
-            </div>
-            <div className="mem-actions">
-              <button className="approve-btn" onClick={() => actions.run(w.id)}>
-                Run
-              </button>
-              <button className="link-danger" onClick={() => actions.remove(w)}>
-                Delete
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-      {data.runs.length > 0 && (
-        <>
-          <div className="muted small" style={{ marginTop: 14 }}>
-            Recent runs
-          </div>
-          <div className="mem-list">
-            {data.runs.slice(0, 10).map((r: RunView) => (
-              <div key={r.id} className="run-row">
-                <span className={`chip ${RUN_STATUS_CLASS[r.status] ?? ''}`}>{r.status}</span>
-                <span className="muted small">{r.trigger}</span>
-                <span className="run-steps">
-                  {r.steps.map((s) => (
-                    <span key={s.stepId} className={`step-dot ${RUN_STATUS_CLASS[s.status] ?? ''}`} title={`${s.name}: ${s.status}`} />
-                  ))}
-                </span>
-                <span className="muted small mono">{new Date(r.startedAt).toLocaleTimeString()}</span>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
-    </div>
-  )
-}
-
-const STEP_TYPES: WfStepType[] = ['COMMAND', 'BRAIN', 'CONNECTOR', 'NOTIFY', 'APPROVAL']
-
-function WorkflowEditor({
-  state,
-  onChange,
-  onSave,
-  onClose,
-}: {
-  state: WfEditorState
-  onChange: (draft: WorkflowDraft) => void
-  onSave: () => void
-  onClose: () => void
-}) {
-  const d = state.draft
-  const set = (patch: Partial<WorkflowDraft>) => onChange({ ...d, ...patch })
-  const setStep = (i: number, patch: Partial<WfStep>) =>
-    set({ steps: d.steps.map((s, idx) => (idx === i ? { ...s, ...patch } : s)) })
-  const addStep = () =>
-    set({
-      steps: [
-        ...d.steps,
-        { id: 's' + (d.steps.length + 1), name: 'Step ' + (d.steps.length + 1), type: 'COMMAND', config: {}, maxAttempts: 1 },
-      ],
-    })
-  const removeStep = (i: number) => set({ steps: d.steps.filter((_, idx) => idx !== i) })
-  const cfg = (s: WfStep, key: string) => (s.config[key] as string) ?? ''
-  const setCfg = (i: number, key: string, value: string) =>
-    setStep(i, { config: { ...d.steps[i].config, [key]: value } })
-
-  const valid = !!d.name.trim() && d.steps.length > 0
-
-  return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal mem-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-head">
-          <span className="accent">New workflow</span>
-          <div className="modal-actions">
-            <button className="primary" disabled={!valid || state.saving} onClick={onSave}>
-              {state.saving ? 'Saving…' : 'Create'}
-            </button>
-            <button onClick={onClose}>Close</button>
-          </div>
-        </div>
-        <div className="mem-form">
-          <label>
-            Name
-            <input value={d.name} onChange={(e) => set({ name: e.target.value })} placeholder="Morning briefing" />
-          </label>
-          <label>
-            Trigger
-            <select value={d.triggerType} onChange={(e) => set({ triggerType: e.target.value as WorkflowDraft['triggerType'] })}>
-              <option value="MANUAL">Manual</option>
-              <option value="SCHEDULE">Schedule (cron)</option>
-              <option value="WEBHOOK">Webhook</option>
-            </select>
-          </label>
-          {d.triggerType === 'SCHEDULE' && (
-            <label className="full">
-              Cron (sec min hour dom mon dow)
-              <input value={d.cron ?? ''} onChange={(e) => set({ cron: e.target.value })} placeholder="0 0 9 * * *" />
-            </label>
-          )}
-          <div className="full">
-            <div className="file-header">
-              <span className="muted small">Steps</span>
-              <span className="file-toolbar">
-                <button onClick={addStep}>+ Step</button>
-              </span>
-            </div>
-            {d.steps.map((s, i) => (
-              <div key={i} className="wf-step">
-                <div className="wf-step-head">
-                  <input
-                    className="wf-step-name"
-                    value={s.name}
-                    onChange={(e) => setStep(i, { name: e.target.value })}
-                  />
-                  <select value={s.type} onChange={(e) => setStep(i, { type: e.target.value as WfStepType, config: {} })}>
-                    {STEP_TYPES.map((t) => (
-                      <option key={t} value={t}>
-                        {t}
-                      </option>
-                    ))}
-                  </select>
-                  <button className="file-del" onClick={() => removeStep(i)}>
-                    ✕
-                  </button>
-                </div>
-                {s.type === 'COMMAND' && (
-                  <input placeholder="/status" value={cfg(s, 'command')} onChange={(e) => setCfg(i, 'command', e.target.value)} />
-                )}
-                {s.type === 'BRAIN' && (
-                  <input placeholder="summarise my day" value={cfg(s, 'prompt')} onChange={(e) => setCfg(i, 'prompt', e.target.value)} />
-                )}
-                {s.type === 'NOTIFY' && (
-                  <input placeholder="message" value={cfg(s, 'message')} onChange={(e) => setCfg(i, 'message', e.target.value)} />
-                )}
-                {s.type === 'APPROVAL' && (
-                  <input placeholder="why approval is needed" value={cfg(s, 'why')} onChange={(e) => setCfg(i, 'why', e.target.value)} />
-                )}
-                {s.type === 'CONNECTOR' && (
-                  <div className="wf-connector">
-                    <input placeholder="connector (e.g. github)" value={cfg(s, 'connector')} onChange={(e) => setCfg(i, 'connector', e.target.value)} />
-                    <input placeholder="action (e.g. list_repos)" value={cfg(s, 'action')} onChange={(e) => setCfg(i, 'action', e.target.value)} />
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function PluginsView({ data, onPick }: { data: PluginsData; onPick: (s: string) => void }) {
-  return (
-    <div className="result">
-      <div className="status-grid">
-        {Object.entries(data.counts).map(([k, v]) => (
-          <Metric key={k} label={k} value={String(v)} />
-        ))}
-      </div>
-      <div className="muted small" style={{ marginTop: 10 }}>Agents</div>
-      <div className="mem-badges">
-        {data.agents.map((a) => (
-          <span key={a.slug} className="chip" title={a.role}>
-            {a.name}
-          </span>
-        ))}
-      </div>
-      <div className="muted small" style={{ marginTop: 10 }}>Tools</div>
-      <div className="mem-badges">
-        {data.tools.map((t) => (
-          <span key={t.name} className="chip mono" title={t.description}>
-            {t.name}
-          </span>
-        ))}
-      </div>
-      <div className="muted small" style={{ marginTop: 10 }}>Connectors</div>
-      <div className="mem-badges">
-        {data.connectors.map((c) => (
-          <span key={c.id} className={`chip ${c.status === 'CONNECTED' ? 'risk-low' : ''}`}>
-            {c.name}
-          </span>
-        ))}
-      </div>
-      <div className="muted small" style={{ marginTop: 10 }}>Commands ({data.commands.length})</div>
-      <div className="mem-badges">
-        {data.commands.map((c) => (
-          <span key={c.slash} className="chip mono accent" style={{ cursor: 'pointer' }} onClick={() => onPick(c.slash)} title={c.description}>
-            {c.slash}
-          </span>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function ModelsView({ data }: { data: ModelsData }) {
-  return (
-    <div className="result">
-      <div className="muted small">
-        Active: <span className="accent">{data.active}</span> · routing: {data.preference}
-      </div>
-      <table className="data-table">
-        <tbody>
-          {data.models.map((m) => (
-            <tr key={m.id}>
-              <td className="mono accent">{m.id}</td>
-              <td className="small">{m.local ? 'local' : m.provider}</td>
-              <td className="small">q{m.quality}</td>
-              <td className="muted small">${m.costInputPer1k}/${m.costOutputPer1k} per 1k</td>
-              <td>{m.available ? <span className="chip risk-low">active</span> : <span className="muted small">—</span>}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )
-}
-
-function DebuggerView({ runs, onReplay }: { runs: RunRecord[]; onReplay: (id: string) => void }) {
-  const [open, setOpen] = useState<string | null>(null)
-  return (
-    <div className="result">
-      <div className="muted small">{runs.length} runs</div>
-      <div className="mem-list">
-        {runs.map((r) => {
-          let steps: { kind: string; label: string; detail: string | null }[] = []
-          try {
-            steps = r.stepsJson ? JSON.parse(r.stepsJson) : []
-          } catch {
-            steps = []
-          }
-          const expanded = open === r.id
-          return (
-            <div key={r.id} className="mem-card">
-              <div className="mem-top">
-                <span className="mem-title">
-                  {r.agent} <span className="muted small mono">{r.model}</span>
-                </span>
-                <span className="mem-badges">
-                  <span className={`chip ${r.status === 'FAILED' ? 'sensitive' : 'risk-low'}`}>{r.status}</span>
-                </span>
-              </div>
-              <div className="mem-content small">{r.request}</div>
-              <div className="mem-meta muted small">
-                <span>{r.promptTokens + r.completionTokens} tokens</span>
-                <span>${r.cost.toFixed(4)}</span>
-                <span>{r.durationMs} ms</span>
-                <span className="mono">{r.id}</span>
-              </div>
-              <div className="mem-actions">
-                <button onClick={() => setOpen(expanded ? null : r.id)}>{expanded ? 'hide trace' : 'trace'}</button>
-                <button onClick={() => onReplay(r.id)}>Replay</button>
-              </div>
-              {expanded && (
-                <ol className="trace">
-                  {steps.map((s, i) => (
-                    <li key={i}>
-                      <span className="trace-icon">{STEP_ICON[s.kind] ?? '•'}</span>
-                      <span className="trace-label">{s.label}</span>
-                      {s.detail && <span className="trace-detail muted small">{s.detail}</span>}
-                    </li>
-                  ))}
-                </ol>
-              )}
-            </div>
-          )
-        })}
-      </div>
-    </div>
-  )
-}
-
-function CostsView({ data }: { data: CostsData }) {
-  return (
-    <div className="result">
-      <div className="status-grid">
-        <Metric label="Runs" value={String(data.runs)} />
-        <Metric label="Total tokens" value={String(data.totalTokens)} />
-        <Metric label="Total cost" value={`$${data.totalCost.toFixed(4)}`} good />
-        <Metric label="Prompt / completion" value={`${data.promptTokens} / ${data.completionTokens}`} />
-      </div>
-      <div className="muted small" style={{ marginTop: 10 }}>Cost by model</div>
-      <table className="data-table">
-        <tbody>
-          {Object.entries(data.costByModel).map(([m, c]) => (
-            <tr key={m}>
-              <td className="mono accent">{m}</td>
-              <td>${Number(c).toFixed(4)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div className="muted small" style={{ marginTop: 8 }}>Runs by agent</div>
-      <table className="data-table">
-        <tbody>
-          {Object.entries(data.runsByAgent).map(([a, n]) => (
-            <tr key={a}>
-              <td>{a}</td>
-              <td>{String(n)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )
-}
-
-function KbView({
-  data,
-  onSearch,
-  onIndex,
-  onRemove,
-}: {
-  data: KbData
-  onSearch: (q: string) => void
-  onIndex: () => void
-  onRemove: (id: string) => void
-}) {
-  const [q, setQ] = useState(data.query || '')
-  return (
-    <div className="result">
-      <div className="file-header">
-        <span className="muted small">{data.documents.length} documents indexed</span>
-        <span className="file-toolbar">
-          <button onClick={onIndex}>+ Index a file/folder</button>
-        </span>
-      </div>
-      <form
-        className="kb-search"
-        onSubmit={(e) => {
-          e.preventDefault()
-          if (q.trim()) onSearch(q.trim())
-        }}
-      >
-        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Semantic search your documents…" />
-        <button type="submit">Search</button>
-      </form>
-
-      {data.results.length > 0 && (
-        <div className="kb-results">
-          {data.results.map((h: KbHit, i) => (
-            <div key={i} className="kb-hit">
-              <div className="kb-hit-head">
-                <span className="accent">{h.title}</span>
-                <span className="chip">{(h.score * 100).toFixed(0)}%</span>
-              </div>
-              <div className="small">{h.content.length > 240 ? h.content.slice(0, 240) + '…' : h.content}</div>
-              <div className="muted small mono">{h.source}</div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      <div className="mem-list" style={{ marginTop: 10 }}>
-        {data.documents.map((d) => (
-          <div key={d.id} className="file-row">
-            <span className="file-main" style={{ cursor: 'default' }}>
-              <span className="file-icon">📑</span>
-              <span className="file-name">{d.title ?? d.source}</span>
-              <span className="muted small">{d.chunkCount} chunks</span>
-            </span>
-            <button className="file-del" title="Remove" onClick={() => onRemove(d.id)}>
-              ✕
-            </button>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function NotificationBell({ online }: { online: boolean }) {
-  const [unread, setUnread] = useState(0)
-  const [open, setOpen] = useState(false)
-  const [items, setItems] = useState<NotificationItem[]>([])
-
-  useEffect(() => {
-    if (!online) return
-    let active = true
-    const poll = () => getUnreadCount().then((n) => active && setUnread(n)).catch(() => {})
-    poll()
-    const id = window.setInterval(poll, 8000)
-    return () => {
-      active = false
-      window.clearInterval(id)
-    }
-  }, [online])
-
-  async function toggle() {
-    const next = !open
-    setOpen(next)
-    if (next) {
-      try {
-        setItems(await getNotifications())
-        await markNotificationsRead()
-        setUnread(0)
-      } catch {
-        /* offline */
-      }
-    }
-  }
-
-  return (
-    <div className="bell-wrap">
-      <button className="bell" onClick={toggle} title="Notifications">
-        🔔{unread > 0 && <span className="bell-badge">{unread > 9 ? '9+' : unread}</span>}
-      </button>
-      {open && (
-        <div className="bell-dropdown" onClick={(e) => e.stopPropagation()}>
-          <div className="bell-head muted small">Notifications</div>
-          {items.length === 0 && <div className="muted small bell-empty">Nothing yet.</div>}
-          {items.map((n) => (
-            <div key={n.id} className={`bell-item ${n.read ? '' : 'unread'}`}>
-              <span className={`step-dot ${n.type === 'error' ? 'sensitive' : n.type === 'success' ? 'risk-low' : 'risk-medium'}`} />
-              <div className="bell-text">
-                <div className="bell-title">{n.title}</div>
-                {n.body && <div className="muted small">{n.body}</div>}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  )
-}
-
-function RiskBadge({ level }: { level: RiskLevel }) {
-  return <span className={`chip risk-${level.toLowerCase()}`}>{level}</span>
-}
-
-function ApprovalPending({
-  request,
-  message,
-  onOpen,
-}: {
-  request: ApprovalRequest
-  message: string
-  onOpen: () => void
-}) {
-  return (
-    <div className="result approval-pending">
-      <div className="mem-top">
-        <span className="mem-title">⏳ {message}</span>
-        <RiskBadge level={request.riskLevel} />
-      </div>
-      <pre className="json">{request.preview}</pre>
-      <button className="welcome-cmds-btn" onClick={onOpen}>
-        Open Approval Center
-      </button>
-    </div>
-  )
-}
-
-function ApprovalView({ requests, actions }: { requests: ApprovalRequest[]; actions: ApprovalActions }) {
-  return (
-    <div className="result">
-      <div className="muted small">{requests.length} pending</div>
-      {requests.length === 0 && <div className="muted small">Nothing awaiting approval.</div>}
-      <div className="mem-list">
-        {requests.map((r) => (
-          <ApprovalCard key={r.id} request={r} actions={actions} />
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function ApprovalCard({ request, actions }: { request: ApprovalRequest; actions: ApprovalActions }) {
-  const [remember, setRemember] = useState(false)
-  return (
-    <div className="mem-card">
-      <div className="mem-top">
-        <span className="mem-title">{request.title}</span>
-        <RiskBadge level={request.riskLevel} />
-      </div>
-      {request.description && <div className="mem-content muted">{request.description}</div>}
-      {request.preview && <pre className="json">{request.preview}</pre>}
-      <div className="mem-actions approval-actions">
-        <button className="approve-btn" onClick={() => actions.approve(request.id, remember)}>
-          Approve
-        </button>
-        <button className="link-danger" onClick={() => actions.deny(request.id, remember)}>
-          Deny
-        </button>
-        <label className="remember">
-          <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} />
-          Remember
-        </label>
-      </div>
-    </div>
-  )
-}
-
-function SandboxView({ result }: { result: SandboxResult }) {
-  const ok = result.exitCode === 0 && !result.timedOut
-  return (
-    <div className="result">
-      <div className="file-header">
-        <span className="muted small">
-          Sandbox · {result.durationMs} ms · {result.timedOut ? 'timed out' : `exit ${result.exitCode}`}
-        </span>
-        <span className={`chip ${ok ? 'risk-low' : 'sensitive'}`}>{ok ? 'success' : 'failed'}</span>
-      </div>
-      <pre className="json sandbox-output">{result.output || '(no output)'}</pre>
-    </div>
-  )
-}
-
-function SecretsView({ secrets, actions }: { secrets: SecretView[]; actions: SecretActions }) {
-  return (
-    <div className="result">
-      <div className="file-header">
-        <span className="muted small">{secrets.length} secrets · encrypted at rest, never shown to the model</span>
-        <span className="file-toolbar">
-          <button onClick={actions.add}>+ Add</button>
-        </span>
-      </div>
-      {secrets.length === 0 && <div className="muted small">Vault is empty.</div>}
-      <div className="mem-list">
-        {secrets.map((s) => (
-          <div key={s.id} className="mem-card">
-            <div className="mem-top">
-              <span className="mem-title">
-                🔑 {s.name} <span className="mono accent">{s.masked}</span>
-              </span>
-              <span className="mem-badges">
-                {s.connector && <span className="chip">{s.connector}</span>}
-                {s.scopes.map((sc) => (
-                  <span key={sc} className="chip">
-                    {sc}
-                  </span>
-                ))}
-              </span>
-            </div>
-            <div className="mem-meta muted small">
-              <span className="mono">{s.id}</span>
-              {s.lastAccessedAt && <span>last used: {new Date(s.lastAccessedAt).toLocaleString()}</span>}
-            </div>
-            <div className="mem-actions">
-              <button className="link-danger" onClick={() => actions.remove(s)}>
-                Revoke
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function SecretEditor({
-  state,
-  onChange,
-  onSave,
-  onClose,
-}: {
-  state: SecretEditorState
-  onChange: (draft: SecretDraft) => void
-  onSave: () => void
-  onClose: () => void
-}) {
-  const d = state.draft
-  const set = (patch: Partial<SecretDraft>) => onChange({ ...d, ...patch })
-  const valid = !!d.name.trim() && !!d.value.trim()
-  return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal mem-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-head">
-          <span className="accent">Add secret</span>
-          <div className="modal-actions">
-            <button className="primary" disabled={!valid || state.saving} onClick={onSave}>
-              {state.saving ? 'Saving…' : 'Store'}
-            </button>
-            <button onClick={onClose}>Close</button>
-          </div>
-        </div>
-        <div className="mem-form">
-          <label>
-            Name
-            <input value={d.name} onChange={(e) => set({ name: e.target.value })} placeholder="github-token" />
-          </label>
-          <label>
-            Connector
-            <input value={d.connector ?? ''} onChange={(e) => set({ connector: e.target.value })} placeholder="github" />
-          </label>
-          <label className="full">
-            Value (encrypted on save)
-            <input type="password" value={d.value} onChange={(e) => set({ value: e.target.value })} />
-          </label>
-          <label className="full">
-            Scopes (comma-separated)
-            <input
-              value={(d.scopes ?? []).join(',')}
-              onChange={(e) => set({ scopes: e.target.value.split(',').map((s) => s.trim()).filter(Boolean) })}
-              placeholder="repo, read:user"
-            />
-          </label>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function MemoryView({ memories, actions }: { memories: Memory[]; actions: MemoryActions }) {
-  return (
-    <div className="result">
-      <div className="file-header">
-        <span className="muted small">{memories.length} memories</span>
-        <span className="file-toolbar">
-          <button onClick={actions.add}>+ Add</button>
-          <button onClick={actions.exportAll}>Export</button>
-        </span>
-      </div>
-      {memories.length === 0 && <div className="muted small">No memories yet. Click “+ Add”.</div>}
-      <div className="mem-list">
-        {memories.map((m) => (
-          <div key={m.id} className={`mem-card ${m.enabled ? '' : 'disabled'}`}>
-            <div className="mem-top">
-              <span className="mem-title">{m.title}</span>
-              <span className="mem-badges">
-                <span className="chip">{m.category}</span>
-                {m.sensitivity === 'SENSITIVE' && <span className="chip sensitive">sensitive</span>}
-                {!m.enabled && <span className="chip">disabled</span>}
-              </span>
-            </div>
-            <div className="mem-content">{m.content}</div>
-            <div className="mem-meta muted small">
-              <span>source: {m.source ?? '—'}</span>
-              <span>confidence: {(m.confidence * 100).toFixed(0)}%</span>
-              {m.expiresAt && <span>expires: {new Date(m.expiresAt).toLocaleDateString()}</span>}
-              <span className="mono">{m.id}</span>
-            </div>
-            <div className="mem-actions">
-              <button onClick={() => actions.edit(m)}>Edit</button>
-              <button className="link-danger" onClick={() => actions.remove(m)}>
-                Delete
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function HelpView({ commands, onPick }: { commands: CommandDefinition[]; onPick: (s: string) => void }) {
-  return (
-    <div className="result">
-      <table className="data-table">
-        <tbody>
-          {commands.map((c) => (
-            <tr key={c.slash} onClick={() => onPick(c.slash)}>
-              <td className="mono accent">{c.slash}</td>
-              <td>{c.description}</td>
-              <td className="muted small">{c.category}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )
-}
-
-function FilesView({
-  data,
-  onNavigate,
-  actions,
-}: {
-  data: { path: string; entries: FileNode[] }
-  onNavigate: (s: string) => void
-  actions: FileActions
-}) {
-  const parent = data.path ? data.path.split('/').slice(0, -1).join('/') : null
-  return (
-    <div className="result">
-      <div className="file-header">
-        <span className="file-path mono muted">/{data.path}</span>
-        <span className="file-toolbar">
-          <button onClick={() => actions.newFile(data.path)}>+ File</button>
-          <button onClick={() => actions.newFolder(data.path)}>+ Folder</button>
-        </span>
-      </div>
-      <div className="file-list">
-        {parent !== null && (
-          <div className="file-row">
-            <button className="file-main" onClick={() => onNavigate(`/jfiles ${parent}`)}>
-              <span className="file-icon">↩</span> ..
-            </button>
-          </div>
-        )}
-        {data.entries.length === 0 && <div className="muted small">empty folder</div>}
-        {data.entries.map((f) => (
-          <div key={f.path} className="file-row">
-            <button
-              className="file-main"
-              onClick={() => (f.directory ? onNavigate(`/jfiles ${f.path}`) : actions.open(f.path))}
-            >
-              <span className="file-icon">{f.directory ? '📁' : '📄'}</span>
-              <span className="file-name">{f.name}</span>
-              {!f.directory && <span className="file-size muted small">{formatBytes(f.size)}</span>}
-            </button>
-            <button className="file-del" title="Delete" onClick={() => actions.remove(f.path, data.path)}>
-              ✕
-            </button>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function StatusView({ data }: { data: Record<string, unknown> }) {
-  const cpu = data.cpu as Record<string, number>
-  const mem = data.memory as Record<string, number>
-  const disk = data.disk as Record<string, number>
-  return (
-    <div className="result status-grid">
-      <Metric label="OS" value={String(data.os)} />
-      <Metric label="Health" value={String(data.jarvisHealth)} good />
-      <Metric label="CPU cores" value={String(cpu.availableProcessors)} />
-      <Metric label="System load" value={fmtPct(cpu.systemCpuLoad)} />
-      <Metric
-        label="RAM used"
-        value={`${formatBytes(mem.usedPhysicalBytes)} / ${formatBytes(mem.totalPhysicalBytes)}`}
-      />
-      <Metric
-        label="Disk free"
-        value={`${formatBytes(disk.freeBytes)} / ${formatBytes(disk.totalBytes)}`}
-      />
-    </div>
-  )
-}
-
-function ResourcesView({ initial }: { initial: Record<string, unknown> }) {
-  const [snap, setSnap] = useState<Record<string, unknown>>(initial)
-  const [live, setLive] = useState(false)
-  const [cpuHist, setCpuHist] = useState<number[]>([])
-  const [memHist, setMemHist] = useState<number[]>([])
-
-  useEffect(() => {
-    const es = new EventSource('/api/monitor/stream')
-    es.addEventListener('snapshot', (e) => {
-      const data = JSON.parse((e as MessageEvent).data) as Record<string, unknown>
-      setSnap(data)
-      setLive(true)
-      const cpu = (data.cpu as Record<string, number>).systemCpuLoad
-      const mem = data.memory as Record<string, number>
-      const memPct = mem.usedPhysicalBytes / mem.totalPhysicalBytes
-      setCpuHist((h) => [...h, cpu < 0 ? 0 : cpu].slice(-40))
-      setMemHist((h) => [...h, memPct].slice(-40))
-    })
-    es.onerror = () => setLive(false)
-    es.onopen = () => setLive(true)
-    return () => es.close()
+  const uiProvider = settings ? (settings.provider === 'claude' || settings.provider === 'anthropic' ? 'anthropic' : settings.provider) : 'mock'
+  const pickProvider = useCallback((ui: string) => {
+    const backend = ui === 'anthropic' ? 'claude' : ui
+    apiSetProvider(backend).then(setSettings).catch(() => {})
   }, [])
 
-  const cpu = snap.cpu as Record<string, number>
-  const mem = snap.memory as Record<string, number>
-  const swap = snap.swap as Record<string, number>
-  const disk = snap.disk as Record<string, number>
-  const proc = snap.process as Record<string, number>
-  const jvm = snap.jvm as Record<string, number | string>
-  const rt = snap.runtime as Record<string, number | string>
+  const cpu = pct(snap?.cpu.systemCpuLoad)
+  const memPctV = snap ? Math.round((snap.memory.usedPhysicalBytes / snap.memory.totalPhysicalBytes) * 100) : 0
+  const caption = busy ? 'Processing' : 'Online · Standby'
 
   return (
-    <div className="result">
-      <div className="file-header">
-        <span className="muted small">Live System Monitor</span>
-        <span className={`live-badge ${live ? 'on' : 'off'}`}>
-          <span className="status-dot" /> {live ? 'live' : 'reconnecting…'}
-        </span>
-      </div>
+    <>
+      {/* centerpiece */}
+      <div className="stage"><Sphere kind="gyro" busy={busy} caption={caption} /></div>
 
-      <div className="status-grid">
-        <Metric label="Health" value={String(snap.jarvisHealth)} good />
-        <Metric label="OS" value={String(snap.os)} />
-        <Metric label="CPU cores" value={String(cpu.availableProcessors)} />
-        <Metric label="Load avg" value={String(cpu.systemLoadAverage)} />
-        <Metric label="Active agents" value={String(rt.activeAgents)} />
-        <Metric label="Running tasks" value={String(rt.runningTasks)} />
-        <Metric label="Threads" value={String(proc.threads)} />
-        <Metric
-          label="Open files"
-          value={proc.openFileDescriptors != null ? `${proc.openFileDescriptors} / ${proc.maxFileDescriptors}` : 'n/a'}
-        />
-        <Metric label="Uptime" value={fmtDuration(Number(jvm.uptimeMillis))} />
-      </div>
-
-      <div className="gauge-grid">
-        <Gauge
-          label="CPU"
-          pct={cpu.systemCpuLoad < 0 ? 0 : cpu.systemCpuLoad}
-          caption={fmtPct(cpu.systemCpuLoad)}
-          history={cpuHist}
-        />
-        <Gauge
-          label="RAM"
-          pct={mem.usedPhysicalBytes / mem.totalPhysicalBytes}
-          caption={`${formatBytes(mem.usedPhysicalBytes)} / ${formatBytes(mem.totalPhysicalBytes)}`}
-          history={memHist}
-        />
-        <Gauge
-          label="Swap"
-          pct={swap.totalBytes ? swap.usedBytes / swap.totalBytes : 0}
-          caption={`${formatBytes(swap.usedBytes)} / ${formatBytes(swap.totalBytes)}`}
-        />
-        <Gauge
-          label="Disk"
-          pct={disk.totalBytes ? (disk.totalBytes - disk.freeBytes) / disk.totalBytes : 0}
-          caption={`${formatBytes(disk.freeBytes)} free`}
-        />
-      </div>
-    </div>
-  )
-}
-
-function Gauge({
-  label,
-  pct,
-  caption,
-  history,
-}: {
-  label: string
-  pct: number
-  caption: string
-  history?: number[]
-}) {
-  const clamped = Math.max(0, Math.min(1, pct))
-  return (
-    <div className="gauge">
-      <div className="gauge-top">
-        <span className="gauge-label">{label}</span>
-        <span className="gauge-pct mono">{(clamped * 100).toFixed(0)}%</span>
-      </div>
-      <div className="gauge-bar">
-        <div className="gauge-fill" style={{ width: `${clamped * 100}%` }} />
-      </div>
-      {history && history.length > 1 && <Sparkline values={history} />}
-      <div className="gauge-caption muted small">{caption}</div>
-    </div>
-  )
-}
-
-function Sparkline({ values }: { values: number[] }) {
-  const w = 200
-  const h = 32
-  const max = Math.max(0.001, ...values)
-  const step = values.length > 1 ? w / (values.length - 1) : w
-  const points = values
-    .map((v, i) => `${(i * step).toFixed(1)},${(h - (v / max) * h).toFixed(1)}`)
-    .join(' ')
-  return (
-    <svg className="sparkline" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none">
-      <polyline points={points} fill="none" stroke="var(--accent)" strokeWidth="1.5" />
-    </svg>
-  )
-}
-
-function fmtDuration(ms: number): string {
-  const s = Math.floor(ms / 1000)
-  const h = Math.floor(s / 3600)
-  const m = Math.floor((s % 3600) / 60)
-  if (h > 0) return `${h}h ${m}m`
-  if (m > 0) return `${m}m ${s % 60}s`
-  return `${s}s`
-}
-
-function LogsView({ entries }: { entries: AuditEntry[] }) {
-  return (
-    <div className="result">
-      <table className="data-table">
-        <tbody>
-          {entries.map((e) => (
-            <tr key={e.id}>
-              <td className="muted small mono">{new Date(e.timestamp).toLocaleTimeString()}</td>
-              <td className="small">{e.command ?? e.inputType}</td>
-              <td className={`small ${e.status === 'ERROR' ? 'danger' : 'accent'}`}>{e.status}</td>
-              <td className="muted small">{e.detail}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )
-}
-
-function Metric({ label, value, good }: { label: string; value: string; good?: boolean }) {
-  return (
-    <div className="metric">
-      <div className="metric-label">{label}</div>
-      <div className={`metric-value ${good ? 'accent' : ''}`}>{value}</div>
-    </div>
-  )
-}
-
-function JsonView({ label, data }: { label: string; data: unknown }) {
-  return (
-    <div className="result">
-      <div className="muted small">{label}</div>
-      <pre className="json">{JSON.stringify(data, null, 2)}</pre>
-    </div>
-  )
-}
-
-function Editor({
-  editor,
-  onChange,
-  onSave,
-  onClose,
-  onReveal,
-}: {
-  editor: EditorState
-  onChange: (content: string) => void
-  onSave: () => void
-  onClose: () => void
-  onReveal: () => void
-}) {
-  const dirty = editor.content !== editor.original
-  return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-head">
-          <span className="mono accent">{editor.path}</span>
-          <div className="modal-actions">
-            <button title="Reveal in Finder" onClick={onReveal}>
-              📂 Open location
-            </button>
-            <button className="primary" disabled={!dirty || editor.saving} onClick={onSave}>
-              {editor.saving ? 'Saving…' : dirty ? 'Save' : 'Saved'}
-            </button>
-            <button onClick={onClose}>Close</button>
+      {/* HUD corners */}
+      <div className="hud">
+        <div className="hud-tl">
+          <div className="wordmark"><span className="pip" /><b>J.A.R.V.I.S</b></div>
+          <div className="tagline">JUST A RATHER VERY INTELLIGENT SYSTEM</div>
+          <div className="tele">
+            <span className="k">STATUS</span><span className="v good">{snap?.jarvisHealth === 'OK' ? 'OPERATIONAL' : 'BOOTING'}</span>
+            <span className="k">CPU</span><span className="v">{cpu}%</span>
+            <span className="k">MEMORY</span><span className="v">{snap ? `${gb(snap.memory.usedPhysicalBytes)}/${gb(snap.memory.totalPhysicalBytes)}G (${memPctV}%)` : '—'}</span>
+            <span className="k">LOAD</span><span className="v">{snap?.cpu.systemLoadAverage?.toFixed(2) ?? '—'}</span>
+            <span className="k">DISK</span><span className="v">{snap ? `${gb(snap.disk.freeBytes)}G free` : '—'}</span>
+            <span className="k">AGENTS</span><span className="v">{snap?.runtime.registeredAgents ?? '—'}</span>
+            <span className="k">NETWORK</span><span className="v good">LAN</span>
           </div>
         </div>
-        <textarea
-          className="editor-area mono"
-          value={editor.content}
-          spellCheck={false}
-          onChange={(e) => onChange(e.target.value)}
-        />
-      </div>
-    </div>
-  )
-}
 
-function MemoryEditor({
-  state,
-  onChange,
-  onSave,
-  onClose,
-}: {
-  state: MemEditorState
-  onChange: (draft: MemoryDraft) => void
-  onSave: () => void
-  onClose: () => void
-}) {
-  const d = state.draft
-  const set = (patch: Partial<MemoryDraft>) => onChange({ ...d, ...patch })
-  const valid = !!d.title?.trim() && !!d.content?.trim() && !!d.category?.trim()
-  return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal mem-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-head">
-          <span className="accent">{state.id ? 'Edit memory' : 'New memory'}</span>
-          <div className="modal-actions">
-            <button className="primary" disabled={!valid || state.saving} onClick={onSave}>
-              {state.saving ? 'Saving…' : 'Save'}
-            </button>
-            <button onClick={onClose}>Close</button>
+        <div className="hud-tr">
+          <div className="clock">{now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</div>
+          <div className="datestr">{now.toLocaleDateString([], { weekday: 'short', month: 'short', day: '2-digit', year: 'numeric' }).toUpperCase()}</div>
+          <div className="row2">
+            <button className="iconbtn" title="Refresh" onClick={() => getStatus().then(setSnap)}>⟳</button>
+            <button className="iconbtn" title="Notifications" onClick={async () => { const items = await getNotifications().catch(() => [] as NotificationItem[]); markNotificationsRead().then(() => setUnread(0)).catch(() => {}); openWindow('result', { message: items.length ? '' : 'Nothing yet.', data: items.length ? items.map((n) => `• ${n.title}${n.body ? ' — ' + n.body : ''}`).join('\n') : null }, 'Notifications') }}>
+              🔔{unread > 0 && <span className="count">{unread}</span>}</button>
+          </div>
+          <div className="telemetry-flag"><span className="pip" />TELEMETRY ACTIVE</div>
+        </div>
+
+        <div className="hud-bl">
+          <button className="userchip">
+            <span className="av">S</span>
+            <span><span className="nm">Shay ⌄</span><div className="sub">CPU {cpu}% · MEM {gb(snap?.memory.usedPhysicalBytes)}/{gb(snap?.memory.totalPhysicalBytes)}G</div></span>
+          </button>
+        </div>
+
+        <div className="hud-br">
+          <div className="providers">
+            {(['ollama', 'openai', 'anthropic'] as const).map((p) => (
+              <button key={p} className={provider === p ? 'on' : ''} onClick={() => { setProvider(p); openWindow('settings') }}><span className="pip" />{p.toUpperCase()}</button>
+            ))}
           </div>
         </div>
-        <div className="mem-form">
-          <label>
-            Title
-            <input value={d.title ?? ''} onChange={(e) => set({ title: e.target.value })} />
-          </label>
-          <label>
-            Category
-            <input value={d.category ?? ''} onChange={(e) => set({ category: e.target.value })} />
-          </label>
-          <label className="full">
-            Content
-            <textarea
-              rows={4}
-              value={d.content ?? ''}
-              onChange={(e) => set({ content: e.target.value })}
-            />
-          </label>
-          <label>
-            Source
-            <input value={d.source ?? ''} onChange={(e) => set({ source: e.target.value })} />
-          </label>
-          <label>
-            Confidence ({Math.round((d.confidence ?? 1) * 100)}%)
-            <input
-              type="range"
-              min={0}
-              max={1}
-              step={0.05}
-              value={d.confidence ?? 1}
-              onChange={(e) => set({ confidence: Number(e.target.value) })}
-            />
-          </label>
-          <label>
-            Sensitivity
-            <select
-              value={d.sensitivity ?? 'NORMAL'}
-              onChange={(e) => set({ sensitivity: e.target.value as MemoryDraft['sensitivity'] })}
-            >
-              <option value="NORMAL">Normal</option>
-              <option value="SENSITIVE">Sensitive</option>
-            </select>
-          </label>
-          <label>
-            Visibility
-            <select
-              value={d.visibility ?? 'USER_VISIBLE'}
-              onChange={(e) => set({ visibility: e.target.value as MemoryDraft['visibility'] })}
-            >
-              <option value="USER_VISIBLE">User-visible</option>
-              <option value="INTERNAL">Internal</option>
-            </select>
-          </label>
-          <label>
-            Expires
-            <input
-              type="datetime-local"
-              value={toLocalInput(d.expiresAt)}
-              onChange={(e) =>
-                set({ expiresAt: e.target.value ? new Date(e.target.value).toISOString() : null })
-              }
-            />
-          </label>
-          <label className="checkbox">
-            <input
-              type="checkbox"
-              checked={d.enabled ?? true}
-              onChange={(e) => set({ enabled: e.target.checked })}
-            />
-            Enabled
-          </label>
+      </div>
+
+      {/* bottom command dock */}
+      <div className="dock">
+        <div className="bar">
+          <input placeholder="Ask Jarvis, or type a /command…" value={input}
+            onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') submit(input) }} />
+          <button className="go" onClick={() => submit(input)}>{busy ? <span className="spin-fast">◠</span> : '➤'}</button>
+        </div>
+        <div className="hintrow">
+          <button className="hint" onClick={() => openWindow('today')}>Today</button>
+          <button className="hint" onClick={() => openWindow('history')}>History</button>
+          <button className="hint" onClick={() => openWindow('memory')}>Memory</button>
+          <button className="hint" onClick={() => openWindow('agents')}>Agents</button>
+          <button className="hint" onClick={() => setCmdkOpen(true)}>⌘K</button>
         </div>
       </div>
-    </div>
+
+      {/* floating windows */}
+      <div className="winlayer">
+        {wins.map((w) => (
+          <FloatingWindow key={w.key} win={w} onClose={() => closeWin(w.key)} onFocus={() => focusWin(w.key)}>
+            <WindowBody win={w} />
+          </FloatingWindow>
+        ))}
+      </div>
+
+      {cmdkOpen && <CommandPalette commands={commands} onRun={runCmd} onClose={() => setCmdkOpen(false)} />}
+    </>
   )
-}
-
-function toLocalInput(iso: string | null | undefined): string {
-  if (!iso) return ''
-  const dt = new Date(iso)
-  const pad = (n: number) => String(n).padStart(2, '0')
-  return `${dt.getFullYear()}-${pad(dt.getMonth() + 1)}-${pad(dt.getDate())}T${pad(dt.getHours())}:${pad(dt.getMinutes())}`
-}
-
-function groupByCategory(commands: CommandDefinition[]): Record<string, CommandDefinition[]> {
-  return commands.reduce<Record<string, CommandDefinition[]>>((acc, c) => {
-    ;(acc[c.category] ??= []).push(c)
-    return acc
-  }, {})
-}
-
-function formatBytes(bytes: number): string {
-  if (!bytes) return '0 B'
-  const units = ['B', 'KB', 'MB', 'GB', 'TB']
-  const i = Math.floor(Math.log(bytes) / Math.log(1024))
-  return `${(bytes / Math.pow(1024, i)).toFixed(i ? 1 : 0)} ${units[i]}`
-}
-
-function fmtPct(load: number): string {
-  return load < 0 ? 'n/a' : `${(load * 100).toFixed(1)}%`
 }

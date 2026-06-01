@@ -1,5 +1,7 @@
 package com.jarvis.web;
 
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -13,14 +15,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * automation sidecar.)
  */
 @Service
+@RequiredArgsConstructor
 public class WebSearchService {
 
     private final RestClient client = RestClient.create("https://api.duckduckgo.com");
     private final ObjectMapper mapper;
 
-    public WebSearchService(ObjectMapper mapper) {
-        this.mapper = mapper;
-    }
 
     public String search(String query) {
         if (query == null || query.isBlank()) {

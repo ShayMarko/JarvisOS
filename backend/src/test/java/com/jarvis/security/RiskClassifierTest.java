@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 class RiskClassifierTest {
 
-    private final RiskClassifier classifier = new RiskClassifier();
+    private final RiskClassifier classifier = new RiskClassifier(new RestrictionPolicy(new JarvisPolicyProperties()));
 
     @Test
     void ratesSafeCommandsLow() {

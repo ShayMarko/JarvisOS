@@ -1,5 +1,7 @@
 package com.jarvis.ai.tools;
 
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,15 +14,12 @@ import com.jarvis.connectors.ConnectorRegistry;
  * the same mechanism as local capabilities.
  */
 @Component
+@RequiredArgsConstructor
 public class ConnectorTool implements Tool {
 
     private final ConnectorRegistry registry;
     private final ObjectMapper mapper;
 
-    public ConnectorTool(ConnectorRegistry registry, ObjectMapper mapper) {
-        this.registry = registry;
-        this.mapper = mapper;
-    }
 
     @Override
     public ToolSpec spec() {

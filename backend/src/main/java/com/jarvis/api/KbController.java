@@ -1,5 +1,7 @@
 package com.jarvis.api;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 import java.util.Map;
 
@@ -20,13 +22,11 @@ import com.jarvis.kb.SearchHit;
 /** Knowledge Base / RAG endpoints (spec §10.2). */
 @RestController
 @RequestMapping("/api/kb")
+@RequiredArgsConstructor
 public class KbController {
 
     private final KnowledgeBaseService kb;
 
-    public KbController(KnowledgeBaseService kb) {
-        this.kb = kb;
-    }
 
     public record IndexRequest(String path, String title, String content) {}
 

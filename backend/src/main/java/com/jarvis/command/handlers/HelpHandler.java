@@ -1,5 +1,7 @@
 package com.jarvis.command.handlers;
 
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -12,14 +14,12 @@ import com.jarvis.command.CommandResult;
 
 /** {@code /help} — lists the available commands (spec §5.2). */
 @Component
+@RequiredArgsConstructor
 public class HelpHandler implements CommandHandler {
 
-    private final CommandRegistry registry;
-
     // @Lazy breaks the cycle: registry depends on all handlers, this handler reads the registry.
-    public HelpHandler(@Lazy CommandRegistry registry) {
-        this.registry = registry;
-    }
+    @Lazy
+    private final CommandRegistry registry;
 
     @Override
     public CommandDefinition definition() {

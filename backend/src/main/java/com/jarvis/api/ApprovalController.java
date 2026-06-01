@@ -1,5 +1,7 @@
 package com.jarvis.api;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,13 +19,11 @@ import com.jarvis.approval.ApprovalService;
 /** Approval Center endpoints (spec §11.2). */
 @RestController
 @RequestMapping("/api/approvals")
+@RequiredArgsConstructor
 public class ApprovalController {
 
     private final ApprovalService approval;
 
-    public ApprovalController(ApprovalService approval) {
-        this.approval = approval;
-    }
 
     public record DecisionRequest(boolean remember) {}
 

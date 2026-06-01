@@ -1,5 +1,7 @@
 package com.jarvis.command.handlers;
 
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Component;
 
 import com.jarvis.agent.AgentRegistry;
@@ -11,13 +13,11 @@ import com.jarvis.command.CommandResult;
 
 /** {@code /agents} — lists active/permanent agents (spec §5.2, §7). */
 @Component
+@RequiredArgsConstructor
 public class AgentsHandler implements CommandHandler {
 
     private final AgentRegistry registry;
 
-    public AgentsHandler(AgentRegistry registry) {
-        this.registry = registry;
-    }
 
     @Override
     public CommandDefinition definition() {

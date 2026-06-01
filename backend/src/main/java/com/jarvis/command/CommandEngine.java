@@ -1,5 +1,7 @@
 package com.jarvis.command;
 
+import lombok.RequiredArgsConstructor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import com.jarvis.input.RoutedInput;
  * handled gracefully with explanatory messages.
  */
 @Service
+@RequiredArgsConstructor
 public class CommandEngine {
 
     private static final Logger log = LoggerFactory.getLogger(CommandEngine.class);
@@ -26,13 +29,6 @@ public class CommandEngine {
     private final AuditService audit;
     private final Orchestrator orchestrator;
 
-    public CommandEngine(InputRouter router, CommandRegistry registry, AuditService audit,
-                         Orchestrator orchestrator) {
-        this.router = router;
-        this.registry = registry;
-        this.audit = audit;
-        this.orchestrator = orchestrator;
-    }
 
     public CommandResult execute(String rawInput) {
         return execute(rawInput, "default");

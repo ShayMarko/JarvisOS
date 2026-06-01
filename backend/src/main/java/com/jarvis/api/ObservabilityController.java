@@ -1,5 +1,7 @@
 package com.jarvis.api;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 import java.util.Map;
 
@@ -18,15 +20,12 @@ import com.jarvis.observability.ObservabilityService;
 /** Agent Debugger / Observability + Cost Monitor endpoints (spec §13). */
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class ObservabilityController {
 
     private final ObservabilityService observability;
     private final Orchestrator orchestrator;
 
-    public ObservabilityController(ObservabilityService observability, Orchestrator orchestrator) {
-        this.observability = observability;
-        this.orchestrator = orchestrator;
-    }
 
     @GetMapping("/runs")
     public List<AgentRunRecord> runs(@RequestParam(name = "limit", defaultValue = "50") int limit) {

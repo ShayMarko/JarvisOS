@@ -1,5 +1,7 @@
 package com.jarvis.system;
 
+import lombok.RequiredArgsConstructor;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +20,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
  * never sample for an audience of zero.
  */
 @Service
+@RequiredArgsConstructor
 public class MonitorStreamService {
 
     private static final Logger log = LoggerFactory.getLogger(MonitorStreamService.class);
@@ -26,9 +29,6 @@ public class MonitorStreamService {
     private final SystemMonitorService monitor;
     private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
 
-    public MonitorStreamService(SystemMonitorService monitor) {
-        this.monitor = monitor;
-    }
 
     /** Registers a new subscriber and immediately sends one snapshot. */
     public SseEmitter register() {

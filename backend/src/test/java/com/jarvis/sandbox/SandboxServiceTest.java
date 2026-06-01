@@ -9,6 +9,8 @@ import org.junit.jupiter.api.io.TempDir;
 import java.nio.file.Path;
 
 import com.jarvis.config.JarvisFileSystemProperties;
+import com.jarvis.security.JarvisPolicyProperties;
+import com.jarvis.security.RestrictionPolicy;
 
 class SandboxServiceTest {
 
@@ -21,7 +23,8 @@ class SandboxServiceTest {
     void setUp() {
         JarvisFileSystemProperties props = new JarvisFileSystemProperties();
         props.setJarvisRoot(root.toString());
-        sandbox = new SandboxService(props, new com.jarvis.config.JarvisLimitsProperties());
+        sandbox = new SandboxService(props, new com.jarvis.config.JarvisLimitsProperties(),
+                new RestrictionPolicy(new JarvisPolicyProperties()));
         sandbox.init();
     }
 

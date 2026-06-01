@@ -1,5 +1,7 @@
 package com.jarvis.memory;
 
+import lombok.RequiredArgsConstructor;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -15,15 +17,12 @@ import com.jarvis.error.Exceptions.NotFoundException;
  * edit, delete, search and export. Every mutation is audited.
  */
 @Service
+@RequiredArgsConstructor
 public class MemoryService {
 
     private final MemoryRepository repository;
     private final AuditService audit;
 
-    public MemoryService(MemoryRepository repository, AuditService audit) {
-        this.repository = repository;
-        this.audit = audit;
-    }
 
     @Transactional(readOnly = true)
     public List<Memory> list(String query) {

@@ -1,5 +1,7 @@
 package com.jarvis.api;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -23,13 +25,11 @@ import jakarta.validation.constraints.NotBlank;
  */
 @RestController
 @RequestMapping("/api/secrets")
+@RequiredArgsConstructor
 public class SecretsController {
 
     private final SecretsVaultService vault;
 
-    public SecretsController(SecretsVaultService vault) {
-        this.vault = vault;
-    }
 
     public record CreateRequest(
             @NotBlank String name,

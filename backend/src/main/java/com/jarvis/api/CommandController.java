@@ -1,5 +1,7 @@
 package com.jarvis.api;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,15 +20,12 @@ import jakarta.validation.constraints.NotNull;
 /** Primary entry point for the client: send input, get a structured result. */
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class CommandController {
 
     private final CommandEngine engine;
     private final CommandRegistry registry;
 
-    public CommandController(CommandEngine engine, CommandRegistry registry) {
-        this.engine = engine;
-        this.registry = registry;
-    }
 
     public record CommandRequest(@NotNull String input, String sessionId) {}
 

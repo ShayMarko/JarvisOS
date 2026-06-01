@@ -7,9 +7,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /** A user-facing notification (spec §8 Notification Capability / center). */
 @Entity
 @Table(name = "notification")
+@Getter
 public class Notification {
 
     @Id
@@ -27,6 +31,7 @@ public class Notification {
     /** Where it came from: workflow, approval, system, … */
     private String source;
 
+    @Setter
     private boolean read;
 
     @Column(name = "created_at")
@@ -45,13 +50,4 @@ public class Notification {
         this.read = false;
         this.createdAt = Instant.now();
     }
-
-    public String getId() { return id; }
-    public String getType() { return type; }
-    public String getTitle() { return title; }
-    public String getBody() { return body; }
-    public String getSource() { return source; }
-    public boolean isRead() { return read; }
-    public void setRead(boolean read) { this.read = read; }
-    public Instant getCreatedAt() { return createdAt; }
 }

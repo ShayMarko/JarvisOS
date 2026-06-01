@@ -10,12 +10,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * A single item of long-term memory about the user (spec §10.1, Appendix C).
  * The user owns this data fully — it is viewable, editable and deletable.
  */
 @Entity
 @Table(name = "memory")
+@Getter
+@Setter
 public class Memory {
 
     @Id
@@ -63,29 +68,4 @@ public class Memory {
     public boolean isActive() {
         return enabled && (expiresAt == null || expiresAt.isAfter(Instant.now()));
     }
-
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
-    public String getContent() { return content; }
-    public void setContent(String content) { this.content = content; }
-    public String getSource() { return source; }
-    public void setSource(String source) { this.source = source; }
-    public double getConfidence() { return confidence; }
-    public void setConfidence(double confidence) { this.confidence = confidence; }
-    public Visibility getVisibility() { return visibility; }
-    public void setVisibility(Visibility visibility) { this.visibility = visibility; }
-    public Sensitivity getSensitivity() { return sensitivity; }
-    public void setSensitivity(Sensitivity sensitivity) { this.sensitivity = sensitivity; }
-    public Instant getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
-    public Instant getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(Instant updatedAt) { this.updatedAt = updatedAt; }
-    public Instant getExpiresAt() { return expiresAt; }
-    public void setExpiresAt(Instant expiresAt) { this.expiresAt = expiresAt; }
-    public boolean isEnabled() { return enabled; }
-    public void setEnabled(boolean enabled) { this.enabled = enabled; }
 }

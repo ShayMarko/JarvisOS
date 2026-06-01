@@ -9,9 +9,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import lombok.Getter;
+
 /** A single chat turn, persisted per session so the Brain has conversation context (#8). */
 @Entity
 @Table(name = "conversation_turn")
+@Getter
 public class ConversationTurn {
 
     @Id
@@ -41,10 +44,4 @@ public class ConversationTurn {
         this.content = content;
         this.createdAt = Instant.now();
     }
-
-    public Long getId() { return id; }
-    public String getSessionId() { return sessionId; }
-    public String getRole() { return role; }
-    public String getContent() { return content; }
-    public Instant getCreatedAt() { return createdAt; }
 }

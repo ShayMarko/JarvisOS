@@ -1,5 +1,7 @@
 package com.jarvis.system;
 
+import lombok.RequiredArgsConstructor;
+
 import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.util.LinkedHashMap;
@@ -20,17 +22,13 @@ import com.sun.management.UnixOperatingSystemMXBean;
  * a sidecar can provide them; agent and task counts are wired in Phase 6.
  */
 @Service
+@RequiredArgsConstructor
 public class SystemMonitorService {
 
     private final TaskService tasks;
     private final AgentRegistry agents;
     private final ConnectorRegistry connectors;
 
-    public SystemMonitorService(TaskService tasks, AgentRegistry agents, ConnectorRegistry connectors) {
-        this.tasks = tasks;
-        this.agents = agents;
-        this.connectors = connectors;
-    }
 
     public Map<String, Object> snapshot() {
         OperatingSystemMXBean os =

@@ -1,5 +1,7 @@
 package com.jarvis.model;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.Comparator;
 import java.util.List;
 
@@ -14,15 +16,12 @@ import com.jarvis.ai.JarvisAiProperties;
  * an API key and the configured cloud model becomes selectable.)
  */
 @Component
+@RequiredArgsConstructor
 public class ModelRouter {
 
     private final ModelCatalog catalog;
     private final JarvisAiProperties props;
 
-    public ModelRouter(ModelCatalog catalog, JarvisAiProperties props) {
-        this.catalog = catalog;
-        this.props = props;
-    }
 
     public ModelDescriptor route(String taskType) {
         return choose(catalog.available(), props.getPrivacy());

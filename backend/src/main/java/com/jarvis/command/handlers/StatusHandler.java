@@ -1,5 +1,7 @@
 package com.jarvis.command.handlers;
 
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Component;
 
 import com.jarvis.command.CommandCategory;
@@ -11,13 +13,11 @@ import com.jarvis.system.SystemMonitorService;
 
 /** {@code /status} — overall system status (spec §5.2). */
 @Component
+@RequiredArgsConstructor
 public class StatusHandler implements CommandHandler {
 
     private final SystemMonitorService monitor;
 
-    public StatusHandler(SystemMonitorService monitor) {
-        this.monitor = monitor;
-    }
 
     @Override
     public CommandDefinition definition() {

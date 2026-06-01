@@ -1,5 +1,7 @@
 package com.jarvis.command.handlers;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -16,13 +18,11 @@ import java.util.List;
 
 /** {@code /kb [query]} — open the Knowledge Base, or run a semantic search (spec §5.2, §10.2). */
 @Component
+@RequiredArgsConstructor
 public class KbHandler implements CommandHandler {
 
     private final KnowledgeBaseService kb;
 
-    public KbHandler(KnowledgeBaseService kb) {
-        this.kb = kb;
-    }
 
     @Override
     public CommandDefinition definition() {
