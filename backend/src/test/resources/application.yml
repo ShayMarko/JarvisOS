@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:sqlite:./target/test-jarvis.db
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+jarvis:
+  security:
+    permission-mode: ASSISTED
+    vault-key: test-vault-key
+  filesystem:
+    jarvis-root: ./target/test-explorer
+    explorer-folders:
+      - Notes
+    blocked-paths: []

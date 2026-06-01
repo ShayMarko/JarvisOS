@@ -1,0 +1,100 @@
+spring:
+  application:
+    name: jarvis-core
+
+  datasource:
+    # Local-first SQLite database. File lives under ./data relative to the working dir.
+    url: jdbc:sqlite:${JARVIS_DB_PATH:./data/jarvis.db}
+    driver-class-name: org.sqlite.JDBC
+
+  jpa:
+    hibernate:
+      # Flyway owns the schema; Hibernate neither creates nor validates it.
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.community.dialect.SQLiteDialect
+    open-in-view: false
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+server:
+  port: ${JARVIS_PORT:8088}
+  # Local-first: only listen on the loopback interface so other machines can't reach Jarvis.
+  address: ${JARVIS_BIND:127.0.0.1}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+
+# --- Jarvis-specific configuration -------------------------------------------
+# Mirrors Appendix B of the spec: a virtual Jarvis Explorer root plus an
+# allow-list of external folders. Blocked paths are always denied.
+jarvis:
+  security:
+    # SAFE = read-only, ASSISTED = mutate but confirm deletes, AUTONOMOUS = mutate freely (spec §11.1)
+    permission-mode: ${JARVIS_PERMISSION_MODE:ASSISTED}
+    # Passphrase to derive the Secrets Vault AES key. Override in production.
+    vault-key: ${JARVIS_VAULT_KEY:jarvis-dev-vault-key-change-me}
+  monitor:
+    # How often the live System Monitor stream (SSE) pushes a snapshot.
+    stream-interval-ms: ${JARVIS_MONITOR_INTERVAL:2000}
+  # Jarvis Brain / model adapter (spec §15). Default is the offline mock model.
+  ai:
+    provider: ${JARVIS_AI_PROVIDER:mock}      # mock | claude
+    anthropic-api-key: ${ANTHROPIC_API_KEY:}
+    model: ${JARVIS_AI_MODEL:claude-opus-4-8}
+    max-tokens: 1024
+    max-steps: 4
+    privacy: ${JARVIS_AI_PRIVACY:BALANCED}   # BALANCED | PRIVATE | QUALITY | CHEAP
+  # Tunable limits/sizes (see JarvisLimitsProperties).
+  limits:
+    conversation-history-turns: 10
+    file-max-text-bytes: 2097152            # 2 MB — max file the text viewer loads
+    file-search-max-results: 200
+    kb-chunk-size: 1000                      # chars per KB chunk
+    kb-chunk-overlap: 150
+    kb-max-files-per-folder: 50
+    kb-search-top-k: 5
+    sandbox-timeout-seconds: 15
+    sandbox-max-output-chars: 100000
+    web-fetch-max-chars: 2000
+    web-fetch-timeout-seconds: 12
+    secret-hint-length: 4                    # trailing chars shown as ••••1234
+  filesystem:
+    # The virtual home of Jarvis. Created on startup if missing.
+    jarvis-root: ${JARVIS_ROOT:./JarvisExplorer}
+    # Standard sub-folders created inside the Jarvis root.
+    explorer-folders:
+      - Downloads
+      - Documents
+      - Projects
+      - Media
+      - Notes
+      - Emails
+      - Generated
+      - Screenshots
+      - Logs
+    # Additional real folders Jarvis may read/write, each with a permission level.
+    allowed-folders: []
+    #   - name: desktop
+    #     path: /Users/shaymarko/Desktop
+    #     permission: READ_ONLY
+    blocked-paths:
+      - /System
+      - /Library
+      - /private
+      - ~/.ssh
+      - ~/.aws
+      - ~/.config/secrets
+
+logging:
+  level:
+    com.jarvis: INFO
