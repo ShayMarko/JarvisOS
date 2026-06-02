@@ -35,6 +35,16 @@ public class CommandEngine {
     }
 
     public CommandResult execute(String rawInput, String sessionId) {
+        return execute(rawInput, sessionId, null);
+    }
+
+    /**
+     * The single cognitive entry: routes raw input through {@link InputRouter} and
+     * either runs the deterministic slash command or hands free text to the Brain.
+     * When {@code onStep} is non-null, the Brain streams each step live (the slash
+     * path is one-shot and ignores it).
+     */
+    public CommandResult execute(String rawInput, String sessionId, java.util.function.Consumer<com.jarvis.agent.Step> onStep) {
         RoutedInput routed = router.route(rawInput);
 
         return switch (routed.type()) {
@@ -42,7 +52,7 @@ public class CommandEngine {
 
             case AI_REQUEST -> {
                 try {
-                    var chat = orchestrator.handle(routed.text(), sessionId);
+                    var chat = orchestrator.handle(routed.text(), sessionId, onStep);
                     yield CommandResult.ok("chat", chat.answer(), chat);
                 } catch (JarvisException e) {
                     yield CommandResult.error(e.getMessage());

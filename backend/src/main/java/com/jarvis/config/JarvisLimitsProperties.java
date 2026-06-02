@@ -38,6 +38,11 @@ public class JarvisLimitsProperties {
     private int sandboxTimeoutSeconds = 15;
     private int sandboxMaxOutputChars = 100_000;
 
+    /** When true (and Docker is installed), run sandbox commands inside an isolated,
+     *  network-less container; otherwise fall back to a throwaway temp-dir process. */
+    private boolean sandboxDocker = false;
+    private String sandboxImage = "alpine:3";
+
     /** fetch_url: response cap (chars) and request timeout (seconds). */
     private int webFetchMaxChars = 2000;
     private int webFetchTimeoutSeconds = 12;

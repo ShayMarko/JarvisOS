@@ -2,6 +2,9 @@ package com.jarvis.ai;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -13,11 +16,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class ProviderSwitchingLanguageModel implements LanguageModel {
 
+    private static final Logger log = LoggerFactory.getLogger(ProviderSwitchingLanguageModel.class);
+
     private final JarvisAiProperties props;
     private final ObjectMapper mapper;
     private final MockLanguageModel mock = new MockLanguageModel();
     private volatile AnthropicLanguageModel anthropic;
     private volatile String anthropicKey;
+    private volatile OllamaLanguageModel ollama;
 
     public ProviderSwitchingLanguageModel(JarvisAiProperties props, ObjectMapper mapper) {
         this.props = props;
@@ -26,7 +32,16 @@ public class ProviderSwitchingLanguageModel implements LanguageModel {
 
     @Override
     public ModelResponse generate(List<ChatMessage> messages, List<ToolSpec> tools) {
-        return active().generate(messages, tools);
+        LanguageModel m = active();
+        try {
+            return m.generate(messages, tools);
+        } catch (RuntimeException e) {
+            if (m != mock) {
+                log.warn("Provider {} failed ({}); falling back to the offline mock.", m.name(), e.getMessage());
+                return mock.generate(messages, tools);
+            }
+            throw e;
+        }
     }
 
     @Override
@@ -36,11 +51,20 @@ public class ProviderSwitchingLanguageModel implements LanguageModel {
 
     private LanguageModel active() {
         String provider = props.getProvider() == null ? "" : props.getProvider().toLowerCase();
-        boolean wantsAnthropic = provider.equals("claude") || provider.equals("anthropic");
-        if (wantsAnthropic && hasKey()) {
+        if ((provider.equals("claude") || provider.equals("anthropic")) && hasKey()) {
             return anthropic();
         }
+        if (provider.equals("ollama")) {
+            return ollama();
+        }
         return mock;
+    }
+
+    private OllamaLanguageModel ollama() {
+        if (ollama == null) {
+            ollama = new OllamaLanguageModel(props, mapper);
+        }
+        return ollama;
     }
 
     private boolean hasKey() {

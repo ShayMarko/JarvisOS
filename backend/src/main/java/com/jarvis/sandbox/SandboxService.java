@@ -43,6 +43,7 @@ public class SandboxService {
     private final JarvisLimitsProperties limits;
     private final RestrictionPolicy policy;
     private Path sandboxRoot;
+    private boolean dockerReady;
 
     @PostConstruct
     void init() {
@@ -52,6 +53,15 @@ public class SandboxService {
         } catch (IOException e) {
             throw new UncheckedIOException("Could not create sandbox root", e);
         }
+        dockerReady = limits.isSandboxDocker() && dockerAvailable();
+        log.info("Sandbox isolation: {}", dockerReady
+                ? "Docker container (" + limits.getSandboxImage() + ", --network none)"
+                : "lightweight temp-dir" + (limits.isSandboxDocker() ? " (Docker requested but unavailable)" : ""));
+    }
+
+    /** Whether commands run inside an isolated Docker container (vs a temp-dir process). */
+    public boolean isContainerized() {
+        return dockerReady;
     }
 
     public SandboxResult run(String command, int timeoutSeconds) {
@@ -60,7 +70,7 @@ public class SandboxService {
         long start = System.nanoTime();
         Path workdir = createWorkdir();
         try {
-            ProcessBuilder pb = new ProcessBuilder("sh", "-c", command);
+            ProcessBuilder pb = new ProcessBuilder(buildCommand(command, workdir));
             pb.directory(workdir.toFile());
             pb.redirectErrorStream(true);
             Process process = pb.start();
@@ -91,6 +101,28 @@ public class SandboxService {
 
     public Path getSandboxRoot() {
         return sandboxRoot;
+    }
+
+    /** Build the OS command: a network-less Docker container when enabled, else a plain shell. */
+    private java.util.List<String> buildCommand(String command, Path workdir) {
+        if (dockerReady) {
+            return java.util.List.of("docker", "run", "--rm",
+                    "--network", "none",            // no network egress from sandboxed code
+                    "--memory", "256m", "--cpus", "1",
+                    "-v", workdir.toAbsolutePath() + ":/work", "-w", "/work",
+                    limits.getSandboxImage(), "sh", "-c", command);
+        }
+        return java.util.List.of("sh", "-c", command);
+    }
+
+    private boolean dockerAvailable() {
+        try {
+            Process p = new ProcessBuilder("docker", "version", "--format", "{{.Server.Version}}")
+                    .redirectErrorStream(true).start();
+            return p.waitFor(4, TimeUnit.SECONDS) && p.exitValue() == 0;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private Path createWorkdir() {

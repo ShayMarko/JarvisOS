@@ -37,10 +37,19 @@ public class AgentRuntime {
     }
 
     public AgentRun run(AgentDefinition agent, String userMessage, String context) {
-        return run(agent, userMessage, context, List.of());
+        return run(agent, userMessage, context, List.of(), null);
     }
 
     public AgentRun run(AgentDefinition agent, String userMessage, String context, List<ChatMessage> history) {
+        return run(agent, userMessage, context, history, null);
+    }
+
+    /**
+     * Runs the tool-calling loop, emitting each {@link Step} to {@code onStep} as
+     * it happens (for live streaming). {@code onStep} may be {@code null}.
+     */
+    public AgentRun run(AgentDefinition agent, String userMessage, String context,
+                        List<ChatMessage> history, java.util.function.Consumer<Step> onStep) {
         List<ChatMessage> messages = new ArrayList<>();
         String system = agent.systemPrompt();
         if (persona.isEnabled() && persona.getPrompt() != null && !persona.getPrompt().isBlank()) {
@@ -74,17 +83,27 @@ public class AgentRuntime {
                     String result = tool == null
                             ? "Unknown tool: " + call.name()
                             : tool.execute(call.argumentsJson());
-                    steps.add(new Step("tool", "Called " + call.name(), truncate(result)));
+                    Step step = new Step("tool", "Called " + call.name(), truncate(result));
+                    steps.add(step);
+                    emit(onStep, step);
                     messages.add(ChatMessage.tool(result, call.id()));
                 }
                 continue;
             }
 
-            steps.add(new Step("answer", "Composed the answer", null));
+            Step answer = new Step("answer", "Composed the answer", null);
+            steps.add(answer);
+            emit(onStep, answer);
             return new AgentRun(resp.text(), steps, promptTokens, completionTokens, model.name());
         }
         return new AgentRun("I couldn't complete this within the step budget.", steps,
                 promptTokens, completionTokens, model.name());
+    }
+
+    private static void emit(java.util.function.Consumer<Step> onStep, Step step) {
+        if (onStep != null) {
+            onStep.accept(step);
+        }
     }
 
     private static String truncate(String s) {

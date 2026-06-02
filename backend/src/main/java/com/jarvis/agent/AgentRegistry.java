@@ -30,7 +30,8 @@ public class AgentRegistry {
                         "system_status", "memory_search", "memory_write", "connector_invoke", "open_app",
                         "reveal_in_finder", "clipboard_read", "clipboard_write", "screenshot", "spotlight_search",
                         "image_convert", "say", "list_projects", "open_project", "daily_digest",
-                        "create_pdf", "create_docx", "create_diagram", "ocr_image"), "general");
+                        "create_pdf", "create_docx", "create_diagram", "ocr_image", "mcp_list", "mcp_call",
+                        "backup_create", "backup_list"), "general");
 
         // --- Engineering ---
         add("Product / Spec Agent", "product", "Writes specs, user stories and acceptance criteria.",
@@ -75,8 +76,9 @@ public class AgentRegistry {
                 "You are the Data Analyst. Read and analyse the requested files and explain the findings.",
                 List.of("read_file", "search_files"), "data");
         add("Backup & Sync Agent", "backup", "Backs up and restores files and config.",
-                "You are the Backup & Sync Agent. Help copy, back up and restore files in the Explorer.",
-                List.of("list_files", "read_file", "write_file"), "files");
+                "You are the Backup & Sync Agent. Help copy, back up and restore files in the Explorer. "
+                + "Use backup_create to snapshot and backup_list to review existing snapshots.",
+                List.of("list_files", "read_file", "write_file", "backup_create", "backup_list"), "files");
 
         // --- Knowledge / research ---
         add("Research Agent", "research", "Finds and summarises information from the web and local sources.",
@@ -120,6 +122,9 @@ public class AgentRegistry {
         add("Connector Agent", "connectors", "Acts on external services (Gmail, GitHub, Calendar, Slack).",
                 "You are the Connector Agent. Use connector_invoke to read from and act on external services.",
                 List.of("connector_invoke", "memory_search"), "connectors");
+        add("MCP / Integrations Agent", "mcp", "Uses external MCP servers (filesystem, databases, browser, …).",
+                "You are the MCP Integrations Agent. Call mcp_list to discover connected MCP servers and their tools, then mcp_call to use them.",
+                List.of("mcp_list", "mcp_call", "connector_invoke"), "connectors");
 
         // --- Governance / ops ---
         add("Security / Permission Agent", "security", "Assesses risk, permissions and secrets.",

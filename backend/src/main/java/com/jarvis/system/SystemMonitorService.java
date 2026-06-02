@@ -2,8 +2,11 @@ package com.jarvis.system;
 
 import lombok.RequiredArgsConstructor;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.lang.management.ManagementFactory;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -28,6 +31,12 @@ public class SystemMonitorService {
     private final TaskService tasks;
     private final AgentRegistry agents;
     private final ConnectorRegistry connectors;
+
+    // Network throughput is a rate: we remember the last cumulative byte counts
+    // and the time we read them, then divide the delta by the elapsed seconds.
+    private long lastRxBytes = -1;
+    private long lastTxBytes = -1;
+    private long lastSampleNanos = 0;
 
 
     public Map<String, Object> snapshot() {
@@ -91,10 +100,103 @@ public class SystemMonitorService {
         snapshot.put("process", process);
         snapshot.put("jvm", jvm);
         snapshot.put("runtime", runtimeStatus);
+        snapshot.put("network", network());
         snapshot.put("gpu", null);             // no GPU telemetry yet
         snapshot.put("localModelLoad", null);  // no local model yet (Phase 10)
         snapshot.put("jarvisHealth", "OK");
         return snapshot;
+    }
+
+    /**
+     * Network throughput: cumulative bytes in/out across physical interfaces plus a
+     * per-second rate computed against the previous sample. Real numbers from macOS
+     * {@code netstat -ib}; returns null on other platforms or if the tool is missing.
+     */
+    private synchronized Map<String, Object> network() {
+        long[] totals = readNetTotals();   // {rxBytes, txBytes} or null
+        if (totals == null) {
+            return null;
+        }
+        long rx = totals[0];
+        long tx = totals[1];
+        long nowNanos = System.nanoTime();
+
+        double rxPerSec = 0;
+        double txPerSec = 0;
+        if (lastRxBytes >= 0 && lastSampleNanos > 0) {
+            double seconds = (nowNanos - lastSampleNanos) / 1_000_000_000.0;
+            if (seconds > 0.05) {
+                rxPerSec = Math.max(0, (rx - lastRxBytes) / seconds);
+                txPerSec = Math.max(0, (tx - lastTxBytes) / seconds);
+            }
+        }
+        lastRxBytes = rx;
+        lastTxBytes = tx;
+        lastSampleNanos = nowNanos;
+
+        Map<String, Object> net = new LinkedHashMap<>();
+        net.put("rxBytes", rx);
+        net.put("txBytes", tx);
+        net.put("rxBytesPerSec", Math.round(rxPerSec));
+        net.put("txBytesPerSec", Math.round(txPerSec));
+        return net;
+    }
+
+    /**
+     * Sum ibytes/obytes across the physical {@code en*} interfaces (Wi-Fi + Ethernet)
+     * from {@code netstat -ib}. We anchor on the {@code <Link#N>} token because the
+     * Address column is blank on the Link row, so header column indices don't line up.
+     * The fields after the token are either {@code [MAC] Ipkts Ierrs Ibytes Opkts Oerrs
+     * Obytes Coll} (when the interface has a hardware address) or the same without the
+     * MAC — so we detect the MAC (it contains ':') and offset accordingly. Counting only
+     * {@code en*} avoids double-counting VPN/tunnel traffic that also rides the wire.
+     */
+    private long[] readNetTotals() {
+        if (!System.getProperty("os.name", "").toLowerCase().contains("mac")) {
+            return null;
+        }
+        try {
+            Process p = new ProcessBuilder("netstat", "-ib").redirectErrorStream(true).start();
+            long rx = 0;
+            long tx = 0;
+            try (BufferedReader r = new BufferedReader(
+                    new InputStreamReader(p.getInputStream(), StandardCharsets.UTF_8))) {
+                String line;
+                while ((line = r.readLine()) != null) {
+                    String[] f = line.trim().split("\\s+");
+                    if (f.length < 2 || !f[0].startsWith("en")) {
+                        continue;       // header, blanks, non-physical interfaces
+                    }
+                    int link = -1;
+                    for (int i = 0; i < f.length; i++) {
+                        if (f[i].startsWith("<Link")) {
+                            link = i;
+                            break;
+                        }
+                    }
+                    if (link < 0) {
+                        continue;       // not the Link row (IPv4/IPv6 alias rows)
+                    }
+                    // Ipkts starts right after the Link token, skipping a MAC address if present.
+                    int start = (link + 1 < f.length && f[link + 1].contains(":")) ? link + 2 : link + 1;
+                    int ibytes = start + 2;
+                    int obytes = start + 5;
+                    if (f.length <= obytes) {
+                        continue;
+                    }
+                    try {
+                        rx += Long.parseLong(f[ibytes]);
+                        tx += Long.parseLong(f[obytes]);
+                    } catch (NumberFormatException ignored) {
+                        // unexpected layout for this interface — skip it
+                    }
+                }
+            }
+            p.waitFor();
+            return new long[] {rx, tx};
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private static double round(double value) {

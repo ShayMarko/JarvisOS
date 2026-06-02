@@ -36,8 +36,9 @@ public class SettingsController {
         out.put("provider", ai.getProvider());
         out.put("model", ai.getModel());
         out.put("hasAnthropicKey", ai.getAnthropicApiKey() != null && !ai.getAnthropicApiKey().isBlank());
-        // "claude" is the only provider with real reasoning today; others fall back to the offline mock.
-        out.put("providers", List.of("mock", "claude"));
+        out.put("ollamaModel", ai.getOllamaModel());
+        // mock = offline stub; claude = Anthropic (needs key); ollama = local model (needs Ollama running).
+        out.put("providers", List.of("mock", "claude", "ollama"));
         return out;
     }
 

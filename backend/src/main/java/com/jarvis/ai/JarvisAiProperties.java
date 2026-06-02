@@ -13,10 +13,14 @@ import lombok.Setter;
 @ConfigurationProperties(prefix = "jarvis.ai")
 public class JarvisAiProperties {
 
-    /** "mock" (default, offline) or "claude". */
+    /** "mock" (default, offline), "claude" (Anthropic), or "ollama" (local). */
     private String provider = "mock";
     private String anthropicApiKey = "";
     private String model = "claude-opus-4-8";
+    /** Local Ollama server + chat/embedding models (real reasoning, no API key). */
+    private String ollamaBaseUrl = "http://localhost:11434";
+    private String ollamaModel = "llama3.1";
+    private String ollamaEmbeddingModel = "nomic-embed-text";
     private int maxTokens = 1024;
     /** Max tool-calling iterations before the runtime gives up. */
     private int maxSteps = 4;

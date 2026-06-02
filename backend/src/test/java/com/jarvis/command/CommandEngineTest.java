@@ -1,6 +1,7 @@
 package com.jarvis.command;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -47,7 +48,7 @@ class CommandEngineTest {
 
     @Test
     void freeTextGoesToTheBrain() {
-        when(orchestrator.handle(anyString(), anyString()))
+        when(orchestrator.handle(anyString(), anyString(), any()))
                 .thenReturn(new ChatResponse("answer from brain", "General Assistant",
                         List.of(), "task_1", 12, "mock"));
         CommandResult result = engine().execute("summarise my emails");

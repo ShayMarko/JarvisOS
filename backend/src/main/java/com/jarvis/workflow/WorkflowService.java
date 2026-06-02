@@ -22,6 +22,7 @@ public class WorkflowService {
     private final WorkflowRunRepository runs;
     private final WorkflowEngine engine;
     private final WorkflowScheduler scheduler;
+    private final FileWatchService fileWatch;
     private final ObjectMapper mapper;
 
 
@@ -42,6 +43,7 @@ public class WorkflowService {
                 writeSteps(draft.steps()));
         Workflow saved = workflows.save(wf);
         scheduler.schedule(saved);
+        fileWatch.rescan();
         return toView(saved);
     }
 
@@ -56,6 +58,7 @@ public class WorkflowService {
         wf.setUpdatedAt(Instant.now());
         Workflow saved = workflows.save(wf);
         scheduler.schedule(saved); // reschedule with new cron/enabled state
+        fileWatch.rescan();
         return toView(saved);
     }
 
@@ -63,6 +66,7 @@ public class WorkflowService {
         require(id);
         scheduler.unschedule(id);
         workflows.deleteById(id);
+        fileWatch.rescan();
     }
 
     public RunView run(String id, String trigger) {

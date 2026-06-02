@@ -370,6 +370,10 @@ export function markNotificationsRead(): Promise<void> {
   return req<void>('/api/notifications/read-all', { method: 'POST', headers: jsonHeaders })
 }
 
+export function markNotificationRead(id: string): Promise<void> {
+  return req<void>(`/api/notifications/${id}/read`, { method: 'POST', headers: jsonHeaders })
+}
+
 export function indexKb(body: { path?: string; title?: string; content?: string }): Promise<unknown> {
   return req<unknown>('/api/kb/index', { method: 'POST', headers: jsonHeaders, body: JSON.stringify(body) })
 }
@@ -516,7 +520,31 @@ export interface MonitorSnapshot {
   memory: { totalPhysicalBytes: number; freePhysicalBytes: number; usedPhysicalBytes: number }
   disk: { totalBytes: number; freeBytes: number; usableBytes: number }
   runtime: { activeAgents: number; runningTasks: number; registeredAgents: number; connectorHealth: string }
+  network?: { rxBytes: number; txBytes: number; rxBytesPerSec: number; txBytesPerSec: number } | null
   jarvisHealth: string
+}
+
+export interface BackupInfo {
+  name: string
+  sizeBytes: number
+  createdAt: string
+}
+
+export function listBackups(): Promise<BackupInfo[]> {
+  return req<BackupInfo[]>('/api/backups')
+}
+
+export function createBackup(): Promise<BackupInfo> {
+  return req<BackupInfo>('/api/backups', { method: 'POST' })
+}
+
+export function restoreBackup(name: string): Promise<{ message: string }> {
+  return req<{ message: string }>(`/api/backups/${encodeURIComponent(name)}/restore`, { method: 'POST' })
+}
+
+/** List files/folders under a path within the Jarvis Explorer ('' = root). */
+export function listFiles(path = ''): Promise<FileNode[]> {
+  return req<FileNode[]>(`/api/files?path=${encodeURIComponent(path)}`)
 }
 
 /** Ask Jarvis (free text or a quick action) — full agent run with step trace. */
@@ -550,6 +578,66 @@ export function getStatus(): Promise<MonitorSnapshot> {
 
 export function getRuns(limit = 50): Promise<RunRecord[]> {
   return req<RunRecord[]>(`/api/runs?limit=${limit}`)
+}
+
+export interface ChatStreamHandlers {
+  onStep: (step: Step) => void
+  onAnswer: (resp: ChatResponse) => void
+  onError: (message: string) => void
+  onDone: () => void
+}
+
+// SSE doesn't survive the Vite dev proxy reliably, so in dev we hit the backend
+// origin directly (CORS already allows :5173). In prod (same origin) it's relative.
+const STREAM_BASE = typeof location !== 'undefined' && location.port === '5173' ? 'http://localhost:8088' : ''
+
+export interface InputStreamHandlers {
+  onStep: (step: Step) => void
+  onResult: (result: CommandResult) => void
+  onError: (message: string) => void
+  onDone: () => void
+}
+
+/**
+ * The single cognitive door: send any raw input (slash command or free text);
+ * the backend's InputRouter decides where it goes. Slash commands return a
+ * one-shot result; AI requests stream step events first, then the result.
+ */
+export function streamInput(input: string, h: InputStreamHandlers): EventSource {
+  const url = `${STREAM_BASE}/api/input/stream?input=${encodeURIComponent(input)}&sessionId=${encodeURIComponent(sessionId)}`
+  const es = new EventSource(url)
+  let finished = false
+  es.addEventListener('step', (e) => { try { h.onStep(JSON.parse((e as MessageEvent).data)) } catch { /* skip */ } })
+  es.addEventListener('result', (e) => { try { h.onResult(JSON.parse((e as MessageEvent).data)) } catch { /* skip */ } })
+  es.addEventListener('done', () => { finished = true; h.onDone(); es.close() })
+  es.addEventListener('error', (e) => {
+    if (finished) return
+    finished = true
+    const data = (e as MessageEvent).data
+    if (data) { try { h.onError(JSON.parse(data).message) } catch { h.onError('stream error') } }
+    else h.onError('Could not connect to the stream.')
+    es.close()
+  })
+  return es
+}
+
+/** Stream an agent run: step events arrive live, then the final answer. */
+export function streamChat(message: string, h: ChatStreamHandlers): EventSource {
+  const url = `${STREAM_BASE}/api/chat/stream?message=${encodeURIComponent(message)}&sessionId=${encodeURIComponent(sessionId)}`
+  const es = new EventSource(url)
+  let finished = false
+  es.addEventListener('step', (e) => { try { h.onStep(JSON.parse((e as MessageEvent).data)) } catch { /* skip */ } })
+  es.addEventListener('answer', (e) => { try { h.onAnswer(JSON.parse((e as MessageEvent).data)) } catch { /* skip */ } })
+  es.addEventListener('done', () => { finished = true; h.onDone(); es.close() })
+  es.addEventListener('error', (e) => {
+    if (finished) return
+    finished = true
+    const data = (e as MessageEvent).data
+    if (data) { try { h.onError(JSON.parse(data).message) } catch { h.onError('stream error') } }
+    else h.onError('Could not connect to the stream.')
+    es.close()
+  })
+  return es
 }
 
 export interface SettingsView {

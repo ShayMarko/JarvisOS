@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
-  chat, fetchCommands, getAgents, getAudit, getMemoryList, getNotifications,
-  getRuns, getSettings, getStatus, getTasks, getUnreadCount, markNotificationsRead,
-  runCommand, setProvider as apiSetProvider,
+  createBackup, createMemory, deleteMemory, fetchCommands, getAgents, getAudit, getFileContent,
+  getMemoryList, getNotifications, getRuns, getSettings, getStatus, getUnreadCount, listBackups,
+  listFiles, markNotificationRead, restoreBackup, runCommand, setProvider as apiSetProvider,
+  streamInput, writeFile,
 } from './api'
 import type {
-  AgentDef, AuditEntry, ChatResponse, CommandDefinition, Memory, MonitorSnapshot,
-  NotificationItem, RunRecord, SettingsView, Step, TaskItem,
+  AgentDef, AuditEntry, BackupInfo, ChatResponse, CommandDefinition, CommandResult, FileNode, Memory,
+  MonitorSnapshot, NotificationItem, RunRecord, SettingsView, Step,
 } from './api'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -122,7 +123,7 @@ function Halo() {
 /* ===========================================================================
    Floating window (draggable)
 =========================================================================== */
-type WinKind = 'today' | 'memory' | 'history' | 'settings' | 'agents' | 'logs' | 'result' | 'response'
+type WinKind = 'today' | 'memory' | 'history' | 'settings' | 'agents' | 'logs' | 'files' | 'backups' | 'notifications' | 'result' | 'response'
 interface Win { key: string; kind: WinKind; title: string; subtitle: string; dim: string; x: number; y: number; z: number; payload?: unknown }
 
 function FloatingWindow({ win, onClose, onFocus, children }: { win: Win; onClose: () => void; onFocus: () => void; children: React.ReactNode }) {
@@ -169,16 +170,34 @@ function TodayWindow() {
 
 function MemoryWindow() {
   const [items, setItems] = useState<Memory[] | null>(null)
+  const [title, setTitle] = useState('')
+  const [content, setContent] = useState('')
   const load = useCallback(() => getMemoryList().then(setItems).catch(() => setItems([])), [])
   useEffect(() => { load() }, [load])
+  const add = () => {
+    if (!content.trim()) return
+    createMemory({ category: 'fact', title: title.trim() || 'Note', content: content.trim(), source: 'manual' })
+      .then(() => { setTitle(''); setContent(''); load() }).catch(() => {})
+  }
+  const del = (id: string) => deleteMemory(id).then(load).catch(() => {})
   return (
     <>
-      <div className="w-head-row"><span className="w-section-title">Trusted memory</span>
-        <button className="btn-soft" onClick={load}>⟳ Scan now</button></div>
+      <div className="w-head-row"><span className="w-section-title">Trusted memory · {items?.length ?? 0}</span>
+        <button className="btn-soft" onClick={load}>⟳ Refresh</button></div>
+      <div className="mem-add">
+        <input placeholder="Title (optional)" value={title} onChange={(e) => setTitle(e.target.value)} style={{ flex: '0 0 150px' }} />
+        <input placeholder="Tell Jarvis a fact to remember…" value={content} onChange={(e) => setContent(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter') add() }} style={{ flex: 1 }} />
+        <button className="btn-soft" onClick={add} disabled={!content.trim()}>+ Remember</button>
+      </div>
       {!items ? <div className="w-empty"><span className="spin-fast">◠</span></div>
-        : items.length === 0 ? <div className="w-empty"><div className="big">◈</div><div className="s">No memory yet. Tell Jarvis things to remember, or run “Scan now” to extract from recent chats.</div></div>
+        : items.length === 0 ? <div className="w-empty"><div className="big">◈</div><div className="s">No memory yet. Add a fact above, or just tell Jarvis “remember that …” in the command bar.</div></div>
         : <div className="rows">{items.map((m) => (
-            <div className="row" key={m.id}><span className="grow"><strong>{m.title}</strong> — <span style={{ color: 'var(--muted)' }}>{m.content}</span></span><span className="pill low">{m.category}</span></div>
+            <div className="row" key={m.id}>
+              <span className="grow"><strong>{m.title}</strong> — <span style={{ color: 'var(--muted)' }}>{m.content}</span></span>
+              <span className="pill low">{m.category}</span>
+              <button className="row-del" title="Forget" onClick={() => del(m.id)}>✕</button>
+            </div>
           ))}</div>}
     </>
   )
@@ -250,6 +269,19 @@ function AgentsWindow() {
       ))}</div>
 }
 
+function NotificationsWindow() {
+  const [items, setItems] = useState<NotificationItem[] | null>(null)
+  useEffect(() => { getNotifications().then(setItems).catch(() => setItems([])) }, [])
+  return !items ? <div className="w-empty"><span className="spin-fast">◠</span></div>
+    : items.length === 0 ? <div className="w-empty"><div className="big">🔔</div><div className="s">Nothing yet — you’re all caught up.</div></div>
+    : <div className="rows">{items.map((n) => (
+        <div className="row" key={n.id} style={{ alignItems: 'flex-start' }}>
+          <span className={`dot-s ${n.type === 'error' ? 'bad' : n.type === 'warning' ? 'warn' : 'ok'}`} style={{ marginTop: 5 }} />
+          <span className="grow" style={{ whiteSpace: 'normal' }}><strong>{n.title}</strong>{n.body ? <div style={{ color: 'var(--muted)', fontSize: 12 }}>{n.body}</div> : null}</span>
+          <span className="when">{ago(n.createdAt)}</span>
+        </div>))}</div>
+}
+
 function LogsWindow() {
   const [logs, setLogs] = useState<AuditEntry[] | null>(null)
   useEffect(() => { getAudit(60).then(setLogs).catch(() => setLogs([])) }, [])
@@ -259,6 +291,128 @@ function LogsWindow() {
         <div className="row" key={l.id}><span className={`dot-s ${l.status === 'OK' ? 'ok' : l.status === 'ERROR' ? 'bad' : 'warn'}`} />
           <span className="grow">{l.command || l.inputType}{l.input ? ` — ${l.input}` : ''}</span><span className="when">{ago(l.timestamp)}</span></div>
       ))}</div>
+}
+
+function FilesWindow() {
+  const [cwd, setCwd] = useState('')
+  const [entries, setEntries] = useState<FileNode[] | null>(null)
+  const [sel, setSel] = useState<FileNode | null>(null)
+  const [content, setContent] = useState('')
+  const [dirty, setDirty] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [msg, setMsg] = useState('')
+
+  const load = useCallback((path: string) => {
+    setEntries(null); setSel(null); setMsg('')
+    listFiles(path).then(setEntries).catch((e) => { setEntries([]); setMsg(friendlyError((e as Error).message)) })
+  }, [])
+  useEffect(() => { load(cwd) }, [cwd, load])
+
+  const open = (n: FileNode) => {
+    if (n.directory) { setCwd(n.path); return }
+    setBusy(true); setMsg('')
+    getFileContent(n.path)
+      .then((f) => { setSel(n); setContent(f.content); setDirty(false) })
+      .catch((e) => setMsg(friendlyError((e as Error).message)))
+      .finally(() => setBusy(false))
+  }
+  const save = () => {
+    if (!sel) return
+    setBusy(true)
+    writeFile(sel.path, content)
+      .then(() => { setDirty(false); setMsg('Saved.'); setTimeout(() => setMsg(''), 1800) })
+      .catch((e) => setMsg(friendlyError((e as Error).message)))
+      .finally(() => setBusy(false))
+  }
+  const crumbs = cwd ? cwd.split('/').filter(Boolean) : []
+
+  return (
+    <div className="files">
+      <div className="files-bar">
+        <button className="hint" disabled={!cwd} onClick={() => setCwd(crumbs.slice(0, -1).join('/'))}>↑ Up</button>
+        <span className="crumbs"><button className="crumb" onClick={() => setCwd('')}>Explorer</button>
+          {crumbs.map((c, i) => <button key={i} className="crumb" onClick={() => setCwd(crumbs.slice(0, i + 1).join('/'))}>/ {c}</button>)}</span>
+        <span className="grow" />
+        {msg && <span className="files-msg">{msg}</span>}
+      </div>
+      <div className="files-split">
+        <div className="files-list">
+          {!entries ? <div className="w-empty"><span className="spin-fast">◠</span></div>
+            : entries.length === 0 ? <div className="w-empty"><div className="s">Empty folder.</div></div>
+            : entries.map((n) => (
+              <button key={n.path} className={`file-row${sel?.path === n.path ? ' sel' : ''}`} onClick={() => open(n)}>
+                <span className="fic">{n.directory ? '📁' : '📄'}</span>
+                <span className="fname">{n.name}</span>
+                <span className="fsize">{n.directory ? '' : kb(n.size)}</span>
+              </button>))}
+        </div>
+        <div className="files-view">
+          {!sel ? <div className="w-empty"><div className="s">Select a file to view or edit it.</div></div>
+            : <>
+              <div className="files-vhead"><strong>{sel.name}</strong>
+                <span className="grow" />
+                <button className="hint" disabled={busy || !dirty} onClick={save}>{busy ? '…' : dirty ? 'Save' : 'Saved'}</button></div>
+              <textarea className="files-edit" value={content} spellCheck={false}
+                onChange={(e) => { setContent(e.target.value); setDirty(true) }} />
+            </>}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function BackupsWindow() {
+  const [items, setItems] = useState<BackupInfo[] | null>(null)
+  const [busy, setBusy] = useState(false)
+  const [msg, setMsg] = useState('')
+  const refresh = useCallback(() => { listBackups().then(setItems).catch(() => setItems([])) }, [])
+  useEffect(() => { refresh() }, [refresh])
+
+  const make = () => {
+    setBusy(true); setMsg('')
+    createBackup().then(() => { setMsg('Snapshot created.'); refresh() })
+      .catch((e) => setMsg(friendlyError((e as Error).message))).finally(() => setBusy(false))
+  }
+  const restore = (name: string) => {
+    if (!confirm(`Restore "${name}"? This overwrites current files in the Explorer with the snapshot's versions.`)) return
+    setBusy(true); setMsg('')
+    restoreBackup(name).then((r) => setMsg(r.message))
+      .catch((e) => setMsg(friendlyError((e as Error).message))).finally(() => setBusy(false))
+  }
+
+  return (
+    <>
+      <div className="files-bar">
+        <button className="hint" disabled={busy} onClick={make}>{busy ? '…' : '+ New snapshot'}</button>
+        <button className="hint" onClick={refresh}>⟳ Refresh</button>
+        <span className="grow" />
+        {msg && <span className="files-msg">{msg}</span>}
+      </div>
+      {!items ? <div className="w-empty"><span className="spin-fast">◠</span></div>
+        : items.length === 0 ? <div className="w-empty"><div className="big">🗄</div><div className="s">No snapshots yet. Create one to protect your Explorer.</div></div>
+        : <div className="rows">{items.map((b) => (
+            <div className="row" key={b.name}>
+              <span className="grow"><strong>{b.name}</strong> <span style={{ color: 'var(--muted)' }}>· {kb(b.sizeBytes)}</span>
+                <div style={{ color: 'var(--muted)', fontSize: 12 }}>{new Date(b.createdAt).toLocaleString()}</div></span>
+              <button className="hint" disabled={busy} onClick={() => restore(b.name)}>Restore</button>
+            </div>))}</div>}
+    </>
+  )
+}
+
+/** Format a byte count compactly (B / KB / MB). */
+function kb(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`
+  return `${(bytes / 1024 / 1024).toFixed(1)} MB`
+}
+
+/** Format a per-second throughput for the telemetry readout. */
+function rate(bytesPerSec?: number): string {
+  if (!bytesPerSec || bytesPerSec < 1) return '0'
+  if (bytesPerSec < 1024) return `${Math.round(bytesPerSec)} B/s`
+  if (bytesPerSec < 1024 * 1024) return `${(bytesPerSec / 1024).toFixed(0)} KB/s`
+  return `${(bytesPerSec / 1024 / 1024).toFixed(1)} MB/s`
 }
 
 function pref(key: string, fallback: string): string {
@@ -319,23 +473,120 @@ function SettingsWindow() {
   )
 }
 
+/** True when a string is actually an HTML page / markup that leaked through. */
+function isHtmlish(s?: string): boolean {
+  if (!s) return false
+  return /<!doctype|<html|<\/?[a-z]+[^>]*>/i.test(s) && (s.match(/<[^>]+>/g)?.length ?? 0) > 2
+}
+/** Strip tags/entities and collapse whitespace — used to tidy error text for humans. */
+function stripHtml(s: string): string {
+  const t = s.replace(/<[^>]*>/g, ' ').replace(/&[a-z#0-9]+;/gi, ' ').replace(/\s+/g, ' ').trim()
+  return t.length > 200 ? t.slice(0, 200) + '…' : t
+}
+/** A friendly, human message for an error string (no codes, no HTML, no jargon). */
+function friendlyError(raw?: string): string {
+  if (!raw) return 'Something went wrong. Please try again.'
+  if (isHtmlish(raw)) return 'The service returned an unexpected response. Please try again in a moment.'
+  const r = raw.replace(/^Error:\s*/i, '').trim()
+  if (/403|forbidden|declined/i.test(r)) return 'A service declined the request — it may be rate-limiting us. Please try again shortly.'
+  if (/timeout|timed out/i.test(r)) return 'That took too long and timed out. Please try again.'
+  if (/connect|refused|unreachable|unavailable/i.test(r)) return "I couldn't reach that service. It may be offline — please try again."
+  if (/permission|denied|blocked/i.test(r)) return r // policy/permission messages are already user-facing
+  return r.length > 200 ? r.slice(0, 200) + '…' : r
+}
+
+/** A friendly error card for non-technical users. */
+function ErrorCard({ message }: { message?: string }) {
+  return (
+    <div className="err-card">
+      <span className="ic">⚠</span>
+      <div><div className="t">Something went wrong</div><div className="m">{friendlyError(message)}</div></div>
+    </div>
+  )
+}
+
+/** Humanize a JSON key: camelCase / snake-case / kebab → "Title Case". */
+function humanize(key: string): string {
+  return key
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/\b\w/g, (c) => c.toUpperCase())
+}
+
+/** Recursively renders any value (object / array / scalar) as a clean HUD view. */
+function DataView({ value }: { value: unknown }): React.ReactElement {
+  if (value === null || value === undefined || value === '') return <span className="dv-empty">—</span>
+  if (typeof value === 'string') return value.includes('\n') ? <pre className="raw">{value}</pre> : <span className="dv-scalar">{value}</span>
+  if (typeof value === 'number') return <span className="dv-num">{value.toLocaleString()}</span>
+  if (typeof value === 'boolean') return <span className={`dv-bool ${value ? 't' : 'f'}`}>{value ? 'yes' : 'no'}</span>
+  if (Array.isArray(value)) {
+    if (value.length === 0) return <span className="dv-empty">none</span>
+    const allScalar = value.every((v) => v === null || typeof v !== 'object')
+    if (allScalar) return <div className="dv-list">{value.map((v, i) => <div className="dv-li" key={i}>{String(v)}</div>)}</div>
+    return <div>{value.map((v, i) => <div className="dv-card" key={i}><DataView value={v} /></div>)}</div>
+  }
+  const entries = Object.entries(value as Record<string, unknown>)
+  if (entries.length === 0) return <span className="dv-empty">empty</span>
+  return (
+    <div className="dv">
+      {entries.map(([k, v]) => {
+        const nested = v !== null && typeof v === 'object' && (Array.isArray(v) ? v.some((x) => x && typeof x === 'object') : true)
+        if (nested) return (
+          <div className="dv-section" key={k}>
+            <div className="dv-sec-title">{humanize(k)}</div>
+            <div className="dv-sec-body"><DataView value={v} /></div>
+          </div>
+        )
+        return <div className="dv-row" key={k}><span className="dv-key">{humanize(k)}</span><span className="dv-val"><DataView value={v} /></span></div>
+      })}
+    </div>
+  )
+}
+
 function ResultWindow({ payload }: { payload?: unknown }) {
-  const p = payload as { message?: string; data?: unknown } | undefined
+  const p = payload as { status?: string; message?: string; data?: unknown } | undefined
+  if (p?.status === 'ERROR') return <ErrorCard message={p.message} />
+  const hasData = p?.data !== undefined && p?.data !== null && p?.data !== ''
   return (<>
-    {p?.message && <div className="answer-txt" style={{ marginBottom: 14 }}>{p.message}</div>}
-    {p?.data ? <pre className="raw">{typeof p.data === 'string' ? p.data : JSON.stringify(p.data, null, 2)}</pre> : null}
+    {p?.message && <div className="answer-txt" style={{ marginBottom: hasData ? 16 : 0 }}>{isHtmlish(p.message) ? stripHtml(p.message) : p.message}</div>}
+    {hasData ? <DataView value={p!.data} /> : (!p?.message ? <div className="w-empty"><div className="s">Done.</div></div> : null)}
   </>)
 }
 
 function ResponseWindow({ payload }: { payload?: unknown }) {
-  const p = payload as { loading?: boolean; resp?: ChatResponse } | undefined
-  if (!p || p.loading) return <div className="w-empty"><span className="spin-fast">◠</span><div className="s">Jarvis is thinking…</div></div>
-  const r = p.resp!
-  return (<>
-    <div className="w-section-title" style={{ marginBottom: 10 }}>{r.agent} agent</div>
-    <div className="answer-txt">{r.answer}</div>
-    <div className="answer-meta"><span>model {r.model}</span><span>{r.tokens} tokens</span>{r.steps.length > 0 && <span>{r.steps.length} steps</span>}</div>
-  </>)
+  const p = payload as { loading?: boolean; steps?: Step[]; resp?: ChatResponse; commandResult?: { status?: string; message?: string; data?: unknown } } | undefined
+  const steps = p?.steps ?? []
+  const r = p?.resp
+  const cr = p?.commandResult
+  const hasCrData = cr?.data !== undefined && cr?.data !== null && cr?.data !== ''
+  return (
+    <>
+      {steps.length > 0 && (
+        <div className="substeps" style={{ marginLeft: 0, paddingLeft: 0, marginBottom: 12 }}>
+          {steps.map((s, i) => (
+            <div className="substep" key={i}><span className="kind">{s.kind}</span><span className="lbl">{s.label}{s.detail ? <span className="det"> — {s.detail}</span> : null}</span></div>
+          ))}
+          {p?.loading && <div className="substep"><span className="kind"><span className="spin-fast">◠</span></span><span className="det">working…</span></div>}
+        </div>
+      )}
+      {!r && !cr && p?.loading && steps.length === 0 && <div className="w-empty"><span className="spin-fast">◠</span><div className="s">Jarvis is thinking…</div></div>}
+      {r && (
+        <>
+          <div className="w-section-title" style={{ margin: '4px 0 8px' }}>{r.agent} agent</div>
+          {isHtmlish(r.answer) ? <ErrorCard message={r.answer} /> : <div className="answer-txt">{r.answer}</div>}
+          <div className="answer-meta"><span>model {r.model}</span><span>{r.tokens} tokens</span>{r.steps.length > 0 && <span>{r.steps.length} steps</span>}</div>
+        </>
+      )}
+      {!r && cr && (cr.status === 'ERROR'
+        ? <ErrorCard message={cr.message} />
+        : <>
+            {cr.message && <div className="answer-txt" style={{ marginBottom: hasCrData ? 14 : 0 }}>{isHtmlish(cr.message) ? stripHtml(cr.message) : cr.message}</div>}
+            {hasCrData ? <DataView value={cr.data} /> : null}
+          </>)}
+    </>
+  )
 }
 
 function WindowBody({ win }: { win: Win }) {
@@ -345,7 +596,10 @@ function WindowBody({ win }: { win: Win }) {
     case 'history': return <HistoryWindow />
     case 'agents': return <AgentsWindow />
     case 'logs': return <LogsWindow />
+    case 'files': return <FilesWindow />
+    case 'backups': return <BackupsWindow />
     case 'settings': return <SettingsWindow />
+    case 'notifications': return <NotificationsWindow />
     case 'result': return <ResultWindow payload={win.payload} />
     case 'response': return <ResponseWindow payload={win.payload} />
   }
@@ -387,6 +641,7 @@ function CommandPalette({ commands, onRun, onClose }: { commands: CommandDefinit
 const SLASH_WINDOW: Record<string, WinKind> = {
   '/today': 'today', '/memory': 'memory', '/tasks': 'history', '/history': 'history',
   '/agents': 'agents', '/logs': 'logs', '/settings': 'settings',
+  '/files': 'files', '/jfiles': 'files', '/backup': 'backups', '/backups': 'backups',
 }
 const WIN_META: Record<WinKind, { title: string; subtitle: string; dim: string }> = {
   today: { title: 'Jarvis Today', subtitle: 'Daily digest — counts, highlights', dim: '720×600' },
@@ -395,6 +650,9 @@ const WIN_META: Record<WinKind, { title: string; subtitle: string; dim: string }
   settings: { title: 'Settings', subtitle: 'Voice · models · privacy', dim: '880×640' },
   agents: { title: 'Agents', subtitle: 'The roster', dim: '760×560' },
   logs: { title: 'Activity log', subtitle: 'Recent audited actions', dim: '760×560' },
+  files: { title: 'Explorer', subtitle: 'Browse · view · edit files', dim: '880×620' },
+  backups: { title: 'Backups', subtitle: 'Snapshot · restore the Explorer', dim: '720×560' },
+  notifications: { title: 'Notifications', subtitle: 'Recent alerts', dim: '520×520' },
   result: { title: 'Result', subtitle: '', dim: '720×520' },
   response: { title: 'Jarvis', subtitle: 'Response', dim: '660×440' },
 }
@@ -411,6 +669,9 @@ export default function App() {
   const [wins, setWins] = useState<Win[]>([])
   const [listening, setListening] = useState(false)
   const [wake, setWake] = useState(false)
+  const [notifOpen, setNotifOpen] = useState(false)
+  const [notifItems, setNotifItems] = useState<NotificationItem[]>([])
+  const [notifExpanded, setNotifExpanded] = useState<string | null>(null)
   const zRef = useRef(30)
   const wakeRef = useRef<any>(null)
   const ttsOn = pref('jarvis.tts', 'system') !== 'off'
@@ -451,17 +712,27 @@ export default function App() {
 
   const patchWin = useCallback((key: string, payload: unknown) => setWins((ws) => ws.map((w) => w.key === key ? { ...w, payload } : w)), [])
 
-  const askChat = useCallback(async (message: string, spoken = false) => {
+  // Single cognitive door: raw input → backend InputRouter → command or streamed Brain.
+  const askInput = useCallback((raw: string, spoken = false) => {
     setBusy(true)
     const key = `response-${++zRef.current}`
-    setWins((ws) => [...ws, { key, kind: 'response', title: 'Jarvis', subtitle: 'Response', dim: '660×440', x: 360, y: 200, z: zRef.current, payload: { loading: true } }])
-    try {
-      const resp = await chat(message)
-      patchWin(key, { resp })
-      if (spoken && ttsOn) speak(resp.answer)
-    } catch (e) {
-      patchWin(key, { resp: { answer: `Error: ${(e as Error).message}`, agent: 'system', steps: [], taskId: '', tokens: 0, model: '-' } })
-    } finally { setBusy(false) }
+    setWins((ws) => [...ws, { key, kind: 'response', title: 'Jarvis', subtitle: raw, dim: '660×460', x: 360, y: 190, z: zRef.current, payload: { loading: true, steps: [] } }])
+    const collected: Step[] = []
+    streamInput(raw, {
+      onStep: (s) => { collected.push(s); patchWin(key, { loading: true, steps: [...collected] }) },
+      onResult: (result: CommandResult) => {
+        if (result.type === 'chat') {
+          const resp = result.data as ChatResponse
+          patchWin(key, { loading: false, steps: [...collected], resp })
+          if (spoken && ttsOn) speak(resp.answer)
+        } else {
+          patchWin(key, { loading: false, steps: [...collected], commandResult: { status: result.status, message: result.message, data: result.data } })
+          if (spoken && ttsOn && result.status !== 'ERROR' && result.message) speak(result.message)
+        }
+      },
+      onError: (m) => patchWin(key, { loading: false, steps: [...collected], commandResult: { status: 'ERROR', message: m } }),
+      onDone: () => setBusy(false),
+    })
   }, [patchWin, ttsOn])
 
   const runCmd = useCallback(async (slash: string) => {
@@ -470,18 +741,20 @@ export default function App() {
     if (win) { openWindow(win); return }
     try {
       const res = await runCommand(slash)
-      openWindow('result', { message: res.message, data: res.data }, slash.split(' ')[0])
+      openWindow('result', { status: res.status, message: res.message, data: res.data }, slash.split(' ')[0])
     } catch (e) {
-      openWindow('result', { message: (e as Error).message }, slash)
+      openWindow('result', { status: 'ERROR', message: (e as Error).message }, slash)
     }
   }, [openWindow])
 
   const submit = useCallback((text: string, spoken = false) => {
     const t = text.trim(); if (!t) return
     setInput('')
-    if (t.startsWith('/')) runCmd(t)
-    else askChat(t, spoken)
-  }, [runCmd, askChat])
+    // Window-opener slashes are pure UI nav → open instantly, no round trip.
+    if (t.startsWith('/') && SLASH_WINDOW[t.split(' ')[0]]) { openWindow(SLASH_WINDOW[t.split(' ')[0]]); return }
+    // Everything else (free text + non-window commands) goes through the one cognitive door.
+    askInput(t, spoken)
+  }, [askInput, openWindow])
 
   // --- Voice -------------------------------------------------------------
   const startPTT = useCallback(() => {
@@ -513,6 +786,16 @@ export default function App() {
     apiSetProvider(backend).then(setSettings).catch(() => {})
   }, [])
 
+  // Expand a notification to read it fully; mark just that one read on first open.
+  const toggleNotif = useCallback((n: NotificationItem) => {
+    setNotifExpanded((id) => (id === n.id ? null : n.id))
+    if (!n.read) {
+      markNotificationRead(n.id).catch(() => {})
+      setNotifItems((items) => items.map((x) => (x.id === n.id ? { ...x, read: true } : x)))
+      setUnread((u) => Math.max(0, u - 1))
+    }
+  }, [])
+
   const cpu = pct(snap?.cpu.systemCpuLoad)
   const memPctV = snap ? Math.round((snap.memory.usedPhysicalBytes / snap.memory.totalPhysicalBytes) * 100) : 0
   const caption = busy ? 'Processing' : 'Online · Standby'
@@ -534,7 +817,7 @@ export default function App() {
             <span className="k">LOAD</span><span className="v">{snap?.cpu.systemLoadAverage?.toFixed(2) ?? '—'}</span>
             <span className="k">DISK</span><span className="v">{snap ? `${gb(snap.disk.freeBytes)}G free` : '—'}</span>
             <span className="k">AGENTS</span><span className="v">{snap?.runtime.registeredAgents ?? '—'}</span>
-            <span className="k">NETWORK</span><span className="v good">LAN</span>
+            <span className="k">NETWORK</span><span className="v">{snap?.network ? `↓${rate(snap.network.rxBytesPerSec)} ↑${rate(snap.network.txBytesPerSec)}` : 'LAN'}</span>
           </div>
         </div>
 
@@ -543,23 +826,27 @@ export default function App() {
           <div className="datestr">{now.toLocaleDateString([], { weekday: 'short', month: 'short', day: '2-digit', year: 'numeric' }).toUpperCase()}</div>
           <div className="row2">
             <button className="iconbtn" title="Refresh" onClick={() => getStatus().then(setSnap)}>⟳</button>
-            <button className="iconbtn" title="Notifications" onClick={async () => { const items = await getNotifications().catch(() => [] as NotificationItem[]); markNotificationsRead().then(() => setUnread(0)).catch(() => {}); openWindow('result', { message: items.length ? '' : 'Nothing yet.', data: items.length ? items.map((n) => `• ${n.title}${n.body ? ' — ' + n.body : ''}`).join('\n') : null }, 'Notifications') }}>
+            <button className="iconbtn" title="Notifications" onClick={() => setNotifOpen((o) => {
+              const next = !o
+              if (next) { setNotifExpanded(null); getNotifications().then(setNotifItems).catch(() => {}) }
+              return next
+            })}>
               🔔{unread > 0 && <span className="count">{unread}</span>}</button>
           </div>
           <div className="telemetry-flag"><span className="pip" />TELEMETRY ACTIVE</div>
         </div>
 
         <div className="hud-bl">
-          <button className="userchip">
+          <button className="userchip" title="Open settings" onClick={() => openWindow('settings')}>
             <span className="av">S</span>
-            <span><span className="nm">Shay ⌄</span><div className="sub">CPU {cpu}% · MEM {gb(snap?.memory.usedPhysicalBytes)}/{gb(snap?.memory.totalPhysicalBytes)}G</div></span>
+            <span className="nm">Shay <span className="caret">⌄</span></span>
           </button>
         </div>
 
         <div className="hud-br">
           <div className="providers">
             {(['ollama', 'openai', 'anthropic'] as const).map((p) => (
-              <button key={p} className={provider === p ? 'on' : ''} onClick={() => { setProvider(p); openWindow('settings') }}><span className="pip" />{p.toUpperCase()}</button>
+              <button key={p} className={uiProvider === p ? 'on' : ''} onClick={() => pickProvider(p)} title="Switch AI provider"><span className="pip" />{p.toUpperCase()}</button>
             ))}
           </div>
         </div>
@@ -568,14 +855,18 @@ export default function App() {
       {/* bottom command dock */}
       <div className="dock">
         <div className="bar">
-          <input placeholder="Ask Jarvis, or type a /command…" value={input}
+          <button className={`mic${listening ? ' live' : ''}`} title="Push to talk" onClick={startPTT}>{listening ? '◉' : '🎙'}</button>
+          <input placeholder={listening ? 'Listening…' : 'Ask Jarvis, or type a /command…'} value={input}
             onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') submit(input) }} />
           <button className="go" onClick={() => submit(input)}>{busy ? <span className="spin-fast">◠</span> : '➤'}</button>
         </div>
         <div className="hintrow">
+          <button className={`wake${wake ? ' on' : ''}`} onClick={toggleWake} title='Say "Jarvis …" to command hands-free'><span className="sw" />WAKE WORD</button>
           <button className="hint" onClick={() => openWindow('today')}>Today</button>
           <button className="hint" onClick={() => openWindow('history')}>History</button>
           <button className="hint" onClick={() => openWindow('memory')}>Memory</button>
+          <button className="hint" onClick={() => openWindow('files')}>Files</button>
+          <button className="hint" onClick={() => openWindow('backups')}>Backups</button>
           <button className="hint" onClick={() => openWindow('agents')}>Agents</button>
           <button className="hint" onClick={() => setCmdkOpen(true)}>⌘K</button>
         </div>
@@ -589,6 +880,43 @@ export default function App() {
           </FloatingWindow>
         ))}
       </div>
+
+      {/* notifications popover (anchored under the bell) */}
+      {notifOpen && (
+        <>
+          <div className="notif-overlay" onClick={() => setNotifOpen(false)} />
+          <div className="notif-pop">
+            <div className="head"><span className="t">Notifications</span>{notifItems.length > 0 && <span className="mono" style={{ fontSize: 10, color: 'var(--muted)' }}>{notifItems.length}</span>}</div>
+            <div className="list">
+              {notifItems.length === 0
+                ? <div className="empty">Nothing yet — you’re all caught up.</div>
+                : notifItems.slice(0, 8).map((n) => {
+                    const open = notifExpanded === n.id
+                    return (
+                      <div key={n.id}>
+                        <button className={`item ${n.read ? 'read' : 'unread'}`} onClick={() => toggleNotif(n)}>
+                          <span className={`dot-s ${n.type === 'error' ? 'bad' : n.type === 'warning' ? 'warn' : 'ok'}`} style={{ marginTop: 5 }} />
+                          <span className="body"><div className="ttl">{n.title}</div>{!open && n.body && <div className="sub">{n.body}</div>}</span>
+                          <span className="when">{ago(n.createdAt)}</span>
+                        </button>
+                        {open && (
+                          <div className="detail">
+                            {n.body && <div>{n.body}</div>}
+                            <div className="meta">
+                              <span>{n.type}</span>
+                              {n.source && <span>via {n.source}</span>}
+                              <span>{new Date(n.createdAt).toLocaleString()}</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
+            </div>
+            <div className="foot"><button className="showall" onClick={() => { setNotifOpen(false); openWindow('notifications') }}>SHOW ALL →</button></div>
+          </div>
+        </>
+      )}
 
       {cmdkOpen && <CommandPalette commands={commands} onRun={runCmd} onClose={() => setCmdkOpen(false)} />}
     </>

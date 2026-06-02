@@ -75,6 +75,30 @@ jarvis:
     risk-rules: []
     #   - pattern: "\\bgit\\s+push\\s+--force\\b"
     #     level: HIGH
+  # MCP servers (see McpProperties). Jarvis speaks JSON-RPC over stdio to each and
+  # exposes its tools to the agent loop. Empty by default — runs fine with none.
+  mcp:
+    startup-timeout-seconds: 12
+    servers: []
+    #   - name: filesystem
+    #     command: npx
+    #     args: ["-y", "@modelcontextprotocol/server-filesystem", "/Users/shaymarko/Desktop"]
+    #     enabled: true
+    #   - name: filesystem
+    #     command: npx
+    #     args: ["-y", "@modelcontextprotocol/server-filesystem", "/Users/shaymarko/Desktop"]
+    #     enabled: true
+  # OAuth providers (see OAuthProperties). Tokens are stored encrypted in the vault
+  # and auto-refreshed. Empty by default; add a provider's client id/secret to enable.
+  oauth:
+    base-url: ${JARVIS_BASE_URL:http://localhost:8088}
+    providers: {}
+    #   google:
+    #     auth-url: https://accounts.google.com/o/oauth2/v2/auth
+    #     token-url: https://oauth2.googleapis.com/token
+    #     client-id: ${GOOGLE_CLIENT_ID:}
+    #     client-secret: ${GOOGLE_CLIENT_SECRET:}
+    #     scopes: ["https://www.googleapis.com/auth/drive.readonly"]
   # Project Intelligence (see JarvisProjectsProperties): scan dev folders, open in the right IDE.
   projects:
     scan-roots:
