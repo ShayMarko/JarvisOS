@@ -48,14 +48,17 @@ jarvis:
     stream-interval-ms: ${JARVIS_MONITOR_INTERVAL:2000}
   # Jarvis Brain / model adapter (spec §15). Default is the offline mock model.
   ai:
-    provider: ${JARVIS_AI_PROVIDER:ollama}    # mock | claude | ollama (defaults to local Ollama; falls back to mock if down)
+    provider: ${JARVIS_AI_PROVIDER:ollama}    # mock | claude | ollama | openai (defaults to local Ollama; falls back to mock if down)
     anthropic-api-key: ${ANTHROPIC_API_KEY:}
-    model: ${JARVIS_AI_MODEL:claude-opus-4-8}
-    ollama-model: ${JARVIS_AI_OLLAMA_MODEL:llama3.2:3b}
+    model: ${JARVIS_AI_MODEL:claude-opus-4-8}            # Anthropic model
+    ollama-model: ${JARVIS_AI_OLLAMA_MODEL:llama3.2:3b}  # local Ollama model
     openai-api-key: ${OPENAI_API_KEY:}
-    openai-model: ${JARVIS_AI_OPENAI_MODEL:gpt-4o-mini}
+    openai-model: ${JARVIS_AI_OPENAI_MODEL:gpt-4o-mini}  # OpenAI model
     max-tokens: 1024
     max-steps: 4
+    # Safety net for PAID providers (Claude/OpenAI): hard cap on tokens/day. 0 = unlimited.
+    # Ollama + mock are never metered. Adjustable live in Settings; pause = kill-switch.
+    daily-token-budget: ${JARVIS_AI_DAILY_TOKEN_BUDGET:0}
     privacy: ${JARVIS_AI_PRIVACY:BALANCED}   # BALANCED | PRIVATE | QUALITY | CHEAP
   # Global JARVIS personality, prepended to every agent's system prompt.
   persona:
@@ -127,7 +130,7 @@ jarvis:
     catalog: ${JARVIS_PLUGINS_CATALOG:}  # blank ⇒ <dir>/catalog.json
   # Tunable limits/sizes (see JarvisLimitsProperties).
   limits:
-    conversation-history-turns: 10
+    conversation-history-turns: 6     # replayed to the model every call; lower = fewer input tokens
     file-max-text-bytes: 2097152            # 2 MB — max file the text viewer loads
     file-search-max-results: 200
     kb-chunk-size: 1000                      # chars per KB chunk

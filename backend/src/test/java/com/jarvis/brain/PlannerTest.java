@@ -21,12 +21,13 @@ class PlannerTest {
     private final AgentSelector selector = new AgentSelector(new AgentRegistry());
 
     private Planner planner(LanguageModel model) {
-        return new Planner(selector, model, mapper);
+        return new Planner(selector, model, mapper, new com.jarvis.ai.JarvisAiProperties());
     }
 
     private LanguageModel modelReturning(String text) {
         LanguageModel m = mock(LanguageModel.class);
-        when(m.generate(any(), any())).thenReturn(ModelResponse.text(text, 0, 0));
+        // Planner calls the 3-arg generate (with a cheap planner-model override).
+        when(m.generate(any(), any(), any())).thenReturn(ModelResponse.text(text, 0, 0));
         return m;
     }
 

@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jarvis.agent.AgentDefinition;
 import com.jarvis.agent.AgentSelector;
 import com.jarvis.ai.ChatMessage;
+import com.jarvis.ai.JarvisAiProperties;
 import com.jarvis.ai.LanguageModel;
 import com.jarvis.ai.ModelResponse;
 
@@ -52,6 +53,7 @@ public class Planner {
     private final AgentSelector selector;
     private final LanguageModel model;
     private final ObjectMapper mapper;
+    private final JarvisAiProperties ai;
 
     public List<PlanStep> plan(String message) {
         String msg = message == null ? "" : message.strip();
@@ -105,8 +107,9 @@ public class Planner {
                 Rules: ids are s1,s2,...; dependsOn lists ids whose RESULTS this step needs; \
                 keep tasks self-contained imperatives; if the request is really one task, return a single step.\
                 """.formatted(MAX_STEPS);
+            // The plan is tiny JSON — run it on a cheap model for paid providers.
             ModelResponse resp = model.generate(
-                    List.of(ChatMessage.system(system), ChatMessage.user(msg)), List.of());
+                    List.of(ChatMessage.system(system), ChatMessage.user(msg)), List.of(), plannerModel());
             String text = resp == null ? null : resp.text();
             if (text == null || text.isBlank()) {
                 return null;
@@ -116,6 +119,16 @@ public class Planner {
             log.debug("LLM planning failed, falling back to heuristic: {}", e.getMessage());
             return null;
         }
+    }
+
+    /** Cheap model for the planner on paid providers; null (= default model) for ollama/mock. */
+    private String plannerModel() {
+        String provider = ai.getProvider() == null ? "" : ai.getProvider().toLowerCase();
+        return switch (provider) {
+            case "claude", "anthropic" -> ai.getPlannerModelClaude();
+            case "openai" -> ai.getPlannerModelOpenai();
+            default -> null;
+        };
     }
 
     /** Parse + validate the model's JSON plan; route each step to an agent. Null if unusable. */

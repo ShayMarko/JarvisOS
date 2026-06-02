@@ -49,8 +49,16 @@ public class OllamaLanguageModel implements LanguageModel {
 
     @Override
     public ModelResponse generate(List<ChatMessage> messages, List<ToolSpec> tools) {
+        return generate(messages, tools, null);
+    }
+
+    @Override
+    public ModelResponse generate(List<ChatMessage> messages, List<ToolSpec> tools, String modelOverride) {
         try {
             Map<String, Object> body = buildRequestBody(messages, tools);
+            if (modelOverride != null && !modelOverride.isBlank()) {
+                body.put("model", modelOverride);
+            }
             String raw = client.post().uri("/api/chat").body(body).retrieve().body(String.class);
             return parseResponse(mapper.readTree(raw));
         } catch (Exception e) {

@@ -42,6 +42,12 @@ public class ObservabilityController {
         return observability.costSummary(limit);
     }
 
+    /** Per-model token/cost breakdown + usage timeline for the Token dashboard. */
+    @GetMapping("/tokens")
+    public Map<String, Object> tokens(@RequestParam(name = "limit", defaultValue = "200") int limit) {
+        return observability.tokenDashboard(limit);
+    }
+
     /** Replay a recorded run by re-issuing its original request. */
     @PostMapping("/runs/{id}/replay")
     public ChatResponse replay(@PathVariable String id) {

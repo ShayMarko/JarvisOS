@@ -11,6 +11,15 @@ public interface LanguageModel {
 
     ModelResponse generate(List<ChatMessage> messages, List<ToolSpec> tools);
 
+    /**
+     * Generate with a per-call model override (e.g. route the lightweight planner to a
+     * cheap model). The default ignores the override; HTTP adapters honor it. A
+     * {@code null}/blank override means "use the configured default model".
+     */
+    default ModelResponse generate(List<ChatMessage> messages, List<ToolSpec> tools, String modelOverride) {
+        return generate(messages, tools);
+    }
+
     /** Short provider name for traces/observability (e.g. "mock", "claude"). */
     String name();
 }

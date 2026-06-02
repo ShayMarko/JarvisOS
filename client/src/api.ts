@@ -627,6 +627,27 @@ export function getStatus(): Promise<MonitorSnapshot> {
   return req<MonitorSnapshot>('/api/status')
 }
 
+export interface ProviderUsage {
+  provider: string   // ollama | openai | anthropic
+  runs: number
+  promptTokens: number
+  completionTokens: number
+  totalTokens: number
+  cost: number
+}
+export interface TokenDashboard {
+  runs: number
+  promptTokens: number
+  completionTokens: number
+  totalTokens: number
+  totalCost: number
+  providers: ProviderUsage[]
+  timeline: { at: string | null; provider: string | null; model: string | null; tokens: number; cost: number }[]
+}
+export function getTokenDashboard(limit = 200): Promise<TokenDashboard> {
+  return req<TokenDashboard>(`/api/tokens?limit=${limit}`)
+}
+
 export function getRuns(limit = 50): Promise<RunRecord[]> {
   return req<RunRecord[]>(`/api/runs?limit=${limit}`)
 }
@@ -691,6 +712,13 @@ export function streamChat(message: string, h: ChatStreamHandlers): EventSource 
   return es
 }
 
+export interface TokenBudgetView {
+  paused: boolean
+  dailyTokenBudget: number   // 0 = unlimited
+  tokensToday: number
+  remaining: number          // -1 = unlimited
+}
+
 export interface SettingsView {
   provider: string
   model: string
@@ -699,6 +727,7 @@ export interface SettingsView {
   ollamaModel?: string
   openaiModel?: string
   providers: string[]
+  budget?: TokenBudgetView
 }
 
 export function getSettings(): Promise<SettingsView> {
@@ -710,6 +739,15 @@ export function setProvider(provider: string, model?: string): Promise<SettingsV
     method: 'POST',
     headers: jsonHeaders,
     body: JSON.stringify({ provider, model }),
+  })
+}
+
+/** Set the daily paid-token budget (0 = unlimited) and/or the AI kill-switch (paused). */
+export function setBudget(req2: { dailyTokenBudget?: number; paused?: boolean }): Promise<SettingsView> {
+  return req<SettingsView>('/api/settings/budget', {
+    method: 'POST',
+    headers: jsonHeaders,
+    body: JSON.stringify(req2),
   })
 }
 

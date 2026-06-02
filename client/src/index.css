@@ -307,6 +307,41 @@ pre.raw { white-space: pre-wrap; word-break: break-word; font-family: var(--mono
 .fade-in { animation: fade 0.25s ease; }
 @keyframes fade { from { opacity: 0; transform: translateY(6px) scale(0.99); } to { opacity: 1; transform: none; } }
 
+/* ===== Token dashboard ===== */
+.budget-meter { height: 8px; border-radius: 6px; background: rgba(120,150,190,0.14); overflow: hidden; margin: 10px 0 4px; }
+.budget-meter .fill { height: 100%; background: linear-gradient(90deg, var(--good), var(--accent)); transition: width 0.4s ease; }
+.tok-tabs { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 12px; }
+.tok-tab { display: flex; align-items: center; gap: 6px; background: rgba(120,150,190,0.08); border: 1px solid var(--hud-dim); color: var(--muted); border-radius: 8px; padding: 5px 11px; font-size: 11px; font-family: var(--mono); cursor: pointer; }
+.tok-tab:hover { color: var(--text); }
+.tok-tab.on { background: rgba(69,214,255,0.14); border-color: rgba(69,214,255,0.4); color: var(--accent); }
+.tok-tab .dot { width: 8px; height: 8px; border-radius: 50%; }
+.tok-split { display: flex; gap: 20px; align-items: center; }
+.tok-legend { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 7px; }
+.tok-row { display: flex; align-items: center; gap: 9px; font-size: 12.5px; width: 100%; background: none; border: none; text-align: left; cursor: pointer; padding: 3px 4px; border-radius: 7px; color: var(--text); }
+.tok-row:hover { background: rgba(120,170,230,0.07); }
+.tok-row .dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+.tok-row .nm { width: 130px; flex: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--mono); font-size: 11px; }
+.tok-row .bar { flex: 1; height: 7px; border-radius: 5px; background: rgba(120,150,190,0.12); overflow: hidden; }
+.tok-row .bar span { display: block; height: 100%; border-radius: 5px; }
+.tok-row .val { width: 78px; text-align: right; font-variant-numeric: tabular-nums; color: var(--text); }
+.tok-row .cost { width: 70px; text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+.splitbar { height: 22px; border-radius: 7px; overflow: hidden; display: flex; background: rgba(120,150,190,0.12); }
+.splitbar .in { background: var(--accent); }
+.splitbar .out { background: var(--good); }
+.splitbar-legend { display: flex; gap: 18px; margin-top: 7px; font-size: 11.5px; color: var(--muted); }
+.splitbar-legend .sw { display: inline-block; width: 9px; height: 9px; border-radius: 3px; margin-right: 5px; }
+.splitbar-legend .sw.in { background: var(--accent); }
+.splitbar-legend .sw.out { background: var(--good); }
+.tok-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.tok-table th { text-align: left; font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); padding: 6px 8px; border-bottom: 1px solid var(--hud-dim); font-weight: 600; }
+.tok-table td { padding: 7px 8px; border-bottom: 1px solid rgba(120,170,230,0.06); color: var(--text); }
+.tok-table tr:last-child td { border-bottom: none; }
+.tok-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.tok-table .mono { font-family: var(--mono); font-size: 11px; }
+.tok-table .dim { color: var(--muted); }
+.tok-table .empty { text-align: center; color: var(--muted); padding: 14px; }
+.tok-table .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+
 /* ===== Settings footer ===== */
 .settings-foot { display: flex; align-items: center; gap: 12px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--hud-dim); }
 .hint.primary { background: rgba(69,214,255,0.16); border-color: rgba(69,214,255,0.4); color: var(--accent); font-weight: 600; padding: 7px 18px; }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jarvis.ai.JarvisAiProperties;
+import com.jarvis.ai.TokenBudget;
 import com.jarvis.audit.AuditService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,10 @@ public class SettingsController {
 
     public record ProviderRequest(String provider, String model) {}
 
+    public record BudgetRequest(Long dailyTokenBudget, Boolean paused) {}
+
     private final JarvisAiProperties ai;
+    private final TokenBudget budget;
     private final AuditService audit;
 
     @GetMapping
@@ -41,18 +45,40 @@ public class SettingsController {
         out.put("openaiModel", ai.getOpenaiModel());
         // mock = offline stub; claude = Anthropic (needs key); ollama = local model; openai = OpenAI (needs key).
         out.put("providers", List.of("mock", "claude", "ollama", "openai"));
+        out.put("budget", budget.snapshot());
         return out;
     }
 
     @PostMapping("/provider")
     public Map<String, Object> setProvider(@RequestBody ProviderRequest req) {
+        String provider = req.provider() == null ? ai.getProvider() : req.provider().toLowerCase();
         if (req.provider() != null && !req.provider().isBlank()) {
-            ai.setProvider(req.provider().toLowerCase());
+            ai.setProvider(provider);
         }
+        // Route the model name to the field that matches the provider so each provider
+        // keeps its own model (openai-model vs ollama-model vs Anthropic model).
         if (req.model() != null && !req.model().isBlank()) {
-            ai.setModel(req.model());
+            switch (provider) {
+                case "openai" -> ai.setOpenaiModel(req.model());
+                case "ollama" -> ai.setOllamaModel(req.model());
+                default -> ai.setModel(req.model());   // claude / anthropic / mock
+            }
         }
         audit.record("SETTINGS", "set_provider", ai.getProvider(), "OK", null);
+        return get();
+    }
+
+    /** Set the daily paid-token budget (0 = unlimited) and/or the AI kill-switch. */
+    @PostMapping("/budget")
+    public Map<String, Object> setBudget(@RequestBody BudgetRequest req) {
+        if (req.dailyTokenBudget() != null && req.dailyTokenBudget() >= 0) {
+            ai.setDailyTokenBudget(req.dailyTokenBudget());
+        }
+        if (req.paused() != null) {
+            budget.setPaused(req.paused());
+        }
+        audit.record("SETTINGS", "set_budget",
+                "limit=" + ai.getDailyTokenBudget() + "; paused=" + budget.isPaused(), "OK", null);
         return get();
     }
 }

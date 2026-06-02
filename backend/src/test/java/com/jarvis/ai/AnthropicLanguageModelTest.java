@@ -32,7 +32,10 @@ class AnthropicLanguageModelTest {
 
         Map<String, Object> body = model.buildRequestBody(messages, tools);
 
-        assertThat(body.get("system")).isEqualTo("You are Jarvis.");
+        // System is a cached text block: [{type:text, text:..., cache_control:{type:ephemeral}}]
+        List<Map<String, Object>> systemBlocks = (List<Map<String, Object>>) body.get("system");
+        assertThat(systemBlocks.get(0)).containsEntry("type", "text").containsEntry("text", "You are Jarvis.");
+        assertThat(systemBlocks.get(0).get("cache_control")).isEqualTo(Map.of("type", "ephemeral"));
 
         List<Map<String, Object>> msgs = (List<Map<String, Object>>) body.get("messages");
         assertThat(msgs).hasSize(3);
@@ -52,10 +55,12 @@ class AnthropicLanguageModelTest {
         assertThat(resultBlocks.get(0)).containsEntry("type", "tool_result")
                 .containsEntry("tool_use_id", "t1").containsEntry("content", "📁 Notes");
 
-        // tools advertised with a JSON-schema input_schema
+        // tools advertised with a JSON-schema input_schema (plain Map, not a JsonNode);
+        // the last tool carries the cache_control breakpoint so the tools array is cached.
         List<Map<String, Object>> toolDefs = (List<Map<String, Object>>) body.get("tools");
         assertThat(toolDefs.get(0)).containsEntry("name", "list_files");
-        assertThat(toolDefs.get(0).get("input_schema")).isInstanceOf(JsonNode.class);
+        assertThat(toolDefs.get(0).get("input_schema")).isInstanceOf(Map.class);
+        assertThat(toolDefs.get(toolDefs.size() - 1).get("cache_control")).isEqualTo(Map.of("type", "ephemeral"));
     }
 
     @Test

@@ -15,8 +15,9 @@ import lombok.Setter;
 @ConfigurationProperties(prefix = "jarvis.limits")
 public class JarvisLimitsProperties {
 
-    /** How many prior chat turns the Brain replays for conversation continuity. */
-    private int conversationHistoryTurns = 10;
+    /** How many prior chat turns the Brain replays for conversation continuity.
+     *  Replayed on every model call, so lower = fewer repeated input tokens. */
+    private int conversationHistoryTurns = 6;
 
     /** Largest file (bytes) the internal text viewer/editor will load. */
     private long fileMaxTextBytes = 2 * 1024 * 1024;

@@ -48,8 +48,16 @@ public class AnthropicLanguageModel implements LanguageModel {
 
     @Override
     public ModelResponse generate(List<ChatMessage> messages, List<ToolSpec> tools) {
+        return generate(messages, tools, null);
+    }
+
+    @Override
+    public ModelResponse generate(List<ChatMessage> messages, List<ToolSpec> tools, String modelOverride) {
         try {
             Map<String, Object> body = buildRequestBody(messages, tools);
+            if (modelOverride != null && !modelOverride.isBlank()) {
+                body.put("model", modelOverride);
+            }
             String raw = client.post().uri("/v1/messages").body(body).retrieve().body(String.class);
             return parseResponse(mapper.readTree(raw));
         } catch (Exception e) {
@@ -79,7 +87,7 @@ public class AnthropicLanguageModel implements LanguageModel {
                             block.put("type", "tool_use");
                             block.put("id", tc.id());
                             block.put("name", tc.name());
-                            block.put("input", toJson(tc.argumentsJson()));
+                            block.put("input", toObject(tc.argumentsJson()));
                             blocks.add(block);
                         }
                         apiMessages.add(Map.of("role", "assistant", "content", blocks));
@@ -101,15 +109,24 @@ public class AnthropicLanguageModel implements LanguageModel {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("model", model);
         body.put("max_tokens", maxTokens);
-        body.put("system", system.toString().trim());
+        // System prompt as a cached block — persona + agent prompt repeat across every
+        // tool-loop step and across a session, so caching it cuts repeated input cost.
+        String sys = system.toString().trim();
+        body.put("system", List.of(Map.of(
+                "type", "text", "text", sys, "cache_control", Map.of("type", "ephemeral"))));
         body.put("messages", apiMessages);
         if (tools != null && !tools.isEmpty()) {
             List<Object> toolDefs = new ArrayList<>();
-            for (ToolSpec t : tools) {
+            for (int i = 0; i < tools.size(); i++) {
+                ToolSpec t = tools.get(i);
                 Map<String, Object> def = new LinkedHashMap<>();
                 def.put("name", t.name());
                 def.put("description", t.description());
-                def.put("input_schema", toJson(t.parametersSchema()));
+                def.put("input_schema", toObject(t.parametersSchema()));
+                // Mark the LAST tool as a cache breakpoint → the whole tools array is cached.
+                if (i == tools.size() - 1) {
+                    def.put("cache_control", Map.of("type", "ephemeral"));
+                }
                 toolDefs.add(def);
             }
             body.put("tools", toolDefs);
@@ -146,11 +163,13 @@ public class AnthropicLanguageModel implements LanguageModel {
         }
     }
 
-    private JsonNode toJson(String json) {
+    /** Parse a JSON string into a plain Object tree (Map/List/scalars) so it serialises
+     *  unambiguously inside the request body (never a bean-dumped {@code JsonNode}). */
+    private Object toObject(String json) {
         try {
-            return mapper.readTree(json == null || json.isBlank() ? "{}" : json);
+            return mapper.readValue(json == null || json.isBlank() ? "{}" : json, Object.class);
         } catch (Exception e) {
-            return mapper.createObjectNode();
+            return new LinkedHashMap<>();
         }
     }
 }

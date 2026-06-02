@@ -25,9 +25,16 @@ public class JarvisAiProperties {
     private String openaiApiKey = "";
     private String openaiBaseUrl = "https://api.openai.com/v1";
     private String openaiModel = "gpt-4o-mini";
+    /** Cheap models used for the lightweight PLANNER call (it only emits a tiny JSON plan),
+     *  so planning doesn't burn the expensive main model. Per paid provider. */
+    private String plannerModelClaude = "claude-3-5-haiku-latest";
+    private String plannerModelOpenai = "gpt-4o-mini";
     private int maxTokens = 1024;
     /** Max tool-calling iterations before the runtime gives up. */
     private int maxSteps = 4;
+    /** Safety cap on PAID-provider tokens per day (prompt+completion). 0 = unlimited.
+     *  Local (ollama) and mock are never metered. */
+    private long dailyTokenBudget = 0;
     /** Model Router preference (spec §6): BALANCED | PRIVATE | QUALITY | CHEAP. */
     private RoutingPreference privacy = RoutingPreference.BALANCED;
 }

@@ -50,8 +50,16 @@ public class OpenAiLanguageModel implements LanguageModel {
 
     @Override
     public ModelResponse generate(List<ChatMessage> messages, List<ToolSpec> tools) {
+        return generate(messages, tools, null);
+    }
+
+    @Override
+    public ModelResponse generate(List<ChatMessage> messages, List<ToolSpec> tools, String modelOverride) {
         try {
             Map<String, Object> body = buildRequestBody(messages, tools);
+            if (modelOverride != null && !modelOverride.isBlank()) {
+                body.put("model", modelOverride);
+            }
             String raw = client.post().uri("/chat/completions").body(body).retrieve().body(String.class);
             return parseResponse(mapper.readTree(raw));
         } catch (Exception e) {
@@ -93,6 +101,9 @@ public class OpenAiLanguageModel implements LanguageModel {
         body.put("model", model);
         body.put("messages", apiMessages);
         body.put("max_tokens", maxTokens);
+        // OpenAI auto-caches identical request prefixes; a stable key per build keeps the
+        // system+tools prefix routed to the same cache. (System+tools come first above.)
+        body.put("prompt_cache_key", "jarvis-" + model);
         if (tools != null && !tools.isEmpty()) {
             List<Object> toolDefs = new ArrayList<>();
             for (ToolSpec t : tools) {

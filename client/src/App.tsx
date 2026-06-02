@@ -2,12 +2,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   createBackup, createMemory, deleteMemory, fetchCommands, getAgents, getAudit, getConversation,
   getFileContent, getInstalledPlugins, getMemoryList, getNotifications, getPluginCatalog, getRuns,
-  getSettings, getStatus, getUnreadCount, installPlugin, listBackups, listFiles, markNotificationRead,
-  restoreBackup, revealFile, runCommand, setProvider as apiSetProvider, streamInput, uninstallPlugin, writeFile,
+  getSettings, getStatus, getTokenDashboard, getUnreadCount, installPlugin, listBackups, listFiles,
+  markNotificationRead, restoreBackup, revealFile, runCommand, setBudget as apiSetBudget,
+  setProvider as apiSetProvider, streamInput, uninstallPlugin, writeFile,
 } from './api'
 import type {
   AgentDef, AuditEntry, BackupInfo, ChatResponse, CommandDefinition, CommandResult, FileNode, Memory,
-  MonitorSnapshot, NotificationItem, PluginCatalogEntry, PluginInfo, RunRecord, SettingsView, Step,
+  MonitorSnapshot, NotificationItem, PluginCatalogEntry, PluginInfo, RunRecord, SettingsView, Step, TokenDashboard,
 } from './api'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -123,7 +124,7 @@ function Halo() {
 /* ===========================================================================
    Floating window (draggable)
 =========================================================================== */
-type WinKind = 'conversation' | 'today' | 'memory' | 'history' | 'settings' | 'agents' | 'logs' | 'files' | 'backups' | 'plugins' | 'notifications' | 'result' | 'response'
+type WinKind = 'conversation' | 'today' | 'memory' | 'history' | 'settings' | 'agents' | 'logs' | 'files' | 'backups' | 'plugins' | 'tokens' | 'notifications' | 'result' | 'response'
 
 /** One exchange in the running conversation transcript. */
 interface Turn {
@@ -539,6 +540,203 @@ function PluginsWindow() {
   )
 }
 
+const CHART_COLORS = ['#45d6ff', '#3ad29f', '#ffb454', '#ff6b81', '#b58cff', '#7bd0ff', '#8effc1']
+
+function Donut({ data }: { data: { label: string; value: number }[] }) {
+  const total = data.reduce((s, d) => s + d.value, 0) || 1
+  const r = 52, circ = 2 * Math.PI * r
+  let off = 0
+  return (
+    <svg viewBox="0 0 130 130" width={130} height={130} style={{ flex: 'none' }}>
+      <g transform="translate(65,65) rotate(-90)">
+        <circle r={r} fill="none" stroke="rgba(120,150,190,0.12)" strokeWidth={16} />
+        {data.map((d, i) => {
+          const len = (d.value / total) * circ
+          const seg = <circle key={i} r={r} fill="none" stroke={CHART_COLORS[i % CHART_COLORS.length]}
+            strokeWidth={16} strokeDasharray={`${len} ${circ - len}`} strokeDashoffset={-off} />
+          off += len
+          return seg
+        })}
+      </g>
+    </svg>
+  )
+}
+
+function Spark({ points }: { points: number[] }) {
+  if (points.length < 2) return <div className="note">Not enough runs yet for a trend.</div>
+  const w = 360, h = 56, max = Math.max(...points, 1), step = w / (points.length - 1)
+  const d = points.map((p, i) => `${i ? 'L' : 'M'}${(i * step).toFixed(1)},${(h - (p / max) * h).toFixed(1)}`).join(' ')
+  const area = `${d} L${w},${h} L0,${h} Z`
+  return (
+    <svg viewBox={`0 0 ${w} ${h}`} width="100%" height={h} preserveAspectRatio="none">
+      <path d={area} fill="rgba(69,214,255,0.10)" />
+      <path d={d} fill="none" stroke="var(--accent)" strokeWidth={1.5} />
+    </svg>
+  )
+}
+
+const PROVIDER_LABEL: Record<string, string> = { ollama: 'Ollama', openai: 'OpenAI', anthropic: 'Anthropic', mock: 'Mock' }
+const provLabel = (p: string | null) => (p ? PROVIDER_LABEL[p] ?? p : '—')
+
+/** Horizontal input-vs-output split bar. */
+function SplitBar({ inTok, outTok }: { inTok: number; outTok: number }) {
+  const total = inTok + outTok || 1
+  return (
+    <div>
+      <div className="splitbar">
+        <span className="in" style={{ width: `${(inTok / total) * 100}%` }} />
+        <span className="out" style={{ width: `${(outTok / total) * 100}%` }} />
+      </div>
+      <div className="splitbar-legend">
+        <span><i className="sw in" /> Input {inTok.toLocaleString()} ({Math.round((inTok / total) * 100)}%)</span>
+        <span><i className="sw out" /> Output {outTok.toLocaleString()} ({Math.round((outTok / total) * 100)}%)</span>
+      </div>
+    </div>
+  )
+}
+
+function shortTime(at: string | null): string {
+  if (!at) return '—'
+  try { return new Date(at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) } catch { return '—' }
+}
+
+function TokensWindow() {
+  const [data, setData] = useState<TokenDashboard | null>(null)
+  const [budget, setBudgetState] = useState<SettingsView['budget'] | null>(null)
+  const [sel, setSel] = useState<string | null>(null)   // selected provider, or null = All
+  const refresh = useCallback(() => {
+    getTokenDashboard(300).then(setData).catch(() => setData(null))
+    getSettings().then((s) => setBudgetState(s.budget ?? null)).catch(() => {})
+  }, [])
+  useEffect(() => { refresh() }, [refresh])
+
+  if (!data) return <div className="w-empty"><span className="spin-fast">◠</span></div>
+  const providers = data.providers
+  const pie = providers.filter((m) => m.totalTokens > 0).map((m) => ({ label: m.provider, value: m.totalTokens }))
+  const maxTokens = Math.max(1, ...providers.map((m) => m.totalTokens))
+  const maxCost = Math.max(0.0000001, ...providers.map((m) => m.cost))
+  const colorOf = (provider: string) => CHART_COLORS[Math.max(0, providers.findIndex((m) => m.provider === provider)) % CHART_COLORS.length]
+  const detail = sel ? providers.find((m) => m.provider === sel) : null
+  const recent = [...data.timeline].reverse().filter((t) => !detail || t.provider === detail.provider).slice(0, 14)
+
+  const runsTable = (
+    <table className="tok-table">
+      <thead><tr><th>Time</th><th>Provider</th><th>Model</th><th className="num">Tokens</th><th className="num">Cost</th></tr></thead>
+      <tbody>
+        {recent.length === 0 ? <tr><td colSpan={5} className="empty">No runs yet on a real AI provider.</td></tr>
+          : recent.map((t, i) => (
+            <tr key={i}>
+              <td className="mono">{shortTime(t.at)}</td>
+              <td><span className="dot" style={{ background: colorOf(t.provider ?? '') }} /> {provLabel(t.provider)}</td>
+              <td className="mono dim">{t.model ?? '—'}</td>
+              <td className="num">{t.tokens.toLocaleString()}</td>
+              <td className="num dim">${t.cost.toFixed(4)}</td>
+            </tr>))}
+      </tbody>
+    </table>
+  )
+
+  return (
+    <>
+      <div className="files-bar">
+        <button className="hint" onClick={refresh}>⟳ Refresh</button>
+        <span className="grow" />
+        <span className="note">{data.runs} AI runs analysed</span>
+      </div>
+
+      <div className="tok-tabs">
+        <button className={`tok-tab${sel === null ? ' on' : ''}`} onClick={() => setSel(null)}>All providers</button>
+        {providers.map((m) => (
+          <button key={m.provider} className={`tok-tab${sel === m.provider ? ' on' : ''}`} onClick={() => setSel(m.provider)}>
+            <span className="dot" style={{ background: colorOf(m.provider) }} />{provLabel(m.provider)}
+          </button>
+        ))}
+      </div>
+
+      {detail ? (
+        /* ----- per-provider detail ----- */
+        <>
+          <div className="cards3">
+            <div className="scard"><div className="lbl">TOTAL TOKENS</div><div className="big">{detail.totalTokens.toLocaleString()}</div><div className="sub">{Math.round((detail.totalTokens / Math.max(1, data.totalTokens)) * 100)}% of all usage</div></div>
+            <div className="scard"><div className="lbl">EST. COST</div><div className="big">${detail.cost.toFixed(4)}</div><div className="sub">{detail.runs.toLocaleString()} runs</div></div>
+            <div className="scard"><div className="lbl">AVG / RUN</div><div className="big">{Math.round(detail.totalTokens / Math.max(1, detail.runs)).toLocaleString()}</div><div className="sub">tokens per run</div></div>
+          </div>
+          <div className="dv-sec-title" style={{ marginTop: 14 }}>Input vs output · {provLabel(detail.provider)}</div>
+          <SplitBar inTok={detail.promptTokens} outTok={detail.completionTokens} />
+          <div className="dv-sec-title" style={{ marginTop: 16 }}>Tokens per run</div>
+          <Spark points={data.timeline.filter((t) => t.provider === detail.provider).map((t) => t.tokens)} />
+          <div className="dv-sec-title" style={{ marginTop: 16 }}>Recent {provLabel(detail.provider)} runs</div>
+          {runsTable}
+        </>
+      ) : (
+        /* ----- all-providers overview ----- */
+        <>
+          <div className="cards3">
+            <div className="scard"><div className="lbl">TOTAL TOKENS</div><div className="big">{data.totalTokens.toLocaleString()}</div><div className="sub">{data.promptTokens.toLocaleString()} in · {data.completionTokens.toLocaleString()} out</div></div>
+            <div className="scard"><div className="lbl">EST. COST</div><div className="big">${data.totalCost.toFixed(4)}</div><div className="sub">paid providers only</div></div>
+            <div className="scard"><div className="lbl">BUDGET TODAY</div><div className="big">{budget && budget.dailyTokenBudget > 0 ? `${Math.round((budget.tokensToday / budget.dailyTokenBudget) * 100)}%` : '∞'}</div><div className="sub">{budget ? (budget.paused ? 'PAUSED' : budget.dailyTokenBudget > 0 ? `${budget.tokensToday.toLocaleString()} / ${budget.dailyTokenBudget.toLocaleString()}` : 'no cap') : '—'}</div></div>
+          </div>
+          {budget && budget.dailyTokenBudget > 0 && (
+            <div className="budget-meter"><div className="fill" style={{ width: `${Math.min(100, (budget.tokensToday / budget.dailyTokenBudget) * 100)}%` }} /></div>
+          )}
+
+          <div className="dv-sec-title" style={{ marginTop: 14 }}>Token share by provider <span className="note">· click to drill in</span></div>
+          <div className="tok-split">
+            <Donut data={pie.length ? pie : [{ label: 'none', value: 1 }]} />
+            <div className="tok-legend">
+              {providers.map((m) => (
+                <button className="tok-row" key={m.provider} onClick={() => setSel(m.provider)}>
+                  <span className="dot" style={{ background: colorOf(m.provider) }} />
+                  <span className="nm">{provLabel(m.provider)}</span>
+                  <span className="bar"><span style={{ width: `${(m.totalTokens / maxTokens) * 100}%`, background: colorOf(m.provider) }} /></span>
+                  <span className="val">{m.totalTokens.toLocaleString()}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="dv-sec-title" style={{ marginTop: 16 }}>Input vs output</div>
+          <SplitBar inTok={data.promptTokens} outTok={data.completionTokens} />
+
+          <div className="dv-sec-title" style={{ marginTop: 16 }}>Cost by provider</div>
+          <div className="tok-legend">
+            {providers.map((m) => (
+              <div className="tok-row" key={m.provider} style={{ cursor: 'default' }}>
+                <span className="dot" style={{ background: colorOf(m.provider) }} />
+                <span className="nm">{provLabel(m.provider)}</span>
+                <span className="bar"><span style={{ width: `${(m.cost / maxCost) * 100}%`, background: colorOf(m.provider) }} /></span>
+                <span className="val">${m.cost.toFixed(4)}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="dv-sec-title" style={{ marginTop: 16 }}>Provider breakdown</div>
+          <table className="tok-table">
+            <thead><tr><th>Provider</th><th className="num">Runs</th><th className="num">Input</th><th className="num">Output</th><th className="num">Total</th><th className="num">Cost</th></tr></thead>
+            <tbody>
+              {providers.map((m) => (
+                <tr key={m.provider}>
+                  <td><span className="dot" style={{ background: colorOf(m.provider) }} /> {provLabel(m.provider)}</td>
+                  <td className="num">{m.runs.toLocaleString()}</td>
+                  <td className="num dim">{m.promptTokens.toLocaleString()}</td>
+                  <td className="num dim">{m.completionTokens.toLocaleString()}</td>
+                  <td className="num">{m.totalTokens.toLocaleString()}</td>
+                  <td className="num dim">${m.cost.toFixed(4)}</td>
+                </tr>))}
+            </tbody>
+          </table>
+
+          <div className="dv-sec-title" style={{ marginTop: 16 }}>Tokens per run (recent → now)</div>
+          <Spark points={data.timeline.map((t) => t.tokens)} />
+
+          <div className="dv-sec-title" style={{ marginTop: 16 }}>Recent activity</div>
+          {runsTable}
+        </>
+      )}
+    </>
+  )
+}
+
 /** Format a byte count compactly (B / KB / MB). */
 function kb(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`
@@ -570,18 +768,23 @@ function SettingsWindow() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
 
-  useEffect(() => { getSettings().then((s) => { setSettings(s); setProviderState(s.provider); setModel(s.model) }).catch(() => {}) }, [])
+  // Each provider keeps its own model field (openai-model vs ollama-model vs Anthropic model).
+  const modelFor = (s: SettingsView) => s.provider === 'openai' ? (s.openaiModel ?? '')
+    : s.provider === 'ollama' ? (s.ollamaModel ?? '') : s.model
+
+  useEffect(() => { getSettings().then((s) => { setSettings(s); setProviderState(s.provider); setModel(modelFor(s)) }).catch(() => {}) }, [])
 
   const changeProvider = (p: string) => {
     setProviderState(p); savePref('jarvis.provider', p); setSaving(true)
-    apiSetProvider(p, model || undefined).then((s) => { setSettings(s); setModel(s.model) }).catch(() => {}).finally(() => setSaving(false))
+    // Switch provider only — don't overwrite the new provider's model with the old one's value.
+    apiSetProvider(p).then((s) => { setSettings(s); setProviderState(s.provider); setModel(modelFor(s)) }).catch(() => {}).finally(() => setSaving(false))
   }
 
   // Settings apply on change; Save re-confirms provider+model and flashes a confirmation.
   const saveAll = () => {
     setSaving(true)
     apiSetProvider(provider, model || undefined)
-      .then((s) => { setSettings(s); setModel(s.model); setSaved(true); setTimeout(() => setSaved(false), 2000) })
+      .then((s) => { setSettings(s); setModel(modelFor(s)); setSaved(true); setTimeout(() => setSaved(false), 2000) })
       .catch(() => {})
       .finally(() => setSaving(false))
   }
@@ -605,6 +808,20 @@ function SettingsWindow() {
         <div className="note">{provider === 'claude' && !settings?.hasAnthropicKey ? 'No ANTHROPIC_API_KEY set — calls fall back to the offline mock.' : provider === 'openai' && !settings?.hasOpenaiKey ? 'No OPENAI_API_KEY set — calls fall back to the offline mock.' : provider === 'ollama' ? 'Uses your local Ollama; falls back to the mock if it is not running.' : 'Takes effect immediately for new requests.'}</div></div>
       <div className="field"><label>Model</label>
         <input value={model} onChange={(e) => setModel(e.target.value)} onBlur={() => apiSetProvider(provider, model).then(setSettings).catch(() => {})} placeholder="llama3.2:3b" /></div>
+
+      <div className="field"><label>Daily token budget — paid providers only (0 = unlimited) {settings?.budget?.paused && <span style={{ color: 'var(--bad)' }}>· PAUSED</span>}</label>
+        <input type="number" min={0} step={10000} defaultValue={settings?.budget?.dailyTokenBudget ?? 0}
+          onBlur={(e) => apiSetBudget({ dailyTokenBudget: Math.max(0, Number(e.target.value) || 0) }).then(setSettings).catch(() => {})}
+          placeholder="0" />
+        <div className="note">
+          {settings?.budget
+            ? `Used today: ${settings.budget.tokensToday.toLocaleString()} tokens` + (settings.budget.dailyTokenBudget > 0 ? ` · ${settings.budget.remaining.toLocaleString()} left` : ' · no cap')
+            : 'Caps Claude/OpenAI spend per day. Ollama & Mock are free and never metered.'}
+        </div>
+        <div className="seg" style={{ marginTop: 8 }}>
+          <button className={!settings?.budget?.paused ? 'on' : ''} onClick={() => apiSetBudget({ paused: false }).then(setSettings).catch(() => {})}><span className="pip" />AI on</button>
+          <button className={settings?.budget?.paused ? 'on' : ''} onClick={() => apiSetBudget({ paused: true }).then(setSettings).catch(() => {})}><span className="pip" />Pause (kill-switch)</button>
+        </div></div>
 
       <div className="field"><label>Speech-to-text engine</label>
         <select value={stt} onChange={(e) => { setStt(e.target.value); savePref('jarvis.stt', e.target.value) }}>
@@ -809,6 +1026,7 @@ function WindowBody({ win }: { win: Win }) {
     case 'files': return <FilesWindow />
     case 'backups': return <BackupsWindow />
     case 'plugins': return <PluginsWindow />
+    case 'tokens': return <TokensWindow />
     case 'settings': return <SettingsWindow />
     case 'notifications': return <NotificationsWindow />
     case 'result': return <ResultWindow payload={win.payload} />
@@ -853,6 +1071,7 @@ const SLASH_WINDOW: Record<string, WinKind> = {
   '/today': 'today', '/memory': 'memory', '/tasks': 'history', '/history': 'history',
   '/agents': 'agents', '/logs': 'logs', '/settings': 'settings',
   '/files': 'files', '/jfiles': 'files', '/backup': 'backups', '/backups': 'backups', '/plugins': 'plugins',
+  '/tokens': 'tokens', '/costs': 'tokens',
 }
 const WIN_META: Record<WinKind, { title: string; subtitle: string; dim: string }> = {
   conversation: { title: 'Conversation', subtitle: 'Your chat with Jarvis', dim: '720×620' },
@@ -865,6 +1084,7 @@ const WIN_META: Record<WinKind, { title: string; subtitle: string; dim: string }
   files: { title: 'Explorer', subtitle: 'Browse · view · edit files', dim: '880×620' },
   backups: { title: 'Backups', subtitle: 'Snapshot · restore the Explorer', dim: '720×560' },
   plugins: { title: 'Plugins', subtitle: 'Installed · marketplace', dim: '820×620' },
+  tokens: { title: 'Token usage', subtitle: 'Spend & tokens per model', dim: '860×640' },
   notifications: { title: 'Notifications', subtitle: 'Recent alerts', dim: '520×520' },
   result: { title: 'Result', subtitle: '', dim: '720×520' },
   response: { title: 'Jarvis', subtitle: 'Response', dim: '660×440' },
@@ -888,6 +1108,7 @@ export default function App() {
   const [notifExpanded, setNotifExpanded] = useState<string | null>(null)
   const zRef = useRef(30)
   const wakeRef = useRef<any>(null)
+  const esRef = useRef<EventSource | null>(null)   // current streamInput connection
   const ttsOn = pref('jarvis.tts', 'system') !== 'off'
 
   useEffect(() => {
@@ -911,7 +1132,7 @@ export default function App() {
     const c = setInterval(() => setNow(new Date()), 1000)
     const k = (e: KeyboardEvent) => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); setCmdkOpen((o) => !o) } }
     window.addEventListener('keydown', k)
-    return () => { clearInterval(s); clearInterval(c); window.removeEventListener('keydown', k) }
+    return () => { clearInterval(s); clearInterval(c); window.removeEventListener('keydown', k); esRef.current?.close() }
   }, [])
 
   const focusWin = useCallback((key: string) => setWins((ws) => ws.map((w) => w.key === key ? { ...w, z: ++zRef.current } : w)), [])
@@ -944,10 +1165,11 @@ export default function App() {
   const askInput = useCallback((raw: string, spoken = false) => {
     setBusy(true)
     openWindow('conversation')              // singleton — reused for every turn
+    esRef.current?.close()                  // close any prior stream before starting a new one
     const id = `t-${++zRef.current}`
     setTurns((ts) => [...ts, { id, prompt: raw, loading: true, steps: [] }])
     const collected: Step[] = []
-    streamInput(raw, {
+    esRef.current = streamInput(raw, {
       onStep: (s) => { collected.push(s); updateTurn(id, { steps: [...collected] }) },
       onResult: (result: CommandResult) => {
         if (result.type === 'chat') {
@@ -1091,13 +1313,13 @@ export default function App() {
         </div>
         <div className="hintrow">
           <button className={`wake${wake ? ' on' : ''}`} onClick={toggleWake} title='Say "Jarvis …" to command hands-free'><span className="sw" />WAKE WORD</button>
-          <button className="hint" onClick={() => openWindow('conversation')}>Chat</button>
           <button className="hint" onClick={() => openWindow('today')}>Today</button>
           <button className="hint" onClick={() => openWindow('history')}>History</button>
           <button className="hint" onClick={() => openWindow('memory')}>Memory</button>
           <button className="hint" onClick={() => openWindow('files')}>Files</button>
           <button className="hint" onClick={() => openWindow('backups')}>Backups</button>
           <button className="hint" onClick={() => openWindow('plugins')}>Plugins</button>
+          <button className="hint" onClick={() => openWindow('tokens')}>Tokens</button>
           <button className="hint" onClick={() => openWindow('agents')}>Agents</button>
           <button className="hint" onClick={() => setCmdkOpen(true)}>⌘K</button>
         </div>

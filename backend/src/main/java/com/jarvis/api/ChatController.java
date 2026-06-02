@@ -32,7 +32,10 @@ public class ChatController {
 
     private final Orchestrator orchestrator;
     private final ObjectMapper mapper;
-    private final ExecutorService exec = Executors.newCachedThreadPool();
+    // Bounded pool: each SSE stream holds a thread for up to the emitter timeout while the
+    // agent loop makes blocking model calls, so an unbounded pool could exhaust threads.
+    private final ExecutorService exec =
+            Executors.newFixedThreadPool(Math.max(4, Runtime.getRuntime().availableProcessors()));
 
     public record ChatRequest(@NotBlank String message, String sessionId) {}
 

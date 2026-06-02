@@ -20,6 +20,7 @@ public class ProviderSwitchingLanguageModel implements LanguageModel {
 
     private final JarvisAiProperties props;
     private final ObjectMapper mapper;
+    private final TokenBudget budget;
     private final MockLanguageModel mock = new MockLanguageModel();
     private volatile AnthropicLanguageModel anthropic;
     private volatile String anthropicKey;
@@ -27,23 +28,58 @@ public class ProviderSwitchingLanguageModel implements LanguageModel {
     private volatile OpenAiLanguageModel openai;
     private volatile String openaiKey;
 
-    public ProviderSwitchingLanguageModel(JarvisAiProperties props, ObjectMapper mapper) {
+    public ProviderSwitchingLanguageModel(JarvisAiProperties props, ObjectMapper mapper, TokenBudget budget) {
         this.props = props;
         this.mapper = mapper;
+        this.budget = budget;
     }
 
     @Override
     public ModelResponse generate(List<ChatMessage> messages, List<ToolSpec> tools) {
+        return generate(messages, tools, null);
+    }
+
+    @Override
+    public ModelResponse generate(List<ChatMessage> messages, List<ToolSpec> tools, String modelOverride) {
         LanguageModel m = active();
+        // Only meter the real paid adapters; local Ollama + offline mock are free.
+        boolean metered = m instanceof AnthropicLanguageModel || m instanceof OpenAiLanguageModel;
+        if (metered) {
+            budget.checkBeforeCall();   // kill-switch + daily cap (throws if exceeded)
+        }
         try {
-            return m.generate(messages, tools);
+            ModelResponse resp = m.generate(messages, tools, modelOverride);
+            if (metered) {
+                budget.record(resp.promptTokens(), resp.completionTokens());
+            }
+            return resp;
         } catch (RuntimeException e) {
             if (m != mock) {
+                // A bad/expired API key (401/403) is a config error the user must SEE —
+                // silently answering with the mock would hide it. Only transient/network
+                // failures (or a local model not being pulled) fall back to the mock.
+                if (isAuthError(e)) {
+                    throw new IllegalStateException(m.name()
+                            + " rejected the request — check the API key (and that the model name is valid).", e);
+                }
                 log.warn("Provider {} failed ({}); falling back to the offline mock.", m.name(), e.getMessage());
                 return mock.generate(messages, tools);
             }
             throw e;
         }
+    }
+
+    /** True if the failure chain is an HTTP 401/403 (auth/permission) — a config error. */
+    private static boolean isAuthError(Throwable e) {
+        for (Throwable t = e; t != null; t = t.getCause()) {
+            if (t instanceof org.springframework.web.client.HttpClientErrorException http) {
+                int code = http.getStatusCode().value();
+                if (code == 401 || code == 403) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override
