@@ -48,9 +48,10 @@ jarvis:
     stream-interval-ms: ${JARVIS_MONITOR_INTERVAL:2000}
   # Jarvis Brain / model adapter (spec §15). Default is the offline mock model.
   ai:
-    provider: ${JARVIS_AI_PROVIDER:mock}      # mock | claude
+    provider: ${JARVIS_AI_PROVIDER:ollama}    # mock | claude | ollama (defaults to local Ollama; falls back to mock if down)
     anthropic-api-key: ${ANTHROPIC_API_KEY:}
     model: ${JARVIS_AI_MODEL:claude-opus-4-8}
+    ollama-model: ${JARVIS_AI_OLLAMA_MODEL:llama3.2:3b}
     max-tokens: 1024
     max-steps: 4
     privacy: ${JARVIS_AI_PRIVACY:BALANCED}   # BALANCED | PRIVATE | QUALITY | CHEAP
@@ -115,6 +116,13 @@ jarvis:
       rust: Visual Studio Code
       go: Visual Studio Code
       xcode: Xcode
+  # Plugin SDK (see JarvisPluginProperties). Drops-in JARs that implement
+  # com.jarvis.plugin.spi.JarvisPlugin are loaded at startup; their tools are
+  # registered and granted to the General agent. The marketplace reads catalog.json.
+  plugins:
+    enabled: ${JARVIS_PLUGINS_ENABLED:true}
+    dir: ${JARVIS_PLUGINS_DIR:}          # blank ⇒ <jarvisRoot>/Plugins
+    catalog: ${JARVIS_PLUGINS_CATALOG:}  # blank ⇒ <dir>/catalog.json
   # Tunable limits/sizes (see JarvisLimitsProperties).
   limits:
     conversation-history-turns: 10
@@ -130,8 +138,8 @@ jarvis:
     web-fetch-timeout-seconds: 12
     secret-hint-length: 4                    # trailing chars shown as ••••1234
   filesystem:
-    # The virtual home of Jarvis. Created on startup if missing.
-    jarvis-root: ${JARVIS_ROOT:./JarvisExplorer}
+    # The virtual home of Jarvis ("C: drive"). Created on startup if missing.
+    jarvis-root: ${JARVIS_ROOT:~/Documents/jarvis_drive}
     # Standard sub-folders created inside the Jarvis root.
     explorer-folders:
       - Downloads
@@ -144,9 +152,13 @@ jarvis:
       - Screenshots
       - Logs
     # Additional real folders Jarvis may read/write, each with a permission level.
-    allowed-folders: []
+    # Surfaced as navigable entries at the Explorer root.
+    allowed-folders:
+      - name: Documents
+        path: ~/Documents
+        permission: READ_WRITE
     #   - name: desktop
-    #     path: /Users/shaymarko/Desktop
+    #     path: ~/Desktop
     #     permission: READ_ONLY
     blocked-paths:
       - /System

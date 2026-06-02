@@ -3,7 +3,10 @@ package com.jarvis.brain;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -141,25 +144,36 @@ public class Orchestrator {
         // Thread-safe step emit (parallel sub-agents share the steps list + SSE emitter).
         Consumer<Step> emit = step -> { synchronized (lock) { steps.add(step); if (onStep != null) onStep.accept(step); } };
 
-        emit.accept(new Step("plan", "Decomposed into " + plan.size() + " sub-tasks (running in parallel)",
+        boolean hasDeps = plan.stream().anyMatch(p -> !p.dependsOn().isEmpty());
+        emit.accept(new Step("plan",
+                "Decomposed into " + plan.size() + " sub-tasks (" + (hasDeps ? "pipeline — dependencies honored" : "running in parallel") + ")",
                 plan.stream().map(PlanStep::agentName).collect(Collectors.joining(", "))));
 
         ModelDescriptor model = modelRouter.route("general");
         long start = System.nanoTime();
         try {
-            List<CompletableFuture<SubResult>> futures = new ArrayList<>();
+            // Build one future per step; a step starts once all the steps it depends on complete,
+            // and receives their outputs as extra context. Independent steps still run in parallel.
+            Map<String, CompletableFuture<SubResult>> byId = new LinkedHashMap<>();
             for (PlanStep ps : plan) {
-                futures.add(CompletableFuture.supplyAsync(() -> {
+                List<CompletableFuture<SubResult>> deps = ps.dependsOn().stream()
+                        .map(byId::get).filter(Objects::nonNull).toList();
+                CompletableFuture<Void> gate = deps.isEmpty()
+                        ? CompletableFuture.completedFuture(null)
+                        : CompletableFuture.allOf(deps.toArray(CompletableFuture[]::new));
+                CompletableFuture<SubResult> fut = gate.thenApplyAsync(v -> {
                     AgentDefinition a = registry.find(ps.agentSlug()).orElseGet(registry::general);
+                    String stepContext = withDependencyOutputs(context, deps);
                     emit.accept(new Step("agent", "→ " + a.name(), ps.task()));
-                    AgentRun run = runtime.run(a, ps.task(), context, history);
+                    AgentRun run = runtime.run(a, ps.task(), stepContext, history);
                     emit.accept(new Step("tool", "✓ " + a.name(), truncate(run.answer())));
                     return new SubResult(ps, run);
-                }, PLAN_EXEC));
+                }, PLAN_EXEC);
+                byId.put(ps.id(), fut);
             }
             List<SubResult> results = new ArrayList<>();
-            for (CompletableFuture<SubResult> f : futures) {
-                results.add(f.join());
+            for (PlanStep ps : plan) {
+                results.add(byId.get(ps.id()).join());
             }
 
             int promptTokens = results.stream().mapToInt(r -> r.run().promptTokens()).sum();
@@ -186,6 +200,20 @@ public class Orchestrator {
             audit.record("BRAIN", "planner", message, "ERROR", e.getMessage());
             throw e;
         }
+    }
+
+    /** Append the (already-completed) dependency step outputs to a step's context. */
+    private String withDependencyOutputs(String baseContext, List<CompletableFuture<SubResult>> deps) {
+        if (deps.isEmpty()) {
+            return baseContext;
+        }
+        StringBuilder sb = new StringBuilder(baseContext == null ? "" : baseContext);
+        sb.append("\n\nResults from earlier steps you can build on:\n");
+        for (CompletableFuture<SubResult> d : deps) {
+            SubResult r = d.join();   // already complete: the gate awaited it
+            sb.append("• ").append(r.step().task()).append(":\n").append(r.run().answer()).append("\n\n");
+        }
+        return sb.toString().strip();
     }
 
     private String synthesize(List<SubResult> results) {

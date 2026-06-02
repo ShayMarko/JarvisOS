@@ -33,6 +33,13 @@ public final class Exceptions {
         }
     }
 
+    /** The request is malformed or fails a precondition (HTTP 400). */
+    public static class ValidationException extends JarvisException {
+        public ValidationException(String message) {
+            super(ErrorCode.VALIDATION_FAILED, message);
+        }
+    }
+
     /** A requested file/resource does not exist. */
     public static class NotFoundException extends JarvisException {
         public NotFoundException(String message) {

@@ -151,6 +151,33 @@ public class AgentRegistry {
         bySlug.put(slug, new AgentDefinition(name, slug, role, systemPrompt, tools, category));
     }
 
+    /**
+     * Grant extra tools (e.g. plugin-contributed ones) to the General agent so they're
+     * reachable through normal routing. Rebuilds the definition with a deduped tool list.
+     */
+    public synchronized void grantToolsToGeneral(List<String> toolNames) {
+        AgentDefinition g = bySlug.get("general");
+        if (g == null || toolNames == null || toolNames.isEmpty()) {
+            return;
+        }
+        java.util.LinkedHashSet<String> merged = new java.util.LinkedHashSet<>(g.toolNames());
+        merged.addAll(toolNames);
+        bySlug.put("general", new AgentDefinition(g.name(), g.slug(), g.role(),
+                g.systemPrompt(), List.copyOf(merged), g.category()));
+    }
+
+    /** Remove tools from the General agent (when a plugin is uninstalled). */
+    public synchronized void revokeToolsFromGeneral(List<String> toolNames) {
+        AgentDefinition g = bySlug.get("general");
+        if (g == null || toolNames == null || toolNames.isEmpty()) {
+            return;
+        }
+        java.util.LinkedHashSet<String> merged = new java.util.LinkedHashSet<>(g.toolNames());
+        toolNames.forEach(merged::remove);
+        bySlug.put("general", new AgentDefinition(g.name(), g.slug(), g.role(),
+                g.systemPrompt(), List.copyOf(merged), g.category()));
+    }
+
     public List<AgentDefinition> all() {
         return List.copyOf(bySlug.values());
     }

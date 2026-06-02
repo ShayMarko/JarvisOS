@@ -294,7 +294,42 @@ export interface PluginsData {
   tools: { name: string; description: string }[]
   connectors: { id: string; name: string; status: string }[]
   agents: { slug: string; name: string; role: string }[]
+  plugins?: PluginInfo[]
   counts: Record<string, number>
+}
+
+export interface PluginInfo {
+  id: string
+  name: string
+  version: string
+  description: string
+  jar: string
+  tools: string[]
+}
+
+export interface PluginCatalogEntry {
+  id: string
+  name: string
+  description: string
+  version: string
+  jar: string
+  installed: boolean
+}
+
+export function getInstalledPlugins(): Promise<PluginInfo[]> {
+  return req<PluginInfo[]>('/api/plugins/installed')
+}
+
+export function getPluginCatalog(): Promise<PluginCatalogEntry[]> {
+  return req<PluginCatalogEntry[]>('/api/plugins/catalog')
+}
+
+export function installPlugin(idOrPath: { id?: string; path?: string }): Promise<PluginInfo[]> {
+  return req<PluginInfo[]>('/api/plugins/install', { method: 'POST', headers: jsonHeaders, body: JSON.stringify(idOrPath) })
+}
+
+export function uninstallPlugin(id: string): Promise<{ message: string }> {
+  return req<{ message: string }>(`/api/plugins/${encodeURIComponent(id)}`, { method: 'DELETE' })
 }
 
 export interface NotificationItem {
@@ -339,8 +374,24 @@ async function req<T>(url: string, init?: RequestInit): Promise<T> {
 const jsonHeaders = { 'Content-Type': 'application/json' }
 
 /** A stable id for this client session, so the Brain keeps conversation continuity. */
-export const sessionId: string =
-  (globalThis.crypto?.randomUUID?.() ?? 'sess-' + Math.random().toString(36).slice(2))
+/** Stable per-browser session id so conversation continuity survives reloads. */
+export const sessionId: string = (() => {
+  try {
+    const k = 'jarvis.sessionId'
+    let s = localStorage.getItem(k)
+    if (!s) { s = globalThis.crypto?.randomUUID?.() ?? 'sess-' + Math.random().toString(36).slice(2); localStorage.setItem(k, s) }
+    return s
+  } catch {
+    return globalThis.crypto?.randomUUID?.() ?? 'sess-' + Math.random().toString(36).slice(2)
+  }
+})()
+
+export interface ConversationTurn { role: string; content: string; createdAt: string | null }
+
+/** Recent chat transcript for this session (to rehydrate the conversation window). */
+export function getConversation(): Promise<ConversationTurn[]> {
+  return req<ConversationTurn[]>(`/api/conversation?sessionId=${encodeURIComponent(sessionId)}`)
+}
 
 export function runCommand(input: string): Promise<CommandResult> {
   return req<CommandResult>('/api/command', {
@@ -644,6 +695,7 @@ export interface SettingsView {
   provider: string
   model: string
   hasAnthropicKey: boolean
+  ollamaModel?: string
   providers: string[]
 }
 

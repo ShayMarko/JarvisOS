@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
-  createBackup, createMemory, deleteMemory, fetchCommands, getAgents, getAudit, getFileContent,
-  getMemoryList, getNotifications, getRuns, getSettings, getStatus, getUnreadCount, listBackups,
-  listFiles, markNotificationRead, restoreBackup, runCommand, setProvider as apiSetProvider,
-  streamInput, writeFile,
+  createBackup, createMemory, deleteMemory, fetchCommands, getAgents, getAudit, getConversation,
+  getFileContent, getInstalledPlugins, getMemoryList, getNotifications, getPluginCatalog, getRuns,
+  getSettings, getStatus, getUnreadCount, installPlugin, listBackups, listFiles, markNotificationRead,
+  restoreBackup, revealFile, runCommand, setProvider as apiSetProvider, streamInput, uninstallPlugin, writeFile,
 } from './api'
 import type {
   AgentDef, AuditEntry, BackupInfo, ChatResponse, CommandDefinition, CommandResult, FileNode, Memory,
-  MonitorSnapshot, NotificationItem, RunRecord, SettingsView, Step,
+  MonitorSnapshot, NotificationItem, PluginCatalogEntry, PluginInfo, RunRecord, SettingsView, Step,
 } from './api'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -123,7 +123,17 @@ function Halo() {
 /* ===========================================================================
    Floating window (draggable)
 =========================================================================== */
-type WinKind = 'today' | 'memory' | 'history' | 'settings' | 'agents' | 'logs' | 'files' | 'backups' | 'notifications' | 'result' | 'response'
+type WinKind = 'conversation' | 'today' | 'memory' | 'history' | 'settings' | 'agents' | 'logs' | 'files' | 'backups' | 'plugins' | 'notifications' | 'result' | 'response'
+
+/** One exchange in the running conversation transcript. */
+interface Turn {
+  id: string
+  prompt: string
+  loading: boolean
+  steps: Step[]
+  resp?: ChatResponse
+  commandResult?: { status?: string; message?: string; data?: unknown }
+}
 interface Win { key: string; kind: WinKind; title: string; subtitle: string; dim: string; x: number; y: number; z: number; payload?: unknown }
 
 function FloatingWindow({ win, onClose, onFocus, children }: { win: Win; onClose: () => void; onFocus: () => void; children: React.ReactNode }) {
@@ -293,6 +303,10 @@ function LogsWindow() {
       ))}</div>
 }
 
+const IMG_EXT = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'svg', 'ico']
+function extOf(name: string): string { return name.includes('.') ? name.split('.').pop()!.toLowerCase() : '' }
+function rawUrl(path: string): string { return `/api/files/raw?path=${encodeURIComponent(path)}` }
+
 function FilesWindow() {
   const [cwd, setCwd] = useState('')
   const [entries, setEntries] = useState<FileNode[] | null>(null)
@@ -303,17 +317,25 @@ function FilesWindow() {
   const [msg, setMsg] = useState('')
 
   const load = useCallback((path: string) => {
-    setEntries(null); setSel(null); setMsg('')
+    setEntries(null); setMsg('')
     listFiles(path).then(setEntries).catch((e) => { setEntries([]); setMsg(friendlyError((e as Error).message)) })
   }, [])
   useEffect(() => { load(cwd) }, [cwd, load])
 
+  const isAbs = cwd.startsWith('/')
+  const segs = cwd.split('/').filter(Boolean)
+  const goUp = () => { const i = cwd.lastIndexOf('/'); setSel(null); setCwd(i <= 0 ? '' : cwd.slice(0, i)) }
+  const crumbTo = (i: number) => { const j = segs.slice(0, i + 1).join('/'); return isAbs ? '/' + j : j }
+
   const open = (n: FileNode) => {
-    if (n.directory) { setCwd(n.path); return }
-    setBusy(true); setMsg('')
+    if (n.directory) { setSel(null); setCwd(n.path); return }
+    setSel(n); setMsg('')
+    const e = extOf(n.name)
+    if (IMG_EXT.includes(e) || e === 'pdf') { setContent(''); return }   // previewed via /raw
+    setBusy(true)
     getFileContent(n.path)
-      .then((f) => { setSel(n); setContent(f.content); setDirty(false) })
-      .catch((e) => setMsg(friendlyError((e as Error).message)))
+      .then((f) => { setContent(f.content); setDirty(false) })
+      .catch((er) => setMsg(friendlyError((er as Error).message)))
       .finally(() => setBusy(false))
   }
   const save = () => {
@@ -324,14 +346,18 @@ function FilesWindow() {
       .catch((e) => setMsg(friendlyError((e as Error).message)))
       .finally(() => setBusy(false))
   }
-  const crumbs = cwd ? cwd.split('/').filter(Boolean) : []
+  const openLocation = () => { if (sel) revealFile(sel.path).catch(() => setMsg('Could not reveal the file.')) }
+
+  const selExt = sel ? extOf(sel.name) : ''
+  const selIsImg = IMG_EXT.includes(selExt)
+  const selIsPdf = selExt === 'pdf'
 
   return (
     <div className="files">
       <div className="files-bar">
-        <button className="hint" disabled={!cwd} onClick={() => setCwd(crumbs.slice(0, -1).join('/'))}>↑ Up</button>
-        <span className="crumbs"><button className="crumb" onClick={() => setCwd('')}>Explorer</button>
-          {crumbs.map((c, i) => <button key={i} className="crumb" onClick={() => setCwd(crumbs.slice(0, i + 1).join('/'))}>/ {c}</button>)}</span>
+        <button className="hint" disabled={!cwd} onClick={goUp}>↑ Up</button>
+        <span className="crumbs"><button className="crumb" onClick={() => { setSel(null); setCwd('') }}>Explorer</button>
+          {segs.map((c, i) => <button key={i} className="crumb" onClick={() => { setSel(null); setCwd(crumbTo(i)) }}>/ {c}</button>)}</span>
         <span className="grow" />
         {msg && <span className="files-msg">{msg}</span>}
       </div>
@@ -351,9 +377,13 @@ function FilesWindow() {
             : <>
               <div className="files-vhead"><strong>{sel.name}</strong>
                 <span className="grow" />
-                <button className="hint" disabled={busy || !dirty} onClick={save}>{busy ? '…' : dirty ? 'Save' : 'Saved'}</button></div>
-              <textarea className="files-edit" value={content} spellCheck={false}
-                onChange={(e) => { setContent(e.target.value); setDirty(true) }} />
+                <button className="hint" onClick={openLocation} title="Reveal in Finder">Open location</button>
+                {!selIsImg && !selIsPdf && <button className="hint" disabled={busy || !dirty} onClick={save}>{busy ? '…' : dirty ? 'Save' : 'Saved'}</button>}</div>
+              {selIsImg ? <div className="files-preview"><img src={rawUrl(sel.path)} alt={sel.name} /></div>
+                : selIsPdf ? <iframe className="files-preview" src={rawUrl(sel.path)} title={sel.name} />
+                : busy ? <div className="w-empty"><span className="spin-fast">◠</span></div>
+                : <textarea className="files-edit" value={content} spellCheck={false}
+                    onChange={(e) => { setContent(e.target.value); setDirty(true) }} />}
             </>}
         </div>
       </div>
@@ -400,6 +430,61 @@ function BackupsWindow() {
   )
 }
 
+function PluginsWindow() {
+  const [installed, setInstalled] = useState<PluginInfo[] | null>(null)
+  const [catalog, setCatalog] = useState<PluginCatalogEntry[] | null>(null)
+  const [busy, setBusy] = useState('')
+  const [msg, setMsg] = useState('')
+  const refresh = useCallback(() => {
+    getInstalledPlugins().then(setInstalled).catch(() => setInstalled([]))
+    getPluginCatalog().then(setCatalog).catch(() => setCatalog([]))
+  }, [])
+  useEffect(() => { refresh() }, [refresh])
+
+  const install = (id: string) => {
+    setBusy(id); setMsg('')
+    installPlugin({ id }).then((added) => { setMsg(`Installed ${added.map(p => p.name).join(', ')}`); refresh() })
+      .catch((e) => setMsg(friendlyError((e as Error).message))).finally(() => setBusy(''))
+  }
+  const remove = (id: string, name: string) => {
+    if (!confirm(`Uninstall "${name}"? Its tools will be removed from Jarvis.`)) return
+    setBusy(id); setMsg('')
+    uninstallPlugin(id).then((r) => { setMsg(r.message); refresh() })
+      .catch((e) => setMsg(friendlyError((e as Error).message))).finally(() => setBusy(''))
+  }
+  const notInstalled = (catalog ?? []).filter((c) => !c.installed)
+
+  return (
+    <>
+      <div className="files-bar">
+        <button className="hint" onClick={refresh}>⟳ Refresh</button>
+        <span className="grow" />
+        {msg && <span className="files-msg">{msg}</span>}
+      </div>
+      <div className="dv-sec-title">Installed</div>
+      {!installed ? <div className="w-empty"><span className="spin-fast">◠</span></div>
+        : installed.length === 0 ? <div className="w-empty"><div className="s">No plugins installed. Install one from the marketplace below.</div></div>
+        : <div className="rows">{installed.map((p) => (
+            <div className="row" key={p.id}>
+              <span className="grow"><strong>{p.name}</strong> <span style={{ color: 'var(--muted)' }}>v{p.version}</span>
+                <div style={{ color: 'var(--muted)', fontSize: 12 }}>{p.description}</div>
+                <div style={{ fontSize: 11, marginTop: 2 }}>{p.tools.map((t) => <span key={t} className="pill low" style={{ marginRight: 4 }}>{t}</span>)}</div></span>
+              <button className="hint" disabled={busy === p.id} onClick={() => remove(p.id, p.name)}>{busy === p.id ? '…' : 'Uninstall'}</button>
+            </div>))}</div>}
+
+      <div className="dv-sec-title" style={{ marginTop: 16 }}>Marketplace</div>
+      {!catalog ? <div className="w-empty"><span className="spin-fast">◠</span></div>
+        : notInstalled.length === 0 ? <div className="w-empty"><div className="s">{(catalog.length ?? 0) === 0 ? 'No catalog configured (add a catalog.json in the Plugins folder).' : 'Everything in the catalog is installed.'}</div></div>
+        : <div className="rows">{notInstalled.map((c) => (
+            <div className="row" key={c.id}>
+              <span className="grow"><strong>{c.name}</strong> <span style={{ color: 'var(--muted)' }}>v{c.version}</span>
+                <div style={{ color: 'var(--muted)', fontSize: 12 }}>{c.description}</div></span>
+              <button className="hint" disabled={busy === c.id} onClick={() => install(c.id)}>{busy === c.id ? '…' : 'Install'}</button>
+            </div>))}</div>}
+    </>
+  )
+}
+
 /** Format a byte count compactly (B / KB / MB). */
 function kb(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`
@@ -429,6 +514,7 @@ function SettingsWindow() {
   const [lang, setLang] = useState(pref('jarvis.lang', 'en-US'))
   const [voice, setVoice] = useState(pref('jarvis.voice', 'natural'))
   const [saving, setSaving] = useState(false)
+  const [saved, setSaved] = useState(false)
 
   useEffect(() => { getSettings().then((s) => { setSettings(s); setProviderState(s.provider); setModel(s.model) }).catch(() => {}) }, [])
 
@@ -437,22 +523,33 @@ function SettingsWindow() {
     apiSetProvider(p, model || undefined).then((s) => { setSettings(s); setModel(s.model) }).catch(() => {}).finally(() => setSaving(false))
   }
 
+  // Settings apply on change; Save re-confirms provider+model and flashes a confirmation.
+  const saveAll = () => {
+    setSaving(true)
+    apiSetProvider(provider, model || undefined)
+      .then((s) => { setSettings(s); setModel(s.model); setSaved(true); setTimeout(() => setSaved(false), 2000) })
+      .catch(() => {})
+      .finally(() => setSaving(false))
+  }
+  const providerLabel = (p?: string) => p === 'claude' ? 'Anthropic' : p === 'ollama' ? 'Ollama' : 'Mock'
+
   return (
     <>
       <div className="cards3">
-        <div className="scard"><div className="lbl">AI PROVIDER</div><div className="big">{(settings?.provider ?? provider) === 'claude' ? 'Anthropic' : 'Mock'}</div><div className="sub">{settings?.hasAnthropicKey ? 'API key set' : 'no key · offline'}</div></div>
+        <div className="scard"><div className="lbl">AI PROVIDER</div><div className="big">{providerLabel(settings?.provider ?? provider)}</div><div className="sub">{(settings?.provider ?? provider) === 'ollama' ? 'local · ' + (settings?.ollamaModel ?? 'ollama') : settings?.hasAnthropicKey ? 'API key set' : 'no key · offline'}</div></div>
         <div className="scard"><div className="lbl">STT ENGINE</div><div className="big">{stt === 'whisper' ? 'Whisper' : 'Local'}</div><div className="sub">{stt === 'whisper' ? 'cloud · accurate' : 'offline'}</div></div>
         <div className="scard"><div className="lbl">TTS ENGINE</div><div className="big">{tts === 'system' ? 'System' : 'ElevenLabs'}</div><div className="sub">{tts === 'system' ? 'native · fastest' : 'cloud'}</div></div>
       </div>
 
       <div className="field"><label>AI provider {saving && <span className="spin-fast">◠</span>}</label>
         <select value={provider} onChange={(e) => changeProvider(e.target.value)}>
-          <option value="mock">Mock (offline · no key)</option>
-          <option value="claude">Anthropic Claude (real reasoning)</option>
+          <option value="ollama">Ollama (local · agentic · no key)</option>
+          <option value="claude">Anthropic Claude (cloud · needs key)</option>
+          <option value="mock">Mock (offline stub · scripted)</option>
         </select>
-        <div className="note">{provider === 'claude' && !settings?.hasAnthropicKey ? 'No ANTHROPIC_API_KEY set — calls fall back to the offline mock.' : 'Takes effect immediately for new requests.'}</div></div>
+        <div className="note">{provider === 'claude' && !settings?.hasAnthropicKey ? 'No ANTHROPIC_API_KEY set — calls fall back to the offline mock.' : provider === 'ollama' ? 'Uses your local Ollama; falls back to the mock if it is not running.' : 'Takes effect immediately for new requests.'}</div></div>
       <div className="field"><label>Model</label>
-        <input value={model} onChange={(e) => setModel(e.target.value)} onBlur={() => apiSetProvider(provider, model).then(setSettings).catch(() => {})} placeholder="claude-opus-4-8" /></div>
+        <input value={model} onChange={(e) => setModel(e.target.value)} onBlur={() => apiSetProvider(provider, model).then(setSettings).catch(() => {})} placeholder="llama3.2:3b" /></div>
 
       <div className="field"><label>Speech-to-text engine</label>
         <select value={stt} onChange={(e) => { setStt(e.target.value); savePref('jarvis.stt', e.target.value) }}>
@@ -469,6 +566,11 @@ function SettingsWindow() {
           <button className={voice === 'natural' ? 'on' : ''} onClick={() => { setVoice('natural'); savePref('jarvis.voice', 'natural') }}><span className="pip" />Natural</button>
           <button className={voice === 'robotic' ? 'on' : ''} onClick={() => { setVoice('robotic'); savePref('jarvis.voice', 'robotic') }}><span className="pip" />Robotic</button>
         </div></div>
+
+      <div className="settings-foot">
+        <span className="note" style={{ flex: 1 }}>Settings apply as you change them. Save re-confirms the AI provider &amp; model.</span>
+        <button className="hint primary" onClick={saveAll} disabled={saving}>{saving ? 'Saving…' : saved ? 'Saved ✓' : 'Save'}</button>
+      </div>
     </>
   )
 }
@@ -589,6 +691,51 @@ function ResponseWindow({ payload }: { payload?: unknown }) {
   )
 }
 
+/** The running chat transcript: one reused window, every exchange appended. */
+function ConversationWindow({ turns, onClear }: { turns: Turn[]; onClear: () => void }) {
+  const endRef = useRef<HTMLDivElement | null>(null)
+  useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }) }, [turns])
+  return (
+    <div className="convo">
+      <div className="convo-bar">
+        <span className="grow" style={{ color: 'var(--muted)', fontSize: 12 }}>{turns.length} exchange{turns.length === 1 ? '' : 's'}</span>
+        {turns.length > 0 && <button className="hint" onClick={onClear}>Clear view</button>}
+      </div>
+      <div className="convo-scroll">
+        {turns.length === 0
+          ? <div className="w-empty"><div className="big">💬</div><div className="s">Ask Jarvis anything from the bar below — your whole conversation shows up here.</div></div>
+          : turns.map((t) => (
+            <div className="turn" key={t.id}>
+              <div className="bubble user"><span className="who">You</span><div className="txt">{t.prompt}</div></div>
+              <div className="bubble jarvis">
+                <span className="who">Jarvis</span>
+                {t.steps.length > 0 && (
+                  <div className="substeps">
+                    {t.steps.map((s, i) => (
+                      <div className="substep" key={i}><span className="kind">{s.kind}</span><span className="lbl">{s.label}{s.detail ? <span className="det"> — {s.detail}</span> : null}</span></div>
+                    ))}
+                    {t.loading && <div className="substep"><span className="kind"><span className="spin-fast">◠</span></span><span className="det">working…</span></div>}
+                  </div>
+                )}
+                {t.loading && t.steps.length === 0 && <div className="w-empty" style={{ padding: 12 }}><span className="spin-fast">◠</span><div className="s">Jarvis is thinking…</div></div>}
+                {t.resp && (isHtmlish(t.resp.answer)
+                  ? <ErrorCard message={t.resp.answer} />
+                  : <><div className="answer-txt">{t.resp.answer}</div>
+                      <div className="answer-meta"><span>{t.resp.agent}</span><span>model {t.resp.model}</span><span>{t.resp.tokens} tokens</span></div></>)}
+                {t.commandResult && (t.commandResult.status === 'ERROR'
+                  ? <ErrorCard message={t.commandResult.message} />
+                  : <>
+                      {t.commandResult.message && <div className="answer-txt">{isHtmlish(t.commandResult.message) ? stripHtml(t.commandResult.message) : t.commandResult.message}</div>}
+                      {t.commandResult.data !== undefined && t.commandResult.data !== null && t.commandResult.data !== '' ? <DataView value={t.commandResult.data} /> : null}
+                    </>)}
+              </div>
+            </div>))}
+        <div ref={endRef} />
+      </div>
+    </div>
+  )
+}
+
 function WindowBody({ win }: { win: Win }) {
   switch (win.kind) {
     case 'today': return <TodayWindow />
@@ -598,6 +745,7 @@ function WindowBody({ win }: { win: Win }) {
     case 'logs': return <LogsWindow />
     case 'files': return <FilesWindow />
     case 'backups': return <BackupsWindow />
+    case 'plugins': return <PluginsWindow />
     case 'settings': return <SettingsWindow />
     case 'notifications': return <NotificationsWindow />
     case 'result': return <ResultWindow payload={win.payload} />
@@ -641,9 +789,10 @@ function CommandPalette({ commands, onRun, onClose }: { commands: CommandDefinit
 const SLASH_WINDOW: Record<string, WinKind> = {
   '/today': 'today', '/memory': 'memory', '/tasks': 'history', '/history': 'history',
   '/agents': 'agents', '/logs': 'logs', '/settings': 'settings',
-  '/files': 'files', '/jfiles': 'files', '/backup': 'backups', '/backups': 'backups',
+  '/files': 'files', '/jfiles': 'files', '/backup': 'backups', '/backups': 'backups', '/plugins': 'plugins',
 }
 const WIN_META: Record<WinKind, { title: string; subtitle: string; dim: string }> = {
+  conversation: { title: 'Conversation', subtitle: 'Your chat with Jarvis', dim: '720×620' },
   today: { title: 'Jarvis Today', subtitle: 'Daily digest — counts, highlights', dim: '720×600' },
   memory: { title: 'Memory', subtitle: 'Trusted facts', dim: '720×640' },
   history: { title: 'Multi-step history', subtitle: 'Prompts and their sub-step trees', dim: '900×620' },
@@ -652,6 +801,7 @@ const WIN_META: Record<WinKind, { title: string; subtitle: string; dim: string }
   logs: { title: 'Activity log', subtitle: 'Recent audited actions', dim: '760×560' },
   files: { title: 'Explorer', subtitle: 'Browse · view · edit files', dim: '880×620' },
   backups: { title: 'Backups', subtitle: 'Snapshot · restore the Explorer', dim: '720×560' },
+  plugins: { title: 'Plugins', subtitle: 'Installed · marketplace', dim: '820×620' },
   notifications: { title: 'Notifications', subtitle: 'Recent alerts', dim: '520×520' },
   result: { title: 'Result', subtitle: '', dim: '720×520' },
   response: { title: 'Jarvis', subtitle: 'Response', dim: '660×440' },
@@ -667,6 +817,7 @@ export default function App() {
   const [input, setInput] = useState('')
   const [cmdkOpen, setCmdkOpen] = useState(false)
   const [wins, setWins] = useState<Win[]>([])
+  const [turns, setTurns] = useState<Turn[]>([])
   const [listening, setListening] = useState(false)
   const [wake, setWake] = useState(false)
   const [notifOpen, setNotifOpen] = useState(false)
@@ -679,6 +830,18 @@ export default function App() {
   useEffect(() => {
     fetchCommands().then(setCommands).catch(() => {})
     getSettings().then(setSettings).catch(() => {})
+    // Rehydrate the conversation transcript for this session (survives reloads).
+    getConversation().then((hist) => {
+      const seeded: Turn[] = []
+      hist.forEach((h, i) => {
+        if (h.role === 'USER') {
+          seeded.push({ id: `h-${i}`, prompt: h.content, loading: false, steps: [] })
+        } else if (seeded.length > 0 && !seeded[seeded.length - 1].resp && !seeded[seeded.length - 1].commandResult) {
+          seeded[seeded.length - 1].commandResult = { status: 'OK', message: h.content }
+        }
+      })
+      if (seeded.length > 0) setTurns(seeded)
+    }).catch(() => {})
     const poll = () => { getStatus().then(setSnap).catch(() => {}); getUnreadCount().then(setUnread).catch(() => {}) }
     poll()
     const s = setInterval(poll, 3000)
@@ -710,30 +873,33 @@ export default function App() {
     return singleton ? kind : `${kind}-${zRef.current}`
   }, [])
 
-  const patchWin = useCallback((key: string, payload: unknown) => setWins((ws) => ws.map((w) => w.key === key ? { ...w, payload } : w)), [])
+  const updateTurn = useCallback((id: string, patch: Partial<Turn>) =>
+    setTurns((ts) => ts.map((t) => t.id === id ? { ...t, ...patch } : t)), [])
 
   // Single cognitive door: raw input → backend InputRouter → command or streamed Brain.
+  // All exchanges accumulate in ONE Conversation window (a running transcript).
   const askInput = useCallback((raw: string, spoken = false) => {
     setBusy(true)
-    const key = `response-${++zRef.current}`
-    setWins((ws) => [...ws, { key, kind: 'response', title: 'Jarvis', subtitle: raw, dim: '660×460', x: 360, y: 190, z: zRef.current, payload: { loading: true, steps: [] } }])
+    openWindow('conversation')              // singleton — reused for every turn
+    const id = `t-${++zRef.current}`
+    setTurns((ts) => [...ts, { id, prompt: raw, loading: true, steps: [] }])
     const collected: Step[] = []
     streamInput(raw, {
-      onStep: (s) => { collected.push(s); patchWin(key, { loading: true, steps: [...collected] }) },
+      onStep: (s) => { collected.push(s); updateTurn(id, { steps: [...collected] }) },
       onResult: (result: CommandResult) => {
         if (result.type === 'chat') {
           const resp = result.data as ChatResponse
-          patchWin(key, { loading: false, steps: [...collected], resp })
+          updateTurn(id, { loading: false, steps: [...collected], resp })
           if (spoken && ttsOn) speak(resp.answer)
         } else {
-          patchWin(key, { loading: false, steps: [...collected], commandResult: { status: result.status, message: result.message, data: result.data } })
+          updateTurn(id, { loading: false, steps: [...collected], commandResult: { status: result.status, message: result.message, data: result.data } })
           if (spoken && ttsOn && result.status !== 'ERROR' && result.message) speak(result.message)
         }
       },
-      onError: (m) => patchWin(key, { loading: false, steps: [...collected], commandResult: { status: 'ERROR', message: m } }),
+      onError: (m) => updateTurn(id, { loading: false, steps: [...collected], commandResult: { status: 'ERROR', message: m } }),
       onDone: () => setBusy(false),
     })
-  }, [patchWin, ttsOn])
+  }, [openWindow, updateTurn, ttsOn])
 
   const runCmd = useCallback(async (slash: string) => {
     setCmdkOpen(false)
@@ -825,7 +991,6 @@ export default function App() {
           <div className="clock">{now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</div>
           <div className="datestr">{now.toLocaleDateString([], { weekday: 'short', month: 'short', day: '2-digit', year: 'numeric' }).toUpperCase()}</div>
           <div className="row2">
-            <button className="iconbtn" title="Refresh" onClick={() => getStatus().then(setSnap)}>⟳</button>
             <button className="iconbtn" title="Notifications" onClick={() => setNotifOpen((o) => {
               const next = !o
               if (next) { setNotifExpanded(null); getNotifications().then(setNotifItems).catch(() => {}) }
@@ -862,11 +1027,13 @@ export default function App() {
         </div>
         <div className="hintrow">
           <button className={`wake${wake ? ' on' : ''}`} onClick={toggleWake} title='Say "Jarvis …" to command hands-free'><span className="sw" />WAKE WORD</button>
+          <button className="hint" onClick={() => openWindow('conversation')}>Chat</button>
           <button className="hint" onClick={() => openWindow('today')}>Today</button>
           <button className="hint" onClick={() => openWindow('history')}>History</button>
           <button className="hint" onClick={() => openWindow('memory')}>Memory</button>
           <button className="hint" onClick={() => openWindow('files')}>Files</button>
           <button className="hint" onClick={() => openWindow('backups')}>Backups</button>
+          <button className="hint" onClick={() => openWindow('plugins')}>Plugins</button>
           <button className="hint" onClick={() => openWindow('agents')}>Agents</button>
           <button className="hint" onClick={() => setCmdkOpen(true)}>⌘K</button>
         </div>
@@ -876,7 +1043,9 @@ export default function App() {
       <div className="winlayer">
         {wins.map((w) => (
           <FloatingWindow key={w.key} win={w} onClose={() => closeWin(w.key)} onFocus={() => focusWin(w.key)}>
-            <WindowBody win={w} />
+            {w.kind === 'conversation'
+              ? <ConversationWindow turns={turns} onClear={() => setTurns([])} />
+              : <WindowBody win={w} />}
           </FloatingWindow>
         ))}
       </div>

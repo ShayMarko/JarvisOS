@@ -51,6 +51,21 @@ public class FilesController {
         return fileSystem.readText(path);
     }
 
+    /** Raw bytes of a file (guarded), for in-app preview of images / PDFs. */
+    @GetMapping("/raw")
+    public ResponseEntity<byte[]> raw(@RequestParam("path") String path) {
+        java.nio.file.Path p = fileSystem.resolveExisting(path);
+        try {
+            byte[] bytes = java.nio.file.Files.readAllBytes(p);
+            String ct = java.nio.file.Files.probeContentType(p);
+            return ResponseEntity.ok()
+                    .header("Content-Type", ct != null ? ct : "application/octet-stream")
+                    .body(bytes);
+        } catch (java.io.IOException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PutMapping("/content")
     public FileNode write(@RequestBody WriteRequest request) {
         return fileSystem.writeText(request.path(), request.content());

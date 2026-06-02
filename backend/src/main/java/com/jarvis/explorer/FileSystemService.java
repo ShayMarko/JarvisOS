@@ -44,12 +44,26 @@ public class FileSystemService {
     private final PermissionGuard guard;
     private final JarvisLimitsProperties limits;
     private Path root;
+    /** The root plus every configured allowed folder — the absolute paths the Explorer may address. */
+    private List<Path> mounts;
 
     @PostConstruct
     void init() {
-        this.root = Path.of(properties.getJarvisRoot()).toAbsolutePath().normalize();
+        this.root = expandHome(properties.getJarvisRoot());
+        List<Path> built = new ArrayList<>();
+        built.add(root);
+        properties.getAllowedFolders().forEach(f -> built.add(expandHome(f.getPath())));
+        this.mounts = List.copyOf(built);
         ensureExplorerLayout();
-        log.info("Jarvis Explorer root: {}", root);
+        log.info("Jarvis Explorer root: {} (+{} allowed folder(s))", root, mounts.size() - 1);
+    }
+
+    /** Expand a leading {@code ~} to the user home, then absolutize + normalize. */
+    private static Path expandHome(String raw) {
+        String expanded = raw != null && raw.startsWith("~")
+                ? System.getProperty("user.home") + raw.substring(1)
+                : raw;
+        return Path.of(expanded).toAbsolutePath().normalize();
     }
 
     public Path getRoot() {
@@ -58,7 +72,7 @@ public class FileSystemService {
 
     /** Resolve a relative Explorer path to a guarded, existing absolute path (for reveal-in-Finder). */
     public Path resolveExisting(String relativePath) {
-        Path target = resolveWithinRoot(relativePath);
+        Path target = resolveScoped(relativePath);
         guard.check(target, Operation.READ, false);
         if (!Files.exists(target)) {
             throw new NotFoundException("Does not exist: " + relativePath);
@@ -80,7 +94,7 @@ public class FileSystemService {
     // --- Read -----------------------------------------------------------------
 
     public List<FileNode> list(String relativePath) {
-        Path target = resolveWithinRoot(relativePath);
+        Path target = resolveScoped(relativePath);
         guard.check(target, Operation.READ, false);
         if (!Files.isDirectory(target)) {
             throw new NotFoundException("Not a directory: " + relativePath);
@@ -93,11 +107,23 @@ public class FileSystemService {
         }
         nodes.sort(Comparator.comparing(FileNode::directory).reversed()
                 .thenComparing(n -> n.name().toLowerCase()));
+        // At the Explorer root, surface the configured allowed folders as navigable entries.
+        if (target.equals(root)) {
+            List<FileNode> withMounts = new ArrayList<>();
+            properties.getAllowedFolders().forEach(f -> {
+                Path mp = expandHome(f.getPath());
+                if (Files.isDirectory(mp)) {
+                    withMounts.add(new FileNode("📂 " + f.getName(), mp.toString(), true, 0, Instant.EPOCH));
+                }
+            });
+            withMounts.addAll(nodes);
+            return withMounts;
+        }
         return nodes;
     }
 
     public FileContent readText(String relativePath) {
-        Path target = resolveWithinRoot(relativePath);
+        Path target = resolveScoped(relativePath);
         guard.check(target, Operation.READ, false);
         if (!Files.isRegularFile(target)) {
             throw new NotFoundException("Not a file: " + relativePath);
@@ -108,14 +134,14 @@ public class FileSystemService {
                         + (limits.getFileMaxTextBytes() / (1024 * 1024)) + " MB): " + relativePath);
             }
             String content = Files.readString(target, StandardCharsets.UTF_8);
-            return new FileContent(root.relativize(target).toString(), content);
+            return new FileContent(displayPath(target), content);
         } catch (IOException e) {
             throw new UncheckedIOException("Could not read file: " + relativePath, e);
         }
     }
 
     public List<FileNode> search(String query, String relativeBase) {
-        Path base = resolveWithinRoot(relativeBase);
+        Path base = resolveScoped(relativeBase);
         guard.check(base, Operation.READ, false);
         String needle = query.toLowerCase();
         List<FileNode> matches = new ArrayList<>();
@@ -133,7 +159,7 @@ public class FileSystemService {
     // --- Write ----------------------------------------------------------------
 
     public FileNode writeText(String relativePath, String content) {
-        Path target = resolveWithinRoot(relativePath);
+        Path target = resolveScoped(relativePath);
         Operation op = Files.exists(target) ? Operation.WRITE : Operation.CREATE;
         guard.check(target, op, true);
         try {
@@ -148,7 +174,7 @@ public class FileSystemService {
     }
 
     public FileNode createDirectory(String relativePath) {
-        Path target = resolveWithinRoot(relativePath);
+        Path target = resolveScoped(relativePath);
         guard.check(target, Operation.CREATE, true);
         if (Files.exists(target)) {
             throw new ConflictException("Already exists: " + relativePath);
@@ -162,7 +188,7 @@ public class FileSystemService {
     }
 
     public void delete(String relativePath, boolean confirmed) {
-        Path target = resolveWithinRoot(relativePath);
+        Path target = resolveScoped(relativePath);
         guard.check(target, Operation.DELETE, confirmed);
         if (!Files.exists(target)) {
             throw new NotFoundException("Does not exist: " + relativePath);
@@ -195,18 +221,33 @@ public class FileSystemService {
         } catch (IOException ignored) {
             // best effort: surface the entry even if attributes are unreadable
         }
-        return new FileNode(p.getFileName().toString(), root.relativize(p).toString(), dir, size, modified);
+        return new FileNode(p.getFileName().toString(), displayPath(p), dir, size, modified);
     }
 
-    /** Resolves a client path against the root and forbids escaping it. */
-    private Path resolveWithinRoot(String relativePath) {
-        String clean = relativePath == null ? "" : relativePath.trim();
+    /** Paths under the Jarvis root stay relative ("Notes/x.md"); allowed-folder paths stay absolute. */
+    private String displayPath(Path p) {
+        return p.startsWith(root) ? root.relativize(p).toString() : p.toString();
+    }
+
+    /**
+     * Resolve a client path. An absolute path under a known mount (root or an allowed
+     * folder) is used as-is; anything else is treated as Explorer-relative and confined
+     * to the root. The {@link PermissionGuard} then authorises the actual operation.
+     */
+    private Path resolveScoped(String path) {
+        String clean = path == null ? "" : path.trim();
+        if (!clean.isEmpty()) {
+            Path abs = Path.of(clean).normalize();
+            if (abs.isAbsolute() && mounts.stream().anyMatch(abs::startsWith)) {
+                return abs;
+            }
+        }
         if (clean.startsWith("/")) {
             clean = clean.substring(1);
         }
         Path resolved = root.resolve(clean).normalize();
         if (!resolved.startsWith(root)) {
-            throw new PathBlockedException("Path escapes the Jarvis Explorer root: " + relativePath);
+            throw new PathBlockedException("Path escapes the Jarvis Explorer root: " + path);
         }
         return resolved;
     }

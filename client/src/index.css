@@ -307,6 +307,23 @@ pre.raw { white-space: pre-wrap; word-break: break-word; font-family: var(--mono
 .fade-in { animation: fade 0.25s ease; }
 @keyframes fade { from { opacity: 0; transform: translateY(6px) scale(0.99); } to { opacity: 1; transform: none; } }
 
+/* ===== Settings footer ===== */
+.settings-foot { display: flex; align-items: center; gap: 12px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--hud-dim); }
+.hint.primary { background: rgba(69,214,255,0.16); border-color: rgba(69,214,255,0.4); color: var(--accent); font-weight: 600; padding: 7px 18px; }
+
+/* ===== Conversation window ===== */
+.convo { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.convo-bar { display: flex; align-items: center; gap: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--hud-dim); margin-bottom: 8px; }
+.convo-bar .grow { flex: 1; }
+.convo-scroll { flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; gap: 16px; padding-right: 4px; }
+.turn { display: flex; flex-direction: column; gap: 8px; }
+.bubble { border-radius: 12px; padding: 10px 14px; }
+.bubble .who { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 5px; }
+.bubble.user { align-self: flex-end; max-width: 82%; background: rgba(69,214,255,0.12); border: 1px solid rgba(69,214,255,0.22); }
+.bubble.user .who { color: var(--accent); }
+.bubble.user .txt { white-space: pre-wrap; word-break: break-word; font-size: 13.5px; }
+.bubble.jarvis { align-self: stretch; background: rgba(8,16,30,0.5); border: 1px solid var(--hud-dim); }
+
 /* ===== File Explorer / Backups windows ===== */
 .files { display: flex; flex-direction: column; height: 100%; min-height: 0; }
 .files-bar { display: flex; align-items: center; gap: 8px; padding-bottom: 10px; border-bottom: 1px solid var(--hud-dim); margin-bottom: 10px; flex-wrap: wrap; }
@@ -327,3 +344,6 @@ pre.raw { white-space: pre-wrap; word-break: break-word; font-family: var(--mono
 .files-vhead { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 13px; }
 .files-edit { flex: 1; min-height: 240px; width: 100%; resize: none; background: rgba(6,12,24,0.6); border: 1px solid var(--hud-dim); border-radius: 10px; padding: 12px 14px; color: var(--text); font-family: var(--mono); font-size: 12.5px; line-height: 1.55; outline: none; }
 .files-edit:focus { border-color: var(--accent); }
+.files-preview { flex: 1; min-height: 240px; overflow: auto; border: 1px solid var(--hud-dim); border-radius: 10px; background: rgba(6,12,24,0.6); display: flex; align-items: center; justify-content: center; }
+.files-preview img { max-width: 100%; max-height: 100%; object-fit: contain; }
+iframe.files-preview { width: 100%; border: 1px solid var(--hud-dim); }

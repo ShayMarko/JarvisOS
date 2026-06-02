@@ -32,6 +32,7 @@ public class PluginRegistry {
     private final ToolRegistry tools;
     private final ConnectorRegistry connectors;
     private final AgentRegistry agents;
+    private final PluginManager pluginManager;
 
 
     public Map<String, Object> surface() {
@@ -44,11 +45,15 @@ public class PluginRegistry {
                 "id", c.id(), "name", c.name(), "status", c.status().name())).toList());
         out.put("agents", agents.all().stream().map(a -> Map.of(
                 "slug", a.slug(), "name", a.name(), "role", a.role())).toList());
+        out.put("plugins", pluginManager.installed().stream().map(p -> Map.of(
+                "id", p.id(), "name", p.name(), "version", p.version(),
+                "description", p.description(), "tools", p.tools())).toList());
         out.put("counts", Map.of(
                 "commands", commands.definitions().size(),
                 "tools", tools.all().size(),
                 "connectors", connectors.list().size(),
-                "agents", agents.all().size()));
+                "agents", agents.all().size(),
+                "plugins", pluginManager.installed().size()));
         return out;
     }
 }

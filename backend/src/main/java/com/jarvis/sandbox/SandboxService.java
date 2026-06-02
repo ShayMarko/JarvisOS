@@ -27,11 +27,16 @@ import lombok.RequiredArgsConstructor;
  * working directory with a timeout and captured output, so generated or risky
  * commands can run without touching the user's real working tree.
  *
- * <p>This is a lightweight sandbox: a fresh temp cwd + timeout + output capture,
- * NOT full OS/container isolation. Container-grade isolation (and two-stage
- * "promote after approval") is a later hardening step (Phase 11). The strong
- * safety property today is that nothing here runs until the Approval Center
- * has cleared it.
+ * <p>Two isolation tiers (chosen at startup):
+ * <ul>
+ *   <li><b>Container</b> — when {@code jarvis.limits.sandbox-docker=true} and Docker is
+ *       available, commands run in a throwaway {@code --network none} container with
+ *       memory/CPU caps (added in Phase 5).</li>
+ *   <li><b>Lightweight</b> — otherwise, a fresh temp working directory + timeout +
+ *       captured output (no OS-level isolation). This is the default.</li>
+ * </ul>
+ * Either way, the strong safety property is that nothing here runs until the Approval
+ * Center has cleared it. Still deferred: the two-stage "promote after approval" flow.
  */
 @Service
 @RequiredArgsConstructor
