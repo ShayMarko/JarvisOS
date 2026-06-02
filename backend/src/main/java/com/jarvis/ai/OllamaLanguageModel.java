@@ -111,8 +111,99 @@ public class OllamaLanguageModel extends AbstractHttpLanguageModel {
         }
         int in = root.path("prompt_eval_count").asInt(0);
         int out = root.path("eval_count").asInt(0);
+        String content = message.path("content").asText("");
+        if (toolCalls.isEmpty()) {
+            // Smaller local models (e.g. llama3.2:3b) often ignore the native tool_calls channel and
+            // instead emit the call as raw JSON in the content — e.g. {"name":"read_file","parameters":{…}}.
+            // Without this, that JSON leaks to the user as the "answer". Salvage it into a real ToolCall
+            // so the agent loop actually runs the tool instead of printing the JSON.
+            List<ToolCall> salvaged = salvageToolCalls(content);
+            if (!salvaged.isEmpty()) {
+                return ModelResponse.tools(salvaged, in, out);
+            }
+        }
         return toolCalls.isEmpty()
-                ? ModelResponse.text(message.path("content").asText(""), in, out)
+                ? ModelResponse.text(content, in, out)
                 : ModelResponse.tools(toolCalls, in, out);
+    }
+
+    /**
+     * Recovers tool calls a weak model emitted as plain-text JSON in the content field instead of via
+     * the native tool_calls channel. Only triggers when the whole message is one (or a few stacked)
+     * JSON objects of the shape {@code {"name": "...", "parameters"|"arguments"|"args": {…}}} — a strong
+     * signal it's a tool call, not prose — so a normal answer that merely mentions JSON is never hijacked.
+     */
+    private List<ToolCall> salvageToolCalls(String content) {
+        List<ToolCall> out = new ArrayList<>();
+        if (content == null) {
+            return out;
+        }
+        String s = content.strip();
+        // Strip a ```json … ``` (or bare ```) fence if the model wrapped the call.
+        if (s.startsWith("```")) {
+            int nl = s.indexOf('\n');
+            if (nl > 0) {
+                s = s.substring(nl + 1);
+            }
+            if (s.endsWith("```")) {
+                s = s.substring(0, s.length() - 3);
+            }
+            s = s.strip();
+        }
+        if (!s.startsWith("{")) {
+            return out;
+        }
+        int i = 0;
+        // Walk one or more concatenated top-level {…} objects (some models stack two calls back-to-back).
+        while (i < s.length() && s.charAt(i) == '{') {
+            int end = matchingBrace(s, i);
+            if (end < 0) {
+                break;
+            }
+            String chunk = s.substring(i, end + 1);
+            try {
+                JsonNode node = mapper.readTree(chunk);
+                String name = node.path("name").asText("");
+                JsonNode params = node.has("parameters") ? node.get("parameters")
+                        : node.has("arguments") ? node.get("arguments")
+                        : node.get("args");
+                if (!name.isBlank() && params != null && params.isObject()) {
+                    out.add(new ToolCall("call_" + out.size(), name, params.toString()));
+                } else {
+                    return List.of(); // not the tool-call shape — treat the whole content as an answer
+                }
+            } catch (RuntimeException | com.fasterxml.jackson.core.JsonProcessingException e) {
+                return List.of();
+            }
+            i = end + 1;
+            while (i < s.length() && Character.isWhitespace(s.charAt(i))) {
+                i++;
+            }
+        }
+        // Only accept if we consumed the entire message (no trailing prose after the JSON).
+        return i >= s.length() ? out : List.of();
+    }
+
+    /** Index of the brace that closes the object opening at {@code open}, respecting strings/escapes. */
+    private static int matchingBrace(String s, int open) {
+        int depth = 0;
+        boolean inStr = false, esc = false;
+        for (int i = open; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (inStr) {
+                if (esc) { esc = false; }
+                else if (c == '\\') { esc = true; }
+                else if (c == '"') { inStr = false; }
+            } else if (c == '"') {
+                inStr = true;
+            } else if (c == '{') {
+                depth++;
+            } else if (c == '}') {
+                if (--depth == 0) {
+                    return i;
+                }
+            }
+        }
+        return -1;
     }
 }

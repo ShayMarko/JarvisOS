@@ -55,7 +55,7 @@ jarvis:
     openai-api-key: ${OPENAI_API_KEY:}
     openai-model: ${JARVIS_AI_OPENAI_MODEL:gpt-4o-mini}  # OpenAI model
     max-tokens: 1024
-    max-steps: 4
+    max-steps: 12      # tool-loop iterations per agent run (enough to write a multi-file project)
     # Safety net for PAID providers (Claude/OpenAI): hard cap on tokens/day. 0 = unlimited.
     # Ollama + mock are never metered. Adjustable live in Settings; pause = kill-switch.
     daily-token-budget: ${JARVIS_AI_DAILY_TOKEN_BUDGET:0}

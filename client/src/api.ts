@@ -734,6 +734,14 @@ export function getSettings(): Promise<SettingsView> {
   return req<SettingsView>('/api/settings')
 }
 
+/** The user's "About Me" profile (a Markdown doc Jarvis reads into every conversation). */
+export function getProfile(): Promise<{ content: string }> {
+  return req<{ content: string }>('/api/profile')
+}
+export function saveProfile(content: string): Promise<{ content: string }> {
+  return req<{ content: string }>('/api/profile', { method: 'PUT', headers: jsonHeaders, body: JSON.stringify({ content }) })
+}
+
 export function setProvider(provider: string, model?: string): Promise<SettingsView> {
   return req<SettingsView>('/api/settings/provider', {
     method: 'POST',

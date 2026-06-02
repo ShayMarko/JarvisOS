@@ -1,19 +1,34 @@
 package com.jarvis.agent;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import com.jarvis.ai.ChatMessage;
+import com.jarvis.ai.JarvisAiProperties;
+import com.jarvis.ai.LanguageModel;
+import com.jarvis.ai.ModelResponse;
 
 import lombok.RequiredArgsConstructor;
 
 /**
- * Picks the most appropriate agent for a request (the Brain's routing step).
- * Phase 6 uses ordered keyword rules — the first matching rule wins, else the
- * General Assistant. (A real model can do this selection in later phases.)
+ * Picks the best agent for a request (the Brain's routing step), reaching the FULL roster.
+ *
+ * <p>Two tiers: a fast keyword table for obvious cases, and — when the keywords don't pin a
+ * specialist — a cheap LLM call that chooses from the whole roster by each agent's role. This
+ * makes routing agentic (every specialist is reachable, chosen by reasoning) while spending a
+ * routing call only on ambiguous requests. Falls back to keywords/General on mock or any error,
+ * so it always works offline.
  */
 @Component
 @RequiredArgsConstructor
 public class AgentSelector {
+
+    private static final Logger log = LoggerFactory.getLogger(AgentSelector.class);
 
     /** An ordered routing rule: if the message contains any keyword, route to {@code slug}. */
     private record Rule(String slug, List<String> keywords) {}
@@ -24,21 +39,110 @@ public class AgentSelector {
             new Rule("email", List.of("email", "inbox", "mail", "reply to")),
             new Rule("calendar", List.of("calendar", "schedule", "meeting", "event", "agenda")),
             new Rule("data", List.of("analyse", "analyze", "data", "csv", "spreadsheet")),
-            new Rule("code", List.of("code", "function", "bug", "class ", "compile", "stack trace")),
+            new Rule("code", List.of("code", "function", "bug", "class ", "compile", "stack trace",
+                    "build an app", "build a app", "build me an app", "build the app", "build a ", "create an app",
+                    "spring boot", "react app", "backend", "frontend", "rest api", "web app", "implement")),
             new Rule("research", List.of("document", "docs", "according to", "knowledge base",
                     "on the web", "web search", "research", "look up", "summarise", "summarize", "find")),
             new Rule("files", List.of("file", "files", "folder", "directory", "read", "open", "explorer")));
 
     private final AgentRegistry registry;
+    private final LanguageModel model;
+    private final JarvisAiProperties ai;
 
+    /**
+     * Smart selection: a keyword-matched specialist wins immediately (free); otherwise — when the
+     * request would fall back to General and a real model is active — ask the model to pick the
+     * best specialist from the roster.
+     */
     public AgentDefinition select(String message) {
-        String m = message.toLowerCase();
+        AgentDefinition keyword = byKeyword(message);
+        if (!"general".equals(keyword.slug())) {
+            return keyword;   // keywords already pinned a specialist — no model call needed
+        }
+        if (isMock()) {
+            return keyword;
+        }
+        String slug = llmPick(message);
+        return slug == null ? keyword : registry.find(slug).orElse(keyword);
+    }
+
+    /** Keyword-only routing (no model call) — the fast/offline path and the planner fallback. */
+    public AgentDefinition byKeyword(String message) {
+        String m = message == null ? "" : message.toLowerCase();
         return RULES.stream()
                 .filter(rule -> rule.keywords().stream().anyMatch(m::contains))
                 .map(rule -> registry.find(rule.slug()))
-                .filter(java.util.Optional::isPresent)
-                .map(java.util.Optional::get)
+                .filter(Optional::isPresent).map(Optional::get)
                 .findFirst()
                 .orElseGet(registry::general);
+    }
+
+    /** Resolve a model-provided agent slug (e.g. from the planner), else keyword-route the text. */
+    public AgentDefinition resolve(String slug, String fallbackText) {
+        if (slug != null && !slug.isBlank()) {
+            Optional<AgentDefinition> a = registry.find(slug.trim().toLowerCase());
+            if (a.isPresent()) {
+                return a.get();
+            }
+        }
+        return byKeyword(fallbackText);
+    }
+
+    /** "slug: role" for every agent — the menu the model (planner or router) chooses from. */
+    public String roster() {
+        return registry.all().stream()
+                .map(a -> a.slug() + ": " + a.role())
+                .collect(Collectors.joining("\n"));
+    }
+
+    private String llmPick(String message) {
+        try {
+            String system = "You route the user's request to the single best specialist agent. "
+                    + "Reply with ONLY that agent's slug (one token, lowercase), nothing else.\nAgents:\n" + roster();
+            ModelResponse r = model.generate(
+                    List.of(ChatMessage.system(system), ChatMessage.user(message)), List.of(), routerModel());
+            if (r == null || r.text() == null) {
+                return null;
+            }
+            String[] tokens = r.text().trim().toLowerCase().split("[^a-z0-9-]+");
+            // Trust only a short, slug-like reply. Many slugs (email/data/code/files/...) are common
+            // words, so a chatty reply would false-match — better to fall back to keywords/General
+            // than to mis-route to the wrong specialist (a weak model returns prose; a strong one
+            // returns just the slug as instructed).
+            if (tokens.length == 0 || tokens.length > 3) {
+                return null;
+            }
+            for (String tok : tokens) {
+                if (!tok.isBlank() && registry.find(tok).isPresent()) {
+                    return tok;
+                }
+            }
+            return null;
+        } catch (RuntimeException e) {
+            log.debug("LLM agent routing failed, using keyword fallback: {}", e.getMessage());
+            return null;
+        }
+    }
+
+    private boolean isMock() {
+        String p = ai.getProvider() == null ? "" : ai.getProvider().toLowerCase();
+        return !(p.equals("ollama")
+                || ((p.equals("claude") || p.equals("anthropic")) && hasKey(ai.getAnthropicApiKey()))
+                || (p.equals("openai") && hasKey(ai.getOpenaiApiKey())));
+    }
+
+    private static boolean hasKey(String k) {
+        return k != null && !k.isBlank();
+    }
+
+    /** Cheap model for routing (same tier as the planner); null ⇒ provider's default. */
+    private String routerModel() {
+        String p = ai.getProvider() == null ? "" : ai.getProvider().toLowerCase();
+        return switch (p) {
+            case "claude", "anthropic" -> ai.getPlannerModelClaude();
+            case "openai" -> ai.getPlannerModelOpenai();
+            default -> null;
+        };
     }
 }

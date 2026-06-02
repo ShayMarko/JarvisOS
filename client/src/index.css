@@ -373,6 +373,9 @@ pre.raw { white-space: pre-wrap; word-break: break-word; font-family: var(--mono
 .files-group:hover { color: #dff0ff; }
 .files-group .chev { font-size: 9px; width: 10px; }
 .files-group .cnt { margin-left: auto; color: var(--muted); background: rgba(120,150,190,0.12); border-radius: 6px; padding: 1px 7px; letter-spacing: 0; }
+.agents-head { display: flex; align-items: baseline; gap: 10px; padding: 4px 8px 10px; margin-bottom: 4px; border-bottom: 1px solid rgba(120,150,190,0.14); }
+.agents-head strong { color: var(--accent); font-size: 18px; }
+.agents-head .s { margin-left: auto; color: var(--muted); font-size: 11px; }
 .file-row { display: flex; align-items: center; gap: 9px; width: 100%; text-align: left; background: none; border: none; cursor: pointer; padding: 8px 8px; border-radius: 8px; color: var(--text); font-size: 13px; }
 .file-row:hover { background: rgba(120,170,230,0.07); }
 .file-row.sel { background: rgba(69,214,255,0.12); }

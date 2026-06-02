@@ -18,7 +18,8 @@ import com.jarvis.ai.ModelResponse;
 class PlannerTest {
 
     private final ObjectMapper mapper = new ObjectMapper();
-    private final AgentSelector selector = new AgentSelector(new AgentRegistry());
+    private final AgentSelector selector = new AgentSelector(
+            new AgentRegistry(), mock(LanguageModel.class), new com.jarvis.ai.JarvisAiProperties());
 
     private Planner planner(LanguageModel model) {
         return new Planner(selector, model, mapper, new com.jarvis.ai.JarvisAiProperties());

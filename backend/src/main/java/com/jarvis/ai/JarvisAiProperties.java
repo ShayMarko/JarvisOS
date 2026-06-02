@@ -30,8 +30,10 @@ public class JarvisAiProperties {
     private String plannerModelClaude = "claude-3-5-haiku-latest";
     private String plannerModelOpenai = "gpt-4o-mini";
     private int maxTokens = 1024;
-    /** Max tool-calling iterations before the runtime gives up. */
-    private int maxSteps = 4;
+    /** Max tool-calling iterations per agent run before the runtime gives up. Higher lets an
+     *  agent write a whole multi-file project (one write_file per step); simple turns still end
+     *  early, so raising the cap costs nothing for them. */
+    private int maxSteps = 12;
     /** Safety cap on PAID-provider tokens per day (prompt+completion). 0 = unlimited.
      *  Local (ollama) and mock are never metered. */
     private long dailyTokenBudget = 0;

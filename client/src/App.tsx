@@ -2,9 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   createBackup, createMemory, deleteMemory, fetchCommands, getAgents, getAudit, getConversation,
   getFileContent, getInstalledPlugins, getMemoryList, getNotifications, getPluginCatalog, getRuns,
-  getSettings, getStatus, getTokenDashboard, getUnreadCount, installPlugin, listBackups, listFiles,
-  markNotificationRead, restoreBackup, revealFile, runCommand, setBudget as apiSetBudget,
-  setProvider as apiSetProvider, streamInput, uninstallPlugin, writeFile,
+  getSettings, getStatus, getTokenDashboard, getUnreadCount, installPlugin, listBackups,
+  listFiles, markNotificationRead, restoreBackup, revealFile, runCommand,
+  setBudget as apiSetBudget, setProvider as apiSetProvider, streamInput, uninstallPlugin, writeFile,
 } from './api'
 import type {
   AgentDef, AuditEntry, BackupInfo, ChatResponse, CommandDefinition, CommandResult, FileNode, Memory,
@@ -288,14 +288,53 @@ function HistoryWindow() {
   )
 }
 
+/** Human label + display order for each agent category (the rest fall through alphabetically). */
+const CATEGORY_LABELS: Record<string, string> = {
+  general: 'General', dev: 'Development', research: 'Research & Knowledge',
+  data: 'Data & Analysis', files: 'Files', connectors: 'Connectors',
+  monitoring: 'System & Monitoring', security: 'Security', memory: 'Memory',
+  workflows: 'Workflows & Automation', temporary: 'Temporary',
+}
+const CATEGORY_ORDER = ['general', 'dev', 'research', 'data', 'files', 'connectors', 'monitoring', 'security', 'memory', 'workflows', 'temporary']
+
 function AgentsWindow() {
   const [agents, setAgents] = useState<AgentDef[] | null>(null)
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
   useEffect(() => { getAgents().then(setAgents).catch(() => setAgents([])) }, [])
-  return !agents ? <div className="w-empty"><span className="spin-fast">◠</span></div>
-    : <div className="rows">{agents.map((a) => (
-        <div className="row" key={a.slug}><span className="grow"><strong>{a.name}</strong> — <span style={{ color: 'var(--muted)' }}>{a.role}</span></span>
-          <span className="pill low">{a.category}</span></div>
-      ))}</div>
+  if (!agents) return <div className="w-empty"><span className="spin-fast">◠</span></div>
+
+  // Group by category, then order known categories first, unknown ones alphabetically after.
+  const groups: Record<string, AgentDef[]> = {}
+  for (const a of agents) (groups[a.category] ||= []).push(a)
+  const cats = Object.keys(groups).sort((a, b) => {
+    const ia = CATEGORY_ORDER.indexOf(a), ib = CATEGORY_ORDER.indexOf(b)
+    if (ia !== -1 || ib !== -1) return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib)
+    return a.localeCompare(b)
+  })
+
+  return (
+    <div className="files-pane">
+      <div className="agents-head">
+        <span className="grow"><strong>{agents.length}</strong> agents</span>
+        <span className="s">{cats.length} categories</span>
+      </div>
+      {cats.map((cat) => {
+        const items = groups[cat]
+        return (
+          <div key={cat}>
+            <button className="files-group" onClick={() => setCollapsed((c) => ({ ...c, [cat]: !c[cat] }))}>
+              <span className="chev">{collapsed[cat] ? '▸' : '▾'}</span>{CATEGORY_LABELS[cat] || cat}<span className="cnt">{items.length}</span>
+            </button>
+            {!collapsed[cat] && items.map((a) => (
+              <div className="row" key={a.slug}>
+                <span className="grow"><strong>{a.name}</strong> — <span style={{ color: 'var(--muted)' }}>{a.role}</span></span>
+              </div>
+            ))}
+          </div>
+        )
+      })}
+    </div>
+  )
 }
 
 function NotificationsWindow() {
@@ -1085,6 +1124,26 @@ const SLASH_WINDOW: Record<string, WinKind> = {
   '/files': 'files', '/jfiles': 'files', '/backup': 'backups', '/backups': 'backups', '/plugins': 'plugins',
   '/tokens': 'tokens', '/costs': 'tokens',
 }
+
+/** Light NL → window navigation: "open/show/go to the <X> window". UI nav only, not an AI task. */
+const WINDOW_ALIASES: { kind: WinKind; re: RegExp }[] = [
+  { kind: 'tokens', re: /\btokens?\b|\btoken usage\b|\bcosts?\b/ },
+  { kind: 'memory', re: /\bmemor(y|ies)\b/ },
+  { kind: 'files', re: /\bfiles?\b|\bexplorer\b/ },
+  { kind: 'backups', re: /\bbackups?\b/ },
+  { kind: 'plugins', re: /\bplugins?\b|\bmarketplace\b/ },
+  { kind: 'settings', re: /\bsettings\b|\bpreferences\b/ },
+  { kind: 'agents', re: /\bagents?\b/ },
+  { kind: 'today', re: /\btoday\b|\bdigest\b|\bbriefing\b/ },
+  { kind: 'history', re: /\bhistory\b|\btasks?\b/ },
+  { kind: 'logs', re: /\blogs?\b|\bactivity\b/ },
+  { kind: 'conversation', re: /\bchat\b|\bconversation\b/ },
+]
+function matchWindowOpen(text: string): WinKind | null {
+  const t = text.toLowerCase()
+  if (!/^(open|show|go to|launch|bring up|display)\b/.test(t)) return null
+  return WINDOW_ALIASES.find((a) => a.re.test(t))?.kind ?? null
+}
 const WIN_META: Record<WinKind, { title: string; subtitle: string; dim: string }> = {
   conversation: { title: 'Conversation', subtitle: 'Your chat with Jarvis', dim: '720×620' },
   today: { title: 'Jarvis Today', subtitle: 'Daily digest — counts, highlights', dim: '720×600' },
@@ -1213,6 +1272,10 @@ export default function App() {
     setInput('')
     // Window-opener slashes are pure UI nav → open instantly, no round trip.
     if (t.startsWith('/') && SLASH_WINDOW[t.split(' ')[0]]) { openWindow(SLASH_WINDOW[t.split(' ')[0]]); return }
+    // Natural-language UI navigation ("open/show the X window") — opening a window is a UI
+    // action, not an AI task, so handle it client-side instead of routing to the Brain.
+    const nav = matchWindowOpen(t)
+    if (nav) { openWindow(nav); return }
     // Everything else (free text + non-window commands) goes through the one cognitive door.
     askInput(t, spoken)
   }, [askInput, openWindow])

@@ -85,7 +85,7 @@ public class Planner {
         List<PlanStep> steps = new ArrayList<>();
         int i = 1;
         for (String fragment : fragments) {
-            AgentDefinition a = selector.select(fragment);
+            AgentDefinition a = selector.byKeyword(fragment);   // keyword-only here: avoid an LLM call per fragment
             steps.add(new PlanStep("s" + (i++), a.slug(), a.name(), fragment));
         }
         return steps;
@@ -102,11 +102,14 @@ public class Planner {
         try {
             String system = """
                 You are a task planner. Break the user's request into the FEWEST independent or \
-                dependent sub-tasks needed (max %d). Reply with ONLY a JSON object, no prose:
-                {"steps":[{"id":"s1","task":"...","dependsOn":[]},{"id":"s2","task":"...","dependsOn":["s1"]}]}
+                dependent sub-tasks needed (max %d). Assign each step the best specialist agent by slug. \
+                Reply with ONLY a JSON object, no prose:
+                {"steps":[{"id":"s1","task":"...","agent":"<slug>","dependsOn":[]},{"id":"s2","task":"...","agent":"<slug>","dependsOn":["s1"]}]}
                 Rules: ids are s1,s2,...; dependsOn lists ids whose RESULTS this step needs; \
-                keep tasks self-contained imperatives; if the request is really one task, return a single step.\
-                """.formatted(MAX_STEPS);
+                keep tasks self-contained imperatives; if the request is really one task, return a single step. \
+                Choose each agent from this roster (slug: role):
+                %s\
+                """.formatted(MAX_STEPS, selector.roster());
             // The plan is tiny JSON — run it on a cheap model for paid providers.
             ModelResponse resp = model.generate(
                     List.of(ChatMessage.system(system), ChatMessage.user(msg)), List.of(), plannerModel());
@@ -160,7 +163,8 @@ public class Planner {
                 for (JsonNode d : s.path("dependsOn")) {
                     deps.add(d.asText());
                 }
-                AgentDefinition a = selector.select(task);
+                // Use the agent the planner picked for this step; fall back to keyword routing.
+                AgentDefinition a = selector.resolve(s.path("agent").asText(""), task);
                 raw.add(new PlanStep(id, a.slug(), a.name(), task, deps));
                 i++;
                 if (raw.size() >= MAX_STEPS) {

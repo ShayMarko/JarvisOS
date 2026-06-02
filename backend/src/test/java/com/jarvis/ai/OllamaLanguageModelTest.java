@@ -47,6 +47,32 @@ class OllamaLanguageModelTest {
         assertThat(strResp.toolCalls().get(0).argumentsJson()).contains("\"query\"").contains("hi");
     }
 
+    @Test
+    void salvagesToolCallEmittedAsPlainTextJson() {
+        // Weak models emit the call as content JSON with "parameters" instead of using tool_calls.
+        var r = model().parseResponse(node(
+                "{\"message\":{\"content\":\"{\\\"name\\\": \\\"read_file\\\", \\\"parameters\\\": {\\\"path\\\": \\\"reminders.txt\\\"}}\"}}"));
+        assertThat(r.wantsTools()).isTrue();
+        assertThat(r.toolCalls().get(0).name()).isEqualTo("read_file");
+        assertThat(r.toolCalls().get(0).argumentsJson()).contains("reminders.txt");
+    }
+
+    @Test
+    void salvagesToolCallWrappedInCodeFence() {
+        var r = model().parseResponse(node(
+                "{\"message\":{\"content\":\"```json\\n{\\\"name\\\": \\\"calculate\\\", \\\"arguments\\\": {\\\"expression\\\": \\\"3*3\\\"}}\\n```\"}}"));
+        assertThat(r.wantsTools()).isTrue();
+        assertThat(r.toolCalls().get(0).name()).isEqualTo("calculate");
+    }
+
+    @Test
+    void doesNotHijackANormalAnswerThatMentionsJson() {
+        var r = model().parseResponse(node(
+                "{\"message\":{\"content\":\"Here is the plan: {\\\"name\\\": \\\"x\\\"} and then we proceed.\"}}"));
+        assertThat(r.wantsTools()).isFalse();  // trailing prose ⇒ treated as a normal answer
+        assertThat(r.text()).contains("Here is the plan");
+    }
+
     private com.fasterxml.jackson.databind.JsonNode node(String json) {
         try {
             return mapper.readTree(json);
