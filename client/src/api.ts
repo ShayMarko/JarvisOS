@@ -695,7 +695,9 @@ export interface SettingsView {
   provider: string
   model: string
   hasAnthropicKey: boolean
+  hasOpenaiKey?: boolean
   ollamaModel?: string
+  openaiModel?: string
   providers: string[]
 }
 

@@ -138,7 +138,11 @@ interface Win { key: string; kind: WinKind; title: string; subtitle: string; dim
 
 function FloatingWindow({ win, onClose, onFocus, children }: { win: Win; onClose: () => void; onFocus: () => void; children: React.ReactNode }) {
   const [pos, setPos] = useState({ x: win.x, y: win.y })
+  const [w0, h0] = win.dim.split('×').map(Number)
+  const [size, setSize] = useState({ w: w0 || 720, h: h0 || 520 })
   const drag = useRef<{ dx: number; dy: number } | null>(null)
+  const rez = useRef<{ sx: number; sy: number; w: number; h: number } | null>(null)
+
   const onDown = (e: React.PointerEvent) => {
     onFocus()
     drag.current = { dx: e.clientX - pos.x, dy: e.clientY - pos.y }
@@ -146,18 +150,32 @@ function FloatingWindow({ win, onClose, onFocus, children }: { win: Win; onClose
     const up = () => { drag.current = null; window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up) }
     window.addEventListener('pointermove', move); window.addEventListener('pointerup', up)
   }
-  const [size] = win.dim.split('×').map(Number)
+  // Drag the bottom-right corner to resize (clamped to sane bounds).
+  const onResize = (e: React.PointerEvent) => {
+    e.stopPropagation(); onFocus()
+    rez.current = { sx: e.clientX, sy: e.clientY, w: size.w, h: size.h }
+    const move = (ev: PointerEvent) => {
+      if (!rez.current) return
+      setSize({
+        w: Math.max(360, Math.min(window.innerWidth - 40, rez.current.w + (ev.clientX - rez.current.sx))),
+        h: Math.max(220, Math.min(window.innerHeight - 40, rez.current.h + (ev.clientY - rez.current.sy))),
+      })
+    }
+    const up = () => { rez.current = null; window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up) }
+    window.addEventListener('pointermove', move); window.addEventListener('pointerup', up)
+  }
+
   return (
-    <div className="window fade-in" style={{ left: pos.x, top: pos.y, zIndex: win.z, width: size }} onMouseDown={onFocus}>
+    <div className="window fade-in" style={{ left: pos.x, top: pos.y, zIndex: win.z, width: size.w, height: size.h }} onMouseDown={onFocus}>
       <div className="win-head" onPointerDown={onDown}>
         <span className="pip" />
         <span className="title">{win.title}</span>
         <span className="subtitle">{win.subtitle}</span>
-        <span className="dim">{win.dim}</span>
+        <span className="dim">{Math.round(size.w)}×{Math.round(size.h)}</span>
         <button className="close" onClick={onClose}>✕</button>
       </div>
-      <div className="win-body" style={{ maxHeight: 'min(70vh, 620px)' }}>{children}</div>
-      <div className="win-resize" />
+      <div className="win-body">{children}</div>
+      <div className="win-resize" onPointerDown={onResize} title="Drag to resize" />
     </div>
   )
 }
@@ -304,8 +322,24 @@ function LogsWindow() {
 }
 
 const IMG_EXT = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'svg', 'ico']
+const VID_EXT = ['mp4', 'webm', 'm4v', 'ogv', 'mov']
+const AUD_EXT = ['mp3', 'wav', 'm4a', 'aac', 'flac', 'ogg', 'oga']
+const TEXT_EXT = ['txt', 'md', 'markdown', 'json', 'jsonl', 'xml', 'yaml', 'yml', 'csv', 'tsv', 'log',
+  'js', 'jsx', 'ts', 'tsx', 'java', 'kt', 'py', 'rb', 'go', 'rs', 'c', 'h', 'cpp', 'hpp', 'cs', 'php',
+  'swift', 'sh', 'bash', 'zsh', 'sql', 'html', 'htm', 'css', 'scss', 'less', 'toml', 'ini', 'cfg',
+  'conf', 'env', 'properties', 'gradle', 'dockerfile', 'gitignore', 'editorconfig', 'svg']
 function extOf(name: string): string { return name.includes('.') ? name.split('.').pop()!.toLowerCase() : '' }
 function rawUrl(path: string): string { return `/api/files/raw?path=${encodeURIComponent(path)}` }
+/** How to render a file in the viewer. */
+function fileKind(name: string): 'image' | 'video' | 'audio' | 'pdf' | 'text' | 'binary' {
+  const e = extOf(name)
+  if (IMG_EXT.includes(e)) return 'image'
+  if (VID_EXT.includes(e)) return 'video'
+  if (AUD_EXT.includes(e)) return 'audio'
+  if (e === 'pdf') return 'pdf'
+  if (e === '' || TEXT_EXT.includes(e)) return 'text'   // no-extension files: try as text
+  return 'binary'
+}
 
 function FilesWindow() {
   const [cwd, setCwd] = useState('')
@@ -315,6 +349,7 @@ function FilesWindow() {
   const [dirty, setDirty] = useState(false)
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState('')
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
 
   const load = useCallback((path: string) => {
     setEntries(null); setMsg('')
@@ -330,8 +365,7 @@ function FilesWindow() {
   const open = (n: FileNode) => {
     if (n.directory) { setSel(null); setCwd(n.path); return }
     setSel(n); setMsg('')
-    const e = extOf(n.name)
-    if (IMG_EXT.includes(e) || e === 'pdf') { setContent(''); return }   // previewed via /raw
+    if (fileKind(n.name) !== 'text') { setContent(''); return }   // image/video/audio/pdf/binary → /raw or fallback
     setBusy(true)
     getFileContent(n.path)
       .then((f) => { setContent(f.content); setDirty(false) })
@@ -348,9 +382,7 @@ function FilesWindow() {
   }
   const openLocation = () => { if (sel) revealFile(sel.path).catch(() => setMsg('Could not reveal the file.')) }
 
-  const selExt = sel ? extOf(sel.name) : ''
-  const selIsImg = IMG_EXT.includes(selExt)
-  const selIsPdf = selExt === 'pdf'
+  const kind = sel ? fileKind(sel.name) : 'text'
 
   return (
     <div className="files">
@@ -365,6 +397,25 @@ function FilesWindow() {
         <div className="files-list">
           {!entries ? <div className="w-empty"><span className="spin-fast">◠</span></div>
             : entries.length === 0 ? <div className="w-empty"><div className="s">Empty folder.</div></div>
+            : cwd === '' ? (() => {
+                const fileRow = (n: FileNode) => (
+                  <button key={n.path} className={`file-row${sel?.path === n.path ? ' sel' : ''}`} onClick={() => open(n)}>
+                    <span className="fic">{n.directory ? '📁' : '📄'}</span><span className="fname">{n.name}</span>
+                    <span className="fsize">{n.directory ? '' : kb(n.size)}</span></button>)
+                const section = (title: string, items: FileNode[]) => (
+                  <div key={title}>
+                    <button className="files-group" onClick={() => setCollapsed((c) => ({ ...c, [title]: !c[title] }))}>
+                      <span className="chev">{collapsed[title] ? '▸' : '▾'}</span>{title}<span className="cnt">{items.length}</span>
+                    </button>
+                    {!collapsed[title] && items.map(fileRow)}
+                  </div>)
+                const drive = entries.filter((n) => !n.path.startsWith('/'))   // jarvis_drive (relative)
+                const os = entries.filter((n) => n.path.startsWith('/'))       // OS mounts (absolute)
+                return <>
+                  {section('jarvis_drive', drive)}
+                  {os.length > 0 && section('OS', os)}
+                </>
+              })()
             : entries.map((n) => (
               <button key={n.path} className={`file-row${sel?.path === n.path ? ' sel' : ''}`} onClick={() => open(n)}>
                 <span className="fic">{n.directory ? '📁' : '📄'}</span>
@@ -378,9 +429,12 @@ function FilesWindow() {
               <div className="files-vhead"><strong>{sel.name}</strong>
                 <span className="grow" />
                 <button className="hint" onClick={openLocation} title="Reveal in Finder">Open location</button>
-                {!selIsImg && !selIsPdf && <button className="hint" disabled={busy || !dirty} onClick={save}>{busy ? '…' : dirty ? 'Save' : 'Saved'}</button>}</div>
-              {selIsImg ? <div className="files-preview"><img src={rawUrl(sel.path)} alt={sel.name} /></div>
-                : selIsPdf ? <iframe className="files-preview" src={rawUrl(sel.path)} title={sel.name} />
+                {kind === 'text' && <button className="hint" disabled={busy || !dirty} onClick={save}>{busy ? '…' : dirty ? 'Save' : 'Saved'}</button>}</div>
+              {kind === 'image' ? <div className="files-preview"><img src={rawUrl(sel.path)} alt={sel.name} /></div>
+                : kind === 'video' ? <div className="files-preview"><video src={rawUrl(sel.path)} controls /></div>
+                : kind === 'audio' ? <div className="files-preview"><audio src={rawUrl(sel.path)} controls /></div>
+                : kind === 'pdf' ? <iframe className="files-preview" src={rawUrl(sel.path)} title={sel.name} />
+                : kind === 'binary' ? <div className="w-empty"><div className="big">📦</div><div className="s">No inline preview for this file type.<br />Use “Open location” to open it in Finder.</div></div>
                 : busy ? <div className="w-empty"><span className="spin-fast">◠</span></div>
                 : <textarea className="files-edit" value={content} spellCheck={false}
                     onChange={(e) => { setContent(e.target.value); setDirty(true) }} />}
@@ -531,7 +585,7 @@ function SettingsWindow() {
       .catch(() => {})
       .finally(() => setSaving(false))
   }
-  const providerLabel = (p?: string) => p === 'claude' ? 'Anthropic' : p === 'ollama' ? 'Ollama' : 'Mock'
+  const providerLabel = (p?: string) => p === 'claude' ? 'Anthropic' : p === 'ollama' ? 'Ollama' : p === 'openai' ? 'OpenAI' : 'Mock'
 
   return (
     <>
@@ -544,10 +598,11 @@ function SettingsWindow() {
       <div className="field"><label>AI provider {saving && <span className="spin-fast">◠</span>}</label>
         <select value={provider} onChange={(e) => changeProvider(e.target.value)}>
           <option value="ollama">Ollama (local · agentic · no key)</option>
+          <option value="openai">OpenAI (cloud · needs key)</option>
           <option value="claude">Anthropic Claude (cloud · needs key)</option>
           <option value="mock">Mock (offline stub · scripted)</option>
         </select>
-        <div className="note">{provider === 'claude' && !settings?.hasAnthropicKey ? 'No ANTHROPIC_API_KEY set — calls fall back to the offline mock.' : provider === 'ollama' ? 'Uses your local Ollama; falls back to the mock if it is not running.' : 'Takes effect immediately for new requests.'}</div></div>
+        <div className="note">{provider === 'claude' && !settings?.hasAnthropicKey ? 'No ANTHROPIC_API_KEY set — calls fall back to the offline mock.' : provider === 'openai' && !settings?.hasOpenaiKey ? 'No OPENAI_API_KEY set — calls fall back to the offline mock.' : provider === 'ollama' ? 'Uses your local Ollama; falls back to the mock if it is not running.' : 'Takes effect immediately for new requests.'}</div></div>
       <div className="field"><label>Model</label>
         <input value={model} onChange={(e) => setModel(e.target.value)} onBlur={() => apiSetProvider(provider, model).then(setSettings).catch(() => {})} placeholder="llama3.2:3b" /></div>
 
@@ -573,6 +628,14 @@ function SettingsWindow() {
       </div>
     </>
   )
+}
+
+/** True when an "answer" is actually a raw tool-call / JsonNode dump that leaked through. */
+function looksLikeRawTool(s?: string): boolean {
+  if (!s) return false
+  const t = s.trim()
+  if (/"nodeType"\s*:\s*"OBJECT"|"bigDecimal"\s*:|"valueNode"\s*:/.test(t)) return true
+  return t.startsWith('{') && /"(name|tool|function)"\s*:/.test(t) && /"(parameters|arguments)"\s*:/.test(t)
 }
 
 /** True when a string is actually an HTML page / markup that leaked through. */
@@ -718,8 +781,8 @@ function ConversationWindow({ turns, onClear }: { turns: Turn[]; onClear: () => 
                   </div>
                 )}
                 {t.loading && t.steps.length === 0 && <div className="w-empty" style={{ padding: 12 }}><span className="spin-fast">◠</span><div className="s">Jarvis is thinking…</div></div>}
-                {t.resp && (isHtmlish(t.resp.answer)
-                  ? <ErrorCard message={t.resp.answer} />
+                {t.resp && (isHtmlish(t.resp.answer) || looksLikeRawTool(t.resp.answer)
+                  ? <ErrorCard message={looksLikeRawTool(t.resp.answer) ? "I had trouble using a tool for that. Try rephrasing, or switch the model in Settings." : t.resp.answer} />
                   : <><div className="answer-txt">{t.resp.answer}</div>
                       <div className="answer-meta"><span>{t.resp.agent}</span><span>model {t.resp.model}</span><span>{t.resp.tokens} tokens</span></div></>)}
                 {t.commandResult && (t.commandResult.status === 'ERROR'
@@ -890,7 +953,7 @@ export default function App() {
         if (result.type === 'chat') {
           const resp = result.data as ChatResponse
           updateTurn(id, { loading: false, steps: [...collected], resp })
-          if (spoken && ttsOn) speak(resp.answer)
+          if (spoken && ttsOn && !isHtmlish(resp.answer) && !looksLikeRawTool(resp.answer)) speak(resp.answer)
         } else {
           updateTurn(id, { loading: false, steps: [...collected], commandResult: { status: result.status, message: result.message, data: result.data } })
           if (spoken && ttsOn && result.status !== 'ERROR' && result.message) speak(result.message)
@@ -948,7 +1011,7 @@ export default function App() {
 
   const uiProvider = settings ? (settings.provider === 'claude' || settings.provider === 'anthropic' ? 'anthropic' : settings.provider) : 'mock'
   const pickProvider = useCallback((ui: string) => {
-    const backend = ui === 'anthropic' ? 'claude' : ui
+    const backend = ui === 'anthropic' ? 'claude' : ui   // UI label "anthropic" → backend provider "claude"
     apiSetProvider(backend).then(setSettings).catch(() => {})
   }, [])
 
@@ -985,12 +1048,14 @@ export default function App() {
             <span className="k">AGENTS</span><span className="v">{snap?.runtime.registeredAgents ?? '—'}</span>
             <span className="k">NETWORK</span><span className="v">{snap?.network ? `↓${rate(snap.network.rxBytesPerSec)} ↑${rate(snap.network.txBytesPerSec)}` : 'LAN'}</span>
           </div>
+          <div className="telemetry-flag"><span className="pip" />TELEMETRY ACTIVE</div>
         </div>
 
         <div className="hud-tr">
           <div className="clock">{now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</div>
           <div className="datestr">{now.toLocaleDateString([], { weekday: 'short', month: 'short', day: '2-digit', year: 'numeric' }).toUpperCase()}</div>
           <div className="row2">
+            <button className="iconbtn" title="Chat history" onClick={() => openWindow('conversation')}>💬</button>
             <button className="iconbtn" title="Notifications" onClick={() => setNotifOpen((o) => {
               const next = !o
               if (next) { setNotifExpanded(null); getNotifications().then(setNotifItems).catch(() => {}) }
@@ -998,7 +1063,6 @@ export default function App() {
             })}>
               🔔{unread > 0 && <span className="count">{unread}</span>}</button>
           </div>
-          <div className="telemetry-flag"><span className="pip" />TELEMETRY ACTIVE</div>
         </div>
 
         <div className="hud-bl">

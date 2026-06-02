@@ -13,7 +13,7 @@ import lombok.Setter;
 @ConfigurationProperties(prefix = "jarvis.ai")
 public class JarvisAiProperties {
 
-    /** "mock" (default, offline), "claude" (Anthropic), or "ollama" (local). */
+    /** "mock" (offline), "claude" (Anthropic), "ollama" (local), or "openai". */
     private String provider = "mock";
     private String anthropicApiKey = "";
     private String model = "claude-opus-4-8";
@@ -21,6 +21,10 @@ public class JarvisAiProperties {
     private String ollamaBaseUrl = "http://localhost:11434";
     private String ollamaModel = "llama3.1";
     private String ollamaEmbeddingModel = "nomic-embed-text";
+    /** OpenAI (Chat Completions API). Needs an API key. */
+    private String openaiApiKey = "";
+    private String openaiBaseUrl = "https://api.openai.com/v1";
+    private String openaiModel = "gpt-4o-mini";
     private int maxTokens = 1024;
     /** Max tool-calling iterations before the runtime gives up. */
     private int maxSteps = 4;

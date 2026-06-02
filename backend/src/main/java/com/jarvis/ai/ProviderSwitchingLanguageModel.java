@@ -24,6 +24,8 @@ public class ProviderSwitchingLanguageModel implements LanguageModel {
     private volatile AnthropicLanguageModel anthropic;
     private volatile String anthropicKey;
     private volatile OllamaLanguageModel ollama;
+    private volatile OpenAiLanguageModel openai;
+    private volatile String openaiKey;
 
     public ProviderSwitchingLanguageModel(JarvisAiProperties props, ObjectMapper mapper) {
         this.props = props;
@@ -57,6 +59,9 @@ public class ProviderSwitchingLanguageModel implements LanguageModel {
         if (provider.equals("ollama")) {
             return ollama();
         }
+        if (provider.equals("openai") && hasOpenAiKey()) {
+            return openai();
+        }
         return mock;
     }
 
@@ -65,6 +70,21 @@ public class ProviderSwitchingLanguageModel implements LanguageModel {
             ollama = new OllamaLanguageModel(props, mapper);
         }
         return ollama;
+    }
+
+    private boolean hasOpenAiKey() {
+        String key = props.getOpenaiApiKey();
+        return key != null && !key.isBlank();
+    }
+
+    /** Build (or rebuild if the key changed) the OpenAI adapter lazily. */
+    private OpenAiLanguageModel openai() {
+        String key = props.getOpenaiApiKey();
+        if (openai == null || !key.equals(openaiKey)) {
+            openai = new OpenAiLanguageModel(props, mapper);
+            openaiKey = key;
+        }
+        return openai;
     }
 
     private boolean hasKey() {

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,18 +52,49 @@ public class FilesController {
         return fileSystem.readText(path);
     }
 
-    /** Raw bytes of a file (guarded), for in-app preview of images / PDFs. */
+    /**
+     * Raw file bytes (guarded), for in-app preview of images, PDFs, audio and video.
+     * Supports HTTP Range requests so {@code <video>}/{@code <audio>} can seek and the
+     * server streams in ~1&nbsp;MB chunks instead of buffering the whole file in memory.
+     */
     @GetMapping("/raw")
-    public ResponseEntity<byte[]> raw(@RequestParam("path") String path) {
+    public ResponseEntity<org.springframework.core.io.support.ResourceRegion> raw(
+            @RequestParam("path") String path,
+            @RequestHeader(value = org.springframework.http.HttpHeaders.RANGE, required = false) String rangeHeader) {
         java.nio.file.Path p = fileSystem.resolveExisting(path);
+        org.springframework.core.io.FileSystemResource res = new org.springframework.core.io.FileSystemResource(p);
+        long length;
         try {
-            byte[] bytes = java.nio.file.Files.readAllBytes(p);
-            String ct = java.nio.file.Files.probeContentType(p);
-            return ResponseEntity.ok()
-                    .header("Content-Type", ct != null ? ct : "application/octet-stream")
-                    .body(bytes);
+            length = res.contentLength();
         } catch (java.io.IOException e) {
             return ResponseEntity.notFound().build();
+        }
+        long chunk = 1024 * 1024;   // serve up to 1 MB per response
+        org.springframework.core.io.support.ResourceRegion region;
+        org.springframework.http.HttpStatus status;
+        if (rangeHeader != null && !rangeHeader.isBlank()) {
+            org.springframework.http.HttpRange range = org.springframework.http.HttpRange.parseRanges(rangeHeader).get(0);
+            long start = range.getRangeStart(length);
+            long end = range.getRangeEnd(length);
+            region = new org.springframework.core.io.support.ResourceRegion(res, start, Math.min(chunk, end - start + 1));
+            status = org.springframework.http.HttpStatus.PARTIAL_CONTENT;
+        } else {
+            region = new org.springframework.core.io.support.ResourceRegion(res, 0, Math.min(chunk, length));
+            status = length > chunk ? org.springframework.http.HttpStatus.PARTIAL_CONTENT : org.springframework.http.HttpStatus.OK;
+        }
+        String ct = probeType(p);
+        return ResponseEntity.status(status)
+                .header(org.springframework.http.HttpHeaders.ACCEPT_RANGES, "bytes")
+                .contentType(org.springframework.http.MediaType.parseMediaType(ct))
+                .body(region);
+    }
+
+    private static String probeType(java.nio.file.Path p) {
+        try {
+            String ct = java.nio.file.Files.probeContentType(p);
+            return ct != null ? ct : "application/octet-stream";
+        } catch (java.io.IOException e) {
+            return "application/octet-stream";
         }
     }
 

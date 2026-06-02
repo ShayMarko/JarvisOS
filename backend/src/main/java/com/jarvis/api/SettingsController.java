@@ -36,9 +36,11 @@ public class SettingsController {
         out.put("provider", ai.getProvider());
         out.put("model", ai.getModel());
         out.put("hasAnthropicKey", ai.getAnthropicApiKey() != null && !ai.getAnthropicApiKey().isBlank());
+        out.put("hasOpenaiKey", ai.getOpenaiApiKey() != null && !ai.getOpenaiApiKey().isBlank());
         out.put("ollamaModel", ai.getOllamaModel());
-        // mock = offline stub; claude = Anthropic (needs key); ollama = local model (needs Ollama running).
-        out.put("providers", List.of("mock", "claude", "ollama"));
+        out.put("openaiModel", ai.getOpenaiModel());
+        // mock = offline stub; claude = Anthropic (needs key); ollama = local model; openai = OpenAI (needs key).
+        out.put("providers", List.of("mock", "claude", "ollama", "openai"));
         return out;
     }
 

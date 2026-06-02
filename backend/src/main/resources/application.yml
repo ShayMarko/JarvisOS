@@ -52,6 +52,8 @@ jarvis:
     anthropic-api-key: ${ANTHROPIC_API_KEY:}
     model: ${JARVIS_AI_MODEL:claude-opus-4-8}
     ollama-model: ${JARVIS_AI_OLLAMA_MODEL:llama3.2:3b}
+    openai-api-key: ${OPENAI_API_KEY:}
+    openai-model: ${JARVIS_AI_OPENAI_MODEL:gpt-4o-mini}
     max-tokens: 1024
     max-steps: 4
     privacy: ${JARVIS_AI_PRIVACY:BALANCED}   # BALANCED | PRIVATE | QUALITY | CHEAP

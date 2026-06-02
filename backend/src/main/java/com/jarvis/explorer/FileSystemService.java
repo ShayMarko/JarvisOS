@@ -113,7 +113,7 @@ public class FileSystemService {
             properties.getAllowedFolders().forEach(f -> {
                 Path mp = expandHome(f.getPath());
                 if (Files.isDirectory(mp)) {
-                    withMounts.add(new FileNode("📂 " + f.getName(), mp.toString(), true, 0, Instant.EPOCH));
+                    withMounts.add(new FileNode(f.getName(), mp.toString(), true, 0, Instant.EPOCH));
                 }
             });
             withMounts.addAll(nodes);
