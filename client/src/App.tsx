@@ -752,6 +752,18 @@ function rate(bytesPerSec?: number): string {
   return `${(bytesPerSec / 1024 / 1024).toFixed(1)} MB/s`
 }
 
+/** Self-contained clock — owns its own 1s tick so the second-hand doesn't re-render the whole HUD. */
+function Clock() {
+  const [now, setNow] = useState(new Date())
+  useEffect(() => { const t = setInterval(() => setNow(new Date()), 1000); return () => clearInterval(t) }, [])
+  return (
+    <>
+      <div className="clock">{now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</div>
+      <div className="datestr">{now.toLocaleDateString([], { weekday: 'short', month: 'short', day: '2-digit', year: 'numeric' }).toUpperCase()}</div>
+    </>
+  )
+}
+
 function pref(key: string, fallback: string): string {
   try { return localStorage.getItem(key) ?? fallback } catch { return fallback }
 }
@@ -1092,7 +1104,6 @@ const WIN_META: Record<WinKind, { title: string; subtitle: string; dim: string }
 
 export default function App() {
   const [snap, setSnap] = useState<MonitorSnapshot | null>(null)
-  const [now, setNow] = useState(new Date())
   const [commands, setCommands] = useState<CommandDefinition[]>([])
   const [unread, setUnread] = useState(0)
   const [settings, setSettings] = useState<SettingsView | null>(null)
@@ -1129,10 +1140,9 @@ export default function App() {
     const poll = () => { getStatus().then(setSnap).catch(() => {}); getUnreadCount().then(setUnread).catch(() => {}) }
     poll()
     const s = setInterval(poll, 3000)
-    const c = setInterval(() => setNow(new Date()), 1000)
     const k = (e: KeyboardEvent) => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); setCmdkOpen((o) => !o) } }
     window.addEventListener('keydown', k)
-    return () => { clearInterval(s); clearInterval(c); window.removeEventListener('keydown', k); esRef.current?.close() }
+    return () => { clearInterval(s); window.removeEventListener('keydown', k); esRef.current?.close() }
   }, [])
 
   const focusWin = useCallback((key: string) => setWins((ws) => ws.map((w) => w.key === key ? { ...w, z: ++zRef.current } : w)), [])
@@ -1274,8 +1284,7 @@ export default function App() {
         </div>
 
         <div className="hud-tr">
-          <div className="clock">{now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</div>
-          <div className="datestr">{now.toLocaleDateString([], { weekday: 'short', month: 'short', day: '2-digit', year: 'numeric' }).toUpperCase()}</div>
+          <Clock />
           <div className="row2">
             <button className="iconbtn" title="Chat history" onClick={() => openWindow('conversation')}>💬</button>
             <button className="iconbtn" title="Notifications" onClick={() => setNotifOpen((o) => {

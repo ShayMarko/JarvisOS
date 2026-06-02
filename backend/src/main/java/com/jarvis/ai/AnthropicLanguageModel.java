@@ -20,25 +20,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * <p>{@link #buildRequestBody} and {@link #parseResponse} are pure and unit-tested
  * (no network); only {@link #generate} performs I/O.
  */
-public class AnthropicLanguageModel implements LanguageModel {
+public class AnthropicLanguageModel extends AbstractHttpLanguageModel {
 
     private static final String VERSION = "2023-06-01";
 
-    private final RestClient client;
-    private final ObjectMapper mapper;
     private final String model;
     private final int maxTokens;
 
     public AnthropicLanguageModel(JarvisAiProperties props, ObjectMapper mapper) {
-        this.mapper = mapper;
-        this.model = props.getModel();
-        this.maxTokens = props.getMaxTokens();
-        this.client = RestClient.builder()
+        super(mapper, RestClient.builder()
                 .baseUrl("https://api.anthropic.com")
                 .defaultHeader("x-api-key", props.getAnthropicApiKey())
                 .defaultHeader("anthropic-version", VERSION)
                 .defaultHeader("content-type", "application/json")
-                .build();
+                .build(), "Anthropic");
+        this.model = props.getModel();
+        this.maxTokens = props.getMaxTokens();
     }
 
     @Override
@@ -47,26 +44,13 @@ public class AnthropicLanguageModel implements LanguageModel {
     }
 
     @Override
-    public ModelResponse generate(List<ChatMessage> messages, List<ToolSpec> tools) {
-        return generate(messages, tools, null);
-    }
-
-    @Override
-    public ModelResponse generate(List<ChatMessage> messages, List<ToolSpec> tools, String modelOverride) {
-        try {
-            Map<String, Object> body = buildRequestBody(messages, tools);
-            if (modelOverride != null && !modelOverride.isBlank()) {
-                body.put("model", modelOverride);
-            }
-            String raw = client.post().uri("/v1/messages").body(body).retrieve().body(String.class);
-            return parseResponse(mapper.readTree(raw));
-        } catch (Exception e) {
-            throw new IllegalStateException("Anthropic request failed: " + e.getMessage(), e);
-        }
+    protected String chatUri() {
+        return "/v1/messages";
     }
 
     /** Maps our conversation + tools into an Anthropic Messages API request body. */
-    Map<String, Object> buildRequestBody(List<ChatMessage> messages, List<ToolSpec> tools) {
+    @Override
+    protected Map<String, Object> buildRequestBody(List<ChatMessage> messages, List<ToolSpec> tools) {
         StringBuilder system = new StringBuilder();
         List<Map<String, Object>> apiMessages = new ArrayList<>();
         List<Map<String, Object>> pendingToolResults = new ArrayList<>();
@@ -135,7 +119,8 @@ public class AnthropicLanguageModel implements LanguageModel {
     }
 
     /** Parses an Anthropic Messages API response into our {@link ModelResponse}. */
-    ModelResponse parseResponse(JsonNode root) {
+    @Override
+    protected ModelResponse parseResponse(JsonNode root) {
         List<ToolCall> toolCalls = new ArrayList<>();
         StringBuilder text = new StringBuilder();
         for (JsonNode block : root.path("content")) {
@@ -160,16 +145,6 @@ public class AnthropicLanguageModel implements LanguageModel {
         if (!pending.isEmpty()) {
             apiMessages.add(Map.of("role", "user", "content", new ArrayList<>(pending)));
             pending.clear();
-        }
-    }
-
-    /** Parse a JSON string into a plain Object tree (Map/List/scalars) so it serialises
-     *  unambiguously inside the request body (never a bean-dumped {@code JsonNode}). */
-    private Object toObject(String json) {
-        try {
-            return mapper.readValue(json == null || json.isBlank() ? "{}" : json, Object.class);
-        } catch (Exception e) {
-            return new LinkedHashMap<>();
         }
     }
 }

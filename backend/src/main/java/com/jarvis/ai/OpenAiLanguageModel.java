@@ -21,21 +21,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * only {@link #generate} performs I/O. Tool schemas/arguments are passed as plain
  * Map/List trees (never raw {@code JsonNode}) so they serialise correctly.
  */
-public class OpenAiLanguageModel implements LanguageModel {
+public class OpenAiLanguageModel extends AbstractHttpLanguageModel {
 
-    private final RestClient client;
-    private final ObjectMapper mapper;
     private final String model;
     private final int maxTokens;
 
     public OpenAiLanguageModel(JarvisAiProperties props, ObjectMapper mapper) {
-        this.mapper = mapper;
+        super(mapper, build(props), "OpenAI");
         this.model = props.getOpenaiModel();
         this.maxTokens = props.getMaxTokens();
+    }
+
+    private static RestClient build(JarvisAiProperties props) {
         SimpleClientHttpRequestFactory rf = new SimpleClientHttpRequestFactory();
         rf.setConnectTimeout(Duration.ofSeconds(5));
         rf.setReadTimeout(Duration.ofSeconds(60));
-        this.client = RestClient.builder()
+        return RestClient.builder()
                 .requestFactory(rf)
                 .baseUrl(props.getOpenaiBaseUrl())
                 .defaultHeader("content-type", "application/json")
@@ -49,26 +50,13 @@ public class OpenAiLanguageModel implements LanguageModel {
     }
 
     @Override
-    public ModelResponse generate(List<ChatMessage> messages, List<ToolSpec> tools) {
-        return generate(messages, tools, null);
-    }
-
-    @Override
-    public ModelResponse generate(List<ChatMessage> messages, List<ToolSpec> tools, String modelOverride) {
-        try {
-            Map<String, Object> body = buildRequestBody(messages, tools);
-            if (modelOverride != null && !modelOverride.isBlank()) {
-                body.put("model", modelOverride);
-            }
-            String raw = client.post().uri("/chat/completions").body(body).retrieve().body(String.class);
-            return parseResponse(mapper.readTree(raw));
-        } catch (Exception e) {
-            throw new IllegalStateException("OpenAI request failed: " + e.getMessage(), e);
-        }
+    protected String chatUri() {
+        return "/chat/completions";
     }
 
     /** Maps our conversation + tools into an OpenAI /chat/completions request body. */
-    Map<String, Object> buildRequestBody(List<ChatMessage> messages, List<ToolSpec> tools) {
+    @Override
+    protected Map<String, Object> buildRequestBody(List<ChatMessage> messages, List<ToolSpec> tools) {
         List<Map<String, Object>> apiMessages = new ArrayList<>();
         for (ChatMessage m : messages) {
             Map<String, Object> msg = new LinkedHashMap<>();
@@ -117,7 +105,8 @@ public class OpenAiLanguageModel implements LanguageModel {
     }
 
     /** Parses an OpenAI /chat/completions response into our {@link ModelResponse}. */
-    ModelResponse parseResponse(JsonNode root) {
+    @Override
+    protected ModelResponse parseResponse(JsonNode root) {
         JsonNode message = root.path("choices").path(0).path("message");
         List<ToolCall> toolCalls = new ArrayList<>();
         for (JsonNode call : message.path("tool_calls")) {
@@ -132,14 +121,5 @@ public class OpenAiLanguageModel implements LanguageModel {
         return toolCalls.isEmpty()
                 ? ModelResponse.text(message.path("content").asText(""), in, out)
                 : ModelResponse.tools(toolCalls, in, out);
-    }
-
-    /** Parse a JSON string into a plain Object tree so it serialises unambiguously. */
-    private Object toObject(String json) {
-        try {
-            return mapper.readValue(json == null || json.isBlank() ? "{}" : json, Object.class);
-        } catch (Exception e) {
-            return new LinkedHashMap<>();
-        }
     }
 }

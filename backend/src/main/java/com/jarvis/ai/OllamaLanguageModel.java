@@ -21,21 +21,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * <p>{@link #buildRequestBody} and {@link #parseResponse} are pure (no network);
  * only {@link #generate} performs I/O.
  */
-public class OllamaLanguageModel implements LanguageModel {
+public class OllamaLanguageModel extends AbstractHttpLanguageModel {
 
-    private final RestClient client;
-    private final ObjectMapper mapper;
     private final String model;
     private final int maxTokens;
 
     public OllamaLanguageModel(JarvisAiProperties props, ObjectMapper mapper) {
-        this.mapper = mapper;
+        super(mapper, build(props), "Ollama");
         this.model = props.getOllamaModel();
         this.maxTokens = props.getMaxTokens();
+    }
+
+    private static RestClient build(JarvisAiProperties props) {
         SimpleClientHttpRequestFactory rf = new SimpleClientHttpRequestFactory();
         rf.setConnectTimeout(Duration.ofSeconds(3));
         rf.setReadTimeout(Duration.ofSeconds(120)); // local generation can be slow
-        this.client = RestClient.builder()
+        return RestClient.builder()
                 .requestFactory(rf)
                 .baseUrl(props.getOllamaBaseUrl())
                 .defaultHeader("content-type", "application/json")
@@ -48,26 +49,13 @@ public class OllamaLanguageModel implements LanguageModel {
     }
 
     @Override
-    public ModelResponse generate(List<ChatMessage> messages, List<ToolSpec> tools) {
-        return generate(messages, tools, null);
-    }
-
-    @Override
-    public ModelResponse generate(List<ChatMessage> messages, List<ToolSpec> tools, String modelOverride) {
-        try {
-            Map<String, Object> body = buildRequestBody(messages, tools);
-            if (modelOverride != null && !modelOverride.isBlank()) {
-                body.put("model", modelOverride);
-            }
-            String raw = client.post().uri("/api/chat").body(body).retrieve().body(String.class);
-            return parseResponse(mapper.readTree(raw));
-        } catch (Exception e) {
-            throw new IllegalStateException("Ollama request failed: " + e.getMessage(), e);
-        }
+    protected String chatUri() {
+        return "/api/chat";
     }
 
     /** Maps our conversation + tools into an Ollama /api/chat request body. */
-    Map<String, Object> buildRequestBody(List<ChatMessage> messages, List<ToolSpec> tools) {
+    @Override
+    protected Map<String, Object> buildRequestBody(List<ChatMessage> messages, List<ToolSpec> tools) {
         List<Map<String, Object>> apiMessages = new ArrayList<>();
         for (ChatMessage m : messages) {
             Map<String, Object> msg = new LinkedHashMap<>();
@@ -108,7 +96,8 @@ public class OllamaLanguageModel implements LanguageModel {
     }
 
     /** Parses an Ollama /api/chat response into our {@link ModelResponse}. */
-    ModelResponse parseResponse(JsonNode root) {
+    @Override
+    protected ModelResponse parseResponse(JsonNode root) {
         JsonNode message = root.path("message");
         List<ToolCall> toolCalls = new ArrayList<>();
         JsonNode calls = message.path("tool_calls");
@@ -125,19 +114,5 @@ public class OllamaLanguageModel implements LanguageModel {
         return toolCalls.isEmpty()
                 ? ModelResponse.text(message.path("content").asText(""), in, out)
                 : ModelResponse.tools(toolCalls, in, out);
-    }
-
-    /**
-     * Parse a JSON string into a plain Object tree (Map/List/scalars) so it serializes
-     * unambiguously inside the request body. Returning a {@link JsonNode} here risks it
-     * being bean-serialized (array/bigDecimal/nodeType…) into the outgoing JSON, which
-     * hands the model a garbage tool schema.
-     */
-    private Object toObject(String json) {
-        try {
-            return mapper.readValue(json == null || json.isBlank() ? "{}" : json, Object.class);
-        } catch (Exception e) {
-            return new LinkedHashMap<>();
-        }
     }
 }
