@@ -375,6 +375,8 @@ pre.raw { white-space: pre-wrap; word-break: break-word; font-family: var(--mono
 .files-group:hover { color: #dff0ff; }
 .files-group .chev { font-size: 9px; width: 10px; }
 .files-group .cnt { margin-left: auto; color: var(--muted); background: rgba(120,150,190,0.12); border-radius: 6px; padding: 1px 7px; letter-spacing: 0; }
+.cache-flag { margin-top: 6px; font-size: 11px; color: #ff7a7a; letter-spacing: 0.01em; }
+.cache-flag .ast { color: #ff3b3b; font-weight: 700; margin-right: 3px; }
 .agents-head { display: flex; align-items: baseline; gap: 10px; padding: 4px 8px 10px; margin-bottom: 4px; border-bottom: 1px solid rgba(120,150,190,0.14); }
 .agents-head strong { color: var(--accent); font-size: 18px; }
 .agents-head .s { margin-left: auto; color: var(--muted); font-size: 11px; }

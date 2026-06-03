@@ -23,6 +23,46 @@ function speak(text: string) {
   } catch { /* speech not available */ }
 }
 
+/** Stop any in-progress speech immediately (barge-in). */
+function stopSpeaking() { try { speechSynthesis.cancel() } catch { /* n/a */ } }
+
+// --- Voice answer shaping: speak a short summary, keep the full text for "continue" ----------------
+let lastLongSpeech = ''   // full text of the most recent answer whose spoken form was shortened
+function isLongSpeech(t: string) { return t.length > 240 || ((t.match(/[.!?]/g)?.length ?? 0) > 2) }
+/** First N sentences (or a clipped head) — the 1-2 sentence spoken summary. */
+function firstSentences(t: string, n = 2): string {
+  const clean = t.replace(/\s+/g, ' ').trim()
+  const parts = clean.match(/[^.!?]+[.!?]+/g)
+  if (!parts || parts.length === 0) return clean.slice(0, 240)
+  return parts.slice(0, n).join(' ').trim()
+}
+/** Speak short: long answers get a 1-2 sentence summary + an offer to hear the rest. */
+function speakSmart(full: string) {
+  if (!full) return
+  if (isLongSpeech(full)) {
+    lastLongSpeech = full
+    speak(firstSentences(full, 2) + ' — say "continue" to hear the rest.')
+  } else {
+    lastLongSpeech = ''
+    speak(full)
+  }
+}
+/** "continue / keep going / tell me more / read the rest …" — a voice-control follow-up, not an AI task. */
+const CONTINUE_RE = /^\s*(continue|keep going|go on|tell me more|what else|read (the )?(rest|full|more|long)|finish( it)?|more details?|elaborate)\b/i
+function wantsContinue(t: string) { return CONTINUE_RE.test(t) }
+
+// --- Cache flagging: the backend marks a cached answer with model "cache:<ageSeconds>" -----------
+function cacheAgeSeconds(model?: string): number | null {
+  if (!model || !model.startsWith('cache')) return null
+  const n = parseInt(model.split(':')[1] ?? '0', 10)
+  return Number.isFinite(n) ? n : 0
+}
+function fmtAge(s: number): string {
+  if (s < 60) return `${s}s`
+  if (s < 3600) return `${Math.round(s / 60)} min`
+  return `${Math.round(s / 3600)} hr`
+}
+
 /* ===========================================================================
    Helpers
 =========================================================================== */
@@ -1071,7 +1111,10 @@ function ConversationWindow({ turns, onClear }: { turns: Turn[]; onClear: () => 
                 {t.resp && (isHtmlish(t.resp.answer) || looksLikeRawTool(t.resp.answer)
                   ? <ErrorCard message={looksLikeRawTool(t.resp.answer) ? "I had trouble using a tool for that. Try rephrasing, or switch the model in Settings." : t.resp.answer} />
                   : <><div className="answer-txt">{t.resp.answer}</div>
-                      <div className="answer-meta"><span>{t.resp.agent}</span><span>model {t.resp.model}</span><span>{t.resp.tokens} tokens</span></div></>)}
+                      {cacheAgeSeconds(t.resp.model) !== null && (
+                        <div className="cache-flag"><span className="ast">*</span> cached answer · ~{fmtAge(cacheAgeSeconds(t.resp.model)!)} old — not a live response</div>
+                      )}
+                      <div className="answer-meta"><span>{t.resp.agent}</span><span>{cacheAgeSeconds(t.resp.model) !== null ? 'cached' : `model ${t.resp.model}`}</span><span>{t.resp.tokens} tokens</span></div></>)}
                 {t.commandResult && (t.commandResult.status === 'ERROR'
                   ? <ErrorCard message={t.commandResult.message} />
                   : <>
@@ -1263,10 +1306,10 @@ export default function App() {
         if (result.type === 'chat') {
           const resp = result.data as ChatResponse
           updateTurn(id, { loading: false, steps: [...collected], resp })
-          if (spoken && ttsOn && !isHtmlish(resp.answer) && !looksLikeRawTool(resp.answer)) speak(resp.answer)
+          if (spoken && ttsOn && !isHtmlish(resp.answer) && !looksLikeRawTool(resp.answer)) speakSmart(resp.answer)
         } else {
           updateTurn(id, { loading: false, steps: [...collected], commandResult: { status: result.status, message: result.message, data: result.data } })
-          if (spoken && ttsOn && result.status !== 'ERROR' && result.message) speak(result.message)
+          if (spoken && ttsOn && result.status !== 'ERROR' && result.message) speakSmart(result.message)
         }
       },
       onError: (m) => updateTurn(id, { loading: false, steps: [...collected], commandResult: { status: 'ERROR', message: m } }),
@@ -1289,6 +1332,15 @@ export default function App() {
   const submit = useCallback((text: string, spoken = false) => {
     const t = text.trim(); if (!t) return
     setInput('')
+    // Barge-in: any new input stops Jarvis mid-sentence (he was talking, you took over).
+    stopSpeaking()
+    // "continue / keep going / tell me more" → speak the full version of the last shortened answer.
+    // Pure voice-control, handled client-side (no AI round trip).
+    if (wantsContinue(t) && lastLongSpeech) {
+      const full = lastLongSpeech; lastLongSpeech = ''
+      if (ttsOn) speak(full)
+      return
+    }
     // Window-opener slashes are pure UI nav → open instantly, no round trip.
     if (t.startsWith('/') && SLASH_WINDOW[t.split(' ')[0]]) { openWindow(SLASH_WINDOW[t.split(' ')[0]]); return }
     // Natural-language UI navigation ("open/show the X window") — opening a window is a UI
@@ -1297,11 +1349,12 @@ export default function App() {
     if (nav) { openWindow(nav); return }
     // Everything else (free text + non-window commands) goes through the one cognitive door.
     askInput(t, spoken)
-  }, [askInput, openWindow])
+  }, [askInput, openWindow, ttsOn])
 
   // --- Voice -------------------------------------------------------------
   const startPTT = useCallback(() => {
     if (!SR) { alert('Voice input needs a Chromium-based browser (Web Speech API).'); return }
+    stopSpeaking()   // barge-in: pressing the mic cuts off whatever Jarvis is saying
     const r = new SR(); r.lang = pref('jarvis.lang', 'en-US'); r.interimResults = false; r.maxAlternatives = 1
     r.onresult = (e: any) => { const t = e.results[0][0].transcript as string; submit(t, true) }
     r.onend = () => setListening(false)

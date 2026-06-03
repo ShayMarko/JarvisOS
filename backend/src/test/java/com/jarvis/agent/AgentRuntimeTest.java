@@ -89,6 +89,41 @@ class AgentRuntimeTest {
 
     private static ToolCall call(String name) { return new ToolCall("c1", name, "{}"); }
 
+    private static AgentDefinition generalAgent(java.util.List<String> tools) {
+        return new AgentDefinition("General", "general", "general", "You are Jarvis.", tools, "general");
+    }
+
+    @Test
+    void reflectsOnRefusalAndUsesAToolInstead() {
+        // Model first refuses ("I can't get the weather"); the runtime hands it its tools and it retries.
+        JarvisAiProperties props = new JarvisAiProperties();
+        props.setProvider("ollama");   // a real model is active → reflection is meaningful
+        ToolRegistry registry = new ToolRegistry(List.of(new FakeSearch()));
+        LanguageModel model = new ScriptedModel(
+                ModelResponse.text("I can't check the weather — I don't have real-time access.", 5, 5),
+                ModelResponse.tools(List.of(call("search_files")), 5, 5),
+                ModelResponse.text("It's 25°C and sunny in Tel Aviv.", 5, 5));
+        AgentRuntime runtime = new AgentRuntime(model, registry, props, new JarvisPersonaProperties());
+
+        AgentRun run = runtime.run(generalAgent(List.of("search_files")), "weather in tel aviv", "");
+
+        assertThat(run.answer()).isEqualTo("It's 25°C and sunny in Tel Aviv.");      // it figured it out
+        assertThat(run.steps()).anyMatch(s -> s.kind().equals("intent") && s.label().contains("Re-checking"));
+    }
+
+    @Test
+    void doesNotReflectWhenTheAgentHasNoTools() {
+        JarvisAiProperties props = new JarvisAiProperties();
+        props.setProvider("ollama");
+        ToolRegistry registry = new ToolRegistry(List.of());
+        LanguageModel model = new ScriptedModel(ModelResponse.text("I can't do that.", 5, 5));
+        AgentRuntime runtime = new AgentRuntime(model, registry, props, new JarvisPersonaProperties());
+
+        AgentRun run = runtime.run(generalAgent(List.of()), "do something", "");
+
+        assertThat(run.answer()).isEqualTo("I can't do that.");   // nothing to reflect with → unchanged
+    }
+
     @Test
     void honestyGuardCorrectsAFabricatedSuccess() {
         // Agent CAN write files, but this turn it only searched (no mutation) yet claims it built the app.

@@ -90,6 +90,7 @@ public class AgentRuntime {
                 .map(tools::find).flatMap(Optional::stream).anyMatch(Tool::mutates);
         boolean toolCalled = false;
         boolean mutationSucceeded = false;
+        boolean reflected = false;   // capability-reflection retry already used this run (only once)
         // The model actually used this run (the per-task pick, or the provider default) — for traces.
         String usedModel = chosen != null ? chosen.id() : model.name();
 
@@ -120,9 +121,22 @@ public class AgentRuntime {
                 continue;
             }
 
+            String text = resp.text();
+
+            // Capability self-discovery: if the model is about to REFUSE but it actually HAS tools, hand
+            // it its own tool list once and let it reconsider — turning "I can't get the weather" into a
+            // web_search call. General (any refusal, any tool), no per-request hard-coding.
+            if (!reflected && !toolSpecs.isEmpty() && realModel() && isCapabilityRefusal(text)) {
+                reflected = true;
+                messages.add(ChatMessage.user(reflectionNudge(toolSpecs)));
+                Step recheck = new Step("intent", "Re-checking my own capabilities", null);
+                steps.add(recheck);
+                emit(onStep, recheck);
+                continue;   // give the model another pass, now aware of what it can do
+            }
+
             // Honesty guard: an action-capable agent that used tools but landed NO successful action,
             // yet whose reply claims it completed something — correct the reply to match reality.
-            String text = resp.text();
             if (agentCanMutate && toolCalled && !mutationSucceeded && claimsCompletedAction(text)) {
                 text = correctOverclaim(text, steps);
             }
@@ -133,6 +147,36 @@ public class AgentRuntime {
         }
         return new AgentRun("I couldn't complete this within the step budget.", steps,
                 promptTokens, completionTokens, usedModel);
+    }
+
+    /** Generic detector that the model is REFUSING on capability grounds (any domain), so it can be
+     *  re-prompted with its own tools. Plain refusal language, not a per-task rule. */
+    private static boolean isCapabilityRefusal(String text) {
+        if (text == null) {
+            return false;
+        }
+        String t = text.toLowerCase();
+        String[] refusals = {"i can't", "i cannot", "i can not", "i'm unable", "i am unable",
+                "i'm not able", "i am not able", "i don't have access", "i do not have access",
+                "i don't have the ability", "i don't have the capability", "i'm not capable",
+                "i don't have real-time", "i do not have real-time", "don't have real-time access",
+                "cannot provide real-time", "can't provide real-time", "unable to access",
+                "i'm sorry, but i can", "i am sorry, but i can", "i'm afraid i can"};
+        for (String r : refusals) {
+            if (t.contains(r)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** The nudge that lists the agent's own tools and asks it to use the fitting one instead of refusing. */
+    private static String reflectionNudge(List<ToolSpec> toolSpecs) {
+        String names = toolSpecs.stream().map(ToolSpec::name).collect(Collectors.joining(", "));
+        return "Before you refuse — you DO have tools available: " + names + ". Re-read my last request and, "
+                + "if ANY of these can accomplish it, call that tool now instead of saying you can't "
+                + "(e.g. use web_search to look up current or unknown facts like weather, prices, news or people; "
+                + "calculate for math; read_file/search_files for my files). Only refuse if genuinely none apply.";
     }
 
     /** A tool result that signals the action did NOT happen (so it doesn't count as a success). */

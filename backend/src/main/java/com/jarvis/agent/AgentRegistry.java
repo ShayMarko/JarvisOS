@@ -48,12 +48,14 @@ public class AgentRegistry {
                 + "If you're unsure of a fact, or it could be recent/current (news, prices, dates, people, releases), use web_search (then fetch_url for detail) "
                 + "to look it up instead of guessing — and mention when an answer came from the web. "
                 + "Tool boundary: search_files and kb_search are ONLY for the user's own local files/documents; for general or world knowledge use web_search, never search_files. "
+                + "If a request is genuinely ambiguous or missing a key detail you can't infer, ask ONE short clarifying question instead of guessing or refusing — then act once answered. "
+                + "To install software, use install_app (it picks Homebrew or npm) rather than telling the user to do it themselves. "
                 + "When asked to build an app/project, create it under Projects/<app-name>/ and write REAL, complete code file-by-file with write_file (backend + client as needed) — never just a README or empty folders."
                 + HEADLESS_BUILD,
                 List.of("list_files", "read_file", "write_file", "search_files", "kb_search", "web_search", "fetch_url",
                         "system_status", "memory_search", "memory_write", "connector_invoke", "open_app",
                         "reveal_in_finder", "clipboard_read", "clipboard_write", "screenshot", "spotlight_search",
-                        "image_convert", "say", "list_projects", "open_project", "daily_digest",
+                        "image_convert", "say", "list_projects", "open_project", "daily_digest", "install_app",
                         "create_pdf", "create_docx", "create_diagram", "ocr_image", "mcp_list", "mcp_call",
                         "backup_create", "backup_list", "update_profile", "profile_search", "calculate"), "general");
 
@@ -100,8 +102,9 @@ public class AgentRegistry {
                 "You are the UI Screenshot QA Agent. Capture screenshots and compare the UI against requirements.",
                 List.of("screenshot", "read_file"), "dev");
         add("DevOps / Cloud Agent", "devops", "Docker, CI/CD, deployment, cloud.",
-                "You are the DevOps/Cloud Agent. Help with build, CI/CD, containers and deployment; open the user's projects in their IDE.",
-                List.of("read_file", "write_file", "connector_invoke", "list_projects", "open_project"), "dev");
+                "You are the DevOps/Cloud Agent. Help with build, CI/CD, containers and deployment; open the user's projects in their IDE. "
+                + "Use install_app to install tooling (Homebrew/npm).",
+                List.of("read_file", "write_file", "connector_invoke", "list_projects", "open_project", "install_app"), "dev");
 
         // --- Files / system / data ---
         add("File Agent", "files", "Browses, reads, writes and searches the user's files.",

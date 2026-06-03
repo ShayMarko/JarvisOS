@@ -59,6 +59,7 @@ public class Orchestrator {
     private final AuditService audit;
     private final ModelRouter modelRouter;
     private final ObservabilityService observability;
+    private final ResponseCache responseCache;
     private final ObjectMapper mapper;
 
 
@@ -92,6 +93,19 @@ public class Orchestrator {
         }
         conversations.record(session, "USER", message);
 
+        // Exact-prompt cache: an identical timeless question answered recently → return instantly,
+        // skipping a slow model run. Only no-tool answers are ever stored (see below), so this can't
+        // replay a stale web/file/tool result.
+        ResponseCache.Hit hit = responseCache.lookup(message, System.currentTimeMillis());
+        if (hit != null) {
+            addStep(steps, onStep, new Step("answer", "Answered from cache", hit.ageSeconds() + "s old"));
+            conversations.record(session, "ASSISTANT", hit.answer());
+            tasks.finish(task, "General Assistant", hit.answer());
+            // model = "cache:<ageSeconds>" so the UI can flag a non-live, dated answer to the user.
+            return new ChatResponse(hit.answer(), "General Assistant", steps, task.getId(), 0,
+                    "cache:" + hit.ageSeconds());
+        }
+
         String context = contextBuilder.build();
 
         // Task decomposition: a compound request fans out to parallel sub-agents (spec §6).
@@ -112,6 +126,12 @@ public class Orchestrator {
             long durationMs = (System.nanoTime() - start) / 1_000_000;
             double cost = CostCalculator.cost(model, run.promptTokens(), run.completionTokens());
             steps.addAll(run.steps());
+            // Cache only PURE-knowledge answers (no tool was used this run) — these are timeless and
+            // safe to replay; tool/web/file answers are not cached (could be time-sensitive).
+            boolean usedTools = run.steps().stream().anyMatch(s -> "tool".equals(s.kind()));
+            if (!usedTools) {
+                responseCache.put(message, run.answer(), System.currentTimeMillis());
+            }
             conversations.record(session, "ASSISTANT", run.answer());
             tasks.finish(task, agent.name(), run.answer());
             observability.record(task.getId(), session, agent.name(), model.id(), message, run.answer(), "OK",

@@ -9,18 +9,26 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jarvis.telegram.TelegramService;
+
 /** The Notification Center (spec §8). Other subsystems call {@link #notify} to surface events. */
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
 
     private final NotificationRepository repository;
+    private final TelegramService telegram;
 
 
     public Notification notify(String type, String title, String body, String source) {
-        return repository.save(new Notification(
+        Notification saved = repository.save(new Notification(
                 "ntf_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8),
                 type, title, body, source));
+        // Heartbeat to your phone: mirror every notification to Telegram when the bridge is on.
+        if (telegram.pushNotifications()) {
+            telegram.push("🔔 " + title + (body == null || body.isBlank() ? "" : "\n" + body));
+        }
+        return saved;
     }
 
     public List<Notification> recent(int limit) {
