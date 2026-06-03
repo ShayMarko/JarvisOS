@@ -28,6 +28,10 @@ public class JarvisAiProperties {
      *  file needs far more than the paid-provider {@code maxTokens} cap — too low truncates the file
      *  (and its tool-call JSON) mid-stream. -1 = until context end. */
     private int ollamaNumPredict = 8192;
+    /** Self-correcting build loop: after a build writes files, the Test agent verifies (run_in_sandbox)
+     *  and, on failure, the developer is re-dispatched with the errors, then re-verified — up to this
+     *  many fix attempts. 0 = off. Shines on a capable model; under-converges on a small local one. */
+    private int buildVerifyMaxIters = 2;
     /** OpenAI (Chat Completions API). Needs an API key. */
     private String openaiApiKey = "";
     private String openaiBaseUrl = "https://api.openai.com/v1";

@@ -23,6 +23,7 @@ import com.jarvis.agent.AgentSelector;
 import com.jarvis.agent.Step;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jarvis.ai.ChatMessage;
+import com.jarvis.ai.JarvisAiProperties;
 import com.jarvis.audit.AuditService;
 import com.jarvis.conversation.ConversationService;
 import com.jarvis.conversation.ConversationTurn;
@@ -60,6 +61,7 @@ public class Orchestrator {
     private final ModelRouter modelRouter;
     private final ObservabilityService observability;
     private final ResponseCache responseCache;
+    private final JarvisAiProperties ai;
     private final ObjectMapper mapper;
 
 
@@ -123,9 +125,11 @@ public class Orchestrator {
         long start = System.nanoTime();
         try {
             AgentRun run = runtime.run(agent, message, context, history, onStep, model);
+            steps.addAll(run.steps());
+            // Self-correcting build loop: if files landed under Projects/, verify + auto-fix (bounded).
+            run = verifyAndFix(agent, message, context, history, onStep, model, run, steps);
             long durationMs = (System.nanoTime() - start) / 1_000_000;
             double cost = CostCalculator.cost(model, run.promptTokens(), run.completionTokens());
-            steps.addAll(run.steps());
             // Cache only PURE-knowledge answers (no tool was used this run) — these are timeless and
             // safe to replay; tool/web/file answers are not cached (could be time-sensitive).
             boolean usedTools = run.steps().stream().anyMatch(s -> "tool".equals(s.kind()));
@@ -155,6 +159,89 @@ public class Orchestrator {
         if (onStep != null) {
             onStep.accept(step);
         }
+    }
+
+    private static final java.util.regex.Pattern WROTE_PROJECT =
+            java.util.regex.Pattern.compile("Projects/([A-Za-z0-9._-]+)/");
+
+    /**
+     * Self-correcting build loop (the tester ⇄ developer cycle). If the developer's run wrote files
+     * under {@code Projects/<app>/}, the Test agent verifies the build (via run_in_sandbox) and ends
+     * its reply with {@code VERDICT: PASS|FAIL}. On FAIL, the SAME developer agent is re-dispatched
+     * with the tester's errors and the project is re-verified — up to {@code buildVerifyMaxIters} times.
+     * Each step streams to the HUD ("→ Test Agent (verify)" / "→ <dev> (fixing)"). Gated on a real model
+     * and a detected project, so non-build turns are untouched.
+     */
+    private AgentRun verifyAndFix(AgentDefinition dev, String message, String context, List<ChatMessage> history,
+            Consumer<Step> onStep, ModelDescriptor model, AgentRun firstRun, List<Step> steps) {
+        int max = ai.getBuildVerifyMaxIters();
+        String project = detectProjectName(firstRun.steps());
+        if (max <= 0 || project == null || !realModel()) {
+            return firstRun;
+        }
+        AgentDefinition tester = registry.find("test").orElse(dev);
+        AgentRun current = firstRun;
+        for (int iter = 1; iter <= max; iter++) {
+            addStep(steps, onStep, new Step("agent", "→ Test Agent (verify)", "Projects/" + project));
+            String verifyPrompt = "Verify the project at Projects/" + project + ". Use run_in_sandbox to compile/build "
+                    + "it or run its tests (do NOT try to launch a GUI window — it would hang). Then end your reply with "
+                    + "ONE line: 'VERDICT: PASS' if it builds/tests cleanly, or 'VERDICT: FAIL' followed by the exact errors.";
+            AgentRun verify = runtime.run(tester, verifyPrompt, context, history, onStep, model);
+            steps.addAll(verify.steps());
+            if (!verdictFail(verify.answer())) {
+                addStep(steps, onStep, new Step("answer", "✓ Build verified (attempt " + iter + ")", null));
+                return current;
+            }
+            addStep(steps, onStep, new Step("agent", "→ " + dev.name() + " (fixing)", "attempt " + iter));
+            String fixPrompt = message + "\n\nThe build did NOT pass verification. The tester reported:\n"
+                    + clip(verify.answer()) + "\nFix the files under Projects/" + project + " so it builds/tests cleanly.";
+            current = runtime.run(dev, fixPrompt, context, history, onStep, model);
+            steps.addAll(current.steps());
+        }
+        addStep(steps, onStep, new Step("answer", "Verification still failing after " + max + " fix attempts", null));
+        return current;
+    }
+
+    /** The project folder name from a write_file step ("Wrote Projects/<name>/…"), or null if none. */
+    private String detectProjectName(List<Step> steps) {
+        for (Step s : steps) {
+            if (!"tool".equals(s.kind()) || s.detail() == null) {
+                continue;
+            }
+            java.util.regex.Matcher m = WROTE_PROJECT.matcher(s.detail());
+            if (m.find()) {
+                return m.group(1);
+            }
+        }
+        return null;
+    }
+
+    /** Only re-dispatch on an explicit FAIL verdict (avoids looping on ambiguous output). */
+    private static boolean verdictFail(String answer) {
+        if (answer == null) {
+            return false;
+        }
+        String a = answer.toLowerCase();
+        return !a.contains("verdict: pass") && a.contains("verdict: fail");
+    }
+
+    private static String clip(String s) {
+        if (s == null) {
+            return "";
+        }
+        return s.length() > 1500 ? s.substring(0, 1500) + "…" : s;
+    }
+
+    /** A real reasoning model is active (not the offline mock) — gates the verify loop. */
+    private boolean realModel() {
+        String p = ai.getProvider() == null ? "" : ai.getProvider().toLowerCase();
+        return p.equals("ollama")
+                || ((p.equals("claude") || p.equals("anthropic")) && notBlank(ai.getAnthropicApiKey()))
+                || (p.equals("openai") && notBlank(ai.getOpenaiApiKey()));
+    }
+
+    private static boolean notBlank(String s) {
+        return s != null && !s.isBlank();
     }
 
     /** Runs a multi-step plan: sub-agents in parallel, then merges their answers. */
