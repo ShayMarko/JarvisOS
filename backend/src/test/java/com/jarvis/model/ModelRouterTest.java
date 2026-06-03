@@ -6,6 +6,10 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import com.jarvis.ai.JarvisAiProperties;
+import com.jarvis.ai.TokenBudget;
+import com.jarvis.model.ModelRouter.TaskTier;
+
 class ModelRouterTest {
 
     private final ModelDescriptor local = new ModelDescriptor("mock-local", "mock", true, 0, 0, 2, 5, true);
@@ -31,5 +35,48 @@ class ModelRouterTest {
     @Test
     void cheapFallsBackToOnlyAvailableWhenSingle() {
         assertThat(ModelRouter.choose(List.of(opus), RoutingPreference.CHEAP)).isEqualTo(opus);
+    }
+
+    // --- per-task tiering (preference = BALANCED) ---
+
+    @Test
+    void balancedHeavyTaskPrefersQuality() {
+        assertThat(ModelRouter.choose(all, RoutingPreference.BALANCED, TaskTier.HEAVY)).isEqualTo(opus);
+    }
+
+    @Test
+    void balancedLightTaskPrefersCheap() {
+        assertThat(ModelRouter.choose(all, RoutingPreference.BALANCED, TaskTier.LIGHT)).isEqualTo(local);
+    }
+
+    @Test
+    void conserveForcesCheapLocal() {
+        // Near the budget cap / paused → keep it on the free local model regardless of tier.
+        assertThat(ModelRouter.choose(all, RoutingPreference.BALANCED, TaskTier.HEAVY, true)).isEqualTo(local);
+    }
+
+    @Test
+    void agentSlugsMapToTiers() {
+        assertThat(ModelRouter.tierFor("code")).isEqualTo(TaskTier.HEAVY);
+        assertThat(ModelRouter.tierFor("system")).isEqualTo(TaskTier.LIGHT);
+        assertThat(ModelRouter.tierFor("general")).isEqualTo(TaskTier.STANDARD);
+    }
+
+    // --- end-to-end route() over a real catalogue (cross-provider, mock-avoiding) ---
+
+    @Test
+    void routeNeverPicksMockWhenARealModelExists() {
+        JarvisAiProperties props = new JarvisAiProperties();   // default: ollama model present, no cloud keys
+        ModelRouter r = new ModelRouter(new ModelCatalog(props), props, new TokenBudget(props));
+        assertThat(r.route("code").provider()).isEqualTo("ollama");   // not "mock"
+    }
+
+    @Test
+    void routePicksHeavyCloudModelForCodeButStaysLocalForLightWork() {
+        JarvisAiProperties props = new JarvisAiProperties();
+        props.setAnthropicApiKey("sk-test");                  // makes the Claude tiers available
+        ModelRouter r = new ModelRouter(new ModelCatalog(props), props, new TokenBudget(props));
+        assertThat(r.route("code").id()).isEqualTo("claude-opus-4-8");   // heavy → best quality
+        assertThat(r.route("system").provider()).isEqualTo("ollama");    // light → cheapest (free local)
     }
 }

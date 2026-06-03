@@ -108,7 +108,7 @@ public class Orchestrator {
 
         long start = System.nanoTime();
         try {
-            AgentRun run = runtime.run(agent, message, context, history, onStep);
+            AgentRun run = runtime.run(agent, message, context, history, onStep, model);
             long durationMs = (System.nanoTime() - start) / 1_000_000;
             double cost = CostCalculator.cost(model, run.promptTokens(), run.completionTokens());
             steps.addAll(run.steps());
@@ -164,8 +164,9 @@ public class Orchestrator {
                 CompletableFuture<SubResult> fut = gate.thenApplyAsync(v -> {
                     AgentDefinition a = registry.find(ps.agentSlug()).orElseGet(registry::general);
                     String stepContext = withDependencyOutputs(context, deps);
-                    emit.accept(new Step("agent", "→ " + a.name(), ps.task()));
-                    AgentRun run = runtime.run(a, ps.task(), stepContext, history);
+                    ModelDescriptor subModel = modelRouter.route(a.slug());   // pick the model per sub-task
+                    emit.accept(new Step("agent", "→ " + a.name(), ps.task() + " · " + subModel.id()));
+                    AgentRun run = runtime.run(a, ps.task(), stepContext, history, null, subModel);
                     emit.accept(new Step("tool", "✓ " + a.name(), truncate(run.answer())));
                     return new SubResult(ps, run);
                 }, PLAN_EXEC);

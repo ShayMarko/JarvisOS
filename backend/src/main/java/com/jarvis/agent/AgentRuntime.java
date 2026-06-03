@@ -16,6 +16,7 @@ import com.jarvis.ai.ToolCall;
 import com.jarvis.ai.ToolSpec;
 import com.jarvis.ai.tools.Tool;
 import com.jarvis.ai.tools.ToolRegistry;
+import com.jarvis.model.ModelDescriptor;
 
 /**
  * The agent runtime / tool-calling loop (spec §15 "we build the agent loop"):
@@ -54,6 +55,16 @@ public class AgentRuntime {
      */
     public AgentRun run(AgentDefinition agent, String userMessage, String context,
                         List<ChatMessage> history, java.util.function.Consumer<Step> onStep) {
+        return run(agent, userMessage, context, history, onStep, null);
+    }
+
+    /**
+     * As above, but runs on a SPECIFIC model {@code chosen} per task by the Model Router (provider +
+     * model id). When {@code chosen} is {@code null}, uses the configured default provider.
+     */
+    public AgentRun run(AgentDefinition agent, String userMessage, String context,
+                        List<ChatMessage> history, java.util.function.Consumer<Step> onStep,
+                        ModelDescriptor chosen) {
         List<ChatMessage> messages = new ArrayList<>();
         String system = agent.systemPrompt();
         if (persona.isEnabled() && persona.getPrompt() != null && !persona.getPrompt().isBlank()) {
@@ -79,9 +90,13 @@ public class AgentRuntime {
                 .map(tools::find).flatMap(Optional::stream).anyMatch(Tool::mutates);
         boolean toolCalled = false;
         boolean mutationSucceeded = false;
+        // The model actually used this run (the per-task pick, or the provider default) — for traces.
+        String usedModel = chosen != null ? chosen.id() : model.name();
 
         for (int i = 0; i < maxSteps; i++) {
-            ModelResponse resp = model.generate(messages, toolSpecs);
+            ModelResponse resp = chosen == null
+                    ? model.generate(messages, toolSpecs)
+                    : model.generateOn(chosen.provider(), chosen.id(), messages, toolSpecs);
             promptTokens += resp.promptTokens();
             completionTokens += resp.completionTokens();
 
@@ -114,10 +129,10 @@ public class AgentRuntime {
             Step answer = new Step("answer", "Composed the answer", null);
             steps.add(answer);
             emit(onStep, answer);
-            return new AgentRun(text, steps, promptTokens, completionTokens, model.name());
+            return new AgentRun(text, steps, promptTokens, completionTokens, usedModel);
         }
         return new AgentRun("I couldn't complete this within the step budget.", steps,
-                promptTokens, completionTokens, model.name());
+                promptTokens, completionTokens, usedModel);
     }
 
     /** A tool result that signals the action did NOT happen (so it doesn't count as a success). */

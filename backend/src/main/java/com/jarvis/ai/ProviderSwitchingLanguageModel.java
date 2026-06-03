@@ -41,7 +41,35 @@ public class ProviderSwitchingLanguageModel implements LanguageModel {
 
     @Override
     public ModelResponse generate(List<ChatMessage> messages, List<ToolSpec> tools, String modelOverride) {
-        LanguageModel m = active();
+        return runOn(active(), messages, tools, modelOverride);
+    }
+
+    /**
+     * Run on a specific provider + model id, as decided per task by the Model Router. Resolves the
+     * adapter for {@code provider} (falling back to the configured active provider if that one isn't
+     * usable), then routes the model id to it — so heavy tasks can hit Claude/OpenAI while light ones
+     * stay on local Ollama, all within one call. Same metering + fallback as {@link #generate}.
+     */
+    @Override
+    public ModelResponse generateOn(String provider, String modelId,
+                                    List<ChatMessage> messages, List<ToolSpec> tools) {
+        LanguageModel adapter = adapterFor(provider);
+        return runOn(adapter == null ? active() : adapter, messages, tools, modelId);
+    }
+
+    /** The usable adapter for a provider name, or {@code null} if it isn't configured/keyed. */
+    private LanguageModel adapterFor(String provider) {
+        String p = provider == null ? "" : provider.toLowerCase();
+        return switch (p) {
+            case "claude", "anthropic" -> hasKey() ? anthropic() : null;
+            case "openai" -> hasOpenAiKey() ? openai() : null;
+            case "ollama" -> ollama();
+            case "mock" -> mock;
+            default -> null;
+        };
+    }
+
+    private ModelResponse runOn(LanguageModel m, List<ChatMessage> messages, List<ToolSpec> tools, String modelOverride) {
         // Only meter the real paid adapters; local Ollama + offline mock are free.
         boolean metered = m instanceof AnthropicLanguageModel || m instanceof OpenAiLanguageModel;
         if (metered) {
