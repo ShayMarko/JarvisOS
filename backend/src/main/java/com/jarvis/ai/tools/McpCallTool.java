@@ -28,6 +28,11 @@ public class McpCallTool implements Tool {
     }
 
     @Override
+    public boolean mutates() {
+        return true;
+    }
+
+    @Override
     public String execute(String args) {
         try {
             var root = mapper.readTree(args == null || args.isBlank() ? "{}" : args);

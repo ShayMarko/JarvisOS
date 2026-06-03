@@ -31,6 +31,11 @@ public class ConnectorTool implements Tool {
     }
 
     @Override
+    public boolean mutates() {
+        return true;
+    }
+
+    @Override
     public String execute(String argumentsJson) {
         try {
             var node = mapper.readTree(argumentsJson == null || argumentsJson.isBlank() ? "{}" : argumentsJson);

@@ -250,6 +250,8 @@ input, textarea, select { font-family: inherit; }
 .substep .kind { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.08em; color: var(--accent); min-width: 56px; text-transform: uppercase; }
 .substep .lbl { color: var(--text); }
 .substep .det { color: var(--muted); }
+.substep.live { border-left-color: var(--accent); }
+.substep.live .det { color: var(--accent); font-variant-numeric: tabular-nums; }
 
 /* wake-word toggle */
 .wake { display: flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; color: var(--muted); }

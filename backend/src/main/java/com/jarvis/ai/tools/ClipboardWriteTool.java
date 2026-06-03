@@ -23,6 +23,11 @@ public class ClipboardWriteTool implements Tool {
     }
 
     @Override
+    public boolean mutates() {
+        return true;
+    }
+
+    @Override
     public String execute(String args) {
         try { return mac.clipboardWrite(ToolArgs.str(mapper, args, "text")); }
         catch (Exception e) { return "Error: " + e.getMessage(); }

@@ -23,6 +23,11 @@ public class BackupCreateTool implements Tool {
     }
 
     @Override
+    public boolean mutates() {
+        return true;
+    }
+
+    @Override
     public String execute(String args) {
         try {
             BackupInfo info = backup.create();

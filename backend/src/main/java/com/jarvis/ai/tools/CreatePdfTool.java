@@ -24,6 +24,11 @@ public class CreatePdfTool implements Tool {
     }
 
     @Override
+    public boolean mutates() {
+        return true;
+    }
+
+    @Override
     public String execute(String args) {
         try {
             String path = documents.createPdf(ToolArgs.str(mapper, args, "filename"),

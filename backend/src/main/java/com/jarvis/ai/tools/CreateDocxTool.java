@@ -24,6 +24,11 @@ public class CreateDocxTool implements Tool {
     }
 
     @Override
+    public boolean mutates() {
+        return true;
+    }
+
+    @Override
     public String execute(String args) {
         try {
             String path = documents.createDocx(ToolArgs.str(mapper, args, "filename"),

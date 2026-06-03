@@ -132,8 +132,27 @@ interface Turn {
   prompt: string
   loading: boolean
   steps: Step[]
+  startedAt?: number   // epoch ms when the turn began — drives the live elapsed timer
   resp?: ChatResponse
   commandResult?: { status?: string; message?: string; data?: unknown }
+}
+
+/**
+ * Live "still working" indicator for an in-progress turn: ticks every second on its OWN interval
+ * (so only this small node re-renders, not the whole app) and shows elapsed mm:ss + step count.
+ * This is the reassurance that a long multi-step task is genuinely progressing, not stalled.
+ */
+function LiveProgress({ startedAt, steps }: { startedAt?: number; steps: number }) {
+  const [, setTick] = useState(0)
+  useEffect(() => { const h = setInterval(() => setTick((n) => n + 1), 1000); return () => clearInterval(h) }, [])
+  const secs = startedAt ? Math.max(0, Math.floor((Date.now() - startedAt) / 1000)) : 0
+  const mmss = `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`
+  return (
+    <div className="substep live">
+      <span className="kind"><span className="spin-fast">◠</span></span>
+      <span className="det">working… · {steps} step{steps === 1 ? '' : 's'} · {mmss}</span>
+    </div>
+  )
 }
 interface Win { key: string; kind: WinKind; title: string; subtitle: string; dim: string; x: number; y: number; z: number; payload?: unknown }
 
@@ -1045,10 +1064,10 @@ function ConversationWindow({ turns, onClear }: { turns: Turn[]; onClear: () => 
                     {t.steps.map((s, i) => (
                       <div className="substep" key={i}><span className="kind">{s.kind}</span><span className="lbl">{s.label}{s.detail ? <span className="det"> — {s.detail}</span> : null}</span></div>
                     ))}
-                    {t.loading && <div className="substep"><span className="kind"><span className="spin-fast">◠</span></span><span className="det">working…</span></div>}
+                    {t.loading && <LiveProgress startedAt={t.startedAt} steps={t.steps.length} />}
                   </div>
                 )}
-                {t.loading && t.steps.length === 0 && <div className="w-empty" style={{ padding: 12 }}><span className="spin-fast">◠</span><div className="s">Jarvis is thinking…</div></div>}
+                {t.loading && t.steps.length === 0 && <div className="w-empty" style={{ padding: 12 }}><span className="spin-fast">◠</span><div className="s">Jarvis is thinking…</div><LiveProgress startedAt={t.startedAt} steps={0} /></div>}
                 {t.resp && (isHtmlish(t.resp.answer) || looksLikeRawTool(t.resp.answer)
                   ? <ErrorCard message={looksLikeRawTool(t.resp.answer) ? "I had trouble using a tool for that. Try rephrasing, or switch the model in Settings." : t.resp.answer} />
                   : <><div className="answer-txt">{t.resp.answer}</div>
@@ -1236,7 +1255,7 @@ export default function App() {
     openWindow('conversation')              // singleton — reused for every turn
     esRef.current?.close()                  // close any prior stream before starting a new one
     const id = `t-${++zRef.current}`
-    setTurns((ts) => [...ts, { id, prompt: raw, loading: true, steps: [] }])
+    setTurns((ts) => [...ts, { id, prompt: raw, loading: true, steps: [], startedAt: Date.now() }])
     const collected: Step[] = []
     esRef.current = streamInput(raw, {
       onStep: (s) => { collected.push(s); updateTurn(id, { steps: [...collected] }) },

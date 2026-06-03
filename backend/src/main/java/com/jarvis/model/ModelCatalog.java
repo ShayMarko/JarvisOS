@@ -5,56 +5,76 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.jarvis.ai.LanguageModel;
+import com.jarvis.ai.JarvisAiProperties;
 
 /**
- * The Model Manager's catalogue (spec §6). Lists known models with cost/quality
- * metadata and marks the one actually wired up right now (the active adapter).
+ * The Model Manager's catalogue (spec §6). Lists the models the Model Router may choose from —
+ * across ALL configured providers (local Ollama, OpenAI, Anthropic) plus the offline mock — and
+ * marks which are actually usable right now (local is always usable; a cloud model needs its API
+ * key). The router picks among {@link #available()} so its choice is real, never advisory.
  */
 @Component
 public class ModelCatalog {
 
+    private final JarvisAiProperties props;
     private final List<ModelDescriptor> models = new ArrayList<>();
 
-    public ModelCatalog(LanguageModel active) {
-        String activeId = activeId(active.name());
-
-        List<ModelDescriptor> base = List.of(
-                new ModelDescriptor("mock-local", "mock", true, 0, 0, 2, 5, false),
-                new ModelDescriptor("claude-haiku-4-8", "anthropic", false, 0.0008, 0.004, 3, 600, false),
-                new ModelDescriptor("claude-sonnet-4-8", "anthropic", false, 0.003, 0.015, 4, 900, false),
-                new ModelDescriptor("claude-opus-4-8", "anthropic", false, 0.015, 0.075, 5, 1500, false));
-
-        boolean matched = false;
-        for (ModelDescriptor d : base) {
-            boolean avail = d.id().equals(activeId);
-            matched |= avail;
-            models.add(new ModelDescriptor(d.id(), d.provider(), d.local(), d.costInputPer1k(),
-                    d.costOutputPer1k(), d.quality(), d.latencyMs(), avail));
-        }
-        if (!matched) {
-            // configured a model not in the static list — add it as available
-            models.add(new ModelDescriptor(activeId, "anthropic", false, 0.003, 0.015, 4, 900, true));
-        }
+    public ModelCatalog(JarvisAiProperties props) {
+        this.props = props;
+        rebuild();
     }
 
-    private static String activeId(String name) {
-        return name.startsWith("mock") ? "mock-local" : name.replace("claude:", "");
+    /** (Re)build the catalogue from current config — availability follows the keys that are set. */
+    private void rebuild() {
+        models.clear();
+        boolean openai = notBlank(props.getOpenaiApiKey());
+        boolean anthropic = notBlank(props.getAnthropicApiKey());
+
+        // Offline stub — only a last resort, so it carries the lowest quality.
+        models.add(new ModelDescriptor("mock-local", "mock", true, 0, 0, 1, 5, true));
+        // Local Ollama — free + private, always considered usable (if the server is down the
+        // runtime falls back to the mock at call time).
+        models.add(new ModelDescriptor(props.getOllamaModel(), "ollama", true, 0, 0, 3, 900, true));
+        // OpenAI — the single configured chat model (needs a key).
+        models.add(new ModelDescriptor(props.getOpenaiModel(), "openai", false, 0.00015, 0.0006, 4, 700, openai));
+        // Anthropic — three quality/cost tiers so the router can spend haiku on light work and
+        // opus on heavy reasoning (all need a key).
+        models.add(new ModelDescriptor("claude-haiku-4-8", "anthropic", false, 0.0008, 0.004, 3, 600, anthropic));
+        models.add(new ModelDescriptor("claude-sonnet-4-8", "anthropic", false, 0.003, 0.015, 4, 900, anthropic));
+        models.add(new ModelDescriptor("claude-opus-4-8", "anthropic", false, 0.015, 0.075, 5, 1500, anthropic));
+    }
+
+    private static boolean notBlank(String s) {
+        return s != null && !s.isBlank();
+    }
+
+    /** The model id for the currently-configured default provider (shown as "active" in the UI). */
+    private String activeId() {
+        String p = props.getProvider() == null ? "" : props.getProvider().toLowerCase();
+        return switch (p) {
+            case "ollama" -> props.getOllamaModel();
+            case "openai" -> props.getOpenaiModel();
+            case "claude", "anthropic" -> props.getModel();
+            default -> "mock-local";
+        };
     }
 
     public List<ModelDescriptor> all() {
+        rebuild();   // reflect live key/provider changes (Settings can flip them at runtime)
         return List.copyOf(models);
     }
 
     public List<ModelDescriptor> available() {
-        return models.stream().filter(ModelDescriptor::available).toList();
+        return all().stream().filter(ModelDescriptor::available).toList();
     }
 
     public ModelDescriptor active() {
-        return available().stream().findFirst().orElse(models.get(0));
+        String id = activeId();
+        return all().stream().filter(m -> m.id().equals(id) && m.available()).findFirst()
+                .orElseGet(() -> available().stream().findFirst().orElse(models.get(0)));
     }
 
     public ModelDescriptor byId(String id) {
-        return models.stream().filter(m -> m.id().equals(id)).findFirst().orElse(null);
+        return all().stream().filter(m -> m.id().equals(id)).findFirst().orElse(null);
     }
 }

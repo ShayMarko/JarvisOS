@@ -25,6 +25,11 @@ public class CreateDiagramTool implements Tool {
     }
 
     @Override
+    public boolean mutates() {
+        return true;
+    }
+
+    @Override
     public String execute(String args) {
         try {
             return documents.createDiagram(ToolArgs.str(mapper, args, "filename"),

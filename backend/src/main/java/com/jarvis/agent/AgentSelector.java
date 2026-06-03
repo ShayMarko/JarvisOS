@@ -70,12 +70,42 @@ public class AgentSelector {
     /** Keyword-only routing (no model call) — the fast/offline path and the planner fallback. */
     public AgentDefinition byKeyword(String message) {
         String m = message == null ? "" : message.toLowerCase();
+        // Build intent OUTRANKS domain keywords. "create a fullstack app for reminders with email
+        // + calendar" is a BUILD task for the code agent (which has write_file + the headless build
+        // contract) — not an email/calendar task. Without this, a domain word mentioned in passing
+        // hijacks routing to a specialist that can't write files and just narrates code.
+        if (looksLikeBuild(m)) {
+            Optional<AgentDefinition> code = registry.find("code");
+            if (code.isPresent()) {
+                return code.get();
+            }
+        }
         return RULES.stream()
                 .filter(rule -> rule.keywords().stream().anyMatch(m::contains))
                 .map(rule -> registry.find(rule.slug()))
                 .filter(Optional::isPresent).map(Optional::get)
                 .findFirst()
                 .orElseGet(registry::general);
+    }
+
+    /** A build/create verb paired with a software-artifact noun ⇒ this is a "build me X" request. */
+    private static boolean looksLikeBuild(String m) {
+        boolean verb = containsAny(m, "build", "create", "make", "develop", "implement",
+                "scaffold", "generate", "code up", "write a ", "set up a", "put together");
+        boolean noun = containsAny(m, "app", "application", "fullstack", "full-stack", "full stack",
+                "website", "web app", "webapp", "web site", "api", "backend", "front end", "frontend",
+                "service", "microservice", "dashboard", "bot", "game", "cli", "script", "program",
+                "platform", "project", "system", "tool", "crud", "rest api");
+        return verb && noun;
+    }
+
+    private static boolean containsAny(String haystack, String... needles) {
+        for (String n : needles) {
+            if (haystack.contains(n)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Resolve a model-provided agent slug (e.g. from the planner), else keyword-route the text. */

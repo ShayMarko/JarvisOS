@@ -23,6 +23,11 @@ public class OpenAppTool implements Tool {
     }
 
     @Override
+    public boolean mutates() {
+        return true;
+    }
+
+    @Override
     public String execute(String args) {
         try { return mac.openApp(ToolArgs.str(mapper, args, "app")); }
         catch (Exception e) { return "Error: " + e.getMessage(); }

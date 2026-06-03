@@ -57,6 +57,20 @@ public class TokenBudget {
         }
     }
 
+    /**
+     * True when the Model Router should conserve — AI is paused, or today's paid-token use has reached
+     * 80% of the daily cap. The router reads this to downshift to free local / cheaper models so a long
+     * session can't blow the budget.
+     */
+    public boolean shouldConserve() {
+        if (paused) {
+            return true;
+        }
+        rollover();
+        long limit = props.getDailyTokenBudget();
+        return limit > 0 && tokensToday.get() >= (long) (limit * 0.8);
+    }
+
     public boolean isPaused() {
         return paused;
     }

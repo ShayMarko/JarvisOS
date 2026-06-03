@@ -30,6 +30,11 @@ public class UpdateProfileTool implements Tool {
     }
 
     @Override
+    public boolean mutates() {
+        return true;
+    }
+
+    @Override
     public String execute(String args) {
         String fact = ToolArgs.str(mapper, args, "fact");
         if (fact.isBlank()) {

@@ -20,6 +20,16 @@ public interface LanguageModel {
         return generate(messages, tools);
     }
 
+    /**
+     * Generate on a SPECIFIC provider + model, chosen per task by the Model Router. The default just
+     * applies the model id on the single configured provider; {@link ProviderSwitchingLanguageModel}
+     * overrides this to actually switch the backing provider (Ollama / OpenAI / Anthropic) per call.
+     */
+    default ModelResponse generateOn(String provider, String modelId,
+                                     List<ChatMessage> messages, List<ToolSpec> tools) {
+        return generate(messages, tools, modelId);
+    }
+
     /** Short provider name for traces/observability (e.g. "mock", "claude"). */
     String name();
 }

@@ -24,10 +24,22 @@ public class WriteFileTool implements Tool {
     }
 
     @Override
+    public boolean mutates() {
+        return true;
+    }
+
+    @Override
     public String execute(String args) {
         try {
-            String path = ToolArgs.str(mapper, args, "path");
-            fs.writeText(path, ToolArgs.str(mapper, args, "content"));
+            // Accept the common argument-name variants weaker models emit (e.g. "filename" for path,
+            // "code"/"text" for content) so a build doesn't silently fail with an empty path.
+            String path = ToolArgs.firstStr(mapper, args, "path", "file_path", "filepath", "file", "filename", "name");
+            String content = ToolArgs.firstStr(mapper, args, "content", "text", "body", "code", "data", "file_content");
+            if (path == null || path.isBlank()) {
+                return "Error: no file path provided. Call write_file with a \"path\" (e.g. "
+                        + "Projects/<app>/backend/src/Main.java) and \"content\".";
+            }
+            fs.writeText(path, content);
             return "Wrote " + path;
         } catch (Exception e) {
             return "Error writing file: " + e.getMessage();

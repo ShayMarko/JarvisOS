@@ -23,6 +23,11 @@ public class ScreenshotTool implements Tool {
     }
 
     @Override
+    public boolean mutates() {
+        return true;
+    }
+
+    @Override
     public String execute(String args) {
         try { return mac.screenshot(ToolArgs.str(mapper, args, "name")); }
         catch (Exception e) { return "Error: " + e.getMessage(); }

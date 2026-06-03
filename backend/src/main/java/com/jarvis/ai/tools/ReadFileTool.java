@@ -25,7 +25,7 @@ public class ReadFileTool implements Tool {
     @Override
     public String execute(String args) {
         try {
-            String content = fs.readText(ToolArgs.str(mapper, args, "path")).content();
+            String content = fs.readText(ToolArgs.firstStr(mapper, args, "path", "file_path", "filepath", "file", "filename", "name")).content();
             return content.length() > 1500 ? content.substring(0, 1500) + "\n…(truncated)" : content;
         } catch (Exception e) {
             return "Error reading file: " + e.getMessage();

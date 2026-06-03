@@ -22,6 +22,18 @@ class AgentSelectorTest {
     }
 
     @Test
+    void buildIntentOutranksDomainKeywords() {
+        // The bug from the transcript: "email"/"calendar" mentioned in a BUILD request hijacked
+        // routing to the Email/Calendar agent (which can't write files). Build intent must win.
+        assertThat(selector().byKeyword("create fullstack app for reminders with email calendar etc").slug()).isEqualTo("code");
+        assertThat(selector().byKeyword("build a reminder app").slug()).isEqualTo("code");
+        assertThat(selector().byKeyword("make me a dashboard with email integration").slug()).isEqualTo("code");
+        // ...but a genuine email/calendar request (no build intent) still routes correctly.
+        assertThat(selector().byKeyword("reply to that email in my inbox").slug()).isEqualTo("email");
+        assertThat(selector().byKeyword("what's on my calendar today").slug()).isEqualTo("calendar");
+    }
+
+    @Test
     void unmatchedFallsBackToGeneralOnMock() {
         // default provider = mock → no LLM routing → General fallback
         assertThat(selector().select("write me a haiku about the sea").slug()).isEqualTo("general");

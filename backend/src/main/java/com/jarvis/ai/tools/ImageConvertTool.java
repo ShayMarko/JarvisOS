@@ -23,6 +23,11 @@ public class ImageConvertTool implements Tool {
     }
 
     @Override
+    public boolean mutates() {
+        return true;
+    }
+
+    @Override
     public String execute(String args) {
         try { return mac.convertImage(ToolArgs.str(mapper, args, "path"), ToolArgs.str(mapper, args, "format")); }
         catch (Exception e) { return "Error: " + e.getMessage(); }

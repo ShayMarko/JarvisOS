@@ -27,6 +27,11 @@ public class MemoryWriteTool implements Tool {
     }
 
     @Override
+    public boolean mutates() {
+        return true;
+    }
+
+    @Override
     public String execute(String args) {
         try {
             String title = ToolArgs.str(mapper, args, "title");

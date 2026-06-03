@@ -13,4 +13,14 @@ public interface Tool {
 
     /** Run the tool with JSON arguments; return a human/model-readable result. */
     String execute(String argumentsJson);
+
+    /**
+     * True if this tool has a real side effect — it creates/changes an artifact or acts on the outside
+     * world (writes a file, sends a message, saves to memory, …). Read-only tools (search, read, status)
+     * return false. The agent runtime uses this to tell whether the agent actually ACCOMPLISHED something
+     * this turn, so it can catch (and correct) an answer that claims an action that never succeeded.
+     */
+    default boolean mutates() {
+        return false;
+    }
 }
