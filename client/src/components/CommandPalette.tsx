@@ -9,7 +9,7 @@ export function CommandPalette({ commands, onRun, onClose }: { commands: Command
   return (
     <div className="cmdk-overlay" onClick={onClose}>
       <div className="cmdk" onClick={(e) => e.stopPropagation()}>
-        <input autoFocus placeholder="Run a command…  /today  /memory  /workflows  /policy" value={q}
+        <input autoFocus placeholder="Run a command…  /today  /files  /workflows  /policy" value={q}
           onChange={(e) => setQ(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'ArrowDown') { e.preventDefault(); setSel((s) => Math.min(s + 1, filtered.length - 1)) }

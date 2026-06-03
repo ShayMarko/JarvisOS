@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jarvis.ai.ChatMessage;
 import com.jarvis.ai.JarvisAiProperties;
 import com.jarvis.ai.JarvisPersonaProperties;
@@ -72,7 +74,9 @@ public class AgentRuntime {
             system = persona.getPrompt().strip() + "\n\n" + system;
         }
         if (context != null && !context.isBlank()) {
-            system += "\n\nContext you may use:\n" + context;
+            system += "\n\nContext (authoritative facts about the user and their setup — use it directly to "
+                    + "answer questions about them, e.g. their name; don't say you don't know what's stated here):\n"
+                    + context;
         }
         messages.add(ChatMessage.system(system));
         if (history != null) {
@@ -118,7 +122,7 @@ public class AgentRuntime {
                             wroteFile = true;
                         }
                     }
-                    Step step = new Step("tool", "Called " + call.name(), truncate(result));
+                    Step step = new Step("tool", toolLabel(call), truncate(result));
                     steps.add(step);
                     emit(onStep, step);
                     messages.add(ChatMessage.tool(result, call.id()));
@@ -387,6 +391,37 @@ public class AgentRuntime {
 
     private static boolean notBlank(String s) {
         return s != null && !s.isBlank();
+    }
+
+    private static final ObjectMapper LABEL_MAPPER = new ObjectMapper();
+
+    /**
+     * A readable trace label for a tool call — names the SPECIFIC service behind generic bridge tools
+     * so the diagram shows "Connector · github.get_pr" / "MCP · filesystem.read" instead of an opaque
+     * "Called connector_invoke". Pure string formatting over the already-parsed args (no extra work).
+     */
+    static String toolLabel(ToolCall call) {
+        String name = call.name();
+        try {
+            String args = call.argumentsJson();
+            JsonNode a = LABEL_MAPPER.readTree(args == null || args.isBlank() ? "{}" : args);
+            if ("connector_invoke".equals(name)) {
+                String c = a.path("connector").asText("");
+                String act = a.path("action").asText("");
+                if (!c.isBlank()) {
+                    return "Connector · " + c + (act.isBlank() ? "" : "." + act);
+                }
+            } else if ("mcp_call".equals(name)) {
+                String server = a.path("server").asText("");
+                String t = a.path("tool").asText("");
+                if (!server.isBlank()) {
+                    return "MCP · " + server + (t.isBlank() ? "" : "." + t);
+                }
+            }
+        } catch (Exception ignored) {
+            // fall through to the generic label
+        }
+        return "Called " + name;
     }
 
     private static void emit(java.util.function.Consumer<Step> onStep, Step step) {

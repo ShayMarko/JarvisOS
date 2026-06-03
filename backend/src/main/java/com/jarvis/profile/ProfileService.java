@@ -28,6 +28,8 @@ public class ProfileService {
 
     static final String FILE = "about-me.md";
     private static final String LEARNED_HEADER = "## What Jarvis has learned";
+    /** Cap for the always-injected identity block — enough for who-they-are, lean on tokens. */
+    private static final int IDENTITY_MAX_CHARS = 900;
 
     private static final String TEMPLATE = """
             # About Me
@@ -102,6 +104,46 @@ public class ProfileService {
             return clip(content, maxChars);
         }
         return clip(String.join("\n\n", ranked), maxChars);
+    }
+
+    /**
+     * A compact identity block — the Identity + Snapshot sections — small enough to inject into EVERY
+     * conversation so Jarvis always knows who it's talking to (name, location, languages), without
+     * shipping the whole long (and partly sensitive) profile each turn. Deeper details stay on-demand
+     * via {@code profile_search}. Returns "" if there's no usable profile yet.
+     */
+    public String compactIdentity() {
+        String content = read();
+        if (content == null || content.isBlank()) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        appendSection(sb, content, "Identity");   // name first — the thing identity questions need
+        appendSection(sb, content, "Snapshot");
+        String out = sb.toString().strip();
+        if (out.isBlank()) {
+            out = content.strip();   // unconventional profile → fall back to the top of it
+        }
+        return clip(out, IDENTITY_MAX_CHARS);
+    }
+
+    private static void appendSection(StringBuilder sb, String content, String header) {
+        String body = section(content, header);
+        if (!body.isBlank()) {
+            sb.append("## ").append(header).append('\n').append(body).append("\n\n");
+        }
+    }
+
+    /** The text under a {@code ## <header>} heading, up to the next {@code ## } (or end). "" if absent. */
+    private static String section(String content, String header) {
+        String marker = "## " + header;
+        int start = content.indexOf(marker);
+        if (start < 0) {
+            return "";
+        }
+        int from = start + marker.length();
+        int next = content.indexOf("\n## ", from);
+        return (next < 0 ? content.substring(from) : content.substring(from, next)).strip();
     }
 
     private static int score(String paragraph, Set<String> terms) {

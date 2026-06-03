@@ -84,11 +84,11 @@ export function ConversationWindow({ turns, onClear }: { turns: Turn[]; onClear:
     <div className="convo">
       <div className="convo-bar">
         <span className="grow" style={{ color: 'var(--muted)', fontSize: 12 }}>{turns.length} exchange{turns.length === 1 ? '' : 's'}</span>
-        <div className="trace-toggle" role="group" aria-label="Trace view">
-          <button className={`trace-btn${view === 'list' ? ' on' : ''}`} onClick={() => setView('list')}>Steps</button>
-          <button className={`trace-btn${view === 'tree' ? ' on' : ''}`} onClick={() => setView('tree')}>Tree</button>
+        <div className="seg" role="group" aria-label="Trace view">
+          <button className={`seg-btn${view === 'list' ? ' on' : ''}`} onClick={() => setView('list')}>Steps</button>
+          <button className={`seg-btn${view === 'tree' ? ' on' : ''}`} onClick={() => setView('tree')}>Tree</button>
         </div>
-        <button className="hint" onClick={onClear} disabled={turns.length === 0}>Clear view</button>
+        {turns.length > 0 && <button className="hint" onClick={onClear}>Clear view</button>}
       </div>
       <div className="convo-scroll">
         {turns.length === 0

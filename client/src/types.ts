@@ -3,7 +3,7 @@ import type { ChatResponse, Step } from './api'
 export type SphereKind = 'gyro' | 'orbital' | 'halo'
 
 export type WinKind =
-  | 'conversation' | 'today' | 'memory' | 'history' | 'settings' | 'agents' | 'logs'
+  | 'conversation' | 'today' | 'history' | 'settings' | 'agents' | 'logs'
   | 'files' | 'backups' | 'plugins' | 'tokens' | 'notifications' | 'result' | 'response'
 
 /** A floating HUD window instance. */

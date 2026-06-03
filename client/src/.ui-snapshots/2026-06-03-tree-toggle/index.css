@@ -253,32 +253,30 @@ input, textarea, select { font-family: inherit; }
 .substep.live { border-left-color: var(--accent); }
 .substep.live .det { color: var(--accent); font-variant-numeric: tabular-nums; }
 
-/* Conversation trace: Steps ⇄ Tree toggle — plain buttons matching the Clear view (.hint) button.
-   Own class names (NOT .seg) so the provider-switcher's ".seg button" pill style can't bleed in.
-   Clear view is left untouched; these match it (global button reset, inherited color), active = accent. */
-.trace-toggle { display: inline-flex; align-items: center; gap: 10px; }
-.trace-btn:hover { color: var(--accent); }
-.trace-btn.on { color: var(--accent); font-weight: 600; }
-.convo-bar .hint:disabled { opacity: 0.32; cursor: default; }
+/* Conversation trace: minimal Steps ⇄ Tree text toggle (no box, no fill) */
+.seg { display: inline-flex; align-items: center; gap: 10px; }
+.seg-btn { background: none; border: 0; padding: 1px 0; font-size: 10.5px; letter-spacing: 0.04em; color: var(--muted);
+  cursor: pointer; font-family: inherit; border-bottom: 1.5px solid transparent; }
+.seg-btn:hover { color: var(--text); }
+.seg-btn.on { color: var(--accent); font-weight: 600; border-bottom-color: var(--accent); }
 
 /* Tree view: top-down org-chart of the trace (boxes + downward branch connectors) */
-.treeview { --guide: rgba(120,170,230,0.42); overflow-x: auto; padding: 12px 4px 14px; }
-.treeview ul { position: relative; display: flex; justify-content: center; padding-top: 20px; margin: 0; list-style: none; }
-.treeview > ul { padding-top: 0; }                                  /* the root row needs no top connector */
-.treeview li { position: relative; list-style: none; padding: 20px 10px 0; text-align: center; }
-.treeview > ul > li { padding-top: 0; }                             /* root node sits flush at the top */
-/* downward connectors between a parent and its children (classic org-chart elbows) */
-.treeview li::before, .treeview li::after { content: ''; position: absolute; top: 0; right: 50%; width: 50%; height: 20px; border-top: 1.5px solid var(--guide); }
+.treeview { --guide: rgba(120,170,230,0.4); overflow-x: auto; padding: 10px 0 14px; }
+.treeview ul { position: relative; display: flex; justify-content: center; padding-top: 18px; margin: 0; list-style: none; }
+.treeview li { position: relative; list-style: none; padding: 18px 9px 0; text-align: center; }
+/* the downward connectors between a parent and its children */
+.treeview li::before, .treeview li::after { content: ''; position: absolute; top: 0; right: 50%; width: 50%; height: 18px; border-top: 1.5px solid var(--guide); }
 .treeview li::after { right: auto; left: 50%; border-left: 1.5px solid var(--guide); }
-.treeview li:first-child::before, .treeview li:last-child::after { border: 0 none; }  /* lone child ⇒ straight vertical, no T */
-.treeview li:last-child::before { border-right: 1.5px solid var(--guide); border-radius: 0 7px 0 0; }
-.treeview li:first-child::after { border-radius: 7px 0 0 0; }
-.treeview ul ul::before { content: ''; position: absolute; top: 0; left: 50%; width: 0; height: 20px; border-left: 1.5px solid var(--guide); }
+.treeview li:only-child::before, .treeview li:only-child::after { display: none; }
+.treeview li:only-child { padding-top: 0; }
+.treeview li:first-child::before, .treeview li:last-child::after { border: 0 none; }
+.treeview li:last-child::before { border-right: 1.5px solid var(--guide); border-radius: 0 6px 0 0; }
+.treeview li:first-child::after { border-radius: 6px 0 0 0; }
+.treeview ul ul::before { content: ''; position: absolute; top: 0; left: 50%; width: 0; height: 18px; border-left: 1.5px solid var(--guide); }
 /* node boxes */
 .treeview .tn { display: inline-flex; flex-direction: column; gap: 2px; align-items: flex-start; text-align: left;
-  border: 1px solid rgba(120,170,230,0.32); background: rgba(120,170,230,0.08); border-radius: 9px; padding: 6px 11px;
-  min-width: 96px; max-width: 230px; white-space: normal; box-shadow: 0 2px 6px rgba(0,0,0,0.22); transition: border-color .12s, box-shadow .12s; }
-.treeview .tn:hover { box-shadow: 0 3px 12px rgba(0,0,0,0.35); }
+  border: 1px solid rgba(120,170,230,0.32); background: rgba(120,170,230,0.08); border-radius: 8px; padding: 6px 10px;
+  max-width: 220px; white-space: normal; }
 .treeview .tn.k-root { background: rgba(255,255,255,0.06); border-color: var(--hud-dim); }
 .treeview .tn.k-agent { background: rgba(240,170,90,0.10); border-color: rgba(240,170,90,0.36); }
 .treeview .tn.k-tool { background: rgba(150,140,230,0.10); border-color: rgba(150,140,230,0.36); }
@@ -287,9 +285,6 @@ input, textarea, select { font-family: inherit; }
 .tn-head { display: inline-flex; align-items: center; gap: 5px; }
 .tn-glyph { font-size: 10px; color: var(--accent); }
 .tn-kind { font-family: var(--mono); font-size: 8px; letter-spacing: 0.09em; color: var(--accent); text-transform: uppercase; }
-.tn.k-agent .tn-glyph, .tn.k-agent .tn-kind { color: #e7a85a; }
-.tn.k-tool .tn-glyph, .tn.k-tool .tn-kind { color: #a89ce8; }
-.tn.k-answer .tn-glyph, .tn.k-answer .tn-kind { color: #7ee6a8; }
 .tn.k-root .tn-glyph, .tn.k-root .tn-kind { color: var(--muted); }
 .tn-label { color: var(--text); font-size: 12px; line-height: 1.35; word-break: break-word; }
 .tn-det { color: var(--muted); font-size: 10.5px; word-break: break-word; }

@@ -4,20 +4,24 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Component;
 
+import com.jarvis.profile.ProfileService;
 import com.jarvis.skill.SkillService;
 
 /**
  * Assembles context for the Brain (spec §6 "Context Builder").
  *
- * <p>Nothing about the user is force-injected every turn — neither the (possibly long)
- * About-Me profile nor the Memory facts. The agent retrieves on demand: {@code profile_search}
- * for who-they-are questions, {@code memory_search} for stored notes. This keeps every prompt
- * lean (token cost) AND avoids two "about me" sources fighting — the profile is the single
- * authoritative identity doc; Memory holds discrete notes/reminders.
- *
- * <p>The ONE thing injected (when present) is a COMPACT roster of learned skills — just
- * "name — description" lines — so the model knows which taught procedures it can perform and can
- * {@code skill_search} for the full steps on demand. Names + one-liners only, so it stays cheap.
+ * <p>Two lean, always-present pieces (so they survive any agent/model and don't depend on the model
+ * choosing to call a tool):
+ * <ol>
+ *   <li>A COMPACT identity block from the About-Me profile (Identity + Snapshot only — name, location,
+ *       languages, a one-line summary). This guarantees "who am I / what's my name" is always answerable.
+ *       The full, longer, partly-sensitive profile stays on demand via {@code profile_search}.</li>
+ *   <li>A COMPACT roster of learned skills ("name — description" lines) so the model knows which taught
+ *       procedures it can perform and can {@code skill_search} for the steps.</li>
+ * </ol>
+ * Memory facts are NOT force-injected — the agent retrieves those on demand via {@code memory_search}.
+ * Identity basics are deliberately injected because they're tiny and needed constantly; the deep profile
+ * and discrete notes are pulled only when relevant, keeping prompts lean.
  */
 @Component
 @RequiredArgsConstructor
@@ -25,14 +29,24 @@ public class ContextBuilder {
 
     private static final int MAX_SKILLS = 25;
 
+    private final ProfileService profile;
     private final SkillService skills;
 
     public String build() {
-        String roster = skills.roster(MAX_SKILLS);
-        if (roster.isBlank()) {
-            return "";
+        StringBuilder ctx = new StringBuilder();
+
+        String identity = profile.compactIdentity();
+        if (!identity.isBlank()) {
+            ctx.append("About the user you're assisting (their profile — call profile_search for anything deeper):\n")
+                    .append(identity).append("\n\n");
         }
-        return "Skills you've been taught (use skill_search to recall the steps, then perform them with your tools):\n"
-                + roster;
+
+        String roster = skills.roster(MAX_SKILLS);
+        if (!roster.isBlank()) {
+            ctx.append("Skills you've been taught (use skill_search to recall the steps, then perform them with your tools):\n")
+                    .append(roster);
+        }
+
+        return ctx.toString().strip();
     }
 }

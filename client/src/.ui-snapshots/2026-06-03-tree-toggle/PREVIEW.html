@@ -1,0 +1,63 @@
+<!doctype html>
+<!-- Visual snapshot of the Conversation "Steps ⇄ Tree" toggle + Tree diagram, exactly as of 2026-06-03.
+     This is the agreed-good baseline to fall back to. Open in a browser to see the look. -->
+<html><head><meta charset="utf-8"><title>Jarvis · Conversation Tree (baseline 2026-06-03)</title>
+<style>
+  :root { --hud-dim: rgba(150,200,240,0.28); --text:#cfe2f2; --muted:#5d6b82; --accent:#5ccde0;
+    --mono:'JetBrains Mono',ui-monospace,Menlo,monospace; }
+  body { background:#070d1a; color:var(--text); font-family:Inter,system-ui,sans-serif; padding:28px; }
+  .convo-bar { display:flex; align-items:center; gap:8px; padding-bottom:8px; border-bottom:1px solid var(--hud-dim); margin-bottom:8px; }
+  .convo-bar .grow { flex:1; color:var(--muted); font-size:12px; }
+
+  /* === TOGGLE (baseline: minimal text switch) === */
+  .seg { display:inline-flex; align-items:center; gap:10px; }
+  .seg-btn { background:none; border:0; padding:1px 0; font-size:10.5px; letter-spacing:0.04em; color:var(--muted);
+    cursor:pointer; font-family:inherit; border-bottom:1.5px solid transparent; }
+  .seg-btn:hover { color:var(--text); }
+  .seg-btn.on { color:var(--accent); font-weight:600; border-bottom-color:var(--accent); }
+
+  /* === TREE (baseline: top-down org-chart) === */
+  .treeview { --guide:rgba(120,170,230,0.4); overflow-x:auto; padding:10px 0 14px; }
+  .treeview ul { position:relative; display:flex; justify-content:center; padding-top:18px; margin:0; list-style:none; }
+  .treeview li { position:relative; list-style:none; padding:18px 9px 0; text-align:center; }
+  .treeview li::before, .treeview li::after { content:''; position:absolute; top:0; right:50%; width:50%; height:18px; border-top:1.5px solid var(--guide); }
+  .treeview li::after { right:auto; left:50%; border-left:1.5px solid var(--guide); }
+  .treeview li:only-child::before, .treeview li:only-child::after { display:none; }
+  .treeview li:only-child { padding-top:0; }
+  .treeview li:first-child::before, .treeview li:last-child::after { border:0 none; }
+  .treeview li:last-child::before { border-right:1.5px solid var(--guide); border-radius:0 6px 0 0; }
+  .treeview li:first-child::after { border-radius:6px 0 0 0; }
+  .treeview ul ul::before { content:''; position:absolute; top:0; left:50%; width:0; height:18px; border-left:1.5px solid var(--guide); }
+  .treeview .tn { display:inline-flex; flex-direction:column; gap:2px; align-items:flex-start; text-align:left;
+    border:1px solid rgba(120,170,230,0.32); background:rgba(120,170,230,0.08); border-radius:8px; padding:6px 10px; max-width:220px; white-space:normal; }
+  .treeview .tn.k-root { background:rgba(255,255,255,0.06); border-color:var(--hud-dim); }
+  .treeview .tn.k-agent { background:rgba(240,170,90,0.10); border-color:rgba(240,170,90,0.36); }
+  .treeview .tn.k-tool { background:rgba(150,140,230,0.10); border-color:rgba(150,140,230,0.36); }
+  .treeview .tn.k-answer { background:rgba(120,230,170,0.12); border-color:rgba(120,230,170,0.4); }
+  .tn-head { display:inline-flex; align-items:center; gap:5px; }
+  .tn-glyph { font-size:10px; color:var(--accent); }
+  .tn-kind { font-family:var(--mono); font-size:8px; letter-spacing:0.09em; color:var(--accent); text-transform:uppercase; }
+  .tn.k-root .tn-glyph, .tn.k-root .tn-kind { color:var(--muted); }
+  .tn-label { color:var(--text); font-size:12px; line-height:1.35; word-break:break-word; }
+  .tn-det { color:var(--muted); font-size:10.5px; word-break:break-word; }
+</style></head>
+<body>
+  <div class="convo-bar">
+    <span class="grow">3 exchanges</span>
+    <div class="seg"><button class="seg-btn">Steps</button><button class="seg-btn on">Tree</button></div>
+    <button class="seg-btn" style="color:var(--muted)">Clear view</button>
+  </div>
+  <div class="treeview"><ul><li>
+    <div class="tn k-root"><span class="tn-head"><span class="tn-glyph">◈</span><span class="tn-kind">prompt</span></span><span class="tn-label">who am I?</span></div>
+    <ul>
+      <li><div class="tn k-intent"><span class="tn-head"><span class="tn-glyph">◍</span><span class="tn-kind">intent</span></span><span class="tn-label">Understood the request</span></div></li>
+      <li><div class="tn k-agent"><span class="tn-head"><span class="tn-glyph">⬡</span><span class="tn-kind">agent</span></span><span class="tn-label">Routed to Knowledge Librarian</span></div>
+        <ul>
+          <li><div class="tn k-model"><span class="tn-head"><span class="tn-glyph">◆</span><span class="tn-kind">model</span></span><span class="tn-label">qwen2.5-coder:14b</span></div></li>
+          <li><div class="tn k-tool"><span class="tn-head"><span class="tn-glyph">▸</span><span class="tn-kind">tool</span></span><span class="tn-label">profile_search</span><span class="tn-det">name</span></div></li>
+        </ul>
+      </li>
+      <li><div class="tn k-answer"><span class="tn-head"><span class="tn-glyph">✓</span><span class="tn-kind">answer</span></span><span class="tn-label">Composed the answer</span></div></li>
+    </ul>
+  </li></ul></div>
+</body></html>

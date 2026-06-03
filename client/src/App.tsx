@@ -255,7 +255,6 @@ export default function App() {
           <button className={`wake${wake ? ' on' : ''}`} onClick={toggleWake} title='Say "Jarvis …" to command hands-free'><span className="sw" />WAKE WORD</button>
           <button className="hint" onClick={() => openWindow('today')}>Today</button>
           <button className="hint" onClick={() => openWindow('history')}>History</button>
-          <button className="hint" onClick={() => openWindow('memory')}>Memory</button>
           <button className="hint" onClick={() => openWindow('files')}>Files</button>
           <button className="hint" onClick={() => openWindow('backups')}>Backups</button>
           <button className="hint" onClick={() => openWindow('plugins')}>Plugins</button>

@@ -292,9 +292,19 @@ public class Orchestrator {
                             subModel = localM;
                         }
                     }
-                    emit.accept(new Step("agent", "→ " + a.name(), ps.task() + " · " + subModel.id()));
                     AgentRun run = runtime.run(a, ps.task(), stepContext, history, null, subModel);
-                    emit.accept(new Step("tool", "✓ " + a.name(), truncate(run.answer())));
+                    // Emit this sub-agent's whole batch atomically so its tool calls nest under it in the
+                    // trace tree (parallel agents would otherwise interleave). Surface the agent's own
+                    // tool/MCP/connector steps — not just a start/finish marker.
+                    synchronized (lock) {
+                        emit.accept(new Step("agent", "→ " + a.name(), ps.task() + " · " + subModel.id()));
+                        for (Step s : run.steps()) {
+                            if ("tool".equals(s.kind())) {
+                                emit.accept(s);
+                            }
+                        }
+                        emit.accept(new Step("tool", "✓ " + a.name(), truncate(run.answer())));
+                    }
                     return new SubResult(ps, run);
                 }, PLAN_EXEC);
                 byId.put(ps.id(), fut);

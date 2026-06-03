@@ -4,7 +4,6 @@ import { BackupsWindow } from './windows/BackupsWindow'
 import { FilesWindow } from './windows/FilesWindow'
 import { HistoryWindow } from './windows/HistoryWindow'
 import { LogsWindow } from './windows/LogsWindow'
-import { MemoryWindow } from './windows/MemoryWindow'
 import { NotificationsWindow } from './windows/NotificationsWindow'
 import { PluginsWindow } from './windows/PluginsWindow'
 import { ResponseWindow } from './windows/ResponseWindow'
@@ -17,7 +16,6 @@ import { TokensWindow } from './windows/TokensWindow'
 export function WindowBody({ win }: { win: Win }) {
   switch (win.kind) {
     case 'today': return <TodayWindow />
-    case 'memory': return <MemoryWindow />
     case 'history': return <HistoryWindow />
     case 'agents': return <AgentsWindow />
     case 'logs': return <LogsWindow />

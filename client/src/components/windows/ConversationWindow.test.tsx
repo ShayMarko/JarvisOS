@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { ConversationWindow } from './ConversationWindow'
 import type { Turn } from '../../types'
 import type { ChatResponse } from '../../api'
@@ -22,6 +22,27 @@ describe('<ConversationWindow>', () => {
     render(<ConversationWindow turns={turns} onClear={() => {}} />)
     expect(screen.getByText('Recursion is a function calling itself.')).toBeInTheDocument()
     expect(screen.getByText(/cached answer · ~2 min old/i)).toBeInTheDocument()
+  })
+
+  it('toggles the trace between Steps (list) and Tree (diagram) views', () => {
+    const turns: Turn[] = [{
+      id: 't3', prompt: 'who am I', loading: false,
+      steps: [{ kind: 'agent', label: 'Routed to Knowledge Librarian', detail: 'recall' },
+              { kind: 'tool', label: 'profile_search', detail: 'name' },
+              { kind: 'answer', label: 'Composed the answer', detail: '' }],
+      resp: resp({ answer: 'You are Shay Marko.' }),
+    }]
+    const { container } = render(<ConversationWindow turns={turns} onClear={() => {}} />)
+    // Default = Steps (list): the .substeps list exists, no .treeview diagram.
+    expect(container.querySelector('.substeps')).toBeTruthy()
+    expect(container.querySelector('.treeview')).toBeNull()
+    // Switch to Tree → top-down org-chart appears, flat list goes away.
+    fireEvent.click(screen.getByText('Tree'))
+    expect(container.querySelector('.treeview')).toBeTruthy()
+    expect(container.querySelector('.substeps')).toBeNull()
+    expect(container.querySelectorAll('.tn').length).toBe(4)            // root, agent, tool, answer
+    // the tool nests UNDER the agent → a 3rd-level <ul> (deep branch) exists.
+    expect(container.querySelectorAll('.treeview ul ul ul').length).toBe(1)
   })
 
   it('routes a leaked raw tool-call answer through the friendly error card', () => {
