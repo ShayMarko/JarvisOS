@@ -47,4 +47,24 @@ class SandboxServiceTest {
         SandboxResult result = sandbox.run("sleep 5", 1);
         assertThat(result.timedOut()).isTrue();
     }
+
+    @Test
+    void runsInsideAnExistingProjectDirAndLeavesItInPlace() throws Exception {
+        // A built "project" with a file the command reads — proves runIn executes in THAT dir.
+        Path project = root.resolve("Projects/demo");
+        java.nio.file.Files.createDirectories(project);
+        java.nio.file.Files.writeString(project.resolve("hello.txt"), "from-project");
+
+        SandboxResult result = sandbox.runIn(project, "cat hello.txt", 10);
+
+        assertThat(result.exitCode()).isZero();
+        assertThat(result.output()).contains("from-project");
+        assertThat(java.nio.file.Files.exists(project)).isTrue();   // not deleted afterward
+    }
+
+    @Test
+    void rejectsAMissingRunDirectory() {
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class,
+                () -> sandbox.runIn(root.resolve("Projects/does-not-exist"), "echo x", 10));
+    }
 }

@@ -51,7 +51,9 @@ jarvis:
     provider: ${JARVIS_AI_PROVIDER:ollama}    # mock | claude | ollama | openai (defaults to local Ollama; falls back to mock if down)
     anthropic-api-key: ${ANTHROPIC_API_KEY:}
     model: ${JARVIS_AI_MODEL:claude-opus-4-8}            # Anthropic model
-    ollama-model: ${JARVIS_AI_OLLAMA_MODEL:llama3.2:3b}  # local Ollama model
+    ollama-model: ${JARVIS_AI_OLLAMA_MODEL:qwen2.5-coder:14b}  # local Ollama model (best fit for 16GB M1)
+    ollama-timeout-seconds: ${JARVIS_AI_OLLAMA_TIMEOUT:300}  # read timeout per generation (big models are slow)
+    ollama-num-predict: ${JARVIS_AI_OLLAMA_NUM_PREDICT:8192}  # local max output tokens (free; must fit whole files)
     openai-api-key: ${OPENAI_API_KEY:}
     openai-model: ${JARVIS_AI_OPENAI_MODEL:gpt-4o-mini}  # OpenAI model
     max-tokens: 1024

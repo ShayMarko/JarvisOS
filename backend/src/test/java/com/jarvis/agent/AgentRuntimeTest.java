@@ -112,6 +112,105 @@ class AgentRuntimeTest {
     }
 
     @Test
+    void keepsWritingFilesWhenItDumpsCodeInChat() {
+        // Wrote one file, then narrated the rest as a code block → runtime pushes it to keep writing.
+        JarvisAiProperties props = new JarvisAiProperties();
+        props.setProvider("ollama");
+        ToolRegistry registry = new ToolRegistry(List.of(new OkWrite()));
+        LanguageModel model = new ScriptedModel(
+                ModelResponse.tools(List.of(call("write_file")), 5, 5),                       // file 1
+                ModelResponse.text("Here's the rest:\n```java\npublic class App {}\n```", 5, 5), // dumps code → nudge
+                ModelResponse.tools(List.of(call("write_file")), 5, 5),                       // file 2 (after nudge)
+                ModelResponse.text("Built the app under Projects/foo. Run: mvn spring-boot:run.", 5, 5))
+        ;
+        AgentRuntime runtime = new AgentRuntime(model, registry, props, new JarvisPersonaProperties())
+        ;
+        AgentRun run = runtime.run(codeAgent(List.of("write_file")), "build an app", "")
+        ;
+        long writes = run.steps().stream().filter(s -> s.kind().equals("tool")).count()
+        ;
+        assertThat(writes).isEqualTo(2);   // it wrote a SECOND file instead of stopping
+        assertThat(run.steps()).anyMatch(s -> s.label().contains("Writing the remaining files"));
+        assertThat(run.answer()).isEqualTo("Built the app under Projects/foo. Run: mvn spring-boot:run.");
+    }
+
+    @Test
+    void pushesToWriteWhenItNarratesAWholeProjectWithoutWritingAnything() {
+        // qwen sometimes dumps the whole project as several ```python blocks and calls write_file zero
+        // times. A build-capable agent should be pushed to actually write the files.
+        JarvisAiProperties props = new JarvisAiProperties();
+        props.setProvider("ollama");
+        ToolRegistry registry = new ToolRegistry(List.of(new OkWrite()));
+        String multiBlock = "Here's the app:\n```python\nclass A: pass\n```\nand:\n```python\nclass B: pass\n```";
+        LanguageModel model = new ScriptedModel(
+                ModelResponse.text(multiBlock, 5, 5),                            // narrates, writes nothing
+                ModelResponse.tools(List.of(call("write_file")), 5, 5),          // after nudge, writes a file
+                ModelResponse.text("Built it under Projects/app. Run: python run.py", 5, 5));
+        AgentRuntime runtime = new AgentRuntime(model, registry, props, new JarvisPersonaProperties());
+
+        AgentRun run = runtime.run(codeAgent(List.of("write_file")), "build a desktop todo app", "");
+
+        assertThat(run.steps()).anyMatch(s -> s.kind().equals("tool"));   // it actually wrote a file
+        assertThat(run.steps()).anyMatch(s -> s.label().contains("Writing the remaining files"));
+        assertThat(run.answer()).isEqualTo("Built it under Projects/app. Run: python run.py");
+    }
+
+    @Test
+    void stripsCodeFromChatIfTheModelWontStopNarrating() {
+        // Headless guarantee: even if the model dumps code on every turn, the final chat answer must
+        // contain NO code (it lives in the written files).
+        JarvisAiProperties props = new JarvisAiProperties();
+        props.setProvider("ollama");
+        ToolRegistry registry = new ToolRegistry(List.of(new OkWrite()));
+        java.util.List<ModelResponse> resps = new java.util.ArrayList<>();
+        resps.add(ModelResponse.tools(List.of(call("write_file")), 5, 5));       // wrote a file
+        for (int i = 0; i < 8; i++) {                                            // then keeps dumping code
+            resps.add(ModelResponse.text("Done! Here's the code:\n```python\nx = 1\n```", 5, 5));
+        }
+        LanguageModel model = new ScriptedModel(resps.toArray(new ModelResponse[0]));
+        AgentRuntime runtime = new AgentRuntime(model, registry, props, new JarvisPersonaProperties());
+
+        AgentRun run = runtime.run(codeAgent(List.of("write_file")), "build an app", "");
+
+        assertThat(run.answer()).doesNotContain("```");          // no code ever reaches chat
+        assertThat(run.answer()).containsIgnoringCase("headless");
+    }
+
+    @Test
+    void neverShowsALeakedToolCallJsonInChat() {
+        // If a (garbled) tool-call JSON survives as the answer, a build agent shows an honest retry
+        // message — never the raw JSON.
+        JarvisAiProperties props = new JarvisAiProperties();
+        props.setProvider("ollama");
+        ToolRegistry registry = new ToolRegistry(List.of(new OkWrite()));
+        LanguageModel model = new ScriptedModel(ModelResponse.text(
+                "```json\n{\"name\": \"write_file\", \"arguments\": {\"path\": \"a.py\", \"content\": \"x\"}}\n``` run it", 5, 5));
+        AgentRuntime runtime = new AgentRuntime(model, registry, props, new JarvisPersonaProperties());
+
+        AgentRun run = runtime.run(codeAgent(List.of("write_file")), "build x", "");
+
+        assertThat(run.answer()).doesNotContain("```");
+        assertThat(run.answer()).doesNotContain("write_file");
+        assertThat(run.answer()).containsIgnoringCase("try again");
+    }
+
+    @Test
+    void doesNotHijackAPlainCodeSnippetAnswer() {
+        // No file was written → "show me a snippet" answers keep their code block, untouched.
+        JarvisAiProperties props = new JarvisAiProperties();
+        props.setProvider("ollama");
+        ToolRegistry registry = new ToolRegistry(List.of(new OkWrite()));
+        LanguageModel model = new ScriptedModel(
+                ModelResponse.text("Sure:\n```js\nconsole.log(1)\n```", 5, 5));
+        AgentRuntime runtime = new AgentRuntime(model, registry, props, new JarvisPersonaProperties());
+
+        AgentRun run = runtime.run(codeAgent(List.of("write_file")), "show me a js one-liner", "");
+
+        assertThat(run.answer()).contains("console.log(1)");
+        assertThat(run.steps()).noneMatch(s -> s.label().contains("Writing the remaining files"));
+    }
+
+    @Test
     void doesNotReflectWhenTheAgentHasNoTools() {
         JarvisAiProperties props = new JarvisAiProperties();
         props.setProvider("ollama");

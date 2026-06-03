@@ -69,11 +69,32 @@ public class SandboxService {
         return dockerReady;
     }
 
+    /** Run a command in a fresh throwaway working directory, deleted afterward. */
     public SandboxResult run(String command, int timeoutSeconds) {
+        Path workdir = createWorkdir();
+        try {
+            return exec(command, workdir, timeoutSeconds);
+        } finally {
+            deleteQuietly(workdir);
+        }
+    }
+
+    /**
+     * Run a command INSIDE an existing directory (e.g. a built project under {@code Projects/}) and
+     * leave it in place — this is how the developer/tester agents build, run and test the app they just
+     * generated. Same policy gate, timeout and output capture; same isolation tier as {@link #run}.
+     */
+    public SandboxResult runIn(Path workdir, String command, int timeoutSeconds) {
+        if (workdir == null || !Files.isDirectory(workdir)) {
+            throw new IllegalArgumentException("Sandbox run directory does not exist: " + workdir);
+        }
+        return exec(command, workdir, timeoutSeconds);
+    }
+
+    private SandboxResult exec(String command, Path workdir, int timeoutSeconds) {
         // Hard floor: a policy-denied command never runs, regardless of approval.
         policy.assertCommandAllowed(command);
         long start = System.nanoTime();
-        Path workdir = createWorkdir();
         try {
             ProcessBuilder pb = new ProcessBuilder(buildCommand(command, workdir));
             pb.directory(workdir.toFile());
@@ -99,8 +120,6 @@ public class SandboxService {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new IllegalStateException("Sandbox execution interrupted", e);
-        } finally {
-            deleteQuietly(workdir);
         }
     }
 

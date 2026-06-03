@@ -34,7 +34,11 @@ public class AgentRegistry {
             + "Projects/reminders/client/src/App.tsx). Create folders simply by including them in the file path. "
             + "If you are ever about to show code, call write_file with it instead. Build the WHOLE project file-by-file "
             + "(every file needed to run it), then end with a brief, plain-language summary — what you built, the folder, "
-            + "the key files, and how to run it — short enough to be read aloud. Do NOT ask whether to create files; just build it.";
+            + "the key files, and how to run it — short enough to be read aloud. Do NOT ask whether to create files; just build it. "
+            + "Aim for a COMPLETE, well-structured project, not a single cram-everything file: split code into separate files by "
+            + "responsibility (entry point, core modules/components, config), and include the supporting files a real project has — "
+            + "a dependency/build file (requirements.txt, package.json, pom.xml as fits the stack), a README with run steps, and "
+            + "tests where it makes sense. Only a genuinely trivial script should be one file.";
 
     public AgentRegistry() {
         // --- Core ---
@@ -57,7 +61,7 @@ public class AgentRegistry {
                         "reveal_in_finder", "clipboard_read", "clipboard_write", "screenshot", "spotlight_search",
                         "image_convert", "say", "list_projects", "open_project", "daily_digest", "install_app",
                         "create_pdf", "create_docx", "create_diagram", "ocr_image", "mcp_list", "mcp_call",
-                        "backup_create", "backup_list", "update_profile", "profile_search", "calculate"), "general");
+                        "backup_create", "backup_list", "update_profile", "profile_search", "calculate", "run_in_sandbox"), "general");
 
         // --- Engineering ---
         add("Product / Spec Agent", "product", "Writes specs, user stories and acceptance criteria.",
@@ -69,19 +73,22 @@ public class AgentRegistry {
                 + "When asked to build an app or feature: (1) place it under Projects/<app-name>/ in the Explorer (create folders simply by writing files with that path prefix, e.g. Projects/reminders/backend/src/...); "
                 + "(2) choose a sensible structure and the right stack (default to Java/Spring Boot unless told otherwise); "
                 + "(3) write the actual files one at a time with write_file — build file (pom.xml/build.gradle), entities, repositories, services, controllers, config, and a runnable entry point — each with COMPLETE working content; "
-                + "(4) read existing files first when extending."
+                + "(4) read existing files first when extending. "
+                + "After writing, VERIFY with run_in_sandbox (e.g. compile/build or run the tests in the project folder) and fix what fails."
                 + HEADLESS_BUILD,
-                List.of("read_file", "write_file", "search_files", "list_files", "calculate"), "dev");
+                List.of("read_file", "write_file", "search_files", "list_files", "calculate", "run_in_sandbox"), "dev");
         add("Frontend Agent", "frontend", "Builds client UI, components and state.",
                 "You are the Frontend Agent. You BUILD real, complete client code — never skeletons or just a README. "
                 + "Put the client under Projects/<app-name>/client/ (create folders by writing files with that path prefix). "
                 + "Default to React + TypeScript + Vite unless told otherwise; write the actual files one at a time with write_file — package.json, entry point, components, state, API calls, and styles — each with COMPLETE working content. "
-                + "Read existing files first when extending."
+                + "Read existing files first when extending. "
+                + "After writing, VERIFY with run_in_sandbox (build the client / run its tests in the project folder) and fix what fails."
                 + HEADLESS_BUILD,
-                List.of("read_file", "write_file", "search_files", "list_files"), "dev");
-        add("Test Agent", "test", "Writes and reasons about unit/integration/E2E tests.",
-                "You are the Test Agent. Write and explain tests for the code in the Explorer.",
-                List.of("read_file", "write_file", "search_files"), "dev");
+                List.of("read_file", "write_file", "search_files", "list_files", "run_in_sandbox"), "dev");
+        add("Test Agent", "test", "Writes, runs and reasons about unit/integration/E2E tests.",
+                "You are the Test Agent. Write tests for the code in the Explorer, then RUN them with run_in_sandbox "
+                + "(e.g. 'pytest -q', 'mvn -q test', 'npm test') inside the project folder, report pass/fail, and pinpoint failures.",
+                List.of("read_file", "write_file", "search_files", "run_in_sandbox"), "dev");
         add("Code Review Agent", "review", "Reviews code for quality, naming and security smells.",
                 "You are the Code Review Agent. Review code for correctness, clarity and security smells.",
                 List.of("read_file", "search_files"), "dev");
@@ -89,22 +96,24 @@ public class AgentRegistry {
                 "You are the Debug Agent. Investigate failures by reading code and logs, then propose fixes.",
                 List.of("read_file", "search_files", "list_files"), "dev");
         add("Code & Bug Fix Agent", "codefix", "Focuses on fixing bugs and writing code.",
-                "You are the Code & Bug Fix Agent. Read the relevant files, then implement complete, working fixes with write_file (no TODO stubs)."
+                "You are the Code & Bug Fix Agent. Read the relevant files, then implement complete, working fixes with write_file (no TODO stubs). "
+                + "Reproduce/verify with run_in_sandbox before and after the fix."
                 + HEADLESS_BUILD,
-                List.of("read_file", "write_file", "search_files", "list_files"), "dev");
+                List.of("read_file", "write_file", "search_files", "list_files", "run_in_sandbox"), "dev");
         add("Code Agent", "code", "Writes and edits real, complete code across the stack.",
                 "You are the Code Agent. You write REAL, complete, runnable code — never skeletons, placeholder TODOs, or just a README. "
                 + "When building something, place it under Projects/<name>/ and write the actual files one at a time with write_file, each with full working content; "
-                + "read existing files first when editing."
+                + "read existing files first when editing. "
+                + "After building, VERIFY it works with run_in_sandbox (run it / run the tests in the project folder) and fix what fails."
                 + HEADLESS_BUILD,
-                List.of("read_file", "write_file", "search_files", "list_files", "calculate"), "dev");
+                List.of("read_file", "write_file", "search_files", "list_files", "calculate", "run_in_sandbox"), "dev");
         add("UI Screenshot QA Agent", "uiqa", "Compares UI screenshots against requirements.",
                 "You are the UI Screenshot QA Agent. Capture screenshots and compare the UI against requirements.",
                 List.of("screenshot", "read_file"), "dev");
         add("DevOps / Cloud Agent", "devops", "Docker, CI/CD, deployment, cloud.",
                 "You are the DevOps/Cloud Agent. Help with build, CI/CD, containers and deployment; open the user's projects in their IDE. "
-                + "Use install_app to install tooling (Homebrew/npm).",
-                List.of("read_file", "write_file", "connector_invoke", "list_projects", "open_project", "install_app"), "dev");
+                + "Use install_app to install tooling (Homebrew/npm), and run_in_sandbox to build/test/run a project under Projects/<name> and read its output.",
+                List.of("read_file", "write_file", "connector_invoke", "list_projects", "open_project", "install_app", "run_in_sandbox"), "dev");
 
         // --- Files / system / data ---
         add("File Agent", "files", "Browses, reads, writes and searches the user's files.",

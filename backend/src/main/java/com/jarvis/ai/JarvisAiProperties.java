@@ -19,8 +19,15 @@ public class JarvisAiProperties {
     private String model = "claude-opus-4-8";
     /** Local Ollama server + chat/embedding models (real reasoning, no API key). */
     private String ollamaBaseUrl = "http://localhost:11434";
-    private String ollamaModel = "llama3.1";
+    private String ollamaModel = "qwen2.5-coder:14b";
     private String ollamaEmbeddingModel = "nomic-embed-text";
+    /** HTTP read timeout for an Ollama generation (seconds). Big models building multi-file projects
+     *  can take minutes; too low and the call fails and silently falls back to the mock. */
+    private int ollamaTimeoutSeconds = 300;
+    /** Max output tokens per LOCAL Ollama generation (num_predict). Local is free, and writing a real
+     *  file needs far more than the paid-provider {@code maxTokens} cap — too low truncates the file
+     *  (and its tool-call JSON) mid-stream. -1 = until context end. */
+    private int ollamaNumPredict = 8192;
     /** OpenAI (Chat Completions API). Needs an API key. */
     private String openaiApiKey = "";
     private String openaiBaseUrl = "https://api.openai.com/v1";

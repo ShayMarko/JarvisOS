@@ -66,6 +66,32 @@ class OllamaLanguageModelTest {
     }
 
     @Test
+    void salvagesToolCallEmbeddedInAFenceWithTrailingProse() {
+        // qwen2.5-coder behavior: shows the write_file call in a ```json fence + adds prose after it.
+        var r = model().parseResponse(node(
+                "{\"message\":{\"content\":\"```json\\n{\\\"name\\\": \\\"write_file\\\", \\\"arguments\\\": "
+                + "{\\\"path\\\": \\\"Projects/x/pom.xml\\\", \\\"content\\\": \\\"<project/>\\\"}}\\n```\\n"
+                + "You can now run the app with mvn spring-boot:run.\"}}"));
+        assertThat(r.wantsTools()).isTrue();
+        assertThat(r.toolCalls().get(0).name()).isEqualTo("write_file");
+        assertThat(r.toolCalls().get(0).argumentsJson()).contains("Projects/x/pom.xml");
+    }
+
+    @Test
+    void recoversAWriteFileWithBrokenQuoteEscaping() {
+        // The model hand-writes a write_file call but doesn't escape the quotes inside the code →
+        // invalid JSON. Lenient recovery should still extract path + content and write the file.
+        String malformed = "{\"name\":\"write_file\",\"arguments\":{\"path\":\"a.py\","
+                + "\"content\":\"print(\"hi\")\"}}";   // print("hi") quotes are NOT escaped
+        var root = mapper.createObjectNode();
+        root.putObject("message").put("content", malformed);
+        var r = model().parseResponse(root);
+        assertThat(r.wantsTools()).isTrue();
+        assertThat(r.toolCalls().get(0).name()).isEqualTo("write_file");
+        assertThat(r.toolCalls().get(0).argumentsJson()).contains("a.py").contains("print");
+    }
+
+    @Test
     void doesNotHijackANormalAnswerThatMentionsJson() {
         var r = model().parseResponse(node(
                 "{\"message\":{\"content\":\"Here is the plan: {\\\"name\\\": \\\"x\\\"} and then we proceed.\"}}"));

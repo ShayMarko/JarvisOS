@@ -90,7 +90,9 @@ public class AgentRuntime {
                 .map(tools::find).flatMap(Optional::stream).anyMatch(Tool::mutates);
         boolean toolCalled = false;
         boolean mutationSucceeded = false;
+        boolean wroteFile = false;   // a write_file actually succeeded this run (drives the build-continuation loop)
         boolean reflected = false;   // capability-reflection retry already used this run (only once)
+        int continuations = 0;       // build-continuation nudges used (bounded)
         // The model actually used this run (the per-task pick, or the provider default) — for traces.
         String usedModel = chosen != null ? chosen.id() : model.name();
 
@@ -112,6 +114,9 @@ public class AgentRuntime {
                     toolCalled = true;
                     if (tool != null && tool.mutates() && !isFailure(result)) {
                         mutationSucceeded = true;
+                        if ("write_file".equals(call.name())) {
+                            wroteFile = true;
+                        }
                     }
                     Step step = new Step("tool", "Called " + call.name(), truncate(result));
                     steps.add(step);
@@ -135,6 +140,34 @@ public class AgentRuntime {
                 continue;   // give the model another pass, now aware of what it can do
             }
 
+            // Build-continuation loop: the model is dumping code into chat instead of delivering files
+            // via write_file. Two cases: (a) it already wrote a file then narrated the rest, or (b) a
+            // build-capable agent narrated a whole multi-FILE project as several code blocks and wrote
+            // nothing. Either way, push it to keep writing. A single snippet (one code block, no file
+            // written) is left alone, so "show me a one-liner" answers aren't hijacked. Bounded.
+            boolean dumpingProject = wroteFile || multipleCodeBlocks(text);
+            if (dumpingProject && continuations < MAX_BUILD_CONTINUATIONS && realModel()
+                    && agentCanMutate && hasCodeFence(text)) {
+                continuations++;
+                messages.add(ChatMessage.user(continuationNudge()));
+                Step cont = new Step("intent", "Writing the remaining files", null);
+                steps.add(cont);
+                emit(onStep, cont);
+                continue;
+            }
+
+            // Headless guarantee (this Mac mini is screenless, in a wall): a build reply must NEVER show
+            // code or a leaked tool-call JSON in chat. Two nets for a build-capable agent:
+            //  1) a leaked/garbled tool-call JSON as the "answer" → replace with an honest retry message;
+            //  2) code blocks that survived the continuation loop → strip (the code is in the files).
+            // A lone snippet ("show me a one-liner", which writes no file) is left intact.
+            if (agentCanMutate && looksLikeLeakedToolCall(text)) {
+                text = "I tried to build that but couldn't complete the file actions cleanly this time. "
+                        + "Please ask me to try again.";
+            } else if (agentCanMutate && (wroteFile || multipleCodeBlocks(text)) && hasCodeFence(text)) {
+                text = stripCodeBlocks(text);
+            }
+
             // Honesty guard: an action-capable agent that used tools but landed NO successful action,
             // yet whose reply claims it completed something — correct the reply to match reality.
             if (agentCanMutate && toolCalled && !mutationSucceeded && claimsCompletedAction(text)) {
@@ -147,6 +180,73 @@ public class AgentRuntime {
         }
         return new AgentRun("I couldn't complete this within the step budget.", steps,
                 promptTokens, completionTokens, usedModel);
+    }
+
+    /** Max times we push the model to keep writing files in one build (bounds the loop). */
+    private static final int MAX_BUILD_CONTINUATIONS = 5;
+
+    /** True if the reply contains a fenced code block — the signal that it's narrating code in chat. */
+    private static boolean hasCodeFence(String text) {
+        return text != null && text.contains("```");
+    }
+
+    /** True if the reply has 2+ fenced code blocks (≥4 ``` markers) — i.e. it narrated a multi-FILE
+     *  project as code instead of writing the files. One block (a snippet) does NOT count. */
+    private static boolean multipleCodeBlocks(String text) {
+        if (text == null) {
+            return false;
+        }
+        int fences = 0;
+        for (int i = text.indexOf("```"); i >= 0; i = text.indexOf("```", i + 3)) {
+            fences++;
+        }
+        return fences >= 4;
+    }
+
+    /** True if the reply is (or contains) a leaked tool-call JSON — has both a "name" and an
+     *  "arguments"/"parameters" key. That's a botched tool call the user must never be shown. */
+    private static boolean looksLikeLeakedToolCall(String text) {
+        if (text == null) {
+            return false;
+        }
+        return text.contains("\"name\"") && (text.contains("\"arguments\"") || text.contains("\"parameters\""));
+    }
+
+    /** Remove fenced ``` … ``` code blocks from a build reply, leaving only the spoken-friendly prose.
+     *  The code is already in the written files; the headless device must never show it in chat. */
+    private static String stripCodeBlocks(String text) {
+        if (text == null) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        while (i < text.length()) {
+            int open = text.indexOf("```", i);
+            if (open < 0) {
+                sb.append(text, i, text.length());
+                break;
+            }
+            sb.append(text, i, open);
+            int close = text.indexOf("```", open + 3);
+            if (close < 0) {
+                break;   // unterminated fence — drop the rest (it's code)
+            }
+            i = close + 3;
+        }
+        String prose = sb.toString().replaceAll("\\n{3,}", "\n\n").strip();
+        if (prose.length() < 40) {
+            return "I've written the project files to your Projects folder — open the Files explorer to "
+                    + "view them. (Code isn't shown here; this machine runs headless.)";
+        }
+        return prose + "\n\n(Code was written to the project files, not shown here — this machine runs headless.)";
+    }
+
+    /** Push the model to keep delivering files via write_file rather than dumping them in the reply. */
+    private static String continuationNudge() {
+        return "You put code in your reply, but you run HEADLESS — code must be delivered with the write_file "
+                + "tool, never shown in chat. For EVERY remaining file in this project, call write_file now: one "
+                + "call per file, the full nested path under Projects/<app-name>/, and the COMPLETE file content. "
+                + "Only once every file is written, reply with a short plain-language summary and NO code.";
     }
 
     /** Generic detector that the model is REFUSING on capability grounds (any domain), so it can be

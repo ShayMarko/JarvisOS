@@ -24,18 +24,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class OllamaLanguageModel extends AbstractHttpLanguageModel {
 
     private final String model;
-    private final int maxTokens;
+    private final int numPredict;
 
     public OllamaLanguageModel(JarvisAiProperties props, ObjectMapper mapper) {
         super(mapper, build(props), "Ollama");
         this.model = props.getOllamaModel();
-        this.maxTokens = props.getMaxTokens();
+        // Local is free — use a generous output budget so it can write whole files without truncating.
+        this.numPredict = props.getOllamaNumPredict();
     }
 
     private static RestClient build(JarvisAiProperties props) {
         SimpleClientHttpRequestFactory rf = new SimpleClientHttpRequestFactory();
         rf.setConnectTimeout(Duration.ofSeconds(3));
-        rf.setReadTimeout(Duration.ofSeconds(120)); // local generation can be slow
+        // Bigger local models (e.g. qwen2.5-coder:14b) generating a multi-file build can take minutes;
+        // too short a read timeout makes the call fail and silently fall back to the mock. Configurable.
+        rf.setReadTimeout(Duration.ofSeconds(props.getOllamaTimeoutSeconds()));
         return RestClient.builder()
                 .requestFactory(rf)
                 .baseUrl(props.getOllamaBaseUrl())
@@ -83,7 +86,7 @@ public class OllamaLanguageModel extends AbstractHttpLanguageModel {
         body.put("model", model);
         body.put("messages", apiMessages);
         body.put("stream", false);
-        body.put("options", Map.of("num_predict", maxTokens));
+        body.put("options", Map.of("num_predict", numPredict));
         if (tools != null && !tools.isEmpty()) {
             List<Object> toolDefs = new ArrayList<>();
             for (ToolSpec t : tools) {
@@ -118,6 +121,12 @@ public class OllamaLanguageModel extends AbstractHttpLanguageModel {
             // Without this, that JSON leaks to the user as the "answer". Salvage it into a real ToolCall
             // so the agent loop actually runs the tool instead of printing the JSON.
             List<ToolCall> salvaged = salvageToolCalls(content);
+            if (salvaged.isEmpty()) {
+                // The model often hand-writes a write_file call with BROKEN escaping (unescaped quotes
+                // inside code content) → invalid JSON the strict salvage can't parse. Recover the file
+                // by locating the content boundaries structurally and re-encoding cleanly.
+                salvaged = lenientWriteFile(content);
+            }
             if (!salvaged.isEmpty()) {
                 return ModelResponse.tools(salvaged, in, out);
             }
@@ -128,39 +137,29 @@ public class OllamaLanguageModel extends AbstractHttpLanguageModel {
     }
 
     /**
-     * Recovers tool calls a weak model emitted as plain-text JSON in the content field instead of via
-     * the native tool_calls channel. Only triggers when the whole message is one (or a few stacked)
-     * JSON objects of the shape {@code {"name": "...", "parameters"|"arguments"|"args": {…}}} — a strong
-     * signal it's a tool call, not prose — so a normal answer that merely mentions JSON is never hijacked.
+     * Recovers tool calls a model emitted as JSON in the content field instead of via the native
+     * tool_calls channel — including when it wraps them in a ```json fence and/or surrounds them with
+     * prose (e.g. qwen "showing" a write_file call). Scans the whole content for EVERY balanced {…}
+     * object of the shape {@code {"name": "...", "parameters"|"arguments"|"args": {…}}} and turns each
+     * into a real ToolCall; non-matching text is ignored. A bare object that isn't this shape is left
+     * alone, and an unknown tool name just yields an "Unknown tool" result downstream (harmless).
      */
     private List<ToolCall> salvageToolCalls(String content) {
         List<ToolCall> out = new ArrayList<>();
         if (content == null) {
             return out;
         }
-        String s = content.strip();
-        // Strip a ```json … ``` (or bare ```) fence if the model wrapped the call.
-        if (s.startsWith("```")) {
-            int nl = s.indexOf('\n');
-            if (nl > 0) {
-                s = s.substring(nl + 1);
-            }
-            if (s.endsWith("```")) {
-                s = s.substring(0, s.length() - 3);
-            }
-            s = s.strip();
-        }
-        if (!s.startsWith("{")) {
-            return out;
-        }
         int i = 0;
-        // Walk one or more concatenated top-level {…} objects (some models stack two calls back-to-back).
-        while (i < s.length() && s.charAt(i) == '{') {
-            int end = matchingBrace(s, i);
-            if (end < 0) {
+        while (i < content.length()) {
+            int brace = content.indexOf('{', i);
+            if (brace < 0) {
                 break;
             }
-            String chunk = s.substring(i, end + 1);
+            int end = matchingBrace(content, brace);
+            if (end < 0) {
+                break;   // unbalanced (likely truncated) — stop
+            }
+            String chunk = content.substring(brace, end + 1);
             try {
                 JsonNode node = mapper.readTree(chunk);
                 String name = node.path("name").asText("");
@@ -169,19 +168,79 @@ public class OllamaLanguageModel extends AbstractHttpLanguageModel {
                         : node.get("args");
                 if (!name.isBlank() && params != null && params.isObject()) {
                     out.add(new ToolCall("call_" + out.size(), name, params.toString()));
-                } else {
-                    return List.of(); // not the tool-call shape — treat the whole content as an answer
+                    i = end + 1;   // consumed this tool-call object; keep scanning for more
+                    continue;
                 }
             } catch (RuntimeException | com.fasterxml.jackson.core.JsonProcessingException e) {
-                return List.of();
+                // not parseable as a JSON object here — fall through and advance
             }
-            i = end + 1;
-            while (i < s.length() && Character.isWhitespace(s.charAt(i))) {
-                i++;
+            i = brace + 1;   // not a tool call at this position; scan from the next '{'
+        }
+        return out;
+    }
+
+    private static final java.util.regex.Pattern WRITE_FILE_NAME =
+            java.util.regex.Pattern.compile("\"name\"\\s*:\\s*\"write_file\"");
+    private static final java.util.regex.Pattern PATH_FIELD =
+            java.util.regex.Pattern.compile("\"(?:path|file_path|filepath|file|filename)\"\\s*:\\s*\"([^\"]+)\"");
+
+    /**
+     * Last-resort recovery of a hand-written {@code write_file} call whose JSON is malformed because the
+     * model didn't escape quotes inside the code content. Finds the path and the content's boundaries by
+     * STRUCTURE (the content string's closing quote is the last {@code "} immediately before a {@code }}),
+     * then re-encodes proper JSON so the tool runs. Single write_file only — the continuation loop handles
+     * subsequent files. Returns empty if it doesn't clearly look like a write_file call.
+     */
+    private List<ToolCall> lenientWriteFile(String content) {
+        List<ToolCall> out = new ArrayList<>();
+        if (content == null || !WRITE_FILE_NAME.matcher(content).find()) {
+            return out;
+        }
+        java.util.regex.Matcher pm = PATH_FIELD.matcher(content);
+        if (!pm.find()) {
+            return out;
+        }
+        String path = pm.group(1);
+        int ci = content.indexOf("\"content\"");
+        if (ci < 0) {
+            return out;
+        }
+        int colon = content.indexOf(':', ci);
+        int start = colon < 0 ? -1 : content.indexOf('"', colon + 1);
+        if (start < 0) {
+            return out;
+        }
+        // The content value ends at the last '"' that is followed by optional whitespace then '}'.
+        int endQuote = -1;
+        for (int k = content.length() - 1; k > start; k--) {
+            if (content.charAt(k) == '"') {
+                int j = k + 1;
+                while (j < content.length() && Character.isWhitespace(content.charAt(j))) {
+                    j++;
+                }
+                if (j < content.length() && content.charAt(j) == '}') {
+                    endQuote = k;
+                    break;
+                }
             }
         }
-        // Only accept if we consumed the entire message (no trailing prose after the JSON).
-        return i >= s.length() ? out : List.of();
+        if (endQuote <= start) {
+            return out;
+        }
+        String fileContent = unescapeJson(content.substring(start + 1, endQuote));
+        try {
+            out.add(new ToolCall("call_0", "write_file",
+                    mapper.writeValueAsString(java.util.Map.of("path", path, "content", fileContent))));
+        } catch (RuntimeException | com.fasterxml.jackson.core.JsonProcessingException e) {
+            return List.of();
+        }
+        return out;
+    }
+
+    /** Decode the common JSON string escapes the model DID emit (leave stray quotes as literal text). */
+    private static String unescapeJson(String s) {
+        return s.replace("\\n", "\n").replace("\\t", "\t").replace("\\r", "\r")
+                .replace("\\\"", "\"").replace("\\/", "/").replace("\\\\", "\\");
     }
 
     /** Index of the brace that closes the object opening at {@code open}, respecting strings/escapes. */
