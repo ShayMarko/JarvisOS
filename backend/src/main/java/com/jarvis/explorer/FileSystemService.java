@@ -23,6 +23,7 @@ import com.jarvis.error.Exceptions.NotFoundException;
 import com.jarvis.error.Exceptions.PathBlockedException;
 import com.jarvis.security.Operation;
 import com.jarvis.security.PermissionGuard;
+import com.jarvis.undo.UndoJournal;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -40,9 +41,13 @@ public class FileSystemService {
 
     private static final Logger log = LoggerFactory.getLogger(FileSystemService.class);
 
+    /** Below this size we keep a snapshot so a write/delete can be undone; above it, undo just notes it can't restore. */
+    private static final long UNDO_SNAPSHOT_MAX_BYTES = 1_000_000;
+
     private final JarvisFileSystemProperties properties;
     private final PermissionGuard guard;
     private final JarvisLimitsProperties limits;
+    private final UndoJournal undo;
     private Path root;
     /** The root plus every configured allowed folder — the absolute paths the Explorer may address. */
     private List<Path> mounts;
@@ -160,17 +165,36 @@ public class FileSystemService {
 
     public FileNode writeText(String relativePath, String content) {
         Path target = resolveScoped(relativePath);
-        Operation op = Files.exists(target) ? Operation.WRITE : Operation.CREATE;
+        boolean existed = Files.exists(target);
+        Operation op = existed ? Operation.WRITE : Operation.CREATE;
         guard.check(target, op, true);
+        String previous = existed ? snapshot(target) : null;
         try {
             if (target.getParent() != null) {
                 Files.createDirectories(target.getParent());
             }
             Files.writeString(target, content, StandardCharsets.UTF_8);
+            recordWriteUndo(relativePath, target, existed, previous);
             return toNode(target);
         } catch (IOException e) {
             throw new UncheckedIOException("Could not write file: " + relativePath, e);
         }
+    }
+
+    /** Register how to reverse a write: delete a freshly-created file, or restore the prior content. */
+    private void recordWriteUndo(String relativePath, Path target, boolean existed, String previous) {
+        if (!existed) {
+            undo.record("Created " + relativePath, () -> {
+                Files.deleteIfExists(target);
+                return "removed the new file";
+            });
+        } else if (previous != null) {
+            undo.record("Edited " + relativePath, () -> {
+                Files.writeString(target, previous, StandardCharsets.UTF_8);
+                return "restored the previous contents";
+            });
+        }
+        // existed but too large to snapshot → not safely reversible, so we don't claim it is.
     }
 
     public FileNode createDirectory(String relativePath) {
@@ -181,6 +205,18 @@ public class FileSystemService {
         }
         try {
             Files.createDirectories(target);
+            undo.record("Created folder " + relativePath, () -> {
+                if (Files.isDirectory(target)) {
+                    try (Stream<Path> kids = Files.list(target)) {
+                        if (kids.findAny().isEmpty()) {
+                            Files.delete(target);
+                            return "removed the new folder";
+                        }
+                    }
+                    return "left the folder (it's no longer empty)";
+                }
+                return "folder already gone";
+            });
             return toNode(target);
         } catch (IOException e) {
             throw new UncheckedIOException("Could not create directory: " + relativePath, e);
@@ -193,9 +229,11 @@ public class FileSystemService {
         if (!Files.exists(target)) {
             throw new NotFoundException("Does not exist: " + relativePath);
         }
+        boolean isDir = Files.isDirectory(target);
+        String contents = isDir ? null : snapshot(target);
         try {
             // Refuse to delete a non-empty directory in Phase 1/2 — recursive delete is risky.
-            if (Files.isDirectory(target)) {
+            if (isDir) {
                 try (Stream<Path> children = Files.list(target)) {
                     if (children.findAny().isPresent()) {
                         throw new ConflictException("Directory is not empty: " + relativePath);
@@ -203,8 +241,39 @@ public class FileSystemService {
                 }
             }
             Files.delete(target);
+            recordDeleteUndo(relativePath, target, isDir, contents);
         } catch (IOException e) {
             throw new UncheckedIOException("Could not delete: " + relativePath, e);
+        }
+    }
+
+    /** Register how to reverse a delete: recreate the empty folder, or restore the file's contents. */
+    private void recordDeleteUndo(String relativePath, Path target, boolean isDir, String contents) {
+        if (isDir) {
+            undo.record("Deleted folder " + relativePath, () -> {
+                Files.createDirectories(target);
+                return "recreated the folder";
+            });
+        } else if (contents != null) {
+            undo.record("Deleted " + relativePath, () -> {
+                if (target.getParent() != null) {
+                    Files.createDirectories(target.getParent());
+                }
+                Files.writeString(target, contents, StandardCharsets.UTF_8);
+                return "restored the file";
+            });
+        }
+    }
+
+    /** A text snapshot for undo, or null if the file is binary/too large/unreadable to safely restore. */
+    private String snapshot(Path target) {
+        try {
+            if (Files.size(target) > UNDO_SNAPSHOT_MAX_BYTES) {
+                return null;
+            }
+            return Files.readString(target, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            return null;   // binary or unreadable — not safely reversible
         }
     }
 

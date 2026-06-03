@@ -28,6 +28,10 @@ public class JarvisAiProperties {
      *  file needs far more than the paid-provider {@code maxTokens} cap — too low truncates the file
      *  (and its tool-call JSON) mid-stream. -1 = until context end. */
     private int ollamaNumPredict = 8192;
+    /** Privacy Router: when true, sensitive content (secrets/financial/personal/confidential) is kept on
+     *  the LOCAL model instead of being sent to a cloud provider. Detection is local-only, so it never
+     *  leaks the content it's protecting. */
+    private boolean privacyGuard = true;
     /** Self-correcting build loop: after a build writes files, the Test agent verifies (run_in_sandbox)
      *  and, on failure, the developer is re-dispatched with the errors, then re-verified — up to this
      *  many fix attempts. 0 = off. Shines on a capable model; under-converges on a small local one. */

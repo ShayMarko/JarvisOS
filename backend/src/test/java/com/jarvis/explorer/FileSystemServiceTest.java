@@ -35,7 +35,8 @@ class FileSystemServiceTest {
 
         PermissionGuard guard = new PermissionGuard(fsProps, secProps);
         guard.init();
-        service = new FileSystemService(fsProps, guard, new com.jarvis.config.JarvisLimitsProperties());
+        service = new FileSystemService(fsProps, guard, new com.jarvis.config.JarvisLimitsProperties(),
+                new com.jarvis.undo.UndoJournal());
         service.init();
     }
 

@@ -39,6 +39,8 @@ public class AgentSelector {
             new Rule("email", List.of("email", "inbox", "mail", "reply to")),
             new Rule("calendar", List.of("calendar", "schedule", "meeting", "event", "agenda")),
             new Rule("data", List.of("analyse", "analyze", "data", "csv", "spreadsheet")),
+            new Rule("devflow", List.of("pull request", "pull-request", "review pr", "review the pr", "review my pr",
+                    "list prs", "open prs", "triage", "github issue", "github issues", "merge request")),
             new Rule("code", List.of("code", "function", "bug", "class ", "compile", "stack trace",
                     "build an app", "build a app", "build me an app", "build the app", "build a ", "create an app",
                     "spring boot", "react app", "backend", "frontend", "rest api", "web app", "implement")),

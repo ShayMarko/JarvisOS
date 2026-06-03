@@ -62,6 +62,16 @@ public class ModelRouter {
         return props.getPrivacy();
     }
 
+    /** The best available LOCAL (on-device) model — used by the Privacy Router to keep sensitive
+     *  content off cloud providers. Falls back to whatever is available if nothing is local. */
+    public ModelDescriptor localModel() {
+        List<ModelDescriptor> local = catalog.available().stream().filter(ModelDescriptor::local).toList();
+        if (local.isEmpty()) {
+            return catalog.available().stream().findFirst().orElse(null);
+        }
+        return choose(local, RoutingPreference.QUALITY, TaskTier.STANDARD, false);   // strongest local
+    }
+
     /** Map an agent slug / task type to its demand tier. */
     public static TaskTier tierFor(String taskType) {
         String t = taskType == null ? "" : taskType.toLowerCase();

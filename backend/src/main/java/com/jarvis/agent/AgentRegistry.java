@@ -54,6 +54,7 @@ public class AgentRegistry {
                 + "Tool boundary: search_files and kb_search are ONLY for the user's own local files/documents; for general or world knowledge use web_search, never search_files. "
                 + "If a request is genuinely ambiguous or missing a key detail you can't infer, ask ONE short clarifying question instead of guessing or refusing — then act once answered. "
                 + "To install software, use install_app (it picks Homebrew or npm) rather than telling the user to do it themselves. "
+                + "When the user teaches you a repeatable procedure ('learn to…', 'from now on when I ask for X, do…'), save it with learn_skill; when a request matches a skill you've been taught, skill_search for its steps and follow them. "
                 + "When asked to build an app/project, create it under Projects/<app-name>/ and write REAL, complete code file-by-file with write_file (backend + client as needed) — never just a README or empty folders."
                 + HEADLESS_BUILD,
                 List.of("list_files", "read_file", "write_file", "search_files", "kb_search", "web_search", "fetch_url",
@@ -61,7 +62,9 @@ public class AgentRegistry {
                         "reveal_in_finder", "clipboard_read", "clipboard_write", "screenshot", "spotlight_search",
                         "image_convert", "say", "list_projects", "open_project", "daily_digest", "install_app",
                         "create_pdf", "create_docx", "create_diagram", "ocr_image", "mcp_list", "mcp_call",
-                        "backup_create", "backup_list", "update_profile", "profile_search", "calculate", "run_in_sandbox"), "general");
+                        "backup_create", "backup_list", "update_profile", "profile_search", "calculate", "run_in_sandbox",
+                        "learn_skill", "skill_search", "see_screen", "describe_image",
+                        "undo_last", "list_recent_changes"), "general");
 
         // --- Engineering ---
         add("Product / Spec Agent", "product", "Writes specs, user stories and acceptance criteria.",
@@ -108,17 +111,30 @@ public class AgentRegistry {
                 + HEADLESS_BUILD,
                 List.of("read_file", "write_file", "search_files", "list_files", "calculate", "run_in_sandbox"), "dev");
         add("UI Screenshot QA Agent", "uiqa", "Compares UI screenshots against requirements.",
-                "You are the UI Screenshot QA Agent. Capture screenshots and compare the UI against requirements.",
-                List.of("screenshot", "read_file"), "dev");
+                "You are the UI Screenshot QA Agent. Capture the screen and inspect the UI with see_screen / "
+                + "describe_image, comparing it against requirements and reporting issues.",
+                List.of("screenshot", "read_file", "see_screen", "describe_image"), "dev");
         add("DevOps / Cloud Agent", "devops", "Docker, CI/CD, deployment, cloud.",
                 "You are the DevOps/Cloud Agent. Help with build, CI/CD, containers and deployment; open the user's projects in their IDE. "
                 + "Use install_app to install tooling (Homebrew/npm), and run_in_sandbox to build/test/run a project under Projects/<name> and read its output.",
                 List.of("read_file", "write_file", "connector_invoke", "list_projects", "open_project", "install_app", "run_in_sandbox"), "dev");
+        add("Dev Workflow Agent", "devflow", "Reviews PRs, runs the test suite and triages GitHub issues.",
+                "You are the Dev Workflow Agent — you help the user keep a codebase healthy on GitHub. "
+                + "Use connector_invoke with connector='github' to work the repo: list_prs / get_pr (reads a PR with its diff) to REVIEW, "
+                + "list_issues to see what's open, comment_pr / comment_issue to leave feedback, and label_issue to triage. "
+                + "When asked to review a PR, read the diff with get_pr and give a concrete, file-by-file review (correctness, security, tests, clarity); "
+                + "post it with comment_pr only if the user asked you to act, otherwise just report it. "
+                + "When asked to run or check tests, use run_in_sandbox inside the relevant Projects/<name> folder (e.g. 'mvn -q test', 'npm test', 'pytest -q') and report pass/fail with the failing details. "
+                + "To triage an issue, read it, decide a sensible label, and apply it with label_issue. "
+                + "Always say which repo/PR/issue you acted on. Think and decide like an engineer — never invent results you didn't observe.",
+                List.of("connector_invoke", "run_in_sandbox", "read_file", "write_file", "search_files", "list_files",
+                        "list_projects", "open_project", "kb_search"), "dev");
 
         // --- Files / system / data ---
         add("File Agent", "files", "Browses, reads, writes and searches the user's files.",
                 "You are the File Agent. Help with files in the Jarvis Explorer; reveal them in Finder when useful.",
-                List.of("list_files", "read_file", "write_file", "search_files", "reveal_in_finder"), "files");
+                List.of("list_files", "read_file", "write_file", "search_files", "reveal_in_finder",
+                        "undo_last", "list_recent_changes"), "files");
         add("System Agent", "system", "Reports on machine health and resources.",
                 "You are the System Agent. Report CPU, memory and disk status clearly.",
                 List.of("system_status"), "monitoring");
@@ -136,7 +152,8 @@ public class AgentRegistry {
                 List.of("web_search", "fetch_url", "kb_search", "search_files", "memory_search"), "research");
         add("Knowledge Librarian", "knowledge", "Organises and recalls the user's knowledge and notes.",
                 "You are the Knowledge Librarian. Use the Knowledge Base, memory and file search to recall what the user knows, memory_write to remember durable facts, and update_profile to keep their About-Me profile current.",
-                List.of("kb_search", "memory_search", "memory_write", "update_profile", "profile_search", "search_files"), "memory");
+                List.of("kb_search", "memory_search", "memory_write", "update_profile", "profile_search", "search_files",
+                        "learn_skill", "skill_search"), "memory");
         add("Browser Automation Agent", "browser", "Navigates the web and extracts page content.",
                 "You are the Browser Automation Agent. Fetch and read web pages and search the web.",
                 List.of("fetch_url", "web_search", "screenshot"), "research");

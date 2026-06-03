@@ -62,6 +62,7 @@ jarvis:
     # Ollama + mock are never metered. Adjustable live in Settings; pause = kill-switch.
     daily-token-budget: ${JARVIS_AI_DAILY_TOKEN_BUDGET:0}
     privacy: ${JARVIS_AI_PRIVACY:BALANCED}   # BALANCED | PRIVATE | QUALITY | CHEAP
+    privacy-guard: ${JARVIS_AI_PRIVACY_GUARD:true}  # keep sensitive content on the local model, never cloud
   # Global JARVIS personality, prepended to every agent's system prompt.
   persona:
     enabled: ${JARVIS_PERSONA_ENABLED:true}
@@ -146,6 +147,29 @@ jarvis:
     max-message-chars: 4000        # Telegram hard-caps at 4096
     idle-poll-ms: 1000             # breather between empty polls
     error-backoff-ms: 3000         # back-off after a poll error
+  # Proactive watchers / heartbeat (see JarvisProactiveProperties). Background checks that PROPOSE
+  # actions via the Notification Center (also pushed to Telegram if configured) — never act unasked.
+  proactive:
+    enabled: ${JARVIS_PROACTIVE_ENABLED:true}
+    disk-percent-threshold: 90
+    check-interval-ms: 600000        # every 10 min
+    watch-folders: [Downloads, Screenshots, Generated]
+  # Second-brain auto-index (see JarvisSecondBrainProperties). Keeps the Knowledge Base continuously
+  # in sync with notes/docs so the model's kb_search always has complete, current recall.
+  second-brain:
+    enabled: ${JARVIS_SECOND_BRAIN_ENABLED:true}
+    interval-ms: 900000              # sweep every 15 min
+    folders: [Documents, Notes]
+    extensions: [.txt, .md, .markdown, .text, .log, .csv, .json, .yml, .yaml, .rtf]
+    max-file-bytes: 1000000          # skip files > 1 MB
+    max-files-per-tick: 25
+    max-depth: 4
+    prune-deleted: true
+  # Preference-learning loop (see JarvisPreferenceProperties). Notices durable facts/preferences and
+  # OFFERS to save them to the About-Me profile via the Approval Center (consent) — judged on the local model.
+  preference-learning:
+    enabled: ${JARVIS_PREFERENCE_LEARNING_ENABLED:true}
+    min-message-chars: 12
   # Tunable limits/sizes (see JarvisLimitsProperties).
   limits:
     conversation-history-turns: 6     # replayed to the model every call; lower = fewer input tokens

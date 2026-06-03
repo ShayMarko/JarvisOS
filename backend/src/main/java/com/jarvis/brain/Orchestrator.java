@@ -24,6 +24,7 @@ import com.jarvis.agent.Step;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jarvis.ai.ChatMessage;
 import com.jarvis.ai.JarvisAiProperties;
+import com.jarvis.ai.PrivacyGuard;
 import com.jarvis.audit.AuditService;
 import com.jarvis.conversation.ConversationService;
 import com.jarvis.conversation.ConversationTurn;
@@ -31,6 +32,7 @@ import com.jarvis.model.CostCalculator;
 import com.jarvis.model.ModelDescriptor;
 import com.jarvis.model.ModelRouter;
 import com.jarvis.observability.ObservabilityService;
+import com.jarvis.profile.PreferenceLearner;
 import com.jarvis.task.Task;
 import com.jarvis.task.TaskService;
 
@@ -62,6 +64,8 @@ public class Orchestrator {
     private final ObservabilityService observability;
     private final ResponseCache responseCache;
     private final JarvisAiProperties ai;
+    private final PrivacyGuard privacyGuard;
+    private final PreferenceLearner preferenceLearner;
     private final ObjectMapper mapper;
 
 
@@ -120,6 +124,14 @@ public class Orchestrator {
         addStep(steps, onStep, new Step("agent", "Routed to " + agent.name(), agent.role()));
 
         ModelDescriptor model = modelRouter.route(agent.slug());
+        // Privacy Router: sensitive content stays on-device instead of going to a cloud provider.
+        if (!model.local() && privacyGuard.keepLocal(message)) {
+            ModelDescriptor localM = modelRouter.localModel();
+            if (localM != null) {
+                addStep(steps, onStep, new Step("model", "Kept on local model for privacy", "sensitive content detected"));
+                model = localM;
+            }
+        }
         addStep(steps, onStep, new Step("model", "Routed to model " + model.id(), modelRouter.preference().name()));
 
         long start = System.nanoTime();
@@ -138,6 +150,8 @@ public class Orchestrator {
             }
             conversations.record(session, "ASSISTANT", run.answer());
             tasks.finish(task, agent.name(), run.answer());
+            // Preference-learning loop: notice durable facts about the user and OFFER to remember them (consent + local).
+            preferenceLearner.observe(message, run.answer());
             observability.record(task.getId(), session, agent.name(), model.id(), message, run.answer(), "OK",
                     run.promptTokens(), run.completionTokens(), cost, durationMs, writeSteps(steps));
             audit.record("BRAIN", agent.slug(), message, "OK",
@@ -272,6 +286,12 @@ public class Orchestrator {
                     AgentDefinition a = registry.find(ps.agentSlug()).orElseGet(registry::general);
                     String stepContext = withDependencyOutputs(context, deps);
                     ModelDescriptor subModel = modelRouter.route(a.slug());   // pick the model per sub-task
+                    if (!subModel.local() && privacyGuard.keepLocal(ps.task())) {   // sensitive → stay on-device
+                        ModelDescriptor localM = modelRouter.localModel();
+                        if (localM != null) {
+                            subModel = localM;
+                        }
+                    }
                     emit.accept(new Step("agent", "→ " + a.name(), ps.task() + " · " + subModel.id()));
                     AgentRun run = runtime.run(a, ps.task(), stepContext, history, null, subModel);
                     emit.accept(new Step("tool", "✓ " + a.name(), truncate(run.answer())));
@@ -293,6 +313,7 @@ public class Orchestrator {
             double cost = CostCalculator.cost(model, promptTokens, completionTokens);
             conversations.record(session, "ASSISTANT", merged);
             tasks.finish(task, "Planner", merged);
+            preferenceLearner.observe(message, merged);
             observability.record(task.getId(), session, "Planner", model.id(), message, merged, "OK",
                     promptTokens, completionTokens, cost, durationMs, writeSteps(steps));
             audit.record("BRAIN", "planner", message, "OK",

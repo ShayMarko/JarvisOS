@@ -22,6 +22,12 @@ class AgentSelectorTest {
     }
 
     @Test
+    void devWorkflowIntentsRouteToDevflow() {
+        assertThat(selector().byKeyword("review the pull request #12 in acme/app").slug()).isEqualTo("devflow");
+        assertThat(selector().byKeyword("triage the open github issues").slug()).isEqualTo("devflow");
+    }
+
+    @Test
     void buildIntentOutranksDomainKeywords() {
         // The bug from the transcript: "email"/"calendar" mentioned in a BUILD request hijacked
         // routing to the Email/Calendar agent (which can't write files). Build intent must win.
