@@ -16,10 +16,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
+
 import com.jarvis.audit.AuditService;
 import com.jarvis.error.Exceptions.NotFoundException;
 import com.jarvis.error.Exceptions.PathBlockedException;
 import com.jarvis.explorer.FileSystemService;
+import com.jarvis.secrets.VaultCrypto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -38,14 +41,39 @@ public class BackupService {
 
     private final FileSystemService fs;
     private final AuditService audit;
+    private final VaultCrypto crypto;
+    private final JarvisBackupProperties props;
 
     public record BackupInfo(String name, long sizeBytes, String createdAt) {}
 
     /** Snapshot the whole Explorer into a new ZIP; returns its info. */
     public BackupInfo create() {
+        return info(createZip());
+    }
+
+    /**
+     * Snapshot, then AES-encrypt the archive (Secrets-Vault key) into a {@code .zip.enc} written to the
+     * cloud-sync folder if configured (else the local backups dir) — so an off-box copy is never plaintext.
+     * The plaintext zip is removed after encryption.
+     */
+    public BackupInfo createEncrypted() {
+        Path zip = createZip();
+        try {
+            String cipher = crypto.encrypt(Base64.getEncoder().encodeToString(Files.readAllBytes(zip)));
+            Path dest = destinationDir().resolve(zip.getFileName().toString() + ".enc");
+            Files.writeString(dest, cipher);
+            Files.deleteIfExists(zip);
+            audit.record("BACKUP", "backup:encrypt", dest.getFileName().toString(), "OK", null);
+            log.info("Encrypted backup written: {}", dest);
+            return info(dest);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Encrypted backup failed", e);
+        }
+    }
+
+    private Path createZip() {
         Path root = fs.getRoot();
-        Path dir = backupsDir();
-        Path zip = uniqueBackupPath(dir);
+        Path zip = uniqueBackupPath(backupsDir());
         int files = 0;
         try (ZipOutputStream zos = new ZipOutputStream(Files.newOutputStream(zip));
              Stream<Path> walk = Files.walk(root)) {
@@ -63,7 +91,24 @@ public class BackupService {
         String name = zip.getFileName().toString();
         audit.record("BACKUP", "backup:create", name, "OK", files + " files");
         log.info("Backup created: {} ({} files)", name, files);
-        return info(zip);
+        return zip;
+    }
+
+    /** Where encrypted backups land — the configured cloud-sync folder, or the local backups dir. */
+    private Path destinationDir() {
+        String cloud = props.getCloudDir();
+        if (cloud == null || cloud.isBlank()) {
+            return backupsDir();
+        }
+        Path dir = cloud.startsWith("~")
+                ? Path.of(System.getProperty("user.home") + cloud.substring(1)).toAbsolutePath().normalize()
+                : Path.of(cloud).toAbsolutePath().normalize();
+        try {
+            Files.createDirectories(dir);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Could not create cloud backup folder", e);
+        }
+        return dir;
     }
 
     public List<BackupInfo> list() {

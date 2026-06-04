@@ -140,6 +140,8 @@ public class Orchestrator {
             steps.addAll(run.steps());
             // Self-correcting build loop: if files landed under Projects/, verify + auto-fix (bounded).
             run = verifyAndFix(agent, message, context, history, onStep, model, run, steps);
+            // Self-correcting authoring loop: if a book landed under Books/, a critic reviews + revises (bounded).
+            run = reviewBookAndRevise(agent, message, context, history, onStep, model, run, steps);
             long durationMs = (System.nanoTime() - start) / 1_000_000;
             double cost = CostCalculator.cost(model, run.promptTokens(), run.completionTokens());
             // Cache only PURE-knowledge answers (no tool was used this run) — these are timeless and
@@ -218,16 +220,64 @@ public class Orchestrator {
 
     /** The project folder name from a write_file step ("Wrote Projects/<name>/…"), or null if none. */
     private String detectProjectName(List<Step> steps) {
+        return detectName(steps, WROTE_PROJECT);
+    }
+
+    /** First capture of {@code pattern} across the run's write_file step details, or null. */
+    private String detectName(List<Step> steps, java.util.regex.Pattern pattern) {
         for (Step s : steps) {
             if (!"tool".equals(s.kind()) || s.detail() == null) {
                 continue;
             }
-            java.util.regex.Matcher m = WROTE_PROJECT.matcher(s.detail());
+            java.util.regex.Matcher m = pattern.matcher(s.detail());
             if (m.find()) {
                 return m.group(1);
             }
         }
         return null;
+    }
+
+    private static final java.util.regex.Pattern WROTE_BOOK =
+            java.util.regex.Pattern.compile("Books/([A-Za-z0-9._-]+)/");
+
+    /**
+     * Self-correcting AUTHORING loop (the author ⇄ critic cycle) — the writing-domain twin of
+     * {@link #verifyAndFix}. If the author wrote chapters under {@code Books/<name>/}, a professional-reader
+     * critic reads the whole book and ends its reply with {@code VERDICT: PASS|FAIL}. On FAIL, the SAME
+     * author agent is re-dispatched with the critique to revise — up to {@code bookReviewMaxIters} times.
+     * Gated on a real model + a detected book, so ordinary turns are untouched.
+     */
+    private AgentRun reviewBookAndRevise(AgentDefinition author, String message, String context, List<ChatMessage> history,
+            Consumer<Step> onStep, ModelDescriptor model, AgentRun firstRun, List<Step> steps) {
+        int max = ai.getBookReviewMaxIters();
+        String book = detectName(firstRun.steps(), WROTE_BOOK);
+        if (max <= 0 || book == null || !realModel()) {
+            return firstRun;
+        }
+        AgentDefinition critic = registry.find("bookcritic").orElse(author);
+        AgentRun current = firstRun;
+        for (int iter = 1; iter <= max; iter++) {
+            addStep(steps, onStep, new Step("agent", "→ Book Critic (review)", "Books/" + book));
+            String reviewPrompt = "Read the ebook under Books/" + book + " — list its files, then read each chapter. "
+                    + "As a demanding professional reader and editor, judge: reading flow, the balance of STORY vs "
+                    + "INFORMATION in each chapter, the chapter 'zones' (hook → development → turn/insight → close), "
+                    + "pacing, voice consistency, and whether it's genuinely sellable. End with ONE line: 'VERDICT: PASS' "
+                    + "if it's publish-ready, or 'VERDICT: FAIL' followed by specific, numbered fixes.";
+            AgentRun review = runtime.run(critic, reviewPrompt, context, history, onStep, model);
+            steps.addAll(review.steps());
+            if (!verdictFail(review.answer())) {
+                addStep(steps, onStep, new Step("answer", "✓ Book passed the professional read (attempt " + iter + ")", null));
+                return current;
+            }
+            addStep(steps, onStep, new Step("agent", "→ " + author.name() + " (revising)", "attempt " + iter));
+            String revisePrompt = message + "\n\nThe book did NOT pass a professional read. The critic reported:\n"
+                    + clip(review.answer()) + "\nRevise the files under Books/" + book + " to fix every point while "
+                    + "keeping a strong reading flow and rich, story-driven chapters.";
+            current = runtime.run(author, revisePrompt, context, history, onStep, model);
+            steps.addAll(current.steps());
+        }
+        addStep(steps, onStep, new Step("answer", "Book still needs work after " + max + " review passes", null));
+        return current;
     }
 
     /** Only re-dispatch on an explicit FAIL verdict (avoids looping on ambiguous output). */

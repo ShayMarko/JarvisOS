@@ -170,6 +170,12 @@ public class AgentRuntime {
                         + "Please ask me to try again.";
             } else if (agentCanMutate && (wroteFile || multipleCodeBlocks(text)) && hasCodeFence(text)) {
                 text = stripCodeBlocks(text);
+            } else if (agentCanMutate && mutationSucceeded && !hasCodeFence(text) && isLongProse(text)) {
+                // Headless guarantee for PROSE artifacts (ebooks, documents): the agent saved the work to
+                // files but then pasted the whole body into chat (no fence to strip). The content belongs
+                // in the file, not the chat — collapse to a short confirmation. The file path is in the steps.
+                text = "Done — I've written it to your Jarvis drive. Open the file there to read it "
+                        + "(the full content isn't printed here — this machine runs headless).";
             }
 
             // Honesty guard: an action-capable agent that used tools but landed NO successful action,
@@ -192,6 +198,11 @@ public class AgentRuntime {
     /** True if the reply contains a fenced code block — the signal that it's narrating code in chat. */
     private static boolean hasCodeFence(String text) {
         return text != null && text.contains("```");
+    }
+
+    /** A reply long enough to be a dumped artifact (e.g. an ebook chapter) rather than a status note. */
+    private static boolean isLongProse(String text) {
+        return text != null && text.length() > 2000;
     }
 
     /** True if the reply has 2+ fenced code blocks (≥4 ``` markers) — i.e. it narrated a multi-FILE

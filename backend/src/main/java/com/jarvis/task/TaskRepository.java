@@ -9,5 +9,7 @@ public interface TaskRepository extends JpaRepository<Task, String> {
 
     List<Task> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
+    List<Task> findByStatus(TaskStatus status);
+
     long countByStatus(TaskStatus status);
 }

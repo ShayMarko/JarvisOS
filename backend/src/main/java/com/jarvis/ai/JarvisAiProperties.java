@@ -36,6 +36,8 @@ public class JarvisAiProperties {
      *  and, on failure, the developer is re-dispatched with the errors, then re-verified — up to this
      *  many fix attempts. 0 = off. Shines on a capable model; under-converges on a small local one. */
     private int buildVerifyMaxIters = 2;
+    /** Max author⇄critic revision passes for a book written under Books/. 0 = off. */
+    private int bookReviewMaxIters = 2;
     /** OpenAI (Chat Completions API). Needs an API key. */
     private String openaiApiKey = "";
     private String openaiBaseUrl = "https://api.openai.com/v1";
@@ -44,7 +46,12 @@ public class JarvisAiProperties {
      *  so planning doesn't burn the expensive main model. Per paid provider. */
     private String plannerModelClaude = "claude-3-5-haiku-latest";
     private String plannerModelOpenai = "gpt-4o-mini";
-    private int maxTokens = 1024;
+    /** The Anthropic Model-Router tiers (all yaml-controlled, no longer hard-coded in ModelCatalog):
+     *  HEAVY = {@code model}, STANDARD = this, LIGHT = {@code plannerModelClaude}. */
+    private String claudeStandardModel = "claude-sonnet-4-8";
+    /** Paid-provider completion cap. A CAP, not forced usage — short answers still cost little. Set high
+     *  enough that big "zero-to-hero" file writes don't truncate mid-file (the 1024 default did). */
+    private int maxTokens = 8192;
     /** Max tool-calling iterations per agent run before the runtime gives up. Higher lets an
      *  agent write a whole multi-file project (one write_file per step); simple turns still end
      *  early, so raising the cap costs nothing for them. */

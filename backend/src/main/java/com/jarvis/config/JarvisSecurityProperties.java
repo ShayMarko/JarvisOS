@@ -17,4 +17,11 @@ public class JarvisSecurityProperties {
 
     /** Passphrase used to derive the Secrets Vault key — sourced from {@code jarvis.security.vault-key}. */
     private String vaultKey;
+
+    /**
+     * Optional API token. When set, every {@code /api/**} request must carry it (header
+     * {@code X-Jarvis-Token}, {@code Authorization: Bearer <token>}, or {@code ?token=}). Blank = open
+     * (the default; the server already binds to loopback). Set this before exposing Jarvis off-box.
+     */
+    private String apiToken = "";
 }

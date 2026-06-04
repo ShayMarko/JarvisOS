@@ -37,11 +37,12 @@ public class ModelCatalog {
         models.add(new ModelDescriptor(props.getOllamaModel(), "ollama", true, 0, 0, 3, 900, true));
         // OpenAI — the single configured chat model (needs a key).
         models.add(new ModelDescriptor(props.getOpenaiModel(), "openai", false, 0.00015, 0.0006, 4, 700, openai));
-        // Anthropic — three quality/cost tiers so the router can spend haiku on light work and
-        // opus on heavy reasoning (all need a key).
-        models.add(new ModelDescriptor("claude-haiku-4-8", "anthropic", false, 0.0008, 0.004, 3, 600, anthropic));
-        models.add(new ModelDescriptor("claude-sonnet-4-8", "anthropic", false, 0.003, 0.015, 4, 900, anthropic));
-        models.add(new ModelDescriptor("claude-opus-4-8", "anthropic", false, 0.015, 0.075, 5, 1500, anthropic));
+        // Anthropic — three quality/cost tiers so the router can spend the light model on light work and
+        // the heavy model on heavy reasoning (all need a key). Model IDs are yaml-controlled (no hard-codes):
+        // LIGHT = planner-model-claude, STANDARD = claude-standard-model, HEAVY = model.
+        models.add(new ModelDescriptor(props.getPlannerModelClaude(), "anthropic", false, 0.0008, 0.004, 3, 600, anthropic));
+        models.add(new ModelDescriptor(props.getClaudeStandardModel(), "anthropic", false, 0.003, 0.015, 4, 900, anthropic));
+        models.add(new ModelDescriptor(props.getModel(), "anthropic", false, 0.015, 0.075, 5, 1500, anthropic));
     }
 
     private static boolean notBlank(String s) {

@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.jarvis.discord.DiscordService;
 import com.jarvis.telegram.TelegramService;
 
 /** The Notification Center (spec §8). Other subsystems call {@link #notify} to surface events. */
@@ -18,15 +19,19 @@ public class NotificationService {
 
     private final NotificationRepository repository;
     private final TelegramService telegram;
+    private final DiscordService discord;
 
 
     public Notification notify(String type, String title, String body, String source) {
         Notification saved = repository.save(new Notification(
                 "ntf_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8),
                 type, title, body, source));
-        // Heartbeat to your phone: mirror every notification to Telegram when the bridge is on.
+        // Heartbeat to your phone: mirror every notification to the private Discord channel (and Telegram
+        // if that bridge is on). Both are dormant until configured, so this is a no-op by default.
+        String line = "🔔 " + title + (body == null || body.isBlank() ? "" : "\n" + body);
+        discord.push(line);
         if (telegram.pushNotifications()) {
-            telegram.push("🔔 " + title + (body == null || body.isBlank() ? "" : "\n" + body));
+            telegram.push(line);
         }
         return saved;
     }

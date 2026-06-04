@@ -79,6 +79,18 @@
 			<artifactId>hibernate-community-dialects</artifactId>
 		</dependency>
 
+		<!-- Database connectors (#116): query the user's own MySQL + MongoDB. Drivers only;
+		     dormant until a connection string is stored in the Secrets Vault. -->
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongodb-driver-sync</artifactId>
+		</dependency>
+
 		<!-- Flyway: versioned schema migrations (Flyway owns the schema; Hibernate ddl-auto=none).
 		     flyway-core bundles SQLite support; spring-boot-flyway provides Boot 4's autoconfiguration. -->
 		<dependency>

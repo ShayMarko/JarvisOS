@@ -44,4 +44,20 @@ public class TaskService {
     public long activeCount() {
         return repository.countByStatus(TaskStatus.RUNNING);
     }
+
+    /**
+     * Durable-task reconciliation: tasks left RUNNING from a previous run can't still be executing (their
+     * in-memory work died with the JVM), so mark them FAILED on startup instead of dangling forever.
+     * Returns how many were reconciled.
+     */
+    public int recoverInterrupted() {
+        List<Task> orphans = repository.findByStatus(TaskStatus.RUNNING);
+        for (Task t : orphans) {
+            t.setStatus(TaskStatus.FAILED);
+            t.setSummary("Interrupted by a restart.");
+            t.setFinishedAt(Instant.now());
+            repository.save(t);
+        }
+        return orphans.size();
+    }
 }

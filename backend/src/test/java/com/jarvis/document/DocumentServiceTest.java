@@ -39,6 +39,20 @@ class DocumentServiceTest {
     }
 
     @Test
+    void createsThePdfInsideAGivenFolder() throws Exception {
+        String rel = documents.createPdf("Books/my-book", "my-book", "My Book", "Chapter one prose.");
+        assertThat(rel).isEqualTo("Books/my-book/my-book.pdf");
+        assertThat(Files.exists(root.resolve(rel))).isTrue();
+    }
+
+    @Test
+    void rejectsAFolderThatEscapesTheRoot() {
+        org.assertj.core.api.Assertions.assertThatThrownBy(
+                () -> documents.createPdf("../evil", "x", "X", "y"))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
     void createsARealDocx() throws Exception {
         String rel = documents.createDocx("notes", "Notes", "Hello world.");
         assertThat(rel).isEqualTo("Generated/notes.docx");

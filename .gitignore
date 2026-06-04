@@ -19,3 +19,4 @@ client/dist/
 .idea/
 .vscode/
 *.iml
+backend/config/

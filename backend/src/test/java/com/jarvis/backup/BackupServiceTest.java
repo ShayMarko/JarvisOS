@@ -12,14 +12,18 @@ import org.junit.jupiter.api.io.TempDir;
 
 import com.jarvis.audit.AuditService;
 import com.jarvis.backup.BackupService.BackupInfo;
+import com.jarvis.config.JarvisSecurityProperties;
 import com.jarvis.explorer.FileSystemService;
+import com.jarvis.secrets.VaultCrypto;
 
 class BackupServiceTest {
 
     private BackupService service(Path root) {
         FileSystemService fs = mock(FileSystemService.class);
         when(fs.getRoot()).thenReturn(root);
-        return new BackupService(fs, mock(AuditService.class));
+        JarvisSecurityProperties sec = new JarvisSecurityProperties();
+        sec.setVaultKey("test-vault-key-1234567890");
+        return new BackupService(fs, mock(AuditService.class), new VaultCrypto(sec), new JarvisBackupProperties());
     }
 
     @Test
@@ -43,6 +47,19 @@ class BackupServiceTest {
         assertThat(result).contains("Restored");
         assertThat(Files.readString(root.resolve("notes.txt"))).isEqualTo("hello jarvis");
         assertThat(Files.readString(root.resolve("Docs/plan.md"))).isEqualTo("# plan");
+    }
+
+    @Test
+    void createsAnEncryptedBackup(@TempDir Path root) throws Exception {
+        Files.writeString(root.resolve("secret.txt"), "top secret");
+        BackupService svc = service(root);
+
+        BackupInfo info = svc.createEncrypted();
+        assertThat(info.name()).endsWith(".zip.enc");
+        Path enc = root.resolve(".backups").resolve(info.name());
+        assertThat(Files.exists(enc)).isTrue();
+        // ciphertext, not a zip: must not start with the ZIP magic "PK"
+        assertThat(Files.readString(enc)).doesNotStartWith("PK");
     }
 
     @Test

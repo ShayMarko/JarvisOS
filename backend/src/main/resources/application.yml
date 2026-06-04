@@ -43,6 +43,12 @@ jarvis:
     permission-mode: ${JARVIS_PERMISSION_MODE:ASSISTED}
     # Passphrase to derive the Secrets Vault AES key. Override in production.
     vault-key: ${JARVIS_VAULT_KEY:jarvis-dev-vault-key-change-me}
+    # Optional API token. Blank = open (loopback only). Set before exposing Jarvis off-box; then every
+    # /api/** call must send it (X-Jarvis-Token header, Authorization: Bearer, or ?token=).
+    api-token: ${JARVIS_API_TOKEN:}
+  # Backups (see JarvisBackupProperties). cloud-dir = a folder a cloud client syncs; encrypted backups land there.
+  backup:
+    cloud-dir: ${JARVIS_BACKUP_CLOUD_DIR:}
   monitor:
     # How often the live System Monitor stream (SSE) pushes a snapshot.
     stream-interval-ms: ${JARVIS_MONITOR_INTERVAL:2000}
@@ -50,13 +56,17 @@ jarvis:
   ai:
     provider: ${JARVIS_AI_PROVIDER:ollama}    # mock | claude | ollama | openai (defaults to local Ollama; falls back to mock if down)
     anthropic-api-key: ${ANTHROPIC_API_KEY:}
-    model: ${JARVIS_AI_MODEL:claude-opus-4-8}            # Anthropic model
+    # Anthropic Model-Router tiers — ALL controlled here (ModelCatalog reads these, no hard-coded IDs):
+    model: ${JARVIS_AI_MODEL:claude-opus-4-8}                          # HEAVY tier / default Anthropic model
+    claude-standard-model: ${JARVIS_AI_CLAUDE_STANDARD:claude-sonnet-4-8}  # STANDARD tier
+    planner-model-claude: ${JARVIS_AI_PLANNER_CLAUDE:claude-3-5-haiku-latest}  # LIGHT tier + the cheap planner call
+    planner-model-openai: ${JARVIS_AI_PLANNER_OPENAI:gpt-4o-mini}
     ollama-model: ${JARVIS_AI_OLLAMA_MODEL:qwen2.5-coder:14b}  # local Ollama model (best fit for 16GB M1)
     ollama-timeout-seconds: ${JARVIS_AI_OLLAMA_TIMEOUT:300}  # read timeout per generation (big models are slow)
     ollama-num-predict: ${JARVIS_AI_OLLAMA_NUM_PREDICT:8192}  # local max output tokens (free; must fit whole files)
     openai-api-key: ${OPENAI_API_KEY:}
     openai-model: ${JARVIS_AI_OPENAI_MODEL:gpt-4o-mini}  # OpenAI model
-    max-tokens: 1024
+    max-tokens: 8192        # paid-provider completion CAP (not forced spend) — high enough that big builds don't truncate
     max-steps: 12      # tool-loop iterations per agent run (enough to write a multi-file project)
     # Safety net for PAID providers (Claude/OpenAI): hard cap on tokens/day. 0 = unlimited.
     # Ollama + mock are never metered. Adjustable live in Settings; pause = kill-switch.
@@ -88,11 +98,13 @@ jarvis:
   # exposes its tools to the agent loop. Empty by default — runs fine with none.
   mcp:
     startup-timeout-seconds: 12
-    servers: []
-    #   - name: filesystem
-    #     command: npx
-    #     args: ["-y", "@modelcontextprotocol/server-filesystem", "/Users/shaymarko/Desktop"]
-    #     enabled: true
+    servers:
+      # Playwright browser automation (official MCP). OFF by default — set JARVIS_MCP_PLAYWRIGHT_ENABLED=true
+      # (needs Node/npx; first run downloads the browser). When on, its tools light up via mcp_call.
+      - name: playwright
+        command: npx
+        args: ["-y", "@playwright/mcp@latest", "--headless"]
+        enabled: ${JARVIS_MCP_PLAYWRIGHT_ENABLED:false}
     #   - name: filesystem
     #     command: npx
     #     args: ["-y", "@modelcontextprotocol/server-filesystem", "/Users/shaymarko/Desktop"]
@@ -147,6 +159,29 @@ jarvis:
     max-message-chars: 4000        # Telegram hard-caps at 4096
     idle-poll-ms: 1000             # breather between empty polls
     error-backoff-ms: 3000         # back-off after a poll error
+  # Private Discord control channel (see DiscordProperties) — command Jarvis from your phone. Dormant
+  # until a bot token + channel id are set. Enable MESSAGE CONTENT intent on the bot in the dev portal.
+  discord:
+    enabled: ${JARVIS_DISCORD_ENABLED:true}          # still inert without a token + channel below
+    bot-token: ${JARVIS_DISCORD_BOT_TOKEN:}          # secret — Discord Developer Portal → Bot
+    channel-id: ${JARVIS_DISCORD_CHANNEL_ID:}        # the ONE private channel Jarvis listens/replies in
+    push-notifications: ${JARVIS_DISCORD_PUSH:true}  # mirror Notification Center + daily briefing here
+    max-message-chars: 1900        # Discord hard-caps at 2000
+    reconnect-backoff-ms: 5000
+  # Daily morning briefing pushed to the Discord channel (see JarvisBriefingProperties).
+  briefing:
+    enabled: ${JARVIS_BRIEFING_ENABLED:true}
+    cron: ${JARVIS_BRIEFING_CRON:0 0 8 * * *}   # 08:00 daily (6-field Spring cron)
+    zone: ${JARVIS_BRIEFING_ZONE:}              # blank = server timezone
+    include-system: true
+  # Watchdog / self-healing (see JarvisWatchdogProperties) — alerts the owner when a dependency breaks.
+  watchdog:
+    enabled: ${JARVIS_WATCHDOG_ENABLED:true}
+    check-interval-ms: 120000        # every 2 min
+    check-ollama: true
+    disk-critical-percent: 95
+    ollama-restart-command: ${JARVIS_WATCHDOG_OLLAMA_RESTART:}   # e.g. "brew services restart ollama"; blank = alert only
+    ollama-ping-timeout-ms: 3000
   # Proactive watchers / heartbeat (see JarvisProactiveProperties). Background checks that PROPOSE
   # actions via the Notification Center (also pushed to Telegram if configured) — never act unasked.
   proactive:

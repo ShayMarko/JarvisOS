@@ -18,8 +18,10 @@ public class CreatePdfTool implements Tool {
 
     @Override
     public ToolSpec spec() {
-        return new ToolSpec("create_pdf", "Create a PDF document from a title and body text.",
-                "{\"type\":\"object\",\"properties\":{\"filename\":{\"type\":\"string\"},"
+        return new ToolSpec("create_pdf",
+                "Create a PDF document from a title and body text. Optional 'folder' (Explorer-relative, e.g. "
+                + "'Books/my-book') stores it in that project folder instead of the shared Generated folder.",
+                "{\"type\":\"object\",\"properties\":{\"folder\":{\"type\":\"string\"},\"filename\":{\"type\":\"string\"},"
                 + "\"title\":{\"type\":\"string\"},\"content\":{\"type\":\"string\"}},\"required\":[\"content\"]}");
     }
 
@@ -31,7 +33,8 @@ public class CreatePdfTool implements Tool {
     @Override
     public String execute(String args) {
         try {
-            String path = documents.createPdf(ToolArgs.str(mapper, args, "filename"),
+            String folder = ToolArgs.firstStr(mapper, args, "folder", "dir", "path");
+            String path = documents.createPdf(folder, ToolArgs.str(mapper, args, "filename"),
                     ToolArgs.str(mapper, args, "title"), ToolArgs.str(mapper, args, "content"));
             return "Created " + path;
         } catch (Exception e) {

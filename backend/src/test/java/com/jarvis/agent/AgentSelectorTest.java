@@ -22,6 +22,23 @@ class AgentSelectorTest {
     }
 
     @Test
+    void tradingIntentsRouteToTheTradingAgent() {
+        assertThat(selector().byKeyword("give me a swing trade read on BTCUSDT").slug()).isEqualTo("trading");
+        assertThat(selector().byKeyword("what's the wyckoff structure on the market right now").slug()).isEqualTo("trading");
+    }
+
+    @Test
+    void notionIntentsRouteToTheNotionAgent() {
+        assertThat(selector().byKeyword("design a notion template for habit tracking").slug()).isEqualTo("notion");
+    }
+
+    @Test
+    void bookIntentsRouteToTheAuthorAgent() {
+        assertThat(selector().byKeyword("write me a book about stoicism").slug()).isEqualTo("author");
+        assertThat(selector().byKeyword("format my ebook for kdp").slug()).isEqualTo("author");
+    }
+
+    @Test
     void devWorkflowIntentsRouteToDevflow() {
         assertThat(selector().byKeyword("review the pull request #12 in acme/app").slug()).isEqualTo("devflow");
         assertThat(selector().byKeyword("triage the open github issues").slug()).isEqualTo("devflow");
@@ -50,6 +67,13 @@ class AgentSelectorTest {
         AgentSelector s = selector();
         assertThat(s.resolve("backend", "anything").slug()).isEqualTo("backend");        // valid slug honored
         assertThat(s.resolve("not-a-real-agent", "check cpu").slug()).isEqualTo("system"); // bad slug → keyword
+    }
+
+    @Test
+    void authorAndBookCriticAreRegistered() {
+        AgentRegistry r = new AgentRegistry();
+        assertThat(r.find("author")).isPresent();
+        assertThat(r.find("bookcritic")).isPresent();
     }
 
     @Test
