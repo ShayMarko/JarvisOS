@@ -358,6 +358,23 @@ pre.raw { white-space: pre-wrap; word-break: break-word; font-family: var(--mono
 .tok-tab:hover { color: var(--text); }
 .tok-tab.on { background: rgba(69,214,255,0.14); border-color: rgba(69,214,255,0.4); color: var(--accent); }
 .tok-tab .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* RevenueOS window */
+.roi-verdict { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 13px; border: 1px solid var(--hud-dim); background: rgba(8,16,30,0.5); }
+.roi-verdict.good { border-color: rgba(74,210,149,0.45); background: rgba(74,210,149,0.08); }
+.roi-verdict.bad { border-color: rgba(255,176,96,0.4); background: rgba(255,176,96,0.06); }
+.roi-icon { width: 40px; height: 40px; flex: none; display: grid; place-items: center; border-radius: 50%; font-size: 20px; background: rgba(120,150,190,0.12); }
+.roi-verdict.good .roi-icon { background: rgba(74,210,149,0.2); color: #4ad295; }
+.roi-verdict.bad .roi-icon { background: rgba(255,176,96,0.18); color: #ffb060; }
+.roi-text { flex: 1; min-width: 0; }
+.roi-head { font-size: 15px; color: #dff0ff; font-weight: 600; }
+.roi-sub { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.roi-mult { font-family: var(--mono); font-size: 22px; color: #dff0ff; flex: none; }
+.roi-verdict.good .roi-mult { color: #4ad295; }
+.rev-form { display: flex; gap: 8px; align-items: center; margin-top: 4px; }
+.rev-in { background: rgba(8,16,30,0.6); border: 1px solid var(--hud-dim); color: var(--text); border-radius: 8px; padding: 7px 10px; font-size: 12.5px; font-family: var(--mono); min-width: 0; }
+.rev-in:focus { outline: none; border-color: rgba(69,214,255,0.5); }
+.rev-in.grow { flex: 1; }
 .tok-split { display: flex; gap: 20px; align-items: center; }
 .tok-legend { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 7px; }
 .tok-row { display: flex; align-items: center; gap: 9px; font-size: 12.5px; width: 100%; background: none; border: none; text-align: left; cursor: pointer; padding: 3px 4px; border-radius: 7px; color: var(--text); }

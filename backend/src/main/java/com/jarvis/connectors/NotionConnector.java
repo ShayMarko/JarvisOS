@@ -39,7 +39,9 @@ public class NotionConnector implements Connector {
                 new ConnectorAction("get_page", "Read a page", "Read a page's title {page_id}"),
                 new ConnectorAction("create_page", "Create a page", "Create a page {parent_page_id|database_id, title, content?}"),
                 new ConnectorAction("append_text", "Append text", "Append paragraphs to a page {page_id, text}"),
-                new ConnectorAction("query_database", "Query a database", "List rows in a database {database_id, page_size?}"));
+                new ConnectorAction("query_database", "Query a database", "List rows in a database {database_id, page_size?}"),
+                new ConnectorAction("create_database", "Create a database", "Create a DB under a page {parent_page_id, title, properties}"),
+                new ConnectorAction("add_row", "Add a database row", "Add a row {database_id, properties}"));
     }
 
     @Override
@@ -51,8 +53,41 @@ public class NotionConnector implements Connector {
             case "create_page" -> createPage(a, token);
             case "append_text" -> appendText(a, token);
             case "query_database" -> queryDatabase(a, token);
+            case "create_database" -> createDatabase(a, token);
+            case "add_row" -> addRow(a, token);
             default -> throw new NotFoundException("Unknown Notion action '" + actionId + "'");
         };
+    }
+
+    /** Create a database under a parent page. {@code properties} is a Notion-shaped property schema object. */
+    private String createDatabase(JsonNode a, String token) throws Exception {
+        String parent = require(a, "parent_page_id");
+        String title = a.path("title").asText("");
+        JsonNode props = a.path("properties");
+        if (title.isBlank() || !props.isObject() || props.isEmpty()) {
+            return "Error: provide 'parent_page_id', 'title', and a non-empty 'properties' schema.";
+        }
+        ObjectNode body = mapper.createObjectNode();
+        body.putObject("parent").put("type", "page_id").put("page_id", parent);
+        ArrayNode titleArr = body.putArray("title");
+        titleArr.addObject().putObject("text").put("content", title);
+        body.set("properties", props);
+        JsonNode r = mapper.readTree(post("/v1/databases", body, token));
+        return "Created database '" + title + "': " + r.path("id").asText("(ok)");
+    }
+
+    /** Add a row (page) to a database. {@code properties} is a Notion-shaped property-values object. */
+    private String addRow(JsonNode a, String token) throws Exception {
+        String dbId = require(a, "database_id");
+        JsonNode props = a.path("properties");
+        if (!props.isObject() || props.isEmpty()) {
+            return "Error: provide 'database_id' and a non-empty 'properties' object.";
+        }
+        ObjectNode body = mapper.createObjectNode();
+        body.putObject("parent").put("database_id", dbId);
+        body.set("properties", props);
+        mapper.readTree(post("/v1/pages", body, token));
+        return "Added a row to database " + dbId + ".";
     }
 
     private String search(JsonNode args, String token) throws Exception {

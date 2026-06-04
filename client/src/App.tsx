@@ -259,6 +259,7 @@ export default function App() {
           <button className="hint" onClick={() => openWindow('backups')}>Backups</button>
           <button className="hint" onClick={() => openWindow('plugins')}>Plugins</button>
           <button className="hint" onClick={() => openWindow('tokens')}>Tokens</button>
+          <button className="hint" onClick={() => openWindow('revenue')}>Revenue</button>
           <button className="hint" onClick={() => openWindow('agents')}>Agents</button>
           <button className="hint" onClick={() => setCmdkOpen(true)}>⌘K</button>
         </div>

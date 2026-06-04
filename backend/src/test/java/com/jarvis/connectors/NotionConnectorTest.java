@@ -17,7 +17,19 @@ class NotionConnectorTest {
     @Test
     void exposesReadAndWriteActions() {
         List<String> ids = notion.actions().stream().map(ConnectorAction::id).toList();
-        assertThat(ids).contains("search", "get_page", "create_page", "append_text", "query_database");
+        assertThat(ids).contains("search", "get_page", "create_page", "append_text", "query_database",
+                "create_database", "add_row");
+    }
+
+    @Test
+    void createDatabaseValidatesArgsBeforeNetwork() throws Exception {
+        assertThat(notion.invoke("create_database", "{\"parent_page_id\":\"p\",\"title\":\"Tasks\"}", "tok"))
+                .contains("properties");
+    }
+
+    @Test
+    void addRowValidatesArgsBeforeNetwork() throws Exception {
+        assertThat(notion.invoke("add_row", "{\"database_id\":\"d\"}", "tok")).contains("properties");
     }
 
     @Test

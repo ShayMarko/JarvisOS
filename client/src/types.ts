@@ -4,7 +4,7 @@ export type SphereKind = 'gyro' | 'orbital' | 'halo'
 
 export type WinKind =
   | 'conversation' | 'today' | 'history' | 'settings' | 'agents' | 'logs'
-  | 'files' | 'backups' | 'plugins' | 'tokens' | 'notifications' | 'result' | 'response'
+  | 'files' | 'backups' | 'plugins' | 'tokens' | 'revenue' | 'notifications' | 'result' | 'response'
 
 /** A floating HUD window instance. */
 export interface Win {

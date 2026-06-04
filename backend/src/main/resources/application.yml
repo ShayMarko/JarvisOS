@@ -49,6 +49,10 @@ jarvis:
   # Backups (see JarvisBackupProperties). cloud-dir = a folder a cloud client syncs; encrypted backups land there.
   backup:
     cloud-dir: ${JARVIS_BACKUP_CLOUD_DIR:}
+  # RevenueOS ROI dashboard (see JarvisRevenueProperties).
+  revenue:
+    hourly-rate: ${JARVIS_HOURLY_RATE:50}            # your $/hour — turns saved hours into value
+    monthly-base-cost-usd: ${JARVIS_MONTHLY_BASE_COST:0}  # fixed subscription cost added to measured AI cost
   monitor:
     # How often the live System Monitor stream (SSE) pushes a snapshot.
     stream-interval-ms: ${JARVIS_MONITOR_INTERVAL:2000}

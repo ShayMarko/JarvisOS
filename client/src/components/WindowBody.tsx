@@ -7,6 +7,7 @@ import { LogsWindow } from './windows/LogsWindow'
 import { NotificationsWindow } from './windows/NotificationsWindow'
 import { PluginsWindow } from './windows/PluginsWindow'
 import { ResponseWindow } from './windows/ResponseWindow'
+import { RevenueWindow } from './windows/RevenueWindow'
 import { ResultWindow } from './windows/ResultWindow'
 import { SettingsWindow } from './windows/SettingsWindow'
 import { TodayWindow } from './windows/TodayWindow'
@@ -23,6 +24,7 @@ export function WindowBody({ win }: { win: Win }) {
     case 'backups': return <BackupsWindow />
     case 'plugins': return <PluginsWindow />
     case 'tokens': return <TokensWindow />
+    case 'revenue': return <RevenueWindow />
     case 'settings': return <SettingsWindow />
     case 'notifications': return <NotificationsWindow />
     case 'result': return <ResultWindow payload={win.payload} />

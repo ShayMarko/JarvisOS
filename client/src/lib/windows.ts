@@ -6,10 +6,12 @@ export const SLASH_WINDOW: Record<string, WinKind> = {
   '/agents': 'agents', '/logs': 'logs', '/settings': 'settings',
   '/files': 'files', '/jfiles': 'files', '/backup': 'backups', '/backups': 'backups', '/plugins': 'plugins',
   '/tokens': 'tokens', '/costs': 'tokens',
+  '/revenue': 'revenue', '/roi': 'revenue', '/money': 'revenue',
 }
 
 /** Light NL → window navigation: "open/show/go to the <X> window". UI nav only, not an AI task. */
 const WINDOW_ALIASES: { kind: WinKind; re: RegExp }[] = [
+  { kind: 'revenue', re: /\brevenue\b|\broi\b|\bmoney\b|\bincome\b|\bearnings?\b/ },
   { kind: 'tokens', re: /\btokens?\b|\btoken usage\b|\bcosts?\b/ },
   { kind: 'files', re: /\bfiles?\b|\bexplorer\b/ },
   { kind: 'backups', re: /\bbackups?\b/ },
@@ -39,6 +41,7 @@ export const WIN_META: Record<WinKind, { title: string; subtitle: string; dim: s
   backups: { title: 'Backups', subtitle: 'Snapshot · restore the Explorer', dim: '720×560' },
   plugins: { title: 'Plugins', subtitle: 'Installed · marketplace', dim: '820×620' },
   tokens: { title: 'Token usage', subtitle: 'Spend & tokens per model', dim: '860×640' },
+  revenue: { title: 'RevenueOS', subtitle: 'ROI — does Jarvis out-earn its cost?', dim: '820×640' },
   notifications: { title: 'Notifications', subtitle: 'Recent alerts', dim: '520×520' },
   result: { title: 'Result', subtitle: '', dim: '720×520' },
   response: { title: 'Jarvis', subtitle: 'Response', dim: '660×440' },

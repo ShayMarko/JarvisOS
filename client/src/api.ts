@@ -734,6 +734,35 @@ export function getSettings(): Promise<SettingsView> {
   return req<SettingsView>('/api/settings')
 }
 
+/** RevenueOS ROI snapshot — does Jarvis out-earn its running cost this month? */
+export interface RoiSnapshot {
+  period: string
+  monthlyAiCost: number
+  monthlyBaseCost: number
+  monthlyCost: number
+  revenue: number
+  moneySaved: number
+  hoursSaved: number
+  hoursValue: number
+  valueGenerated: number
+  assetsCreated: number
+  activeExperiments: number
+  roi: number
+  coversCost: boolean
+}
+
+/** GET the month-to-date ROI dashboard. */
+export function getRoi(): Promise<RoiSnapshot> {
+  return req<RoiSnapshot>('/api/revenue/roi')
+}
+
+/** Log a ledger entry (REVENUE/SAVED/HOURS/ASSET/EXPERIMENT) → returns the updated ROI. */
+export function logRevenue(kind: string, amount: number, note?: string): Promise<RoiSnapshot> {
+  return req<RoiSnapshot>('/api/revenue/log', {
+    method: 'POST', headers: jsonHeaders, body: JSON.stringify({ kind, amount, note }),
+  })
+}
+
 /** The user's "About Me" profile (a Markdown doc Jarvis reads into every conversation). */
 export function getProfile(): Promise<{ content: string }> {
   return req<{ content: string }>('/api/profile')
