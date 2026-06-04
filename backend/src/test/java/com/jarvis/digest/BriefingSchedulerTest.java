@@ -11,7 +11,11 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
+import com.jarvis.ai.LanguageModel;
+import com.jarvis.ai.tools.RssTool;
 import com.jarvis.discord.DiscordService;
+import com.jarvis.observability.ObservabilityService;
+import com.jarvis.revenue.RevenueService;
 import com.jarvis.system.SystemMonitorService;
 
 class BriefingSchedulerTest {
@@ -24,7 +28,9 @@ class BriefingSchedulerTest {
                 "cpu", Map.of("systemCpuLoad", 0.25),
                 "memory", Map.of("usedPhysicalBytes", 8_000_000_000L, "totalPhysicalBytes", 16_000_000_000L),
                 "disk", Map.of("totalBytes", 500_000_000_000L, "freeBytes", 100_000_000_000L)));
-        return new BriefingScheduler(new JarvisBriefingProperties(), digest, discord, monitor);
+        return new BriefingScheduler(new JarvisBriefingProperties(), digest, discord, monitor,
+                mock(RevenueService.class), mock(ObservabilityService.class),
+                mock(WeatherService.class), mock(RssTool.class), mock(LanguageModel.class));
     }
 
     @Test
@@ -50,7 +56,9 @@ class BriefingSchedulerTest {
         JarvisBriefingProperties off = new JarvisBriefingProperties();
         off.setEnabled(false);
         DigestService digest = mock(DigestService.class);
-        new BriefingScheduler(off, digest, discord, mock(SystemMonitorService.class)).daily();
+        new BriefingScheduler(off, digest, discord, mock(SystemMonitorService.class),
+                mock(RevenueService.class), mock(ObservabilityService.class),
+                mock(WeatherService.class), mock(RssTool.class), mock(LanguageModel.class)).daily();
         verify(discord, org.mockito.Mockito.never()).push(anyString());
     }
 }

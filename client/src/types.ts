@@ -4,7 +4,8 @@ export type SphereKind = 'gyro' | 'orbital' | 'halo'
 
 export type WinKind =
   | 'conversation' | 'today' | 'history' | 'settings' | 'agents' | 'logs'
-  | 'files' | 'backups' | 'plugins' | 'tokens' | 'revenue' | 'notifications' | 'result' | 'response'
+  | 'files' | 'backups' | 'plugins' | 'tokens' | 'revenue' | 'approvals'
+  | 'connectors' | 'timeline' | 'undo' | 'vision' | 'notifications' | 'result' | 'response'
 
 /** A floating HUD window instance. */
 export interface Win {
@@ -16,6 +17,8 @@ export interface Win {
   x: number
   y: number
   z: number
+  /** True when collapsed to the window dock (hidden from the canvas but still open). */
+  minimized?: boolean
   payload?: unknown
 }
 

@@ -11,6 +11,7 @@ import { ago, gb, isHtmlish, looksLikeRawTool, pct, rate } from './lib/format'
 import { pref } from './lib/prefs'
 import { SR, speak, speakSmart, stopSpeaking, takeLongSpeech, wantsContinue } from './lib/voice'
 import { SLASH_WINDOW, WIN_META, matchWindowOpen } from './lib/windows'
+import { ApprovalActions } from './components/ApprovalActions'
 import { Clock } from './components/Clock'
 import { CommandPalette } from './components/CommandPalette'
 import { FloatingWindow } from './components/FloatingWindow'
@@ -65,6 +66,53 @@ export default function App() {
 
   const focusWin = useCallback((key: string) => setWins((ws) => ws.map((w) => w.key === key ? { ...w, z: ++zRef.current } : w)), [])
   const closeWin = useCallback((key: string) => setWins((ws) => ws.filter((w) => w.key !== key)), [])
+  const minimizeWin = useCallback((key: string) => setWins((ws) => ws.map((w) => w.key === key ? { ...w, minimized: true } : w)), [])
+  const restoreWin = useCallback((key: string) =>
+    setWins((ws) => ws.map((w) => w.key === key ? { ...w, minimized: false, z: ++zRef.current } : w)), [])
+
+  /** Cascade or tile the OPEN (non-minimized) windows — "tidy the desk" without manual dragging. */
+  const arrangeWindows = useCallback((mode: 'cascade' | 'tile') => {
+    setWins((ws) => {
+      const open = ws.filter((w) => !w.minimized)
+      const cols = Math.max(1, Math.ceil(Math.sqrt(open.length)))
+      const rows = Math.max(1, Math.ceil(open.length / cols))
+      const pad = 16
+      const topBar = 96
+      const bottomBar = 150
+      const cw = Math.floor((window.innerWidth - pad * (cols + 1)) / cols)
+      const ch = Math.floor((window.innerHeight - topBar - bottomBar - pad * (rows - 1)) / rows)
+      let i = -1
+      return ws.map((w) => {
+        if (w.minimized) return w
+        i++
+        if (mode === 'cascade') {
+          return { ...w, x: 120 + i * 34, y: 110 + i * 30, z: ++zRef.current }
+        }
+        const c = i % cols
+        const r = Math.floor(i / cols)
+        return {
+          ...w,
+          x: pad + c * (cw + pad),
+          y: topBar + r * (ch + pad),
+          dim: `${Math.max(360, cw)}×${Math.max(220, ch)}`,
+          z: ++zRef.current,
+        }
+      })
+    })
+  }, [])
+
+  /** Alt-Tab style: bring the least-recently-focused open window to the front (cycles through them). */
+  const cycleWindows = useCallback(() => {
+    setWins((ws) => {
+      const open = ws.filter((w) => !w.minimized)
+      if (open.length < 2) {
+        if (open.length === 1) return ws.map((w) => w.key === open[0].key ? { ...w, z: ++zRef.current } : w)
+        return ws
+      }
+      const target = open.reduce((lo, w) => (w.z < lo.z ? w : lo), open[0])   // lowest z = furthest back
+      return ws.map((w) => w.key === target.key ? { ...w, z: ++zRef.current } : w)
+    })
+  }, [])
 
   const openWindow = useCallback((kind: WinKind, payload?: unknown, titleOverride?: string) => {
     const meta = WIN_META[kind]
@@ -84,6 +132,15 @@ export default function App() {
     })
     return singleton ? kind : `${kind}-${zRef.current}`
   }, [])
+
+  // Cmd-` / Ctrl-` — Alt-Tab style window cycling.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === '`') { e.preventDefault(); cycleWindows() }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [cycleWindows])
 
   const updateTurn = useCallback((id: string, patch: Partial<Turn>) =>
     setTurns((ts) => ts.map((t) => t.id === id ? { ...t, ...patch } : t)), [])
@@ -260,6 +317,10 @@ export default function App() {
           <button className="hint" onClick={() => openWindow('plugins')}>Plugins</button>
           <button className="hint" onClick={() => openWindow('tokens')}>Tokens</button>
           <button className="hint" onClick={() => openWindow('revenue')}>Revenue</button>
+          <button className="hint" onClick={() => openWindow('approvals')}>Approvals</button>
+          <button className="hint" onClick={() => openWindow('connectors')}>Connectors</button>
+          <button className="hint" onClick={() => openWindow('timeline')}>Timeline</button>
+          <button className="hint" onClick={() => openWindow('vision')}>Vision</button>
           <button className="hint" onClick={() => openWindow('agents')}>Agents</button>
           <button className="hint" onClick={() => setCmdkOpen(true)}>⌘K</button>
         </div>
@@ -267,14 +328,34 @@ export default function App() {
 
       {/* floating windows */}
       <div className="winlayer">
-        {wins.map((w) => (
-          <FloatingWindow key={w.key} win={w} onClose={() => closeWin(w.key)} onFocus={() => focusWin(w.key)}>
+        {wins.filter((w) => !w.minimized).map((w) => (
+          <FloatingWindow key={w.key} win={w} onClose={() => closeWin(w.key)} onFocus={() => focusWin(w.key)} onMinimize={() => minimizeWin(w.key)}>
             {w.kind === 'conversation'
               ? <ConversationWindow turns={turns} onClear={() => setTurns([])} />
               : <WindowBody win={w} />}
           </FloatingWindow>
         ))}
       </div>
+
+      {/* Window dock — manage/switch open windows without cluttering the canvas (⌘` to cycle). */}
+      {wins.length > 0 && (
+        <div className="wm-dock">
+          {wins.slice().sort((a, b) => a.title.localeCompare(b.title)).map((w) => (
+            <button key={w.key} className={`wm-chip${w.minimized ? ' min' : ''}`}
+              title={w.minimized ? 'Restore' : 'Bring to front'}
+              onClick={() => (w.minimized ? restoreWin(w.key) : focusWin(w.key))}
+              onDoubleClick={() => minimizeWin(w.key)}>
+              {w.title}
+            </button>
+          ))}
+          {wins.filter((w) => !w.minimized).length > 1 && (
+            <span className="wm-tools">
+              <button className="wm-tool" title="Tile windows" onClick={() => arrangeWindows('tile')}>▦</button>
+              <button className="wm-tool" title="Cascade windows" onClick={() => arrangeWindows('cascade')}>▤</button>
+            </span>
+          )}
+        </div>
+      )}
 
       {/* notifications popover (anchored under the bell) */}
       {notifOpen && (
@@ -294,6 +375,12 @@ export default function App() {
                           <span className="body"><div className="ttl">{n.title}</div>{!open && n.body && <div className="sub">{n.body}</div>}</span>
                           <span className="when">{ago(n.createdAt)}</span>
                         </button>
+                        {n.source === 'approval' && n.actionId && (
+                          <ApprovalActions id={n.actionId} onDone={() => {
+                            getNotifications().then(setNotifItems).catch(() => {})
+                            getUnreadCount().then(setUnread).catch(() => {})
+                          }} />
+                        )}
                         {open && (
                           <div className="detail">
                             {n.body && <div>{n.body}</div>}

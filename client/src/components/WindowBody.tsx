@@ -8,6 +8,11 @@ import { NotificationsWindow } from './windows/NotificationsWindow'
 import { PluginsWindow } from './windows/PluginsWindow'
 import { ResponseWindow } from './windows/ResponseWindow'
 import { RevenueWindow } from './windows/RevenueWindow'
+import { ApprovalsWindow } from './windows/ApprovalsWindow'
+import { ConnectorsWindow } from './windows/ConnectorsWindow'
+import { TimelineWindow } from './windows/TimelineWindow'
+import { UndoWindow } from './windows/UndoWindow'
+import { VisionWindow } from './windows/VisionWindow'
 import { ResultWindow } from './windows/ResultWindow'
 import { SettingsWindow } from './windows/SettingsWindow'
 import { TodayWindow } from './windows/TodayWindow'
@@ -25,6 +30,11 @@ export function WindowBody({ win }: { win: Win }) {
     case 'plugins': return <PluginsWindow />
     case 'tokens': return <TokensWindow />
     case 'revenue': return <RevenueWindow />
+    case 'approvals': return <ApprovalsWindow />
+    case 'connectors': return <ConnectorsWindow />
+    case 'timeline': return <TimelineWindow />
+    case 'undo': return <UndoWindow />
+    case 'vision': return <VisionWindow />
     case 'settings': return <SettingsWindow />
     case 'notifications': return <NotificationsWindow />
     case 'result': return <ResultWindow payload={win.payload} />

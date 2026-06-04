@@ -23,9 +23,18 @@ public class NotificationService {
 
 
     public Notification notify(String type, String title, String body, String source) {
+        return notify(type, title, body, source, null);
+    }
+
+    /**
+     * Surface an event, optionally linked to an actionable target ({@code actionId}) — e.g. an
+     * ApprovalRequest id when {@code source == "approval"}, so the client bell can render inline
+     * Approve/Decline buttons. Mirrors to Discord/Telegram like any other notification.
+     */
+    public Notification notify(String type, String title, String body, String source, String actionId) {
         Notification saved = repository.save(new Notification(
                 "ntf_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8),
-                type, title, body, source));
+                type, title, body, source, actionId));
         // Heartbeat to your phone: mirror every notification to the private Discord channel (and Telegram
         // if that bridge is on). Both are dormant until configured, so this is a no-op by default.
         String line = "🔔 " + title + (body == null || body.isBlank() ? "" : "\n" + body);

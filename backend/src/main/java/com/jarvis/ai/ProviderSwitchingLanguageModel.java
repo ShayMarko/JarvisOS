@@ -10,9 +10,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * A {@link LanguageModel} that picks its backing provider live, per call, from
  * {@link JarvisAiProperties#getProvider()}. This lets the UI switch providers at
- * runtime (Settings / the provider toggle) without a restart. When the chosen
- * provider isn't usable (e.g. "claude" with no API key) it falls back to the
- * offline mock so the agent loop never breaks.
+ * runtime (Settings / the provider toggle) without a restart. When a paid
+ * provider call fails transiently (network/rate-limit/overload) it falls back to
+ * the local Ollama model; the offline mock is only the last resort if Ollama is
+ * unreachable too — so the agent loop never breaks. A bad API key (401/403) is
+ * never masked: it surfaces so the user can fix the config.
  */
 public class ProviderSwitchingLanguageModel implements LanguageModel {
 
@@ -75,27 +77,55 @@ public class ProviderSwitchingLanguageModel implements LanguageModel {
         if (metered) {
             budget.checkBeforeCall();   // kill-switch + daily cap (throws if exceeded)
         }
-        try {
-            ModelResponse resp = m.generate(messages, tools, modelOverride);
-            if (metered) {
-                budget.record(resp.promptTokens(), resp.completionTokens());
-            }
-            return resp;
-        } catch (RuntimeException e) {
-            if (m != mock) {
-                // A bad/expired API key (401/403) is a config error the user must SEE —
-                // silently answering with the mock would hide it. Only transient/network
-                // failures (or a local model not being pulled) fall back to the mock.
+        // Try the chosen provider, retrying transient failures (429/529/5xx/network) with exponential
+        // back-off before giving up. A bad API key (401/403) is never retried — it surfaces immediately.
+        RuntimeException lastError = null;
+        int attempts = (m == mock) ? 1 : MAX_ATTEMPTS;
+        for (int attempt = 1; attempt <= attempts; attempt++) {
+            try {
+                ModelResponse resp = m.generate(messages, tools, modelOverride);
+                if (metered) {
+                    budget.record(resp.promptTokens(), resp.completionTokens());
+                }
+                return resp;
+            } catch (RuntimeException e) {
                 if (isAuthError(e)) {
                     throw new IllegalStateException(m.name()
                             + " rejected the request — check the API key (and that the model name is valid).", e);
                 }
-                log.warn("Provider {} failed ({}); falling back to the offline mock.", m.name(), e.getMessage());
+                lastError = e;
+                if (attempt < attempts && isTransient(e)) {
+                    long wait = backoffMs(attempt);
+                    log.warn("Provider {} transient failure ({}); retry {}/{} in {}ms.",
+                            m.name(), e.getMessage(), attempt, attempts - 1, wait);
+                    sleep(wait);
+                    continue;
+                }
+                break;   // non-transient, or retries exhausted → fall back below
+            }
+        }
+        // Retries exhausted (or a non-transient failure). Fall back to LOCAL OLLAMA first — we don't like
+        // the mock; it's only the last resort if Ollama is unreachable too.
+        String why = lastError == null ? "?" : lastError.getMessage();
+        LanguageModel local = ollama();
+        if (m != local && m != mock) {
+            log.warn("Provider {} failed ({}); falling back to local Ollama.", m.name(), why);
+            try {
+                return local.generate(messages, tools, modelOverride);
+            } catch (RuntimeException oe) {
+                log.warn("Ollama fallback also failed ({}); using the offline mock as a last resort.", oe.getMessage());
                 return mock.generate(messages, tools);
             }
-            throw e;
         }
+        if (m == local) {
+            log.warn("Local Ollama failed ({}); using the offline mock as a last resort.", why);
+            return mock.generate(messages, tools);
+        }
+        throw lastError != null ? lastError : new IllegalStateException("Model call failed");
     }
+
+    /** Max attempts (1 try + retries) against a real provider before falling back. */
+    private static final int MAX_ATTEMPTS = 3;
 
     /** True if the failure chain is an HTTP 401/403 (auth/permission) — a config error. */
     private static boolean isAuthError(Throwable e) {
@@ -108,6 +138,35 @@ public class ProviderSwitchingLanguageModel implements LanguageModel {
             }
         }
         return false;
+    }
+
+    /** Transient failure worth retrying: 429 (rate limit), 529 (overloaded), any 5xx, or a network error. */
+    private static boolean isTransient(Throwable e) {
+        for (Throwable t = e; t != null; t = t.getCause()) {
+            if (t instanceof org.springframework.web.client.ResourceAccessException
+                    || t instanceof java.io.IOException) {
+                return true;   // connection reset / timeout / DNS
+            }
+            if (t instanceof org.springframework.web.client.RestClientResponseException http) {
+                int code = http.getStatusCode().value();
+                if (code == 429 || code == 529 || code >= 500) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static long backoffMs(int attempt) {
+        return 400L * (1L << (attempt - 1));   // 400ms, 800ms, …
+    }
+
+    private static void sleep(long ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+        }
     }
 
     @Override

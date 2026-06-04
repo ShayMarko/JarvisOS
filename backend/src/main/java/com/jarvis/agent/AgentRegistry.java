@@ -65,7 +65,8 @@ public class AgentRegistry {
                         "backup_create", "backup_list", "update_profile", "profile_search", "calculate", "run_in_sandbox",
                         "learn_skill", "skill_search", "see_screen", "describe_image",
                         "undo_last", "list_recent_changes", "market_data", "rss_fetch", "timeline_recall",
-                        "create_routine", "kdp_checklist", "revenue_log", "revenue_roi"), "general");
+                        "create_routine", "kdp_checklist", "revenue_log", "revenue_roi", "token_stats",
+                        "create_chart", "generate_image"), "general");
 
         // --- Engineering ---
         add("Product / Spec Agent", "product", "Writes specs, user stories and acceptance criteria.",

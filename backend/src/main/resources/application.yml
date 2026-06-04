@@ -178,6 +178,12 @@ jarvis:
     cron: ${JARVIS_BRIEFING_CRON:0 0 8 * * *}   # 08:00 daily (6-field Spring cron)
     zone: ${JARVIS_BRIEFING_ZONE:}              # blank = server timezone
     include-system: true
+    include-money: true                         # token spend + ROI line
+    ai-summary: true                            # prepend a short "what matters today" summary (free on Ollama)
+    weather-lat: ${JARVIS_BRIEFING_WEATHER_LAT:}   # set both lat+lon to add a keyless weather line (open-meteo)
+    weather-lon: ${JARVIS_BRIEFING_WEATHER_LON:}
+    weather-place: ${JARVIS_BRIEFING_WEATHER_PLACE:}
+    rss-feeds: ${JARVIS_BRIEFING_RSS:}          # comma-separated RSS/Atom feed URLs for the News section
   # Watchdog / self-healing (see JarvisWatchdogProperties) — alerts the owner when a dependency breaks.
   watchdog:
     enabled: ${JARVIS_WATCHDOG_ENABLED:true}

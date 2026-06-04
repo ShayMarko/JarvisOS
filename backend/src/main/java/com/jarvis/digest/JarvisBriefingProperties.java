@@ -1,5 +1,7 @@
 package com.jarvis.digest;
 
+import java.util.List;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import lombok.Getter;
@@ -22,4 +24,19 @@ public class JarvisBriefingProperties {
     private String zone = "";
     /** Append a one-line system-health summary (CPU/RAM/disk). */
     private boolean includeSystem = true;
+
+    /** Append token spend + ROI (does Jarvis out-earn its cost). */
+    private boolean includeMoney = true;
+
+    /** Prepend a short AI "what matters today" summary of the whole briefing (free on Ollama). */
+    private boolean aiSummary = true;
+
+    /** Weather location (keyless open-meteo). Both lat+lon must be set, else the weather line is skipped. */
+    private Double weatherLat;
+    private Double weatherLon;
+    /** Optional human label for the location, e.g. "Tel Aviv". */
+    private String weatherPlace = "";
+
+    /** RSS/Atom feed URLs to pull top headlines from. Empty = no news section. */
+    private List<String> rssFeeds = List.of();
 }

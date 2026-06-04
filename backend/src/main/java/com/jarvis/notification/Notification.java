@@ -31,6 +31,13 @@ public class Notification {
     /** Where it came from: workflow, approval, system, … */
     private String source;
 
+    /**
+     * Optional id of an actionable target this notification is about — e.g. an ApprovalRequest id when
+     * {@code source == "approval"}. Lets the client render inline Approve/Decline buttons. Null otherwise.
+     */
+    @Column(name = "action_id")
+    private String actionId;
+
     @Setter
     private boolean read;
 
@@ -42,11 +49,16 @@ public class Notification {
     }
 
     public Notification(String id, String type, String title, String body, String source) {
+        this(id, type, title, body, source, null);
+    }
+
+    public Notification(String id, String type, String title, String body, String source, String actionId) {
         this.id = id;
         this.type = type;
         this.title = title;
         this.body = body;
         this.source = source;
+        this.actionId = actionId;
         this.read = false;
         this.createdAt = Instant.now();
     }

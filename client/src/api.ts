@@ -338,6 +338,8 @@ export interface NotificationItem {
   title: string
   body: string | null
   source: string | null
+  /** When source === 'approval', the ApprovalRequest id — lets the bell render inline Approve/Decline. */
+  actionId: string | null
   read: boolean
   createdAt: string
 }
@@ -760,6 +762,32 @@ export function getRoi(): Promise<RoiSnapshot> {
 export function logRevenue(kind: string, amount: number, note?: string): Promise<RoiSnapshot> {
   return req<RoiSnapshot>('/api/revenue/log', {
     method: 'POST', headers: jsonHeaders, body: JSON.stringify({ kind, amount, note }),
+  })
+}
+
+/** Episodic timeline — per-day roll-ups of what Jarvis did. */
+export interface TimelineDay {
+  id: string
+  day: string
+  summary: string
+}
+export function getTimeline(days = 7): Promise<TimelineDay[]> {
+  return req<TimelineDay[]>(`/api/timeline?days=${days}`)
+}
+
+/** Undo journal — the recent reversible actions + reverse the most recent one. */
+export interface UndoState { count: number; recent: string[] }
+export function getUndo(): Promise<UndoState> {
+  return req<UndoState>('/api/undo')
+}
+export function undoLast(): Promise<{ result: string; count: number }> {
+  return req<{ result: string; count: number }>('/api/undo', { method: 'POST' })
+}
+
+/** Vision — describe / answer a question about an image file under the Explorer. */
+export function describeImage(path: string, question?: string): Promise<{ result: string }> {
+  return req<{ result: string }>('/api/vision/describe', {
+    method: 'POST', headers: jsonHeaders, body: JSON.stringify({ path, question }),
   })
 }
 
