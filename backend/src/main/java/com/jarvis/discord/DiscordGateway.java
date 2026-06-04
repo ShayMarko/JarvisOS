@@ -170,6 +170,8 @@ public class DiscordGateway {
         JsonNode d = root.path("d");
         if ("READY".equals(t)) {
             selfId = d.path("user").path("id").asText("");
+            String botName = d.path("user").path("username").asText("?");
+            log.info("Discord gateway READY — connected as @{}; listening on channel {}.", botName, props.getChannelId());
         } else if ("MESSAGE_CREATE".equals(t)) {
             onMessage(d);
         }
@@ -180,6 +182,8 @@ public class DiscordGateway {
         String authorId = msg.path("author").path("id").asText("");
         boolean isBot = msg.path("author").path("bot").asBoolean(false);
         String content = msg.path("content").asText("").trim();
+        log.info("Discord MESSAGE_CREATE: channel={} (configured={}), bot={}, contentLen={}",
+                channelId, props.getChannelId(), isBot, content.length());
         if (!channelId.equals(props.getChannelId()) || isBot || authorId.equals(selfId) || content.isEmpty()) {
             return;   // only the owner's messages in the one private channel
         }
