@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.UUID;
+import com.jarvis.common.Ids;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class TaskService {
 
     public Task start(String request) {
         return repository.save(new Task(
-                "task_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8), request));
+                Ids.generate("task"), request));
     }
 
     public void finish(Task task, String agent, String summary) {

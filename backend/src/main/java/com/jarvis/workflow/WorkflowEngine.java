@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import com.jarvis.common.Ids;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +53,7 @@ public class WorkflowEngine {
         List<StepResult> results = new ArrayList<>();
         steps.forEach(s -> results.add(StepResult.pending(s)));
 
-        WorkflowRun run = new WorkflowRun("run_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8),
+        WorkflowRun run = new WorkflowRun(Ids.generate("run"),
                 wf.getId(), trigger, writeJson(results));
         runs.save(run);
         audit.record("WORKFLOW", "run:start", wf.getName(), "OK", "run=" + run.getId() + "; trigger=" + trigger);

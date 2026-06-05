@@ -13,6 +13,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.jarvis.agent.AgentRegistry;
+import com.jarvis.common.Numbers;
 import com.jarvis.connectors.ConnectorRegistry;
 import com.jarvis.task.TaskService;
 import com.sun.management.OperatingSystemMXBean;
@@ -203,6 +204,6 @@ public class SystemMonitorService {
         if (value < 0) {
             return -1; // metric not available on this platform yet
         }
-        return Math.round(value * 1000.0) / 1000.0;
+        return Numbers.round3(value);
     }
 }

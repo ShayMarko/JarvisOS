@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import com.jarvis.common.Ids;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -49,7 +49,7 @@ public class ApprovalService {
     public ApprovalResult submit(String actionType, String title, String description,
                                  RiskLevel risk, String preview, Callable<Object> action) {
         ApprovalRequest req = new ApprovalRequest(
-                "ap_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8),
+                Ids.generate("ap"),
                 actionType, title, description, risk, preview);
 
         ApprovalStatus remembered = this.remembered.get(actionType);

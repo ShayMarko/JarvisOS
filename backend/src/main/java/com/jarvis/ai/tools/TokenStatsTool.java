@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jarvis.ai.ToolSpec;
 import com.jarvis.observability.ObservabilityService;
 import com.jarvis.revenue.RevenueService;
@@ -21,6 +22,7 @@ public class TokenStatsTool implements Tool {
 
     private final ObservabilityService observability;
     private final RevenueService revenue;
+    private final ObjectMapper mapper;
 
     @Override
     public ToolSpec spec() {
@@ -34,18 +36,7 @@ public class TokenStatsTool implements Tool {
 
     @Override
     public String execute(String argumentsJson) {
-        int limit = 200;
-        // ObjectMapper-free tiny parse: only one optional integer field; default if absent/garbled.
-        if (argumentsJson != null && argumentsJson.contains("limit")) {
-            String digits = argumentsJson.replaceAll("[^0-9]", "");
-            if (!digits.isBlank()) {
-                try {
-                    limit = Math.max(1, Math.min(2000, Integer.parseInt(digits)));
-                } catch (NumberFormatException ignored) {
-                    limit = 200;
-                }
-            }
-        }
+        int limit = Math.max(1, Math.min(2000, ToolArgs.intVal(mapper, argumentsJson, "limit", 200)));
 
         Map<String, Object> cost = observability.costSummary(limit);
         Map<String, Object> roi = revenue.roi();

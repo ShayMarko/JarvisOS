@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import com.jarvis.common.Ids;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -80,13 +80,13 @@ public class KnowledgeBaseService {
         deleteBySource(source); // re-index cleanly
 
         List<String> parts = chunk(content);
-        String docId = "doc_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8);
+        String docId = Ids.generate("doc");
         KbDocument doc = documents.save(new KbDocument(docId, source, title, parts.size()));
 
         List<KbChunk> toSave = new ArrayList<>();
         for (int i = 0; i < parts.size(); i++) {
             float[] vec = embedder.embed(parts.get(i));
-            toSave.add(new KbChunk("chk_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8),
+            toSave.add(new KbChunk(Ids.generate("chk"),
                     docId, i, parts.get(i), writeVec(vec)));
         }
         chunks.saveAll(toSave);

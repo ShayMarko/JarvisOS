@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.jarvis.common.Json;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -46,7 +47,7 @@ public class NotionConnector implements Connector {
 
     @Override
     public String invoke(String actionId, String argumentsJson, String token) throws Exception {
-        JsonNode a = mapper.readTree(argumentsJson == null || argumentsJson.isBlank() ? "{}" : argumentsJson);
+        JsonNode a = Json.read(mapper, argumentsJson);
         return switch (actionId) {
             case "search" -> search(a, token);
             case "get_page" -> getPage(a, token);

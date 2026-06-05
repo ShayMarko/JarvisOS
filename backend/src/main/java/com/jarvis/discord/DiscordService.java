@@ -17,10 +17,10 @@ public class DiscordService {
 
     private static final Logger log = LoggerFactory.getLogger(DiscordService.class);
 
-    private final DiscordProperties props;
+    private final JarvisDiscordProperties props;
     private final RestClient http;
 
-    public DiscordService(DiscordProperties props) {
+    public DiscordService(JarvisDiscordProperties props) {
         this.props = props;
         this.http = RestClient.builder().baseUrl(props.getApiBaseUrl()).build();
     }

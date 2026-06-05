@@ -6,7 +6,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import com.jarvis.common.Ids;
+import com.jarvis.common.Numbers;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class ObservabilityService {
                                  String answer, String status, int promptTokens, int completionTokens,
                                  double cost, long durationMs, String stepsJson) {
         return repository.save(new AgentRunRecord(
-                "arun_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8),
+                Ids.generate("arun"),
                 taskId, sessionId, agent, model, request, answer, status,
                 promptTokens, completionTokens, cost, durationMs, stepsJson));
     }
@@ -58,7 +59,7 @@ public class ObservabilityService {
         out.put("promptTokens", promptTokens);
         out.put("completionTokens", completionTokens);
         out.put("totalTokens", promptTokens + completionTokens);
-        out.put("totalCost", Math.round(cost * 1e6) / 1e6);
+        out.put("totalCost", Numbers.round6(cost));
         out.put("costByModel", byModel);
         out.put("runsByAgent", byAgent);
         return out;
@@ -125,7 +126,7 @@ public class ObservabilityService {
             m.put("promptTokens", t[0]);
             m.put("completionTokens", t[1]);
             m.put("totalTokens", t[0] + t[1]);
-            m.put("cost", Math.round(perProviderCost.get(provider) * 1e6) / 1e6);
+            m.put("cost", Numbers.round6(perProviderCost.get(provider)));
             providers.add(m);
         }
 
@@ -142,7 +143,7 @@ public class ObservabilityService {
             p.put("provider", provider);
             p.put("model", r.getModel());
             p.put("tokens", r.getPromptTokens() + r.getCompletionTokens());
-            p.put("cost", Math.round(r.getCost() * 1e6) / 1e6);
+            p.put("cost", Numbers.round6(r.getCost()));
             timeline.add(p);
         }
 
@@ -151,7 +152,7 @@ public class ObservabilityService {
         out.put("promptTokens", prompt);
         out.put("completionTokens", completion);
         out.put("totalTokens", prompt + completion);
-        out.put("totalCost", Math.round(cost * 1e6) / 1e6);
+        out.put("totalCost", Numbers.round6(cost));
         out.put("providers", providers);
         out.put("timeline", timeline);
         return out;

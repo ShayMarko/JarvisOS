@@ -19,7 +19,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @ConfigurationProperties(prefix = "jarvis.oauth")
-public class OAuthProperties {
+public class JarvisOAuthProperties {
 
     /** Base URL Jarvis is reachable at, used to build the redirect URI. */
     private String baseUrl = "http://localhost:8088";

@@ -47,7 +47,7 @@ public class CreateChartTool implements Tool {
     @Override
     public String execute(String argumentsJson) {
         try {
-            JsonNode root = mapper.readTree(argumentsJson == null || argumentsJson.isBlank() ? "{}" : argumentsJson);
+            JsonNode root = ToolArgs.root(mapper, argumentsJson);
             String type = text(root, "type", "bar");
             String title = text(root, "title", "");
             String filename = text(root, "filename", title.isBlank() ? "chart" : title);

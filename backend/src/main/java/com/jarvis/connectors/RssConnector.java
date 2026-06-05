@@ -14,6 +14,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.jarvis.common.Json;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jarvis.error.Exceptions.NotFoundException;
 
@@ -48,7 +49,7 @@ public class RssConnector implements Connector {
         if (!"feed".equals(actionId)) {
             throw new NotFoundException("Unknown RSS action '" + actionId + "'");
         }
-        JsonNode args = mapper.readTree(argumentsJson == null || argumentsJson.isBlank() ? "{}" : argumentsJson);
+        JsonNode args = Json.read(mapper, argumentsJson);
         String url = args.path("url").asText("");
         int limit = args.path("limit").asInt(8);
         if (url.isBlank()) {

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import com.jarvis.common.Ids;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -57,7 +57,7 @@ public class TimelineService {
             return repository.save(existing);
         }
         return repository.save(new TimelineEntry(
-                "tl_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8), day.toString(), summary));
+                Ids.generate("tl"), day.toString(), summary));
     }
 
     private String summarize(LocalDate day) {

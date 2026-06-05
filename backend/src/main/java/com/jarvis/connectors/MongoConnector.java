@@ -7,6 +7,7 @@ import org.bson.Document;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.jarvis.common.Json;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jarvis.error.Exceptions.NotFoundException;
 import com.mongodb.ConnectionString;
@@ -47,7 +48,7 @@ public class MongoConnector implements Connector {
 
     @Override
     public String invoke(String actionId, String argumentsJson, String uri) throws Exception {
-        JsonNode a = mapper.readTree(argumentsJson == null || argumentsJson.isBlank() ? "{}" : argumentsJson);
+        JsonNode a = Json.read(mapper, argumentsJson);
         ConnectionString cs = new ConnectionString(uri);
         String dbName = a.path("database").asText(cs.getDatabase() == null ? "" : cs.getDatabase());
         if (dbName.isBlank()) {

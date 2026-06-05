@@ -12,6 +12,7 @@ import com.jarvis.ai.ChatMessage;
 import com.jarvis.ai.LanguageModel;
 import com.jarvis.ai.ModelResponse;
 import com.jarvis.ai.tools.RssTool;
+import com.jarvis.common.Numbers;
 import com.jarvis.discord.DiscordService;
 import com.jarvis.observability.ObservabilityService;
 import com.jarvis.revenue.RevenueService;
@@ -189,6 +190,6 @@ public class BriefingScheduler {
     }
 
     private static long gb(long bytes) {
-        return Math.round(bytes / 1_000_000_000.0);
+        return Numbers.toGb(bytes);
     }
 }

@@ -3,6 +3,7 @@ package com.jarvis.ai.tools;
 import java.io.ByteArrayInputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
+import com.jarvis.common.Http;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
@@ -29,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RssTool implements Tool {
 
-    private static final HttpClient HTTP = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(8)).build();
+    private static final HttpClient HTTP = Http.client(8);
 
     private final ObjectMapper mapper;
 

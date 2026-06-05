@@ -18,21 +18,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * Thin Telegram Bot API client — the "mouth" that lets you reach a headless Jarvis from your phone.
  * Send replies, push proactive notifications, and long-poll for inbound messages. All calls go to
  * api.telegram.org over HTTPS (no inbound port opened on the Mac), so it's safe for a closet machine.
- * Inert unless {@link TelegramProperties} has a bot token.
+ * Inert unless {@link JarvisTelegramProperties} has a bot token.
  */
 @Service
 public class TelegramService {
 
     private static final Logger log = LoggerFactory.getLogger(TelegramService.class);
 
-    private final TelegramProperties props;
+    private final JarvisTelegramProperties props;
     private final ObjectMapper mapper;
     private final RestClient http;
 
     /** One inbound message: which Telegram update it was, who sent it, and the text. */
     public record Update(long updateId, String chatId, String text) {}
 
-    public TelegramService(TelegramProperties props, ObjectMapper mapper) {
+    public TelegramService(JarvisTelegramProperties props, ObjectMapper mapper) {
         this.props = props;
         this.mapper = mapper;
         SimpleClientHttpRequestFactory rf = new SimpleClientHttpRequestFactory();

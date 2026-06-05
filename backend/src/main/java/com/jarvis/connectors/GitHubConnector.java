@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.jarvis.common.Json;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jarvis.error.Exceptions.NotFoundException;
 
@@ -50,7 +51,7 @@ public class GitHubConnector implements Connector {
 
     @Override
     public String invoke(String actionId, String argumentsJson, String token) throws Exception {
-        JsonNode a = mapper.readTree(argumentsJson == null || argumentsJson.isBlank() ? "{}" : argumentsJson);
+        JsonNode a = Json.read(mapper, argumentsJson);
         return switch (actionId) {
             case "list_repos" -> listRepos(token);
             case "open_issues" -> openIssues(token);

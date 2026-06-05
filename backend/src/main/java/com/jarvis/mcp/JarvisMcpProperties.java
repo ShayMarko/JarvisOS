@@ -17,7 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @ConfigurationProperties(prefix = "jarvis.mcp")
-public class McpProperties {
+public class JarvisMcpProperties {
 
     private List<Server> servers = new ArrayList<>();
 

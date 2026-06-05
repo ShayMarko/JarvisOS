@@ -9,7 +9,7 @@ class DiscordServiceTest {
 
     @Test
     void inertAndSafeWithoutAToken() {
-        DiscordService d = new DiscordService(new DiscordProperties());
+        DiscordService d = new DiscordService(new JarvisDiscordProperties());
         assertThat(d.active()).isFalse();
         assertThat(d.pushNotifications()).isFalse();
         // no token → no network, no throw
@@ -18,7 +18,7 @@ class DiscordServiceTest {
 
     @Test
     void activatesOnlyWithEnabledPlusToken_andPushNeedsAChannel() {
-        DiscordProperties p = new DiscordProperties();
+        JarvisDiscordProperties p = new JarvisDiscordProperties();
         p.setBotToken("tok");                       // token but not enabled
         assertThat(new DiscordService(p).active()).isFalse();
 

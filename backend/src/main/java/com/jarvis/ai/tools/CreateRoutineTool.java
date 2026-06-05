@@ -2,7 +2,7 @@ package com.jarvis.ai.tools;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import com.jarvis.common.Ids;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -68,7 +68,7 @@ public class CreateRoutineTool implements Tool {
             name = "Routine: " + (task.length() > 40 ? task.substring(0, 40) + "…" : task);
         }
         WorkflowStep step = new WorkflowStep(
-                "st_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8),
+                Ids.generate("st"),
                 "Run task", StepType.BRAIN, Map.of("prompt", task), 1);
         WorkflowDraft draft = new WorkflowDraft(name, "Auto-created routine.", TriggerType.SCHEDULE, cron, true, List.of(step));
         try {

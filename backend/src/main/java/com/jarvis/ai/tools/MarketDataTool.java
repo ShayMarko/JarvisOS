@@ -3,6 +3,7 @@ package com.jarvis.ai.tools;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
+import com.jarvis.common.Http;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
@@ -25,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MarketDataTool implements Tool {
 
-    private static final HttpClient HTTP = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(8)).build();
+    private static final HttpClient HTTP = Http.client(8);
     private static final String BASE = "https://api.binance.com";
 
     private final ObjectMapper mapper;

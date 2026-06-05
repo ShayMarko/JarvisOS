@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import com.jarvis.common.Numbers;
 import com.jarvis.config.JarvisFileSystemProperties;
 import com.jarvis.notification.NotificationService;
 import com.jarvis.system.SystemMonitorService;
@@ -119,7 +120,7 @@ public class ProactiveWatcherService {
     }
 
     private static long gb(long bytes) {
-        return Math.round(bytes / 1_000_000_000.0);
+        return Numbers.toGb(bytes);
     }
 
     private static Path expandHome(String raw) {

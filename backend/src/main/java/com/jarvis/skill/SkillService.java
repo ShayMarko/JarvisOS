@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
+import com.jarvis.common.Ids;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class SkillService {
     public Skill learn(String name, String description, String instructions) {
         Skill s = repository.findByNameIgnoreCase(name.trim()).orElseGet(Skill::new);
         if (s.getId() == null) {
-            s.setId("skl_" + UUID.randomUUID().toString().replace("-", "").substring(0, 10));
+            s.setId(Ids.generate("skl", 10));
             s.setCreatedAt(Instant.now());
             s.setName(name.trim());
         }

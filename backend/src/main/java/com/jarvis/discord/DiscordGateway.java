@@ -38,7 +38,7 @@ public class DiscordGateway {
 
     private static final Logger log = LoggerFactory.getLogger(DiscordGateway.class);
 
-    private final DiscordProperties props;
+    private final JarvisDiscordProperties props;
     private final DiscordService discord;
     private final CommandEngine commandEngine;
     private final ObjectMapper mapper;

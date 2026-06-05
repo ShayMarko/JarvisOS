@@ -3,7 +3,7 @@ package com.jarvis.secrets;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
+import com.jarvis.common.Ids;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +34,7 @@ public class SecretsVaultService {
         int hintLen = limits.getSecretHintLength();
         String hint = value.length() <= hintLen ? "" : value.substring(value.length() - hintLen);
         Secret secret = new Secret(
-                "sec_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8),
+                Ids.generate("sec"),
                 name, connector, crypto.encrypt(value), hint,
                 scopes == null ? "" : String.join(",", scopes));
         Secret saved = repository.save(secret);

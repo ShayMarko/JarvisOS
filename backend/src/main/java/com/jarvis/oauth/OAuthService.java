@@ -36,7 +36,7 @@ public class OAuthService {
     private static final Logger log = LoggerFactory.getLogger(OAuthService.class);
     private static final long EXPIRY_SKEW_SECONDS = 60;
 
-    private final OAuthProperties props;
+    private final JarvisOAuthProperties props;
     private final SecretsVaultService vault;
     private final ObjectMapper mapper;
     private final RestClient http = RestClient.create();
@@ -54,7 +54,7 @@ public class OAuthService {
 
     /** Build the provider's consent URL the user opens to grant access. */
     public String authorizeUrl(String provider, String state) {
-        OAuthProperties.Provider p = require(provider);
+        JarvisOAuthProperties.Provider p = require(provider);
         return UriComponentsBuilder.fromUriString(p.getAuthUrl())
                 .queryParam("client_id", p.getClientId())
                 .queryParam("redirect_uri", redirectUri(provider, p))
@@ -68,7 +68,7 @@ public class OAuthService {
 
     /** Exchange an authorization code for tokens and store them. */
     public void exchangeCode(String provider, String code) {
-        OAuthProperties.Provider p = require(provider);
+        JarvisOAuthProperties.Provider p = require(provider);
         MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
         form.add("grant_type", "authorization_code");
         form.add("code", code);
@@ -93,7 +93,7 @@ public class OAuthService {
         if (bundle.refreshToken() == null || bundle.refreshToken().isBlank()) {
             throw new ConflictException("'" + provider + "' access token expired and no refresh token — re-authorize via /oauth.");
         }
-        OAuthProperties.Provider p = require(provider);
+        JarvisOAuthProperties.Provider p = require(provider);
         MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
         form.add("grant_type", "refresh_token");
         form.add("refresh_token", bundle.refreshToken());
@@ -104,7 +104,7 @@ public class OAuthService {
         return refreshed.accessToken();
     }
 
-    private TokenBundle postForTokens(OAuthProperties.Provider p, MultiValueMap<String, String> form, String fallbackRefresh) {
+    private TokenBundle postForTokens(JarvisOAuthProperties.Provider p, MultiValueMap<String, String> form, String fallbackRefresh) {
         String raw = http.post().uri(p.getTokenUrl())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .accept(MediaType.APPLICATION_JSON)
@@ -155,15 +155,15 @@ public class OAuthService {
         }
     }
 
-    private String redirectUri(String provider, OAuthProperties.Provider p) {
+    private String redirectUri(String provider, JarvisOAuthProperties.Provider p) {
         if (p.getRedirectUri() != null && !p.getRedirectUri().isBlank()) {
             return p.getRedirectUri();
         }
         return props.getBaseUrl() + "/api/oauth/" + provider + "/callback";
     }
 
-    private OAuthProperties.Provider require(String provider) {
-        OAuthProperties.Provider p = props.getProviders().get(provider);
+    private JarvisOAuthProperties.Provider require(String provider) {
+        JarvisOAuthProperties.Provider p = props.getProviders().get(provider);
         if (p == null) {
             throw new NotFoundException("No OAuth provider '" + provider + "' configured (jarvis.oauth.providers).");
         }

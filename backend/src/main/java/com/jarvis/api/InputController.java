@@ -3,8 +3,6 @@ package com.jarvis.api;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +15,7 @@ import com.jarvis.command.CommandEngine;
 import com.jarvis.command.CommandResult;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * The single cognitive door (spec §4 "Input Router"). All user input — slash
@@ -30,9 +29,8 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/input")
 @RequiredArgsConstructor
+@Slf4j
 public class InputController {
-
-    private static final Logger log = LoggerFactory.getLogger(InputController.class);
 
     private final CommandEngine engine;
     private final ObjectMapper mapper;

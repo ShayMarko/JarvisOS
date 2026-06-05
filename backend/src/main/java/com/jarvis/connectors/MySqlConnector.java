@@ -11,6 +11,7 @@ import java.util.Set;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.jarvis.common.Json;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jarvis.error.Exceptions.NotFoundException;
 
@@ -47,7 +48,7 @@ public class MySqlConnector implements Connector {
 
     @Override
     public String invoke(String actionId, String argumentsJson, String url) throws Exception {
-        JsonNode a = mapper.readTree(argumentsJson == null || argumentsJson.isBlank() ? "{}" : argumentsJson);
+        JsonNode a = Json.read(mapper, argumentsJson);
         return switch (actionId) {
             case "list_tables" -> runRead(url, "SHOW TABLES", MAX_ROWS);
             case "query" -> query(a, url);

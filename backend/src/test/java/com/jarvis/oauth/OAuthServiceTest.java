@@ -17,8 +17,8 @@ class OAuthServiceTest {
     private final ObjectMapper mapper = new ObjectMapper();
 
     private OAuthService service() {
-        OAuthProperties props = new OAuthProperties();
-        OAuthProperties.Provider google = new OAuthProperties.Provider();
+        JarvisOAuthProperties props = new JarvisOAuthProperties();
+        JarvisOAuthProperties.Provider google = new JarvisOAuthProperties.Provider();
         google.setAuthUrl("https://accounts.google.com/o/oauth2/v2/auth");
         google.setTokenUrl("https://oauth2.googleapis.com/token");
         google.setClientId("client-123");

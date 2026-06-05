@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jarvis.ai.ToolSpec;
 import com.jarvis.ai.VisionService;
+import com.jarvis.common.MimeTypes;
 import com.jarvis.explorer.FileSystemService;
 
 import lombok.RequiredArgsConstructor;
@@ -40,17 +41,9 @@ public class DescribeImageTool implements Tool {
         try {
             Path p = fs.resolveExisting(path);
             byte[] bytes = Files.readAllBytes(p);
-            return vision.describe(bytes, mimeOf(p.getFileName().toString()), question);
+            return vision.describe(bytes, MimeTypes.of(p.getFileName().toString()), question);
         } catch (Exception e) {
             return "Error reading image: " + e.getMessage();
         }
-    }
-
-    static String mimeOf(String name) {
-        String n = name.toLowerCase();
-        if (n.endsWith(".jpg") || n.endsWith(".jpeg")) return "image/jpeg";
-        if (n.endsWith(".gif")) return "image/gif";
-        if (n.endsWith(".webp")) return "image/webp";
-        return "image/png";
     }
 }

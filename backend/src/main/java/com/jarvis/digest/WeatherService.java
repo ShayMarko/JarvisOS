@@ -2,6 +2,7 @@ package com.jarvis.digest;
 
 import java.net.URI;
 import java.net.http.HttpClient;
+import com.jarvis.common.Http;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
@@ -22,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class WeatherService {
 
-    private static final HttpClient HTTP = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(6)).build();
+    private static final HttpClient HTTP = Http.client(6);
 
     private final ObjectMapper mapper;
 

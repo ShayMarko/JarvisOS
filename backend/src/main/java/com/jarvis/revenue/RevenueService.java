@@ -6,7 +6,8 @@ import java.time.ZoneId;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import com.jarvis.common.Ids;
+import com.jarvis.common.Numbers;
 
 import org.springframework.stereotype.Service;
 
@@ -31,7 +32,7 @@ public class RevenueService {
     /** Log a ledger entry (income, savings, hours, an asset, or an experiment). */
     public RevenueEntry log(RevenueKind kind, double amount, String note) {
         return ledger.save(new RevenueEntry(
-                "rev_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8), kind, amount, note));
+                Ids.generate("rev"), kind, amount, note));
     }
 
     /** This month's ROI snapshot for the dashboard. */
@@ -85,6 +86,6 @@ public class RevenueService {
     }
 
     private static double round(double v) {
-        return Math.round(v * 100.0) / 100.0;
+        return Numbers.round2(v);
     }
 }

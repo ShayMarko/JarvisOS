@@ -2,6 +2,7 @@ package com.jarvis.ai.tools;
 
 import java.net.URI;
 import java.net.http.HttpClient;
+import com.jarvis.common.Http;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
@@ -26,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class GenerateImageTool implements Tool {
 
-    private static final HttpClient HTTP = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
+    private static final HttpClient HTTP = Http.client(10);
     private static final String ENDPOINT = "https://api.openai.com/v1/images/generations";
 
     private final JarvisAiProperties props;
@@ -56,7 +57,7 @@ public class GenerateImageTool implements Tool {
                     + "(jarvis.ai.openai-api-key), then try again.";
         }
         try {
-            JsonNode root = mapper.readTree(argumentsJson == null || argumentsJson.isBlank() ? "{}" : argumentsJson);
+            JsonNode root = ToolArgs.root(mapper, argumentsJson);
             String prompt = text(root, "prompt", "");
             if (prompt.isBlank()) {
                 return "Provide a 'prompt' describing the image to generate.";

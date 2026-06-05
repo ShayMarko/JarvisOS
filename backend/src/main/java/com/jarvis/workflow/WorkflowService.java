@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.UUID;
+import com.jarvis.common.Ids;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -36,7 +36,7 @@ public class WorkflowService {
 
     public WorkflowView create(WorkflowDraft draft) {
         Workflow wf = new Workflow(
-                "wf_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8),
+                Ids.generate("wf"),
                 draft.name(), draft.description(),
                 draft.triggerType() != null ? draft.triggerType() : TriggerType.MANUAL,
                 draft.cron(), draft.enabled() == null || draft.enabled(),

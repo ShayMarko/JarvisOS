@@ -9,13 +9,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 class TelegramServiceTest {
 
-    private TelegramService svc(TelegramProperties p) {
+    private TelegramService svc(JarvisTelegramProperties p) {
         return new TelegramService(p, new ObjectMapper());
     }
 
     @Test
     void inertWithoutAToken() {
-        TelegramProperties p = new TelegramProperties();
+        JarvisTelegramProperties p = new JarvisTelegramProperties();
         p.setEnabled(true);                 // enabled but no token → still inert
         TelegramService s = svc(p);
         assertThat(s.active()).isFalse();
@@ -26,7 +26,7 @@ class TelegramServiceTest {
 
     @Test
     void activeOnlyWhenEnabledAndTokenPresent() {
-        TelegramProperties p = new TelegramProperties();
+        JarvisTelegramProperties p = new JarvisTelegramProperties();
         p.setBotToken("123:abc");
         assertThat(svc(p).active()).isFalse();   // token but not enabled
         p.setEnabled(true);

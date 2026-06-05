@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.jarvis.common.Json;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jarvis.error.Exceptions.NotFoundException;
 
@@ -60,7 +61,7 @@ public class SlackConnector implements Connector {
     }
 
     private String postMessage(String argsJson, String token) throws Exception {
-        JsonNode args = mapper.readTree(argsJson == null || argsJson.isBlank() ? "{}" : argsJson);
+        JsonNode args = Json.read(mapper, argsJson);
         String channel = args.path("channel").asText("");
         String text = args.path("text").asText("");
         JsonNode root = mapper.readTree(client.post()

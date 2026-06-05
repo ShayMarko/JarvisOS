@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.UUID;
+import com.jarvis.common.Ids;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,7 +49,7 @@ public class MemoryService {
     public Memory create(MemoryDraft draft) {
         Instant now = Instant.now();
         Memory m = new Memory();
-        m.setId("mem_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8));
+        m.setId(Ids.generate("mem"));
         m.setCategory(draft.category());
         m.setTitle(draft.title());
         m.setContent(draft.content());

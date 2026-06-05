@@ -34,7 +34,7 @@ public class McpManager {
 
     private static final Logger log = LoggerFactory.getLogger(McpManager.class);
 
-    private final McpProperties props;
+    private final JarvisMcpProperties props;
     private final ObjectMapper mapper;
 
     private final Map<String, McpClient> clients = new LinkedHashMap<>();
@@ -43,7 +43,7 @@ public class McpManager {
 
     @PostConstruct
     void connectAll() {
-        for (McpProperties.Server server : props.getServers()) {
+        for (JarvisMcpProperties.Server server : props.getServers()) {
             if (!server.isEnabled() || server.getName() == null || server.getCommand() == null) {
                 continue;
             }
@@ -61,7 +61,7 @@ public class McpManager {
         }
     }
 
-    private void connect(McpProperties.Server server) throws Exception {
+    private void connect(JarvisMcpProperties.Server server) throws Exception {
         List<String> cmd = new java.util.ArrayList<>();
         cmd.add(server.getCommand());
         cmd.addAll(server.getArgs());

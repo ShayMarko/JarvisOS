@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @ConfigurationProperties(prefix = "jarvis.telegram")
-public class TelegramProperties {
+public class JarvisTelegramProperties {
 
     /** Master switch. Even when true, the bridge stays off unless a botToken is present. */
     private boolean enabled = false;

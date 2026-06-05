@@ -3,7 +3,7 @@ package com.jarvis.notification;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
-import java.util.UUID;
+import com.jarvis.common.Ids;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class NotificationService {
      */
     public Notification notify(String type, String title, String body, String source, String actionId) {
         Notification saved = repository.save(new Notification(
-                "ntf_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8),
+                Ids.generate("ntf"),
                 type, title, body, source, actionId));
         // Heartbeat to your phone: mirror every notification to the private Discord channel (and Telegram
         // if that bridge is on). Both are dormant until configured, so this is a no-op by default.

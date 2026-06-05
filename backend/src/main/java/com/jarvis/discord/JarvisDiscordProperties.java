@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @ConfigurationProperties(prefix = "jarvis.discord")
-public class DiscordProperties {
+public class JarvisDiscordProperties {
 
     /** Master switch. Even when true, the gateway stays off unless a botToken + channelId are present. */
     private boolean enabled = false;

@@ -98,7 +98,7 @@ jarvis:
     risk-rules: []
     #   - pattern: "\\bgit\\s+push\\s+--force\\b"
     #     level: HIGH
-  # MCP servers (see McpProperties). Jarvis speaks JSON-RPC over stdio to each and
+  # MCP servers (see JarvisMcpProperties). Jarvis speaks JSON-RPC over stdio to each and
   # exposes its tools to the agent loop. Empty by default — runs fine with none.
   mcp:
     startup-timeout-seconds: 12
@@ -113,7 +113,7 @@ jarvis:
     #     command: npx
     #     args: ["-y", "@modelcontextprotocol/server-filesystem", "/Users/shaymarko/Desktop"]
     #     enabled: true
-  # OAuth providers (see OAuthProperties). Tokens are stored encrypted in the vault
+  # OAuth providers (see JarvisOAuthProperties). Tokens are stored encrypted in the vault
   # and auto-refreshed. Empty by default; add a provider's client id/secret to enable.
   oauth:
     base-url: ${JARVIS_BASE_URL:http://localhost:8088}
@@ -147,7 +147,7 @@ jarvis:
     enabled: ${JARVIS_PLUGINS_ENABLED:true}
     dir: ${JARVIS_PLUGINS_DIR:}          # blank ⇒ <jarvisRoot>/Plugins
     catalog: ${JARVIS_PLUGINS_CATALOG:}  # blank ⇒ <dir>/catalog.json
-  # Optional Telegram phone bridge (see TelegramProperties). Dormant until a BotFather token is set:
+  # Optional Telegram phone bridge (see JarvisTelegramProperties). Dormant until a BotFather token is set:
   # message @BotFather → /newbot → paste the token into JARVIS_TELEGRAM_BOT_TOKEN. Then you can text
   # Jarvis from your phone and get notifications/digests pushed — no inbound port opened on the Mac.
   telegram:
@@ -163,7 +163,7 @@ jarvis:
     max-message-chars: 4000        # Telegram hard-caps at 4096
     idle-poll-ms: 1000             # breather between empty polls
     error-backoff-ms: 3000         # back-off after a poll error
-  # Private Discord control channel (see DiscordProperties) — command Jarvis from your phone. Dormant
+  # Private Discord control channel (see JarvisDiscordProperties) — command Jarvis from your phone. Dormant
   # until a bot token + channel id are set. Enable MESSAGE CONTENT intent on the bot in the dev portal.
   discord:
     enabled: ${JARVIS_DISCORD_ENABLED:true}          # still inert without a token + channel below
