@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jarvis.security.RiskLevel;
 
 class InstallAppToolTest {
 
@@ -14,6 +15,13 @@ class InstallAppToolTest {
     void declaresItselfAsAMutatingCapability() {
         assertThat(tool.spec().name()).isEqualTo("install_app");
         assertThat(tool.mutates()).isTrue();
+    }
+
+    @Test
+    void isHighRiskSoTheAgentLoopGatesItBehindApproval() {
+        assertThat(tool.riskLevel()).isEqualTo(RiskLevel.HIGH);
+        // A read-only tool stays autonomous (default LOW) — sanity that the threshold is meaningful.
+        assertThat(new KdpChecklistTool(new ObjectMapper()).riskLevel()).isEqualTo(RiskLevel.LOW);
     }
 
     @Test

@@ -47,6 +47,12 @@ public class InstallAppTool implements Tool {
         return true;
     }
 
+    /** Installing software on the real machine is system-changing — gate it behind your approval. */
+    @Override
+    public com.jarvis.security.RiskLevel riskLevel() {
+        return com.jarvis.security.RiskLevel.HIGH;
+    }
+
     @Override
     public String execute(String args) {
         if (!System.getProperty("os.name", "").toLowerCase().contains("mac")) {

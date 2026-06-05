@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { getAgents } from '../../api'
 import type { AgentDef } from '../../api'
+import { useFetch } from '../../lib/useFetch'
 
 /** Human label + display order for each agent category (the rest fall through alphabetically). */
 const CATEGORY_LABELS: Record<string, string> = {
@@ -20,10 +21,9 @@ function agentRow(a: AgentDef) {
 }
 
 export function AgentsWindow() {
-  const [agents, setAgents] = useState<AgentDef[] | null>(null)
+  const { data: agents } = useFetch(getAgents, [])
   const [open, setOpen] = useState<Record<string, boolean>>({})   // category → expanded; default CLOSED
   const [q, setQ] = useState('')
-  useEffect(() => { getAgents().then(setAgents).catch(() => setAgents([])) }, [])
   if (!agents) return <div className="w-empty"><span className="spin-fast">◠</span></div>
 
   // Group by category, then order known categories first, unknown ones alphabetically after.

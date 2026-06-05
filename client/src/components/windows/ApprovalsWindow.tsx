@@ -1,15 +1,12 @@
-import { useCallback, useEffect, useState } from 'react'
 import { getApprovals } from '../../api'
-import type { ApprovalRequest } from '../../api'
 import { ago } from '../../lib/format'
+import { useFetch } from '../../lib/useFetch'
 import { ApprovalActions } from '../ApprovalActions'
 
 const RISK_CLASS: Record<string, string> = { LOW: 'ok', MEDIUM: 'warn', HIGH: 'warn', CRITICAL: 'bad' }
 
 export function ApprovalsWindow() {
-  const [items, setItems] = useState<ApprovalRequest[] | null>(null)
-  const refresh = useCallback(() => { getApprovals().then(setItems).catch(() => setItems([])) }, [])
-  useEffect(() => { refresh() }, [refresh])
+  const { data: items, refresh } = useFetch(getApprovals, [])
 
   if (!items) return <div className="w-empty"><span className="spin-fast">◠</span></div>
 

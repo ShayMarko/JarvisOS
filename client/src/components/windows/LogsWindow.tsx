@@ -1,11 +1,9 @@
-import { useEffect, useState } from 'react'
 import { getAudit } from '../../api'
-import type { AuditEntry } from '../../api'
 import { ago } from '../../lib/format'
+import { useFetch } from '../../lib/useFetch'
 
 export function LogsWindow() {
-  const [logs, setLogs] = useState<AuditEntry[] | null>(null)
-  useEffect(() => { getAudit(60).then(setLogs).catch(() => setLogs([])) }, [])
+  const { data: logs } = useFetch(() => getAudit(60), [])
   return !logs ? <div className="w-empty"><span className="spin-fast">◠</span></div>
     : logs.length === 0 ? <div className="w-empty"><div className="s">No activity logged yet.</div></div>
     : <div className="rows">{logs.map((l) => (

@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { getRuns } from '../../api'
 import type { RunRecord } from '../../api'
 import { ago, parseSteps, runState } from '../../lib/format'
+import { useFetch } from '../../lib/useFetch'
 
 function RunRow({ run }: { run: RunRecord }) {
   const [open, setOpen] = useState(false)
@@ -30,10 +31,9 @@ function RunRow({ run }: { run: RunRecord }) {
 }
 
 export function HistoryWindow() {
-  const [runs, setRuns] = useState<RunRecord[] | null>(null)
+  const { data: runs } = useFetch(() => getRuns(60), [])
   const [tab, setTab] = useState<'all' | 'running' | 'success' | 'failed'>('all')
   const [q, setQ] = useState('')
-  useEffect(() => { getRuns(60).then(setRuns).catch(() => setRuns([])) }, [])
   const filtered = (runs ?? []).filter((r) => (tab === 'all' || runState(r.status) === tab) && r.request.toLowerCase().includes(q.toLowerCase()))
   return (
     <>

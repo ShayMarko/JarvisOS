@@ -1,19 +1,17 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useState } from 'react'
 import { getTimeline } from '../../api'
-import type { TimelineDay } from '../../api'
+import { useFetch } from '../../lib/useFetch'
 
 export function TimelineWindow() {
-  const [days, setDays] = useState<TimelineDay[] | null>(null)
   const [n, setN] = useState(7)
-  const refresh = useCallback((count: number) => { getTimeline(count).then(setDays).catch(() => setDays([])) }, [])
-  useEffect(() => { refresh(n) }, [refresh, n])
+  const { data: days, refresh } = useFetch(() => getTimeline(n), [], [n])
 
   if (!days) return <div className="w-empty"><span className="spin-fast">◠</span></div>
 
   return (
     <>
       <div className="files-bar">
-        <button className="hint" onClick={() => refresh(n)}>⟳ Refresh</button>
+        <button className="hint" onClick={refresh}>⟳ Refresh</button>
         <span className="grow" />
         {[7, 14, 30].map((d) => (
           <button key={d} className={`tok-tab${n === d ? ' on' : ''}`} onClick={() => setN(d)}>{d}d</button>

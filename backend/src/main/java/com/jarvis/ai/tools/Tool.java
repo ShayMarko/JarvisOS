@@ -1,6 +1,7 @@
 package com.jarvis.ai.tools;
 
 import com.jarvis.ai.ToolSpec;
+import com.jarvis.security.RiskLevel;
 
 /**
  * A capability exposed to agents as a callable tool (the diagram's "Tool /
@@ -22,5 +23,15 @@ public interface Tool {
      */
     default boolean mutates() {
         return false;
+    }
+
+    /**
+     * How damaging this tool is when the AGENT chooses to call it autonomously. The agent runtime gates
+     * any call at {@link RiskLevel#HIGH} or above through the Approval Center (the user gets an
+     * Approve/Decline in the notification bell) before it runs; LOW/MEDIUM tools run freely. Default LOW —
+     * override only on genuinely damaging capabilities (installing software, destructive ops, …).
+     */
+    default RiskLevel riskLevel() {
+        return RiskLevel.LOW;
     }
 }

@@ -10,7 +10,7 @@ import type { Turn, Win, WinKind } from './types'
 import { ago, gb, isHtmlish, looksLikeRawTool, pct, rate } from './lib/format'
 import { pref } from './lib/prefs'
 import { SR, speak, speakSmart, stopSpeaking, takeLongSpeech, wantsContinue } from './lib/voice'
-import { SLASH_WINDOW, WIN_META, matchWindowOpen } from './lib/windows'
+import { SLASH_TAB, SLASH_WINDOW, WIN_META, matchWindowOpen } from './lib/windows'
 import { ApprovalActions } from './components/ApprovalActions'
 import { Clock } from './components/Clock'
 import { CommandPalette } from './components/CommandPalette'
@@ -173,8 +173,9 @@ export default function App() {
 
   const runCmd = useCallback(async (slash: string) => {
     setCmdkOpen(false)
-    const win = SLASH_WINDOW[slash.split(' ')[0]]
-    if (win) { openWindow(win); return }
+    const slash0 = slash.split(' ')[0]
+    const win = SLASH_WINDOW[slash0]
+    if (win) { openWindow(win, SLASH_TAB[slash0]); return }
     try {
       const res = await runCommand(slash)
       openWindow('result', { status: res.status, message: res.message, data: res.data }, slash.split(' ')[0])
@@ -195,7 +196,7 @@ export default function App() {
       if (full) { if (ttsOn) speak(full); return }
     }
     // Window-opener slashes are pure UI nav → open instantly, no round trip.
-    if (t.startsWith('/') && SLASH_WINDOW[t.split(' ')[0]]) { openWindow(SLASH_WINDOW[t.split(' ')[0]]); return }
+    if (t.startsWith('/') && SLASH_WINDOW[t.split(' ')[0]]) { openWindow(SLASH_WINDOW[t.split(' ')[0]], SLASH_TAB[t.split(' ')[0]]); return }
     // Natural-language UI navigation ("open/show the X window") — opening a window is a UI
     // action, not an AI task, so handle it client-side instead of routing to the Brain.
     const nav = matchWindowOpen(t)
@@ -310,18 +311,11 @@ export default function App() {
         </div>
         <div className="hintrow">
           <button className={`wake${wake ? ' on' : ''}`} onClick={toggleWake} title='Say "Jarvis …" to command hands-free'><span className="sw" />WAKE WORD</button>
-          <button className="hint" onClick={() => openWindow('today')}>Today</button>
-          <button className="hint" onClick={() => openWindow('history')}>History</button>
+          <button className="hint" onClick={() => openWindow('activity')}>Activity</button>
+          <button className="hint" onClick={() => openWindow('capabilities')}>Capabilities</button>
           <button className="hint" onClick={() => openWindow('files')}>Files</button>
           <button className="hint" onClick={() => openWindow('backups')}>Backups</button>
-          <button className="hint" onClick={() => openWindow('plugins')}>Plugins</button>
-          <button className="hint" onClick={() => openWindow('tokens')}>Tokens</button>
-          <button className="hint" onClick={() => openWindow('revenue')}>Revenue</button>
-          <button className="hint" onClick={() => openWindow('approvals')}>Approvals</button>
-          <button className="hint" onClick={() => openWindow('connectors')}>Connectors</button>
-          <button className="hint" onClick={() => openWindow('timeline')}>Timeline</button>
-          <button className="hint" onClick={() => openWindow('vision')}>Vision</button>
-          <button className="hint" onClick={() => openWindow('agents')}>Agents</button>
+          <button className="hint" onClick={() => openWindow('usage')}>Usage</button>
           <button className="hint" onClick={() => setCmdkOpen(true)}>⌘K</button>
         </div>
       </div>

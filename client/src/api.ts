@@ -325,7 +325,7 @@ export function getPluginCatalog(): Promise<PluginCatalogEntry[]> {
 }
 
 export function installPlugin(idOrPath: { id?: string; path?: string }): Promise<PluginInfo[]> {
-  return req<PluginInfo[]>('/api/plugins/install', { method: 'POST', headers: jsonHeaders, body: JSON.stringify(idOrPath) })
+  return postJson<PluginInfo[]>('/api/plugins/install', idOrPath)
 }
 
 export function uninstallPlugin(id: string): Promise<{ message: string }> {
@@ -375,6 +375,15 @@ async function req<T>(url: string, init?: RequestInit): Promise<T> {
 
 const jsonHeaders = { 'Content-Type': 'application/json' }
 
+/** POST JSON and parse the JSON reply. Body omitted → a bodyless POST (still JSON content-type). */
+function postJson<T>(url: string, body?: unknown): Promise<T> {
+  return req<T>(url, { method: 'POST', headers: jsonHeaders, ...(body !== undefined ? { body: JSON.stringify(body) } : {}) })
+}
+/** PUT JSON and parse the JSON reply. */
+function putJson<T>(url: string, body: unknown): Promise<T> {
+  return putJson<T>(url, body)
+}
+
 /** A stable id for this client session, so the Brain keeps conversation continuity. */
 /** Stable per-browser session id so conversation continuity survives reloads. */
 export const sessionId: string = (() => {
@@ -396,19 +405,11 @@ export function getConversation(): Promise<ConversationTurn[]> {
 }
 
 export function runCommand(input: string): Promise<CommandResult> {
-  return req<CommandResult>('/api/command', {
-    method: 'POST',
-    headers: jsonHeaders,
-    body: JSON.stringify({ input, sessionId }),
-  })
+  return postJson<CommandResult>('/api/command', { input, sessionId })
 }
 
 export function revealFile(path: string): Promise<{ result: string }> {
-  return req<{ result: string }>('/api/files/reveal', {
-    method: 'POST',
-    headers: jsonHeaders,
-    body: JSON.stringify({ path }),
-  })
+  return postJson<{ result: string }>('/api/files/reveal', { path })
 }
 
 export function getNotifications(): Promise<NotificationItem[]> {
@@ -420,15 +421,15 @@ export function getUnreadCount(): Promise<number> {
 }
 
 export function markNotificationsRead(): Promise<void> {
-  return req<void>('/api/notifications/read-all', { method: 'POST', headers: jsonHeaders })
+  return postJson<void>('/api/notifications/read-all')
 }
 
 export function markNotificationRead(id: string): Promise<void> {
-  return req<void>(`/api/notifications/${id}/read`, { method: 'POST', headers: jsonHeaders })
+  return postJson<void>(`/api/notifications/${id}/read`)
 }
 
 export function indexKb(body: { path?: string; title?: string; content?: string }): Promise<unknown> {
-  return req<unknown>('/api/kb/index', { method: 'POST', headers: jsonHeaders, body: JSON.stringify(body) })
+  return postJson<unknown>('/api/kb/index', body)
 }
 
 export function deleteKbDocument(id: string): Promise<void> {
@@ -436,7 +437,7 @@ export function deleteKbDocument(id: string): Promise<void> {
 }
 
 export function replayRun(id: string): Promise<unknown> {
-  return req<unknown>(`/api/runs/${id}/replay`, { method: 'POST', headers: jsonHeaders })
+  return postJson<unknown>(`/api/runs/${id}/replay`)
 }
 
 export function fetchCommands(): Promise<CommandDefinition[]> {
@@ -448,19 +449,11 @@ export function getFileContent(path: string): Promise<FileContent> {
 }
 
 export function writeFile(path: string, content: string): Promise<FileNode> {
-  return req<FileNode>('/api/files/content', {
-    method: 'PUT',
-    headers: jsonHeaders,
-    body: JSON.stringify({ path, content }),
-  })
+  return putJson<FileNode>('/api/files/content', { path, content })
 }
 
 export function createDir(path: string): Promise<FileNode> {
-  return req<FileNode>('/api/files/dir', {
-    method: 'POST',
-    headers: jsonHeaders,
-    body: JSON.stringify({ path }),
-  })
+  return postJson<FileNode>('/api/files/dir', { path })
 }
 
 export function deleteFile(path: string, confirm: boolean): Promise<void> {
@@ -470,19 +463,11 @@ export function deleteFile(path: string, confirm: boolean): Promise<void> {
 }
 
 export function createMemory(draft: MemoryDraft): Promise<Memory> {
-  return req<Memory>('/api/memory', {
-    method: 'POST',
-    headers: jsonHeaders,
-    body: JSON.stringify(draft),
-  })
+  return postJson<Memory>('/api/memory', draft)
 }
 
 export function updateMemory(id: string, draft: MemoryDraft): Promise<Memory> {
-  return req<Memory>(`/api/memory/${id}`, {
-    method: 'PUT',
-    headers: jsonHeaders,
-    body: JSON.stringify(draft),
-  })
+  return putJson<Memory>(`/api/memory/${id}`, draft)
 }
 
 export function deleteMemory(id: string): Promise<void> {
@@ -498,19 +483,11 @@ export function getApprovals(): Promise<ApprovalRequest[]> {
 }
 
 export function approveRequest(id: string, remember: boolean): Promise<ApprovalDecision> {
-  return req<ApprovalDecision>(`/api/approvals/${id}/approve`, {
-    method: 'POST',
-    headers: jsonHeaders,
-    body: JSON.stringify({ remember }),
-  })
+  return postJson<ApprovalDecision>(`/api/approvals/${id}/approve`, { remember })
 }
 
 export function denyRequest(id: string, remember: boolean): Promise<ApprovalRequest> {
-  return req<ApprovalRequest>(`/api/approvals/${id}/deny`, {
-    method: 'POST',
-    headers: jsonHeaders,
-    body: JSON.stringify({ remember }),
-  })
+  return postJson<ApprovalRequest>(`/api/approvals/${id}/deny`, { remember })
 }
 
 export interface SecretDraft {
@@ -525,11 +502,7 @@ export function getSecrets(): Promise<SecretView[]> {
 }
 
 export function createSecret(draft: SecretDraft): Promise<SecretView> {
-  return req<SecretView>('/api/secrets', {
-    method: 'POST',
-    headers: jsonHeaders,
-    body: JSON.stringify(draft),
-  })
+  return postJson<SecretView>('/api/secrets', draft)
 }
 
 export function deleteSecret(id: string): Promise<void> {
@@ -537,15 +510,11 @@ export function deleteSecret(id: string): Promise<void> {
 }
 
 export function createWorkflow(draft: WorkflowDraft): Promise<WorkflowView> {
-  return req<WorkflowView>('/api/workflows', {
-    method: 'POST',
-    headers: jsonHeaders,
-    body: JSON.stringify(draft),
-  })
+  return postJson<WorkflowView>('/api/workflows', draft)
 }
 
 export function runWorkflow(id: string): Promise<RunView> {
-  return req<RunView>(`/api/workflows/${id}/run`, { method: 'POST', headers: jsonHeaders })
+  return postJson<RunView>(`/api/workflows/${id}/run`)
 }
 
 export function deleteWorkflow(id: string): Promise<void> {
@@ -557,11 +526,7 @@ export function getConnectors(): Promise<ConnectorInfo[]> {
 }
 
 export function invokeConnector(id: string, actionId: string): Promise<{ result: string }> {
-  return req<{ result: string }>(`/api/connectors/${id}/actions/${actionId}`, {
-    method: 'POST',
-    headers: jsonHeaders,
-    body: JSON.stringify({ args: '{}' }),
-  })
+  return postJson<{ result: string }>(`/api/connectors/${id}/actions/${actionId}`, { args: '{}' })
 }
 
 // --- Dashboard data sources -------------------------------------------------
@@ -602,11 +567,7 @@ export function listFiles(path = ''): Promise<FileNode[]> {
 
 /** Ask Jarvis (free text or a quick action) — full agent run with step trace. */
 export function chat(message: string): Promise<ChatResponse> {
-  return req<ChatResponse>('/api/chat', {
-    method: 'POST',
-    headers: jsonHeaders,
-    body: JSON.stringify({ message, sessionId }),
-  })
+  return postJson<ChatResponse>('/api/chat', { message, sessionId })
 }
 
 export function getTasks(limit = 20): Promise<TaskItem[]> {
@@ -760,9 +721,22 @@ export function getRoi(): Promise<RoiSnapshot> {
 
 /** Log a ledger entry (REVENUE/SAVED/HOURS/ASSET/EXPERIMENT) → returns the updated ROI. */
 export function logRevenue(kind: string, amount: number, note?: string): Promise<RoiSnapshot> {
-  return req<RoiSnapshot>('/api/revenue/log', {
-    method: 'POST', headers: jsonHeaders, body: JSON.stringify({ kind, amount, note }),
-  })
+  return postJson<RoiSnapshot>('/api/revenue/log', { kind, amount, note })
+}
+
+/** Discord control-channel status + a test ping. */
+export interface DiscordStatus {
+  enabled: boolean
+  tokenSet: boolean
+  channelSet: boolean
+  active: boolean
+  pushReady: boolean
+}
+export function getDiscordStatus(): Promise<DiscordStatus> {
+  return req<DiscordStatus>('/api/discord/status')
+}
+export function testDiscord(): Promise<{ sent: boolean; message: string }> {
+  return postJson<{ sent: boolean; message: string }>('/api/discord/test')
 }
 
 /** Episodic timeline — per-day roll-ups of what Jarvis did. */
@@ -786,9 +760,7 @@ export function undoLast(): Promise<{ result: string; count: number }> {
 
 /** Vision — describe / answer a question about an image file under the Explorer. */
 export function describeImage(path: string, question?: string): Promise<{ result: string }> {
-  return req<{ result: string }>('/api/vision/describe', {
-    method: 'POST', headers: jsonHeaders, body: JSON.stringify({ path, question }),
-  })
+  return postJson<{ result: string }>('/api/vision/describe', { path, question })
 }
 
 /** The user's "About Me" profile (a Markdown doc Jarvis reads into every conversation). */
@@ -796,24 +768,16 @@ export function getProfile(): Promise<{ content: string }> {
   return req<{ content: string }>('/api/profile')
 }
 export function saveProfile(content: string): Promise<{ content: string }> {
-  return req<{ content: string }>('/api/profile', { method: 'PUT', headers: jsonHeaders, body: JSON.stringify({ content }) })
+  return putJson<{ content: string }>('/api/profile', { content })
 }
 
 export function setProvider(provider: string, model?: string): Promise<SettingsView> {
-  return req<SettingsView>('/api/settings/provider', {
-    method: 'POST',
-    headers: jsonHeaders,
-    body: JSON.stringify({ provider, model }),
-  })
+  return postJson<SettingsView>('/api/settings/provider', { provider, model })
 }
 
 /** Set the daily paid-token budget (0 = unlimited) and/or the AI kill-switch (paused). */
 export function setBudget(req2: { dailyTokenBudget?: number; paused?: boolean }): Promise<SettingsView> {
-  return req<SettingsView>('/api/settings/budget', {
-    method: 'POST',
-    headers: jsonHeaders,
-    body: JSON.stringify(req2),
-  })
+  return postJson<SettingsView>('/api/settings/budget', req2)
 }
 
 /** Subscribe to the live monitor SSE stream; returns the EventSource so callers can close it. */

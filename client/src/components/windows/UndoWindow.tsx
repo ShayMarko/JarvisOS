@@ -1,14 +1,11 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useState } from 'react'
 import { getUndo, undoLast } from '../../api'
-import type { UndoState } from '../../api'
+import { useFetch } from '../../lib/useFetch'
 
 export function UndoWindow() {
-  const [state, setState] = useState<UndoState | null>(null)
+  const { data: state, setData: setState, refresh } = useFetch(getUndo, { count: 0, recent: [] })
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState<string | null>(null)
-
-  const refresh = useCallback(() => { getUndo().then(setState).catch(() => setState({ count: 0, recent: [] })) }, [])
-  useEffect(() => { refresh() }, [refresh])
 
   const undo = () => {
     setBusy(true); setMsg(null)

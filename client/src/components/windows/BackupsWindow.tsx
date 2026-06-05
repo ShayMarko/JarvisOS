@@ -1,14 +1,12 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useState } from 'react'
 import { createBackup, listBackups, restoreBackup } from '../../api'
-import type { BackupInfo } from '../../api'
 import { friendlyError, kb } from '../../lib/format'
+import { useFetch } from '../../lib/useFetch'
 
 export function BackupsWindow() {
-  const [items, setItems] = useState<BackupInfo[] | null>(null)
+  const { data: items, refresh } = useFetch(listBackups, [])
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState('')
-  const refresh = useCallback(() => { listBackups().then(setItems).catch(() => setItems([])) }, [])
-  useEffect(() => { refresh() }, [refresh])
 
   const make = () => {
     setBusy(true); setMsg('')

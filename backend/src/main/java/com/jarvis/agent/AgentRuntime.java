@@ -5,10 +5,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jarvis.approval.ApprovalResult;
+import com.jarvis.approval.ApprovalService;
+import com.jarvis.approval.ApprovalStatus;
 import com.jarvis.ai.ChatMessage;
 import com.jarvis.ai.JarvisAiProperties;
 import com.jarvis.ai.JarvisPersonaProperties;
@@ -19,6 +23,7 @@ import com.jarvis.ai.ToolSpec;
 import com.jarvis.ai.tools.Tool;
 import com.jarvis.ai.tools.ToolRegistry;
 import com.jarvis.model.ModelDescriptor;
+import com.jarvis.security.RiskLevel;
 
 /**
  * The agent runtime / tool-calling loop (spec §15 "we build the agent loop"):
@@ -33,14 +38,16 @@ public class AgentRuntime {
     private final int maxSteps;
     private final JarvisPersonaProperties persona;
     private final JarvisAiProperties ai;
+    private final ApprovalService approval;
 
     public AgentRuntime(LanguageModel model, ToolRegistry tools, JarvisAiProperties props,
-                        JarvisPersonaProperties persona) {
+                        JarvisPersonaProperties persona, @Lazy ApprovalService approval) {
         this.model = model;
         this.tools = tools;
         this.maxSteps = props.getMaxSteps();
         this.persona = persona;
         this.ai = props;
+        this.approval = approval;
     }
 
     public AgentRun run(AgentDefinition agent, String userMessage, String context) {
@@ -114,7 +121,9 @@ public class AgentRuntime {
                     Tool tool = tools.find(call.name()).orElse(null);
                     String result = tool == null
                             ? "Unknown tool: " + call.name()
-                            : tool.execute(call.argumentsJson());
+                            : needsApproval(tool)
+                                    ? gatedExecute(tool, call)
+                                    : tool.execute(call.argumentsJson());
                     toolCalled = true;
                     if (tool != null && tool.mutates() && !isFailure(result)) {
                         mutationSucceeded = true;
@@ -190,6 +199,41 @@ public class AgentRuntime {
         }
         return new AgentRun("I couldn't complete this within the step budget.", steps,
                 promptTokens, completionTokens, usedModel);
+    }
+
+    /** HIGH/CRITICAL-risk tools are gated behind the user's approval before the agent may run them. */
+    private static boolean needsApproval(Tool tool) {
+        return tool.riskLevel().ordinal() >= RiskLevel.HIGH.ordinal();
+    }
+
+    /**
+     * Submit a risky tool call to the Approval Center instead of running it outright. If a remembered rule
+     * already approved this action type, it runs immediately and we return its real result; otherwise it's
+     * parked PENDING (the user gets an Approve/Decline in the notification bell) and the agent reports it's
+     * awaiting a decision — the action runs the moment the user approves.
+     */
+    private String gatedExecute(Tool tool, ToolCall call) {
+        String name = call.name();
+        try {
+            ApprovalResult ar = approval.submit(
+                    "tool:" + name,
+                    "Run " + name,
+                    toolLabel(call),
+                    tool.riskLevel(),
+                    truncate(call.argumentsJson()),
+                    () -> tool.execute(call.argumentsJson()));
+            ApprovalStatus status = ar.request().getStatus();
+            if (status == ApprovalStatus.APPROVED) {
+                return ar.result() == null ? "Done." : String.valueOf(ar.result());
+            }
+            if (status == ApprovalStatus.DENIED) {
+                return "Declined — a remembered rule denied running " + name + ".";
+            }
+            return "⏸ This needs your approval (risk " + tool.riskLevel() + "). I've sent it to your "
+                    + "notification bell / Approval Center — approve it there and I'll run it.";
+        } catch (RuntimeException e) {
+            return "Error submitting " + name + " for approval: " + e.getMessage();
+        }
     }
 
     /** Max times we push the model to keep writing files in one build (bounds the loop). */
@@ -302,6 +346,7 @@ public class AgentRuntime {
         String r = result.strip().toLowerCase();
         return r.startsWith("error") || r.startsWith("unknown tool") || r.startsWith("could not")
                 || r.startsWith("couldn't") || r.startsWith("failed") || r.startsWith("no ")
+                || r.startsWith("⏸") || r.startsWith("declined")   // gated → awaiting/denied, not a success
                 || r.contains("not a file") || r.contains("does not exist") || r.contains("permission denied");
     }
 
