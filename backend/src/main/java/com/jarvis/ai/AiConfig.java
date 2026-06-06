@@ -22,9 +22,10 @@ public class AiConfig {
     }
 
     @Bean
-    LanguageModel languageModel(JarvisAiProperties props, ObjectMapper mapper, TokenBudget budget) {
+    LanguageModel languageModel(JarvisAiProperties props, ObjectMapper mapper, TokenBudget budget,
+                                com.jarvis.model.ModelCatalog catalog) {
         log.info("Jarvis AI provider: {} (switchable at runtime via /api/settings).", props.getProvider());
         // Live-switching adapter: chooses its backing provider per call from config.
-        return new ProviderSwitchingLanguageModel(props, mapper, budget);
+        return new ProviderSwitchingLanguageModel(props, mapper, budget, catalog);
     }
 }

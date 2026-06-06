@@ -97,6 +97,30 @@ class MemoryServiceTest {
         assertThat(m.isActive()).isFalse();
     }
 
+    @Test
+    void consolidateRemovesExactDuplicatesKeepingNewest() {
+        Memory newest = mem("mem_new", "Likes tables", "always render tables", "preference");
+        Memory dupe = mem("mem_old", "Likes tables", "always render tables", "preference");
+        Memory distinct = mem("mem_x", "Likes charts", "render charts", "preference");
+        // repository returns newest-first (findAllByOrderByUpdatedAtDesc)
+        when(repo.findAllByOrderByUpdatedAtDesc()).thenReturn(List.of(newest, dupe, distinct));
+
+        int removed = service.consolidate();
+
+        assertThat(removed).isEqualTo(1);
+        org.mockito.Mockito.verify(repo).delete(dupe);      // the older duplicate is dropped
+        org.mockito.Mockito.verify(repo, org.mockito.Mockito.never()).delete(newest);
+        org.mockito.Mockito.verify(repo, org.mockito.Mockito.never()).delete(distinct);
+    }
+
+    @Test
+    void consolidateNoDuplicatesRemovesNothing() {
+        when(repo.findAllByOrderByUpdatedAtDesc()).thenReturn(List.of(
+                mem("a", "One", "x", "fact"), mem("b", "Two", "y", "fact")));
+        assertThat(service.consolidate()).isZero();
+        org.mockito.Mockito.verify(repo, org.mockito.Mockito.never()).delete(any(Memory.class));
+    }
+
     private Memory mem(String id, String title, String content, String category) {
         Memory m = new Memory();
         m.setId(id);

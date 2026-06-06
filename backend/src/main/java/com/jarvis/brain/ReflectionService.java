@@ -75,11 +75,21 @@ public class ReflectionService {
                         0.7, null, null, null, true));
                 saved++;
             }
-            if (saved > 0) {
-                String titles = lessons.stream().limit(saved).map(l -> "• " + l[0])
-                        .reduce((a, b) -> a + "\n" + b).orElse("");
-                notifications.notify("info", "Jarvis nightly reflection",
-                        "Learned " + saved + " new thing(s) for next time:\n" + titles, "reflection");
+            // Self-editing memory: prune exact duplicates so the store stays tidy as it grows.
+            int merged = memory.consolidate();
+
+            if (saved > 0 || merged > 0) {
+                StringBuilder body = new StringBuilder();
+                if (saved > 0) {
+                    String titles = lessons.stream().limit(saved).map(l -> "• " + l[0])
+                            .reduce((a, b) -> a + "\n" + b).orElse("");
+                    body.append("Learned ").append(saved).append(" new thing(s) for next time:\n").append(titles);
+                }
+                if (merged > 0) {
+                    if (body.length() > 0) body.append('\n');
+                    body.append("Tidied memory: removed ").append(merged).append(" duplicate(s).");
+                }
+                notifications.notify("info", "Jarvis nightly reflection", body.toString(), "reflection");
             }
         } catch (RuntimeException e) {
             log.debug("Nightly reflection skipped: {}", e.getMessage());

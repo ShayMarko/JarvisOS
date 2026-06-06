@@ -75,6 +75,10 @@ jarvis:
     # Safety net for PAID providers (Claude/OpenAI): hard cap on tokens/day. 0 = unlimited.
     # Ollama + mock are never metered. Adjustable live in Settings; pause = kill-switch.
     daily-token-budget: ${JARVIS_AI_DAILY_TOKEN_BUDGET:0}
+    # Hard cap on PAID spend per calendar month, in USD (the Opus bill). 0 = unlimited.
+    # At >=80% Jarvis auto-downshifts to free local Ollama; at 100% paid calls are refused
+    # until the 1st of next month (Ollama + mock keep working). Default: $80/month.
+    monthly-budget-usd: ${JARVIS_AI_MONTHLY_BUDGET_USD:80}
     privacy: ${JARVIS_AI_PRIVACY:BALANCED}   # BALANCED | PRIVATE | QUALITY | CHEAP
     privacy-guard: ${JARVIS_AI_PRIVACY_GUARD:true}  # keep sensitive content on the local model, never cloud
   # Global JARVIS personality, prepended to every agent's system prompt.

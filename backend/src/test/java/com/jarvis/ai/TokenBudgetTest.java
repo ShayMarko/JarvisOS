@@ -15,6 +15,42 @@ class TokenBudgetTest {
         return new TokenBudget(props);
     }
 
+    private TokenBudget monthlyBudget(double usdCap) {
+        JarvisAiProperties props = new JarvisAiProperties();
+        props.setMonthlyBudgetUsd(usdCap);
+        return new TokenBudget(props);
+    }
+
+    @Test
+    void blocksOnceMonthlyUsdCapIsReached() {
+        TokenBudget b = monthlyBudget(80.0);
+        b.checkBeforeCall();        // fine at $0
+        b.recordCost(79.50);
+        b.checkBeforeCall();        // still under $80
+        b.recordCost(1.00);         // now $80.50 >= $80
+        assertThatThrownBy(b::checkBeforeCall)
+                .isInstanceOf(PolicyDeniedException.class)
+                .hasMessageContaining("Monthly AI spend cap");
+    }
+
+    @Test
+    void conservesAtEightyPercentOfMonthlyCap() {
+        TokenBudget b = monthlyBudget(80.0);
+        b.recordCost(60.0);                 // 75% — not yet
+        assertThat(b.shouldConserve()).isFalse();
+        b.recordCost(5.0);                  // $65 = 81.25% of $80
+        assertThat(b.shouldConserve()).isTrue();
+    }
+
+    @Test
+    void monthlyCapSnapshotReportsSpendAndRemaining() {
+        TokenBudget b = monthlyBudget(80.0);
+        b.recordCost(12.34);
+        assertThat(b.snapshot().get("monthlyBudgetUsd")).isEqualTo(80.0);
+        assertThat(b.snapshot().get("spentThisMonthUsd")).isEqualTo(12.34);
+        assertThat(b.snapshot().get("remainingUsd")).isEqualTo(67.66);
+    }
+
     @Test
     void unlimitedNeverBlocksAndReportsMinusOneRemaining() {
         TokenBudget b = budget(0);

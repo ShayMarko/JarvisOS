@@ -28,7 +28,7 @@ public class SettingsController {
 
     public record ProviderRequest(String provider, String model) {}
 
-    public record BudgetRequest(Long dailyTokenBudget, Boolean paused) {}
+    public record BudgetRequest(Long dailyTokenBudget, Double monthlyBudgetUsd, Boolean paused) {}
 
     private final JarvisAiProperties ai;
     private final TokenBudget budget;
@@ -68,17 +68,21 @@ public class SettingsController {
         return get();
     }
 
-    /** Set the daily paid-token budget (0 = unlimited) and/or the AI kill-switch. */
+    /** Set the daily paid-token budget, the monthly USD spend cap (0 = unlimited each), and/or the kill-switch. */
     @PostMapping("/budget")
     public Map<String, Object> setBudget(@RequestBody BudgetRequest req) {
         if (req.dailyTokenBudget() != null && req.dailyTokenBudget() >= 0) {
             ai.setDailyTokenBudget(req.dailyTokenBudget());
         }
+        if (req.monthlyBudgetUsd() != null && req.monthlyBudgetUsd() >= 0) {
+            ai.setMonthlyBudgetUsd(req.monthlyBudgetUsd());
+        }
         if (req.paused() != null) {
             budget.setPaused(req.paused());
         }
         audit.record("SETTINGS", "set_budget",
-                "limit=" + ai.getDailyTokenBudget() + "; paused=" + budget.isPaused(), "OK", null);
+                "tokens/day=" + ai.getDailyTokenBudget() + "; usd/month=" + ai.getMonthlyBudgetUsd()
+                        + "; paused=" + budget.isPaused(), "OK", null);
         return get();
     }
 }

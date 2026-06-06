@@ -59,6 +59,10 @@ public class JarvisAiProperties {
     /** Safety cap on PAID-provider tokens per day (prompt+completion). 0 = unlimited.
      *  Local (ollama) and mock are never metered. */
     private long dailyTokenBudget = 0;
+    /** Hard cap on PAID-provider SPEND per calendar month, in USD (e.g. the Opus bill). 0 = unlimited.
+     *  Enforced at the model chokepoint: once reached, paid calls are refused and the Router conserves
+     *  (downshifts to free local Ollama) from 80% onwards. Local + mock are never metered. */
+    private double monthlyBudgetUsd = 0;
     /** Model Router preference (spec §6): BALANCED | PRIVATE | QUALITY | CHEAP. */
     private RoutingPreference privacy = RoutingPreference.BALANCED;
 }

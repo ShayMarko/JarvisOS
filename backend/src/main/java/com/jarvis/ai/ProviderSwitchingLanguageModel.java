@@ -6,6 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jarvis.model.CostCalculator;
+import com.jarvis.model.ModelCatalog;
+import com.jarvis.model.ModelDescriptor;
 
 /**
  * A {@link LanguageModel} that picks its backing provider live, per call, from
@@ -23,6 +26,7 @@ public class ProviderSwitchingLanguageModel implements LanguageModel {
     private final JarvisAiProperties props;
     private final ObjectMapper mapper;
     private final TokenBudget budget;
+    private final ModelCatalog catalog;
     private final MockLanguageModel mock = new MockLanguageModel();
     private volatile AnthropicLanguageModel anthropic;
     private volatile String anthropicKey;
@@ -30,10 +34,12 @@ public class ProviderSwitchingLanguageModel implements LanguageModel {
     private volatile OpenAiLanguageModel openai;
     private volatile String openaiKey;
 
-    public ProviderSwitchingLanguageModel(JarvisAiProperties props, ObjectMapper mapper, TokenBudget budget) {
+    public ProviderSwitchingLanguageModel(JarvisAiProperties props, ObjectMapper mapper, TokenBudget budget,
+                                          ModelCatalog catalog) {
         this.props = props;
         this.mapper = mapper;
         this.budget = budget;
+        this.catalog = catalog;
     }
 
     @Override
@@ -71,6 +77,17 @@ public class ProviderSwitchingLanguageModel implements LanguageModel {
         };
     }
 
+    /** The model id that actually served a call: the per-call override, else the provider's configured default. */
+    private String modelIdFor(LanguageModel m, String modelOverride) {
+        if (modelOverride != null && !modelOverride.isBlank()) {
+            return modelOverride;
+        }
+        if (m instanceof OpenAiLanguageModel) {
+            return props.getOpenaiModel();
+        }
+        return props.getModel();   // Anthropic default (HEAVY tier)
+    }
+
     private ModelResponse runOn(LanguageModel m, List<ChatMessage> messages, List<ToolSpec> tools, String modelOverride) {
         // Only meter the real paid adapters; local Ollama + offline mock are free.
         boolean metered = m instanceof AnthropicLanguageModel || m instanceof OpenAiLanguageModel;
@@ -86,6 +103,9 @@ public class ProviderSwitchingLanguageModel implements LanguageModel {
                 ModelResponse resp = m.generate(messages, tools, modelOverride);
                 if (metered) {
                     budget.record(resp.promptTokens(), resp.completionTokens());
+                    // Feed the monthly USD cap: price the call from the model that actually ran.
+                    ModelDescriptor d = catalog.byId(modelIdFor(m, modelOverride));
+                    budget.recordCost(CostCalculator.cost(d, resp.promptTokens(), resp.completionTokens()));
                 }
                 return resp;
             } catch (RuntimeException e) {
