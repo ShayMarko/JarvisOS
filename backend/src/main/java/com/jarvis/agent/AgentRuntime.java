@@ -39,15 +39,18 @@ public class AgentRuntime {
     private final JarvisPersonaProperties persona;
     private final JarvisAiProperties ai;
     private final ApprovalService approval;
+    private final com.jarvis.explorer.FileSystemService fs;
 
     public AgentRuntime(LanguageModel model, ToolRegistry tools, JarvisAiProperties props,
-                        JarvisPersonaProperties persona, @Lazy ApprovalService approval) {
+                        JarvisPersonaProperties persona, @Lazy ApprovalService approval,
+                        com.jarvis.explorer.FileSystemService fs) {
         this.model = model;
         this.tools = tools;
         this.maxSteps = props.getMaxSteps();
         this.persona = persona;
         this.ai = props;
         this.approval = approval;
+        this.fs = fs;
     }
 
     public AgentRun run(AgentDefinition agent, String userMessage, String context) {
@@ -103,6 +106,7 @@ public class AgentRuntime {
         boolean mutationSucceeded = false;
         boolean wroteFile = false;   // a write_file actually succeeded this run (drives the build-continuation loop)
         boolean reflected = false;   // capability-reflection retry already used this run (only once)
+        boolean reflexed = false;    // Reflexion self-retry after a failed action already used (only once)
         int continuations = 0;       // build-continuation nudges used (bounded)
         // The model actually used this run (the per-task pick, or the provider default) — for traces.
         String usedModel = chosen != null ? chosen.id() : model.name();
@@ -169,6 +173,20 @@ public class AgentRuntime {
                 continue;
             }
 
+            // Reflexion: the agent is action-capable and DID call tools, but nothing succeeded — rather than
+            // return a dud, let it self-diagnose and try once more (bounded to one retry, real model only).
+            if (!reflexed && realModel() && agentCanMutate && toolCalled && !mutationSucceeded) {
+                reflexed = true;
+                messages.add(ChatMessage.user("That attempt didn't actually complete — none of your tool calls "
+                        + "succeeded (see the results above). Briefly reflect on WHY, then TRY AGAIN now: call the "
+                        + "tools to really perform the action, correcting whatever went wrong. Don't claim success "
+                        + "unless a tool result confirms it."));
+                Step rx = new Step("intent", "Reflecting on the failure and retrying", null);
+                steps.add(rx);
+                emit(onStep, rx);
+                continue;
+            }
+
             // Headless guarantee (this Mac mini is screenless, in a wall): a build reply must NEVER show
             // code or a leaked tool-call JSON in chat. Two nets for a build-capable agent:
             //  1) a leaked/garbled tool-call JSON as the "answer" → replace with an honest retry message;
@@ -191,6 +209,16 @@ public class AgentRuntime {
             // yet whose reply claims it completed something — correct the reply to match reality.
             if (agentCanMutate && toolCalled && !mutationSucceeded && claimsCompletedAction(text)) {
                 text = correctOverclaim(text, steps);
+            } else if (agentCanMutate && mutationSucceeded && claimsCompletedAction(text)) {
+                // Per-claim verification: some action DID succeed, but make sure the SPECIFIC artifacts the
+                // reply references actually exist on disk — catches partial overclaims ("built X, Y, Z" when
+                // Z never saved). Deterministic (filesystem check), no extra model cost.
+                String missing = missingClaimedArtifacts(text);
+                if (!missing.isBlank()) {
+                    text = text + "\n\n⚠️ Verification: I referenced " + missing + " but couldn't find "
+                            + (missing.contains(", ") ? "those" : "that") + " saved on disk — that part didn't "
+                            + "complete. Ask me to retry it.";
+                }
             }
             Step answer = new Step("answer", "Composed the answer", null);
             steps.add(answer);
@@ -425,6 +453,28 @@ public class AgentRuntime {
         }
         int cap = (original == null ? 0 : original.length()) + 400;
         return rewrite.length() <= cap;   // a correction shouldn't balloon
+    }
+
+    /** Output-root file paths Jarvis itself writes — a mention in a completion claim implies it created them. */
+    private static final java.util.regex.Pattern ARTIFACT = java.util.regex.Pattern.compile(
+            "\\b(Projects|Generated|Books|Sites|Products|Documents)/[A-Za-z0-9._/ -]+?\\.[A-Za-z0-9]{1,6}\\b");
+
+    /** Of the artifact paths the reply claims, the ones that AREN'T actually on disk (max 3). */
+    private String missingClaimedArtifacts(String text) {
+        if (text == null) {
+            return "";
+        }
+        java.util.LinkedHashSet<String> missing = new java.util.LinkedHashSet<>();
+        java.util.regex.Matcher m = ARTIFACT.matcher(text);
+        while (m.find() && missing.size() < 3) {
+            String path = m.group().strip();
+            try {
+                fs.resolveExisting(path);   // throws if it doesn't exist (or escapes the root)
+            } catch (Exception e) {
+                missing.add(path);
+            }
+        }
+        return String.join(", ", missing);
     }
 
     /** A real reasoning model is active (so the self-check is meaningful) — not the offline mock. */

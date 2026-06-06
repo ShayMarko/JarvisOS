@@ -123,7 +123,7 @@ public class Orchestrator {
         AgentDefinition agent = registry.find(plan.get(0).agentSlug()).orElseGet(() -> selector.select(message));
         addStep(steps, onStep, new Step("agent", "Routed to " + agent.name(), agent.role()));
 
-        ModelDescriptor model = modelRouter.route(agent.slug());
+        ModelDescriptor model = modelRouter.route(agent.slug(), message);
         // Privacy Router: sensitive content stays on-device instead of going to a cloud provider.
         if (!model.local() && privacyGuard.keepLocal(message)) {
             ModelDescriptor localM = modelRouter.localModel();
@@ -320,7 +320,7 @@ public class Orchestrator {
                 "Decomposed into " + plan.size() + " sub-tasks (" + (hasDeps ? "pipeline — dependencies honored" : "running in parallel") + ")",
                 plan.stream().map(PlanStep::agentName).collect(Collectors.joining(", "))));
 
-        ModelDescriptor model = modelRouter.route("general");
+        ModelDescriptor model = modelRouter.route("general", message);
         long start = System.nanoTime();
         try {
             // Build one future per step; a step starts once all the steps it depends on complete,
@@ -335,7 +335,7 @@ public class Orchestrator {
                 CompletableFuture<SubResult> fut = gate.thenApplyAsync(v -> {
                     AgentDefinition a = registry.find(ps.agentSlug()).orElseGet(registry::general);
                     String stepContext = withDependencyOutputs(context, deps);
-                    ModelDescriptor subModel = modelRouter.route(a.slug());   // pick the model per sub-task
+                    ModelDescriptor subModel = modelRouter.route(a.slug(), ps.task());   // model per sub-task (content-aware)
                     if (!subModel.local() && privacyGuard.keepLocal(ps.task())) {   // sensitive → stay on-device
                         ModelDescriptor localM = modelRouter.localModel();
                         if (localM != null) {

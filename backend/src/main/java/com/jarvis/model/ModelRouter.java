@@ -48,6 +48,16 @@ public class ModelRouter {
 
     /** Pick the best model for a task (identified by agent slug / task type). */
     public ModelDescriptor route(String taskType) {
+        return route(taskType, null);
+    }
+
+    /**
+     * Pick the best model for a task, refining the tier by the actual MESSAGE content — so a trivial turn
+     * on the catch-all general agent ("what time is it") routes cheap while a hard one ("build me a Spring
+     * Boot app") escalates to the strongest model. The biggest cost lever once an expensive model (e.g.
+     * Opus) is the brain: most turns hit the general agent, and slug alone can't tell them apart.
+     */
+    public ModelDescriptor route(String taskType, String message) {
         List<ModelDescriptor> avail = catalog.available();
         // Never route real work to the offline mock when a real model exists.
         List<ModelDescriptor> real = avail.stream().filter(m -> !"mock".equalsIgnoreCase(m.provider())).toList();
@@ -55,7 +65,7 @@ public class ModelRouter {
             avail = real;
         }
         boolean conserve = budget != null && budget.shouldConserve();
-        return choose(avail, props.getPrivacy(), tierFor(taskType), conserve);
+        return choose(avail, props.getPrivacy(), classify(taskType, message), conserve);
     }
 
     public RoutingPreference preference() {
@@ -82,6 +92,56 @@ public class ModelRouter {
             return TaskTier.LIGHT;
         }
         return TaskTier.STANDARD;
+    }
+
+    /** Distinctive substrings that mark a genuinely demanding task → strongest model. */
+    private static final String[] HEAVY_HINTS = {
+            "build ", "implement", "refactor", "debug", "compile", "stack trace", "algorithm",
+            "analyze", "analyse", "research", "optimi", "migrate", "architect", "design a",
+            "write a ", "write me a ", "create a ", "create an ", " app", "boilerplate", "saas",
+            "step by step", "multi-file", "end to end", "end-to-end"};
+    /** Message starts that mark a trivial chore → cheapest capable model. */
+    private static final String[] LIGHT_STARTS = {
+            "hi", "hey", "hello", "yo ", "thanks", "thank you", "what time", "what's the time",
+            "status", "list ", "show me", "how many", "what is my", "what's my", "who am i",
+            "remind me", "what day", "what's the date"};
+
+    /**
+     * Refine the slug tier by message content (pure + testable). Long/code/"build" messages escalate to
+     * HEAVY; very short or chore-like messages on a non-heavy agent drop to LIGHT; everything else keeps
+     * the slug's tier. A hint, not a hard gate — STANDARD still scores cost in {@code byBalanced}.
+     */
+    public static TaskTier classify(String taskType, String message) {
+        TaskTier base = tierFor(taskType);
+        if (message == null || message.isBlank()) {
+            return base;
+        }
+        String m = message.toLowerCase().strip();
+        if (m.length() > 600 || m.contains("```") || containsAny(m, HEAVY_HINTS)) {
+            return TaskTier.HEAVY;
+        }
+        if (base != TaskTier.HEAVY && (m.length() < 24 || startsWithAny(m, LIGHT_STARTS))) {
+            return TaskTier.LIGHT;
+        }
+        return base;
+    }
+
+    private static boolean containsAny(String m, String[] hints) {
+        for (String h : hints) {
+            if (m.contains(h)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean startsWithAny(String m, String[] starts) {
+        for (String s : starts) {
+            if (m.startsWith(s)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Back-compat: preference-only choice (STANDARD tier, not conserving). */

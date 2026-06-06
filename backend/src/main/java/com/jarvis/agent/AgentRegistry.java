@@ -69,7 +69,7 @@ public class AgentRegistry {
                         "create_chart", "generate_image",
                         "list_agents", "list_connectors", "list_notifications", "list_approvals",
                         "recent_runs", "activity_log", "package_product", "create_landing_page",
-                        "create_article_page"), "general");
+                        "create_article_page", "product_portfolio", "track_product"), "general");
 
         // --- Engineering ---
         add("Product / Spec Agent", "product", "Writes specs, user stories and acceptance criteria.",

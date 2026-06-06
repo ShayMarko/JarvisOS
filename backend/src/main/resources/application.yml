@@ -109,10 +109,41 @@ jarvis:
         command: npx
         args: ["-y", "@playwright/mcp@latest", "--headless"]
         enabled: ${JARVIS_MCP_PLAYWRIGHT_ENABLED:false}
-    #   - name: filesystem
-    #     command: npx
-    #     args: ["-y", "@modelcontextprotocol/server-filesystem", "/Users/shaymarko/Desktop"]
-    #     enabled: true
+      # ---- Curated official MCP servers — each OFF by default (set its env var = true to enable). ----
+      # They're spawned at boot ONLY when enabled, so default-off keeps the headless box clean. Node ones
+      # need `npx`; Python ones need `uvx` (pip install uv). When on, their tools light up via mcp_call.
+      - name: filesystem                     # read/write files under a path (Node)
+        command: npx
+        args: ["-y", "@modelcontextprotocol/server-filesystem", "${JARVIS_MCP_FS_PATH:${HOME}/Desktop}"]
+        enabled: ${JARVIS_MCP_FILESYSTEM_ENABLED:false}
+      - name: memory                         # knowledge-graph memory (Node)
+        command: npx
+        args: ["-y", "@modelcontextprotocol/server-memory"]
+        enabled: ${JARVIS_MCP_MEMORY_ENABLED:false}
+      - name: sequential-thinking            # structured step-by-step reasoning tool (Node)
+        command: npx
+        args: ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+        enabled: ${JARVIS_MCP_SEQTHINKING_ENABLED:false}
+      - name: fetch                          # fetch a URL → clean markdown (Python/uvx)
+        command: uvx
+        args: ["mcp-server-fetch"]
+        enabled: ${JARVIS_MCP_FETCH_ENABLED:false}
+      - name: git                            # git status/log/diff/commit on a repo (Python/uvx)
+        command: uvx
+        args: ["mcp-server-git", "--repository", "${JARVIS_MCP_GIT_REPO:${HOME}}"]
+        enabled: ${JARVIS_MCP_GIT_ENABLED:false}
+      - name: time                           # current time + timezone conversion (Python/uvx)
+        command: uvx
+        args: ["mcp-server-time"]
+        enabled: ${JARVIS_MCP_TIME_ENABLED:false}
+      - name: sqlite                         # query a SQLite db (Python/uvx)
+        command: uvx
+        args: ["mcp-server-sqlite", "--db-path", "${JARVIS_MCP_SQLITE_DB:${HOME}/data.db}"]
+        enabled: ${JARVIS_MCP_SQLITE_ENABLED:false}
+      - name: brave-search                   # web search via Brave API (Node; needs BRAVE_API_KEY env)
+        command: npx
+        args: ["-y", "@modelcontextprotocol/server-brave-search"]
+        enabled: ${JARVIS_MCP_BRAVE_ENABLED:false}
   # OAuth providers (see JarvisOAuthProperties). Tokens are stored encrypted in the vault
   # and auto-refreshed. Empty by default; add a provider's client id/secret to enable.
   oauth:
@@ -199,6 +230,14 @@ jarvis:
     disk-percent-threshold: 90
     check-interval-ms: 600000        # every 10 min
     watch-folders: [Downloads, Screenshots, Generated]
+    initiative: ${JARVIS_PROACTIVE_INITIATIVE:true}   # LLM proactive "what should I flag" pass → Discord
+    initiative-cron: ${JARVIS_PROACTIVE_INITIATIVE_CRON:0 0 9,18 * * *}   # 09:00 & 18:00 daily
+  # Nightly self-reflection (see JarvisReflectionProperties): review runs → distil durable lessons to memory.
+  reflection:
+    enabled: ${JARVIS_REFLECTION_ENABLED:true}
+    cron: ${JARVIS_REFLECTION_CRON:0 30 23 * * *}   # 23:30 daily
+    lookback-runs: 40
+    max-lessons: 3
   # Second-brain auto-index (see JarvisSecondBrainProperties). Keeps the Knowledge Base continuously
   # in sync with notes/docs so the model's kb_search always has complete, current recall.
   second-brain:

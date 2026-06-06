@@ -21,6 +21,7 @@ import com.jarvis.ai.ToolSpec;
 import com.jarvis.ai.tools.Tool;
 import com.jarvis.ai.tools.ToolRegistry;
 import com.jarvis.approval.ApprovalService;
+import com.jarvis.explorer.FileSystemService;
 
 class AgentRuntimeTest {
 
@@ -75,7 +76,7 @@ class AgentRuntimeTest {
     void runsTheToolLoopAndComposesAnAnswer() {
         ToolRegistry registry = new ToolRegistry(List.of(new FakeListFiles()));
         AgentRuntime runtime = new AgentRuntime(new MockLanguageModel(), registry,
-                new JarvisAiProperties(), new JarvisPersonaProperties(), mock(ApprovalService.class));
+                new JarvisAiProperties(), new JarvisPersonaProperties(), mock(ApprovalService.class), mock(FileSystemService.class));
 
         AgentDefinition agent = new AgentDefinition("File Agent", "files", "files",
                 "You are the File Agent.", List.of("list_files"), "files");
@@ -105,7 +106,7 @@ class AgentRuntimeTest {
                 ModelResponse.text("I can't check the weather — I don't have real-time access.", 5, 5),
                 ModelResponse.tools(List.of(call("search_files")), 5, 5),
                 ModelResponse.text("It's 25°C and sunny in Tel Aviv.", 5, 5));
-        AgentRuntime runtime = new AgentRuntime(model, registry, props, new JarvisPersonaProperties(), mock(ApprovalService.class));
+        AgentRuntime runtime = new AgentRuntime(model, registry, props, new JarvisPersonaProperties(), mock(ApprovalService.class), mock(FileSystemService.class));
 
         AgentRun run = runtime.run(generalAgent(List.of("search_files")), "weather in tel aviv", "");
 
@@ -125,7 +126,7 @@ class AgentRuntimeTest {
                 ModelResponse.tools(List.of(call("write_file")), 5, 5),                       // file 2 (after nudge)
                 ModelResponse.text("Built the app under Projects/foo. Run: mvn spring-boot:run.", 5, 5))
         ;
-        AgentRuntime runtime = new AgentRuntime(model, registry, props, new JarvisPersonaProperties(), mock(ApprovalService.class))
+        AgentRuntime runtime = new AgentRuntime(model, registry, props, new JarvisPersonaProperties(), mock(ApprovalService.class), mock(FileSystemService.class))
         ;
         AgentRun run = runtime.run(codeAgent(List.of("write_file")), "build an app", "")
         ;
@@ -148,7 +149,7 @@ class AgentRuntimeTest {
                 ModelResponse.text(multiBlock, 5, 5),                            // narrates, writes nothing
                 ModelResponse.tools(List.of(call("write_file")), 5, 5),          // after nudge, writes a file
                 ModelResponse.text("Built it under Projects/app. Run: python run.py", 5, 5));
-        AgentRuntime runtime = new AgentRuntime(model, registry, props, new JarvisPersonaProperties(), mock(ApprovalService.class));
+        AgentRuntime runtime = new AgentRuntime(model, registry, props, new JarvisPersonaProperties(), mock(ApprovalService.class), mock(FileSystemService.class));
 
         AgentRun run = runtime.run(codeAgent(List.of("write_file")), "build a desktop todo app", "");
 
@@ -170,7 +171,7 @@ class AgentRuntimeTest {
             resps.add(ModelResponse.text("Done! Here's the code:\n```python\nx = 1\n```", 5, 5));
         }
         LanguageModel model = new ScriptedModel(resps.toArray(new ModelResponse[0]));
-        AgentRuntime runtime = new AgentRuntime(model, registry, props, new JarvisPersonaProperties(), mock(ApprovalService.class));
+        AgentRuntime runtime = new AgentRuntime(model, registry, props, new JarvisPersonaProperties(), mock(ApprovalService.class), mock(FileSystemService.class));
 
         AgentRun run = runtime.run(codeAgent(List.of("write_file")), "build an app", "");
 
@@ -187,7 +188,7 @@ class AgentRuntimeTest {
         ToolRegistry registry = new ToolRegistry(List.of(new OkWrite()));
         LanguageModel model = new ScriptedModel(ModelResponse.text(
                 "```json\n{\"name\": \"write_file\", \"arguments\": {\"path\": \"a.py\", \"content\": \"x\"}}\n``` run it", 5, 5));
-        AgentRuntime runtime = new AgentRuntime(model, registry, props, new JarvisPersonaProperties(), mock(ApprovalService.class));
+        AgentRuntime runtime = new AgentRuntime(model, registry, props, new JarvisPersonaProperties(), mock(ApprovalService.class), mock(FileSystemService.class));
 
         AgentRun run = runtime.run(codeAgent(List.of("write_file")), "build x", "");
 
@@ -204,7 +205,7 @@ class AgentRuntimeTest {
         ToolRegistry registry = new ToolRegistry(List.of(new OkWrite()));
         LanguageModel model = new ScriptedModel(
                 ModelResponse.text("Sure:\n```js\nconsole.log(1)\n```", 5, 5));
-        AgentRuntime runtime = new AgentRuntime(model, registry, props, new JarvisPersonaProperties(), mock(ApprovalService.class));
+        AgentRuntime runtime = new AgentRuntime(model, registry, props, new JarvisPersonaProperties(), mock(ApprovalService.class), mock(FileSystemService.class));
 
         AgentRun run = runtime.run(codeAgent(List.of("write_file")), "show me a js one-liner", "");
 
@@ -218,7 +219,7 @@ class AgentRuntimeTest {
         props.setProvider("ollama");
         ToolRegistry registry = new ToolRegistry(List.of());
         LanguageModel model = new ScriptedModel(ModelResponse.text("I can't do that.", 5, 5));
-        AgentRuntime runtime = new AgentRuntime(model, registry, props, new JarvisPersonaProperties(), mock(ApprovalService.class));
+        AgentRuntime runtime = new AgentRuntime(model, registry, props, new JarvisPersonaProperties(), mock(ApprovalService.class), mock(FileSystemService.class));
 
         AgentRun run = runtime.run(generalAgent(List.of()), "do something", "");
 
@@ -232,7 +233,7 @@ class AgentRuntimeTest {
         LanguageModel model = new ScriptedModel(
                 ModelResponse.tools(List.of(call("search_files")), 5, 5),
                 ModelResponse.text("I've created the full-stack app at Projects/reminders.", 5, 5));
-        AgentRuntime runtime = new AgentRuntime(model, registry, new JarvisAiProperties(), new JarvisPersonaProperties(), mock(ApprovalService.class));
+        AgentRuntime runtime = new AgentRuntime(model, registry, new JarvisAiProperties(), new JarvisPersonaProperties(), mock(ApprovalService.class), mock(FileSystemService.class));
 
         AgentRun run = runtime.run(codeAgent(List.of("search_files", "write_file")), "build an app", "");
 
@@ -248,7 +249,7 @@ class AgentRuntimeTest {
         LanguageModel model = new ScriptedModel(
                 ModelResponse.tools(List.of(call("write_file")), 5, 5),
                 ModelResponse.text("I've created the app at Projects/foo.", 5, 5));
-        AgentRuntime runtime = new AgentRuntime(model, registry, new JarvisAiProperties(), new JarvisPersonaProperties(), mock(ApprovalService.class));
+        AgentRuntime runtime = new AgentRuntime(model, registry, new JarvisAiProperties(), new JarvisPersonaProperties(), mock(ApprovalService.class), mock(FileSystemService.class));
 
         AgentRun run = runtime.run(codeAgent(List.of("write_file")), "build an app", "");
 
@@ -261,7 +262,7 @@ class AgentRuntimeTest {
         LanguageModel model = new ScriptedModel(
                 ModelResponse.tools(List.of(call("search_files")), 5, 5),
                 ModelResponse.text("Here's a plan for the app; shall I proceed?", 5, 5));
-        AgentRuntime runtime = new AgentRuntime(model, registry, new JarvisAiProperties(), new JarvisPersonaProperties(), mock(ApprovalService.class));
+        AgentRuntime runtime = new AgentRuntime(model, registry, new JarvisAiProperties(), new JarvisPersonaProperties(), mock(ApprovalService.class), mock(FileSystemService.class));
 
         AgentRun run = runtime.run(codeAgent(List.of("search_files", "write_file")), "build an app", "");
 

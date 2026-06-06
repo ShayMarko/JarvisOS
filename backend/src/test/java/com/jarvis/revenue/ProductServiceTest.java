@@ -29,7 +29,7 @@ class ProductServiceTest {
         when(fs.getRoot()).thenReturn(root);
         RevenueService revenue = mock(RevenueService.class);
 
-        String out = new ProductService(fs, revenue).packageProduct("Projects/demo", "Demo Kit");
+        String out = new ProductService(fs, revenue, mock(ProductRepository.class)).packageProduct("Projects/demo", "Demo Kit");
 
         assertThat(out).contains("Demo Kit.zip").contains("2 files");
         assertThat(Files.exists(root.resolve("Products/Demo Kit.zip"))).isTrue();
@@ -42,7 +42,7 @@ class ProductServiceTest {
         FileSystemService fs = mock(FileSystemService.class);
         when(fs.resolveExisting("note.txt")).thenReturn(file);
 
-        String out = new ProductService(fs, mock(RevenueService.class)).packageProduct("note.txt", null);
+        String out = new ProductService(fs, mock(RevenueService.class), mock(ProductRepository.class)).packageProduct("note.txt", null);
         assertThat(out).contains("not a folder");
     }
 }

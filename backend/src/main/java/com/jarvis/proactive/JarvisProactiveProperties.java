@@ -23,4 +23,9 @@ public class JarvisProactiveProperties {
     private long checkIntervalMs = 600_000;   // 10 min
     /** Jarvis-root subfolders watched for newly-arrived files. */
     private List<String> watchFolders = List.of("Downloads", "Screenshots", "Generated");
+
+    /** The LLM-driven proactive "initiative" pass (reviews state → high-signal suggestions to Discord). */
+    private boolean initiative = true;
+    /** Cron for the initiative pass (Spring 6-field). Default 09:00 & 18:00 daily. */
+    private String initiativeCron = "0 0 9,18 * * *";
 }
