@@ -5,9 +5,13 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.jarvis.common.logging.TraceIdFilter;
 
@@ -45,6 +49,31 @@ public class GlobalExceptionHandler {
         ApiError body = ApiError.of(ErrorCode.VALIDATION_FAILED, ex.getMessage(),
                 List.of(), TraceIdFilter.currentTraceId());
         return ResponseEntity.status(ErrorCode.VALIDATION_FAILED.status()).body(body);
+    }
+
+    /**
+     * Malformed/missing/mistyped request input — these are CLIENT errors (400), not server faults.
+     * Without this they'd fall through to the catch-all and be mislabelled as 500 INTERNAL.
+     */
+    @ExceptionHandler({HttpMessageNotReadableException.class, MissingServletRequestParameterException.class,
+            MethodArgumentTypeMismatchException.class})
+    public ResponseEntity<ApiError> handleBadRequest(Exception ex) {
+        ApiError body = ApiError.of(ErrorCode.VALIDATION_FAILED,
+                "Bad request: " + rootMessage(ex), List.of(), TraceIdFilter.currentTraceId());
+        return ResponseEntity.status(ErrorCode.VALIDATION_FAILED.status()).body(body);
+    }
+
+    /** Unknown route / static resource — a genuine 404, not a 500. */
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ApiError> handleNotFound(NoResourceFoundException ex) {
+        ApiError body = ApiError.of(ErrorCode.NOT_FOUND, "No such resource: " + ex.getResourcePath(),
+                List.of(), TraceIdFilter.currentTraceId());
+        return ResponseEntity.status(ErrorCode.NOT_FOUND.status()).body(body);
+    }
+
+    private static String rootMessage(Throwable ex) {
+        String m = ex.getMessage();
+        return m == null ? ex.getClass().getSimpleName() : m.split("[\\n:]", 2)[0];
     }
 
     @ExceptionHandler(Exception.class)

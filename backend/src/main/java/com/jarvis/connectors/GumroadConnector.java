@@ -37,6 +37,11 @@ public class GumroadConnector implements Connector {
     @Override public String requiredSecret() { return "gumroad-token"; }
 
     @Override
+    public com.jarvis.security.RiskLevel actionRisk(String actionId) {
+        return "create_product".equals(actionId) ? com.jarvis.security.RiskLevel.HIGH : com.jarvis.security.RiskLevel.LOW;
+    }
+
+    @Override
     public List<ConnectorAction> actions() {
         return List.of(
                 new ConnectorAction("list_products", "List products", "Your Gumroad products + prices"),

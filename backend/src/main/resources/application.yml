@@ -236,6 +236,15 @@ jarvis:
     watch-folders: [Downloads, Screenshots, Generated]
     initiative: ${JARVIS_PROACTIVE_INITIATIVE:true}   # LLM proactive "what should I flag" pass → Discord
     initiative-cron: ${JARVIS_PROACTIVE_INITIATIVE_CRON:0 0 9,18 * * *}   # 09:00 & 18:00 daily
+  # Autonomous Coordinator / "CEO" loop (see JarvisCoordinatorProperties). DEFAULT OFF — arming it lets
+  # Jarvis pick ONE funnel action per cron (scout / build / market / analyze) toward the goal, dispatched
+  # through the Orchestrator. It never publishes/deploys/charges (owner's call) and is capped by the
+  # monthly USD budget. Flip enabled=true (or JARVIS_COORDINATOR_ENABLED=true) when you want it to run.
+  coordinator:
+    enabled: ${JARVIS_COORDINATOR_ENABLED:false}
+    cron: ${JARVIS_COORDINATOR_CRON:0 0 10 * * *}     # 10:00 daily when armed
+    max-actions-per-run: 1
+    goal: ${JARVIS_COORDINATOR_GOAL:Grow the product portfolio toward steady passive income — build small useful products, improve listings, and market what's already live.}
   # Nightly self-reflection (see JarvisReflectionProperties): review runs → distil durable lessons to memory.
   reflection:
     enabled: ${JARVIS_REFLECTION_ENABLED:true}

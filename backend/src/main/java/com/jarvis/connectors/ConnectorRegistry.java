@@ -35,6 +35,12 @@ public class ConnectorRegistry {
         return byId.values().stream().map(this::toInfo).toList();
     }
 
+    /** Risk of a connector action (HIGH ⇒ should be approval-gated). Unknown connector ⇒ LOW. */
+    public com.jarvis.security.RiskLevel actionRisk(String connectorId, String actionId) {
+        Connector connector = byId.get(connectorId);
+        return connector == null ? com.jarvis.security.RiskLevel.LOW : connector.actionRisk(actionId);
+    }
+
     public String invoke(String connectorId, String actionId, String argumentsJson) {
         Connector connector = byId.get(connectorId);
         if (connector == null) {

@@ -38,6 +38,11 @@ public class NetlifyConnector implements Connector {
     @Override public String requiredSecret() { return "netlify-token"; }
 
     @Override
+    public com.jarvis.security.RiskLevel actionRisk(String actionId) {
+        return "deploy_zip".equals(actionId) ? com.jarvis.security.RiskLevel.HIGH : com.jarvis.security.RiskLevel.LOW;
+    }
+
+    @Override
     public List<ConnectorAction> actions() {
         return List.of(
                 new ConnectorAction("list_sites", "List sites", "Your Netlify sites + URLs"),
