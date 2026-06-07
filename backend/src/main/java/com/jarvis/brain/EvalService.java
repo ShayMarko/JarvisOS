@@ -1,5 +1,7 @@
 package com.jarvis.brain;
 
+import com.jarvis.ai.ModelTier;
+
 import java.time.Instant;
 import java.util.List;
 
@@ -54,7 +56,7 @@ public class EvalService {
 
     /** Run the full golden suite and grade each answer. Returns a report (empty if no real model). */
     public EvalReport run() {
-        if (!realModel()) {
+        if (!ModelTier.isReal(ai)) {
             return new EvalReport(Instant.now(), List.of(), 0, 0,
                     "No real model configured — eval skipped (would only grade mock output).");
         }
@@ -84,7 +86,7 @@ public class EvalService {
                             + "by a reason of 20 words or fewer. No other text."),
                     ChatMessage.user("TASK: " + c.prompt() + "\n\nEXPECTATION: " + c.expectation()
                             + "\n\nACTUAL ANSWER: " + answer)),
-                    List.of(), cheapModelId());
+                    List.of(), ModelTier.cheapModelId(ai));
             return parseVerdict(c, answer, r == null ? null : r.text());
         } catch (RuntimeException e) {
             log.debug("Eval judge failed for {}: {}", c.id(), e.getMessage());
@@ -108,23 +110,6 @@ public class EvalService {
         return new EvalResult(c.id(), c.prompt(), c.expectation(), answer, pass, reason);
     }
 
-    private boolean realModel() {
-        String p = ai.getProvider() == null ? "" : ai.getProvider().toLowerCase();
-        return p.equals("ollama")
-                || ((p.equals("claude") || p.equals("anthropic")) && notBlank(ai.getAnthropicApiKey()))
-                || (p.equals("openai") && notBlank(ai.getOpenaiApiKey()));
-    }
 
-    private String cheapModelId() {
-        String p = ai.getProvider() == null ? "" : ai.getProvider().toLowerCase();
-        return switch (p) {
-            case "claude", "anthropic" -> ai.getPlannerModelClaude();
-            case "openai" -> ai.getPlannerModelOpenai();
-            default -> null;
-        };
-    }
 
-    private static boolean notBlank(String s) {
-        return s != null && !s.isBlank();
-    }
 }

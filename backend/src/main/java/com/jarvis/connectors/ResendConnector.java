@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jarvis.common.Json;
 import com.jarvis.error.Exceptions.NotFoundException;
 
-import lombok.RequiredArgsConstructor;
 
 /**
  * Real Resend connector — lets Jarvis send transactional + launch/newsletter email, so the business can own
@@ -21,13 +20,15 @@ import lombok.RequiredArgsConstructor;
  * {@code resend-token}). Sender domain must be verified in Resend; the test sender works out of the box.
  */
 @Component
-@RequiredArgsConstructor
-public class ResendConnector implements Connector {
+public class ResendConnector extends AbstractRestConnector {
+
+    public ResendConnector(ObjectMapper mapper) {
+        super(mapper);
+    }
 
     private static final String DEFAULT_FROM = "Jarvis <onboarding@resend.dev>";
 
     private final RestClient client = RestClient.create("https://api.resend.com");
-    private final ObjectMapper mapper;
 
     @Override public String id() { return "resend"; }
     @Override public String name() { return "Resend (Email)"; }
@@ -86,11 +87,4 @@ public class ResendConnector implements Connector {
                 : "✅ Email sent to " + to + " (id=" + id + ").";
     }
 
-    private JsonNode read(String json) {
-        try {
-            return mapper.readTree(json == null || json.isBlank() ? "{}" : json);
-        } catch (Exception e) {
-            return mapper.createObjectNode();
-        }
-    }
 }

@@ -14,7 +14,6 @@ import com.jarvis.common.Json;
 import com.jarvis.error.Exceptions.NotFoundException;
 import com.jarvis.explorer.FileSystemService;
 
-import lombok.RequiredArgsConstructor;
 
 /**
  * Real Cloudflare connector — closes the open hosting gap (micro-APIs previously needed Fly/Render, static
@@ -25,11 +24,14 @@ import lombok.RequiredArgsConstructor;
  * Micro-API lane can actually ship. Pages projects can be created here too (file push then via Git or wrangler).
  */
 @Component
-@RequiredArgsConstructor
-public class CloudflareConnector implements Connector {
+public class CloudflareConnector extends AbstractRestConnector {
+
+    public CloudflareConnector(ObjectMapper mapper, FileSystemService fs) {
+        super(mapper);
+        this.fs = fs;
+    }
 
     private final RestClient client = RestClient.create("https://api.cloudflare.com/client/v4");
-    private final ObjectMapper mapper;
     private final FileSystemService fs;
 
     @Override public String id() { return "cloudflare"; }
@@ -145,13 +147,6 @@ public class CloudflareConnector implements Connector {
         return client.get().uri(path).header("Authorization", "Bearer " + token).retrieve().body(String.class);
     }
 
-    private JsonNode read(String json) {
-        try {
-            return mapper.readTree(json == null || json.isBlank() ? "{}" : json);
-        } catch (Exception e) {
-            return mapper.createObjectNode();
-        }
-    }
 
     private static String esc(String v) {
         return v == null ? "" : v.replace("\\", "\\\\").replace("\"", "\\\"");

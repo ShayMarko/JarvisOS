@@ -14,7 +14,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jarvis.common.Json;
 import com.jarvis.error.Exceptions.NotFoundException;
 
-import lombok.RequiredArgsConstructor;
 
 /**
  * Real Shopify connector — your own storefront for the product lanes. Admin API access token from the
@@ -23,13 +22,15 @@ import lombok.RequiredArgsConstructor;
  * DRAFT product (you review + publish in Shopify). create_product is approval-gated (a real external write).
  */
 @Component
-@RequiredArgsConstructor
-public class ShopifyConnector implements Connector {
+public class ShopifyConnector extends AbstractRestConnector {
+
+    public ShopifyConnector(ObjectMapper mapper) {
+        super(mapper);
+    }
 
     private static final String API_VERSION = "2024-10";
 
     private final RestClient client = RestClient.create();
-    private final ObjectMapper mapper;
 
     @Override public String id() { return "shopify"; }
     @Override public String name() { return "Shopify"; }
@@ -127,11 +128,4 @@ public class ShopifyConnector implements Connector {
         return client.get().uri(url).header("X-Shopify-Access-Token", token).retrieve().body(String.class);
     }
 
-    private JsonNode read(String json) {
-        try {
-            return mapper.readTree(json == null || json.isBlank() ? "{}" : json);
-        } catch (Exception e) {
-            return mapper.createObjectNode();
-        }
-    }
 }

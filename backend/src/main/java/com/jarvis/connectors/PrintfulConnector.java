@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jarvis.common.Json;
 import com.jarvis.error.Exceptions.NotFoundException;
 
-import lombok.RequiredArgsConstructor;
 
 /**
  * Real Printful connector — the print-on-demand lane. Jarvis generates the artwork (gpt-image-1), hosts it at
@@ -24,11 +23,13 @@ import lombok.RequiredArgsConstructor;
  * or Cloudflare connector first, then pass that URL here.
  */
 @Component
-@RequiredArgsConstructor
-public class PrintfulConnector implements Connector {
+public class PrintfulConnector extends AbstractRestConnector {
+
+    public PrintfulConnector(ObjectMapper mapper) {
+        super(mapper);
+    }
 
     private final RestClient client = RestClient.create("https://api.printful.com");
-    private final ObjectMapper mapper;
 
     @Override public String id() { return "printful"; }
     @Override public String name() { return "Printful (Print-on-Demand)"; }
@@ -142,11 +143,4 @@ public class PrintfulConnector implements Connector {
                 + "(Etsy/Shopify) from the Printful dashboard.";
     }
 
-    private JsonNode read(String json) {
-        try {
-            return mapper.readTree(json == null || json.isBlank() ? "{}" : json);
-        } catch (Exception e) {
-            return mapper.createObjectNode();
-        }
-    }
 }

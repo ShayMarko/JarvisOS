@@ -14,7 +14,6 @@ import com.jarvis.common.Json;
 import com.jarvis.error.Exceptions.NotFoundException;
 import com.jarvis.explorer.FileSystemService;
 
-import lombok.RequiredArgsConstructor;
 
 /**
  * Real Netlify connector — the "deploy/host" step of the money loop for STATIC output (SEO sites, landing
@@ -23,13 +22,16 @@ import lombok.RequiredArgsConstructor;
  * approval. (Micro-APIs need a server host like Fly/Render — a separate future connector.)
  */
 @Component
-@RequiredArgsConstructor
-public class NetlifyConnector implements Connector {
+public class NetlifyConnector extends AbstractRestConnector {
+
+    public NetlifyConnector(ObjectMapper mapper, FileSystemService fs) {
+        super(mapper);
+        this.fs = fs;
+    }
 
     private static final MediaType ZIP = MediaType.parseMediaType("application/zip");
 
     private final RestClient client = RestClient.create("https://api.netlify.com/api/v1");
-    private final ObjectMapper mapper;
     private final FileSystemService fs;
 
     @Override public String id() { return "netlify"; }
@@ -97,11 +99,4 @@ public class NetlifyConnector implements Connector {
                 + d.path("ssl_url").asText(d.path("deploy_ssl_url").asText("(URL pending)"));
     }
 
-    private JsonNode read(String json) {
-        try {
-            return mapper.readTree(json == null || json.isBlank() ? "[]" : json);
-        } catch (Exception e) {
-            return mapper.createObjectNode();
-        }
-    }
 }

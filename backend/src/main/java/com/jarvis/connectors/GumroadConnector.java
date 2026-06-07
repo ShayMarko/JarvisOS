@@ -1,7 +1,5 @@
 package com.jarvis.connectors;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.springframework.http.MediaType;
@@ -13,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jarvis.common.Json;
 import com.jarvis.error.Exceptions.NotFoundException;
 
-import lombok.RequiredArgsConstructor;
 
 /**
  * Real Gumroad connector — the "sell" step of the money loop. Lists/creates products and reads sales
@@ -25,11 +22,13 @@ import lombok.RequiredArgsConstructor;
  * gets you 90% there — product created, priced, described — and you attach the zip + publish.
  */
 @Component
-@RequiredArgsConstructor
-public class GumroadConnector implements Connector {
+public class GumroadConnector extends AbstractRestConnector {
+
+    public GumroadConnector(ObjectMapper mapper) {
+        super(mapper);
+    }
 
     private final RestClient client = RestClient.create("https://api.gumroad.com");
-    private final ObjectMapper mapper;
 
     @Override public String id() { return "gumroad"; }
     @Override public String name() { return "Gumroad"; }
@@ -107,15 +106,5 @@ public class GumroadConnector implements Connector {
                 "%.2f", total) + " gross. Log it with revenue_log when you reconcile.";
     }
 
-    private JsonNode read(String json) {
-        try {
-            return mapper.readTree(json == null || json.isBlank() ? "{}" : json);
-        } catch (Exception e) {
-            return mapper.createObjectNode();
-        }
-    }
 
-    private static String enc(String v) {
-        return URLEncoder.encode(v == null ? "" : v, StandardCharsets.UTF_8);
-    }
 }

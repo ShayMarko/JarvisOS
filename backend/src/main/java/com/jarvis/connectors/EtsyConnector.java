@@ -1,7 +1,5 @@
 package com.jarvis.connectors;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.springframework.http.MediaType;
@@ -13,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jarvis.common.Json;
 import com.jarvis.error.Exceptions.NotFoundException;
 
-import lombok.RequiredArgsConstructor;
 
 /**
  * Real Etsy connector (Open API v3) — sell handmade/printable/POD products on Etsy. Etsy needs TWO creds:
@@ -22,13 +19,15 @@ import lombok.RequiredArgsConstructor;
  * api key, writes use both. create_draft_listing is approval-gated and creates a DRAFT (you review + publish).
  */
 @Component
-@RequiredArgsConstructor
-public class EtsyConnector implements Connector {
+public class EtsyConnector extends AbstractRestConnector {
+
+    public EtsyConnector(ObjectMapper mapper) {
+        super(mapper);
+    }
 
     private static final String BASE = "https://openapi.etsy.com";
 
     private final RestClient client = RestClient.create(BASE);
-    private final ObjectMapper mapper;
 
     @Override public String id() { return "etsy"; }
     @Override public String name() { return "Etsy"; }
@@ -133,15 +132,5 @@ public class EtsyConnector implements Connector {
                 + "). Add photos + publish on Etsy.";
     }
 
-    private JsonNode read(String json) {
-        try {
-            return mapper.readTree(json == null || json.isBlank() ? "{}" : json);
-        } catch (Exception e) {
-            return mapper.createObjectNode();
-        }
-    }
 
-    private static String enc(String v) {
-        return URLEncoder.encode(v == null ? "" : v, StandardCharsets.UTF_8);
-    }
 }

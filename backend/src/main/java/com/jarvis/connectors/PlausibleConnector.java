@@ -1,7 +1,5 @@
 package com.jarvis.connectors;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -12,7 +10,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jarvis.common.Json;
 import com.jarvis.error.Exceptions.NotFoundException;
 
-import lombok.RequiredArgsConstructor;
 
 /**
  * Real Plausible Analytics connector — gives the Analyst REAL traffic numbers instead of flying blind.
@@ -20,11 +17,13 @@ import lombok.RequiredArgsConstructor;
  * aggregate stats, top pages and top sources for a site — the inputs an A/B test or a "double-down" call needs.
  */
 @Component
-@RequiredArgsConstructor
-public class PlausibleConnector implements Connector {
+public class PlausibleConnector extends AbstractRestConnector {
+
+    public PlausibleConnector(ObjectMapper mapper) {
+        super(mapper);
+    }
 
     private final RestClient client = RestClient.create("https://plausible.io");
-    private final ObjectMapper mapper;
 
     @Override public String id() { return "plausible"; }
     @Override public String name() { return "Plausible Analytics"; }
@@ -83,15 +82,5 @@ public class PlausibleConnector implements Connector {
         return client.get().uri(path).header("Authorization", "Bearer " + token).retrieve().body(String.class);
     }
 
-    private JsonNode read(String json) {
-        try {
-            return mapper.readTree(json == null || json.isBlank() ? "{}" : json);
-        } catch (Exception e) {
-            return mapper.createObjectNode();
-        }
-    }
 
-    private static String enc(String v) {
-        return URLEncoder.encode(v == null ? "" : v, StandardCharsets.UTF_8);
-    }
 }

@@ -30,49 +30,8 @@ public class AgentSelector {
 
     private static final Logger log = LoggerFactory.getLogger(AgentSelector.class);
 
-    /** An ordered routing rule: if the message contains any keyword, route to {@code slug}. */
-    private record Rule(String slug, List<String> keywords) {}
-
-    private static final List<Rule> RULES = List.of(
-            new Rule("system", List.of("cpu", "ram", "system status", "resource", "health")),
-            new Rule("knowledge", List.of("remember", "memory", "preference", "know about me")),
-            new Rule("email", List.of("email", "inbox", "mail", "reply to")),
-            new Rule("calendar", List.of("calendar", "schedule", "meeting", "event", "agenda")),
-            new Rule("data", List.of("analyse", "analyze", "data", "csv", "spreadsheet")),
-            new Rule("trading", List.of("trading", "trade setup", "market", "stock", "crypto", "ticker",
-                    "price of", "wyckoff", "support and resistance", "candle", "swing trade", "btcusdt")),
-            new Rule("notion", List.of("notion", "notion template", "notion templates")),
-            new Rule("productbuilder", List.of("boilerplate", "starter kit", "saas starter", "sellable", "sell it",
-                    "sell this", "product to sell", "package for sale", "gumroad", "digital product")),
-            new Rule("appfactory", List.of("app factory", "launch an app", "launch a product", "productize",
-                    "app to sell", "sell an app", "mvp to sell", "passive income app", "validate and build")),
-            new Rule("microapi", List.of("rapidapi", "rapid api", "micro-api", "micro api", "api to sell",
-                    "sell an api", "publish an api", "per-call api", "api on rapidapi")),
-            new Rule("seosite", List.of("seo site", "content site", "affiliate site", "niche site",
-                    "blog to monetize", "monetize a blog", "content website", "affiliate blog")),
-            new Rule("scout", List.of("opportunity", "opportunities", "product idea", "product ideas", "what should i build",
-                    "what to build", "trend", "trending", "niche to", "find a niche", "market gap", "demand for", "scout")),
-            new Rule("analyst", List.of("which product", "best seller", "best-seller", "what's selling", "whats selling",
-                    "double down", "underperform", "roi", "return on investment", "should i drop", "analyse my sales",
-                    "analyze my sales", "portfolio analysis", "revenue breakdown")),
-            new Rule("growth", List.of("market it", "marketing", "promote", "drive traffic", "get traffic", "distribution",
-                    "social post", "social posts", "launch post", "go viral", "reach customers", "growth")),
-            new Rule("coordinator", List.of("run the business", "what should we do next", "what's next for the business",
-                    "next move", "next moves", "business plan", "coordinate", "ceo", "the big picture", "overall plan")),
-            new Rule("pod", List.of("print on demand", "print-on-demand", "pod", "mug", "t-shirt", "tshirt", "t shirt",
-                    "poster", "sticker", "printful", "merch", "merchandise")),
-            new Rule("video", List.of("video", "short", "shorts", "tiktok", "reel", "reels", "youtube short",
-                    "faceless", "voiceover", "video script")),
-            new Rule("author", List.of("ebook", "e-book", "write a book", "write me a book", "author a book",
-                    "my book", "the book", "a chapter", "kdp", "manuscript", "ghostwrite")),
-            new Rule("devflow", List.of("pull request", "pull-request", "review pr", "review the pr", "review my pr",
-                    "list prs", "open prs", "triage", "github issue", "github issues", "merge request")),
-            new Rule("code", List.of("code", "function", "bug", "class ", "compile", "stack trace",
-                    "build an app", "build a app", "build me an app", "build the app", "build a ", "create an app",
-                    "spring boot", "react app", "backend", "frontend", "rest api", "web app", "implement")),
-            new Rule("research", List.of("document", "docs", "according to", "knowledge base",
-                    "on the web", "web search", "research", "look up", "summarise", "summarize", "find")),
-            new Rule("files", List.of("file", "files", "folder", "directory", "read", "open", "explorer")));
+// Routing keywords now live in each agent's markdown frontmatter (keywords + routePriority);
+    // AgentSelector builds its ordered table from the registry, so an agent is fully self-routing.
 
     private final AgentRegistry registry;
     private final LanguageModel model;
@@ -108,12 +67,29 @@ public class AgentSelector {
                 return code.get();
             }
         }
-        return RULES.stream()
-                .filter(rule -> rule.keywords().stream().anyMatch(m::contains))
-                .map(rule -> registry.find(rule.slug()))
-                .filter(Optional::isPresent).map(Optional::get)
+        return keywordAgents().stream()
+                .filter(a -> a.keywords().stream().anyMatch(m::contains))
                 .findFirst()
                 .orElseGet(registry::general);
+    }
+
+    /**
+     * The keyword-routing table, built ONCE from the roster (agents with keywords, ordered by routePriority)
+     * and cached — so per-request routing is a plain ordered scan, not a fresh copy+sort every call. The
+     * roster is fixed after startup, so the cache never goes stale (matches the old static RULES cost).
+     */
+    private volatile List<AgentDefinition> keywordAgents;
+
+    private List<AgentDefinition> keywordAgents() {
+        List<AgentDefinition> cached = keywordAgents;
+        if (cached == null) {
+            cached = registry.all().stream()
+                    .filter(a -> !a.keywords().isEmpty())
+                    .sorted(java.util.Comparator.comparingInt(AgentDefinition::routePriority))
+                    .toList();
+            keywordAgents = cached;
+        }
+        return cached;
     }
 
     /** A build/create verb paired with a software-artifact noun ⇒ this is a "build me X" request. */

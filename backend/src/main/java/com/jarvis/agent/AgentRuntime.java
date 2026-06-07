@@ -1,5 +1,7 @@
 package com.jarvis.agent;
 
+import com.jarvis.ai.ModelTier;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -148,7 +150,7 @@ public class AgentRuntime {
             // Capability self-discovery: if the model is about to REFUSE but it actually HAS tools, hand
             // it its own tool list once and let it reconsider — turning "I can't get the weather" into a
             // web_search call. General (any refusal, any tool), no per-request hard-coding.
-            if (!reflected && !toolSpecs.isEmpty() && realModel() && isCapabilityRefusal(text)) {
+            if (!reflected && !toolSpecs.isEmpty() && ModelTier.isReal(ai) && isCapabilityRefusal(text)) {
                 reflected = true;
                 messages.add(ChatMessage.user(reflectionNudge(toolSpecs)));
                 Step recheck = new Step("intent", "Re-checking my own capabilities", null);
@@ -163,7 +165,7 @@ public class AgentRuntime {
             // nothing. Either way, push it to keep writing. A single snippet (one code block, no file
             // written) is left alone, so "show me a one-liner" answers aren't hijacked. Bounded.
             boolean dumpingProject = wroteFile || multipleCodeBlocks(text);
-            if (dumpingProject && continuations < MAX_BUILD_CONTINUATIONS && realModel()
+            if (dumpingProject && continuations < MAX_BUILD_CONTINUATIONS && ModelTier.isReal(ai)
                     && agentCanMutate && hasCodeFence(text)) {
                 continuations++;
                 messages.add(ChatMessage.user(continuationNudge()));
@@ -175,7 +177,7 @@ public class AgentRuntime {
 
             // Reflexion: the agent is action-capable and DID call tools, but nothing succeeded — rather than
             // return a dud, let it self-diagnose and try once more (bounded to one retry, real model only).
-            if (!reflexed && realModel() && agentCanMutate && toolCalled && !mutationSucceeded) {
+            if (!reflexed && ModelTier.isReal(ai) && agentCanMutate && toolCalled && !mutationSucceeded) {
                 reflexed = true;
                 messages.add(ChatMessage.user("That attempt didn't actually complete — none of your tool calls "
                         + "succeeded (see the results above). Briefly reflect on WHY, then TRY AGAIN now: call the "
@@ -415,7 +417,7 @@ public class AgentRuntime {
      * deterministic honest banner. Either way the user is never told a fabricated success.
      */
     private String correctOverclaim(String answer, List<Step> steps) {
-        String rewrite = realModel() ? modelRewrite(answer, steps) : null;
+        String rewrite = ModelTier.isReal(ai) ? modelRewrite(answer, steps) : null;
         if (isCleanRewrite(rewrite, answer)) {
             return rewrite;
         }
@@ -435,7 +437,7 @@ public class AgentRuntime {
             String user = "REPLY:\n" + (answer == null ? "" : answer)
                     + "\n\nTOOL RESULTS THIS TURN:\n" + (evidence.isBlank() ? "(no tools succeeded)" : evidence);
             ModelResponse r = model.generate(
-                    List.of(ChatMessage.system(system), ChatMessage.user(user)), List.of(), cheapModel());
+                    List.of(ChatMessage.system(system), ChatMessage.user(user)), List.of(), ModelTier.cheapModelId(ai));
             return r == null || r.text() == null ? null : r.text().strip();
         } catch (RuntimeException e) {
             return null;   // never let the guard break a turn
@@ -478,26 +480,9 @@ public class AgentRuntime {
     }
 
     /** A real reasoning model is active (so the self-check is meaningful) — not the offline mock. */
-    private boolean realModel() {
-        String p = ai.getProvider() == null ? "" : ai.getProvider().toLowerCase();
-        return p.equals("ollama")
-                || ((p.equals("claude") || p.equals("anthropic")) && notBlank(ai.getAnthropicApiKey()))
-                || (p.equals("openai") && notBlank(ai.getOpenaiApiKey()));
-    }
 
     /** Cheap model for the meta self-check (same tier as the planner); null ⇒ provider default. */
-    private String cheapModel() {
-        String p = ai.getProvider() == null ? "" : ai.getProvider().toLowerCase();
-        return switch (p) {
-            case "claude", "anthropic" -> ai.getPlannerModelClaude();
-            case "openai" -> ai.getPlannerModelOpenai();
-            default -> null;
-        };
-    }
 
-    private static boolean notBlank(String s) {
-        return s != null && !s.isBlank();
-    }
 
     private static final ObjectMapper LABEL_MAPPER = new ObjectMapper();
 

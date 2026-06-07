@@ -1,7 +1,5 @@
 package com.jarvis.connectors;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Locale;
 
@@ -14,7 +12,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jarvis.common.Json;
 import com.jarvis.error.Exceptions.NotFoundException;
 
-import lombok.RequiredArgsConstructor;
 
 /**
  * Real Stripe connector — payment truth + the ability for the Micro-API lane to bill its OWN customers
@@ -22,11 +19,13 @@ import lombok.RequiredArgsConstructor;
  * Reads products/revenue/balance, and creates a shareable payment link (product → price → link) in one call.
  */
 @Component
-@RequiredArgsConstructor
-public class StripeConnector implements Connector {
+public class StripeConnector extends AbstractRestConnector {
+
+    public StripeConnector(ObjectMapper mapper) {
+        super(mapper);
+    }
 
     private final RestClient client = RestClient.create("https://api.stripe.com");
-    private final ObjectMapper mapper;
 
     @Override public String id() { return "stripe"; }
     @Override public String name() { return "Stripe"; }
@@ -131,17 +130,7 @@ public class StripeConnector implements Connector {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED).body(form).retrieve().body(String.class);
     }
 
-    private JsonNode read(String json) {
-        try {
-            return mapper.readTree(json == null || json.isBlank() ? "{}" : json);
-        } catch (Exception e) {
-            return mapper.createObjectNode();
-        }
-    }
 
-    private static String enc(String v) {
-        return URLEncoder.encode(v == null ? "" : v, StandardCharsets.UTF_8);
-    }
 
     private static String fmt(double v) {
         return String.format(Locale.ROOT, "%.2f", v);

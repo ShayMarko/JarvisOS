@@ -1,5 +1,7 @@
 package com.jarvis.brain;
 
+import com.jarvis.ai.ModelTier;
+
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
@@ -192,7 +194,7 @@ public class Orchestrator {
             Consumer<Step> onStep, ModelDescriptor model, AgentRun firstRun, List<Step> steps) {
         int max = ai.getBuildVerifyMaxIters();
         String project = detectProjectName(firstRun.steps());
-        if (max <= 0 || project == null || !realModel()) {
+        if (max <= 0 || project == null || !ModelTier.isReal(ai)) {
             return firstRun;
         }
         AgentDefinition tester = registry.find("test").orElse(dev);
@@ -251,7 +253,7 @@ public class Orchestrator {
             Consumer<Step> onStep, ModelDescriptor model, AgentRun firstRun, List<Step> steps) {
         int max = ai.getBookReviewMaxIters();
         String book = detectName(firstRun.steps(), WROTE_BOOK);
-        if (max <= 0 || book == null || !realModel()) {
+        if (max <= 0 || book == null || !ModelTier.isReal(ai)) {
             return firstRun;
         }
         AgentDefinition critic = registry.find("bookcritic").orElse(author);
@@ -297,16 +299,7 @@ public class Orchestrator {
     }
 
     /** A real reasoning model is active (not the offline mock) — gates the verify loop. */
-    private boolean realModel() {
-        String p = ai.getProvider() == null ? "" : ai.getProvider().toLowerCase();
-        return p.equals("ollama")
-                || ((p.equals("claude") || p.equals("anthropic")) && notBlank(ai.getAnthropicApiKey()))
-                || (p.equals("openai") && notBlank(ai.getOpenaiApiKey()));
-    }
 
-    private static boolean notBlank(String s) {
-        return s != null && !s.isBlank();
-    }
 
     /** Runs a multi-step plan: sub-agents in parallel, then merges their answers. */
     private ChatResponse executePlan(String message, String session, Task task, List<Step> steps,

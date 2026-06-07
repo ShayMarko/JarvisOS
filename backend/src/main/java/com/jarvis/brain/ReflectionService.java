@@ -1,5 +1,7 @@
 package com.jarvis.brain;
 
+import com.jarvis.ai.ModelTier;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -43,7 +45,7 @@ public class ReflectionService {
 
     @Scheduled(cron = "${jarvis.reflection.cron:0 30 23 * * *}", zone = "${jarvis.briefing.zone:}")
     void nightly() {
-        if (!props.isEnabled() || !realModel()) {
+        if (!props.isEnabled() || !ModelTier.isReal(ai)) {
             return;
         }
         try {
@@ -63,7 +65,7 @@ public class ReflectionService {
                             + "remembered or clearly one-off. Output STRICT lines, each exactly 'TITLE :: one-sentence "
                             + "lesson', or the single word NONE. No preamble."),
                     ChatMessage.user("RUNS:\n" + runsText + "\n\nALREADY REMEMBER: " + known)),
-                    List.of(), cheapModelId());
+                    List.of(), ModelTier.cheapModelId(ai));
 
             List<String[]> lessons = parseLessons(r == null ? null : r.text());
             int saved = 0;
@@ -138,23 +140,6 @@ public class ReflectionService {
                 .anyMatch(m -> m.getTitle() != null && m.getTitle().toLowerCase(Locale.ROOT).equals(t));
     }
 
-    private boolean realModel() {
-        String p = ai.getProvider() == null ? "" : ai.getProvider().toLowerCase();
-        return p.equals("ollama")
-                || ((p.equals("claude") || p.equals("anthropic")) && notBlank(ai.getAnthropicApiKey()))
-                || (p.equals("openai") && notBlank(ai.getOpenaiApiKey()));
-    }
 
-    private String cheapModelId() {
-        String p = ai.getProvider() == null ? "" : ai.getProvider().toLowerCase();
-        return switch (p) {
-            case "claude", "anthropic" -> ai.getPlannerModelClaude();
-            case "openai" -> ai.getPlannerModelOpenai();
-            default -> null;
-        };
-    }
 
-    private static boolean notBlank(String s) {
-        return s != null && !s.isBlank();
-    }
 }

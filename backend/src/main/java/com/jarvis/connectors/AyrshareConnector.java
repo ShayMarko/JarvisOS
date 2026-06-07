@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.jarvis.common.Json;
 import com.jarvis.error.Exceptions.NotFoundException;
 
-import lombok.RequiredArgsConstructor;
 
 /**
  * Real Ayrshare connector — ONE integration that posts to many social networks (X/Twitter, Reddit, LinkedIn,
@@ -21,11 +20,13 @@ import lombok.RequiredArgsConstructor;
  * the assets it drafts, not just file them. API key from the Secrets Vault (entry {@code ayrshare-token}).
  */
 @Component
-@RequiredArgsConstructor
-public class AyrshareConnector implements Connector {
+public class AyrshareConnector extends AbstractRestConnector {
+
+    public AyrshareConnector(ObjectMapper mapper) {
+        super(mapper);
+    }
 
     private final RestClient client = RestClient.create("https://api.ayrshare.com");
-    private final ObjectMapper mapper;
 
     @Override public String id() { return "ayrshare"; }
     @Override public String name() { return "Ayrshare (Social)"; }
@@ -137,11 +138,4 @@ public class AyrshareConnector implements Connector {
         return r.toString();
     }
 
-    private JsonNode read(String json) {
-        try {
-            return mapper.readTree(json == null || json.isBlank() ? "{}" : json);
-        } catch (Exception e) {
-            return mapper.createObjectNode();
-        }
-    }
 }

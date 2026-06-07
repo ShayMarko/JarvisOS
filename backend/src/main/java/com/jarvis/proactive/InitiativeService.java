@@ -1,5 +1,7 @@
 package com.jarvis.proactive;
 
+import com.jarvis.ai.ModelTier;
+
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -37,7 +39,7 @@ public class InitiativeService {
 
     @Scheduled(cron = "${jarvis.proactive.initiative-cron:0 0 9,18 * * *}", zone = "${jarvis.briefing.zone:}")
     void tick() {
-        if (!props.isEnabled() || !props.isInitiative() || !realModel()) {
+        if (!props.isEnabled() || !props.isInitiative() || !ModelTier.isReal(ai)) {
             return;
         }
         try {
@@ -47,7 +49,7 @@ public class InitiativeService {
                             + "overdue/stuck task, a pending approval, a health/disk issue, a useful follow-up. One "
                             + "concise line each. If nothing genuinely warrants interrupting them, reply with exactly "
                             + "NONE. No preamble, no headings."),
-                    ChatMessage.user(digest.build())), List.of(), cheapModelId());
+                    ChatMessage.user(digest.build())), List.of(), ModelTier.cheapModelId(ai));
             String text = r == null || r.text() == null ? "" : r.text().strip();
             if (text.isEmpty() || text.length() < 8 || text.equalsIgnoreCase("NONE")
                     || text.toUpperCase().startsWith("NONE")) {
@@ -60,24 +62,7 @@ public class InitiativeService {
     }
 
     /** A real reasoning model is active (not the offline mock) — otherwise the pass is pointless. */
-    private boolean realModel() {
-        String p = ai.getProvider() == null ? "" : ai.getProvider().toLowerCase();
-        return p.equals("ollama")
-                || ((p.equals("claude") || p.equals("anthropic")) && notBlank(ai.getAnthropicApiKey()))
-                || (p.equals("openai") && notBlank(ai.getOpenaiApiKey()));
-    }
 
     /** Cheap model tier for this background pass (planner model); null ⇒ provider default. */
-    private String cheapModelId() {
-        String p = ai.getProvider() == null ? "" : ai.getProvider().toLowerCase();
-        return switch (p) {
-            case "claude", "anthropic" -> ai.getPlannerModelClaude();
-            case "openai" -> ai.getPlannerModelOpenai();
-            default -> null;
-        };
-    }
 
-    private static boolean notBlank(String s) {
-        return s != null && !s.isBlank();
-    }
 }

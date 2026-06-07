@@ -1,5 +1,7 @@
 package com.jarvis.coordinator;
 
+import com.jarvis.ai.ModelTier;
+
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -59,7 +61,7 @@ public class CoordinatorService {
      * (also used by the manual /api/coordinator/tick trigger). Safe to call when disabled — it just reports.
      */
     public String tick() {
-        if (!realModel()) {
+        if (!ModelTier.isReal(ai)) {
             return "Coordinator idle — no real model configured (would only plan against the offline mock).";
         }
         try {
@@ -100,7 +102,7 @@ public class CoordinatorService {
                         + "publish, deploy live, or charge money — those are the owner's manual steps. Reply with EXACTLY "
                         + "two lines:\nACTION: <one of the words above>\nINSTRUCTION: <one concrete sentence>"),
                 ChatMessage.user("GOAL: " + goal() + "\n\nPORTFOLIO:\n" + portfolioSummary())),
-                List.of(), cheapModelId());
+                List.of(), ModelTier.cheapModelId(ai));
         return parseDecision(r == null ? null : r.text());
     }
 
@@ -167,25 +169,8 @@ public class CoordinatorService {
         return products.portfolio().size();
     }
 
-    private boolean realModel() {
-        String p = ai.getProvider() == null ? "" : ai.getProvider().toLowerCase();
-        return p.equals("ollama")
-                || ((p.equals("claude") || p.equals("anthropic")) && notBlank(ai.getAnthropicApiKey()))
-                || (p.equals("openai") && notBlank(ai.getOpenaiApiKey()));
-    }
 
-    private String cheapModelId() {
-        String p = ai.getProvider() == null ? "" : ai.getProvider().toLowerCase();
-        return switch (p) {
-            case "claude", "anthropic" -> ai.getPlannerModelClaude();
-            case "openai" -> ai.getPlannerModelOpenai();
-            default -> null;
-        };
-    }
 
-    private static boolean notBlank(String s) {
-        return s != null && !s.isBlank();
-    }
 
     enum Action { SCOUT, BUILD, MARKET, ANALYZE, HOLD }
 
