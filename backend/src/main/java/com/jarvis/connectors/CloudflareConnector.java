@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import org.springframework.http.MediaType;
+import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -121,18 +122,33 @@ public class CloudflareConnector extends AbstractRestConnector {
         String name = a.path("name").asText("");
         String scriptPath = a.path("scriptPath").asText("");
         if (name.isBlank() || scriptPath.isBlank()) {
-            return "Provide 'accountId', 'name' and 'scriptPath' (a single .js Worker file).";
+            return "Provide 'accountId', 'name' and 'scriptPath' (a single .js Worker, module syntax: "
+                    + "export default { fetch(req, env, ctx) { … } }).";
         }
         Path script = fs.resolveExisting(scriptPath);
         String code = Files.readString(script);
+        String compat = a.path("compatibilityDate").asText("2024-11-01");
+
+        // Modern Workers upload = multipart/form-data: a JSON 'metadata' part naming the entry module,
+        // plus the script as a file part with content-type application/javascript+module whose form-field
+        // name matches metadata.main_module. (Raw 'application/javascript' only works for the LEGACY
+        // service-worker format and rejects `export default { fetch }` module Workers — which is what
+        // anything modern, or an LLM, writes today.)
+        MultipartBodyBuilder parts = new MultipartBodyBuilder();
+        parts.part("metadata",
+                "{\"main_module\":\"worker.js\",\"compatibility_date\":\"" + compat + "\"}",
+                MediaType.APPLICATION_JSON);
+        parts.part("worker.js", code, MediaType.parseMediaType("application/javascript+module"))
+                .filename("worker.js");
+
         JsonNode r = read(client.put().uri("/accounts/{a}/workers/scripts/{n}", acct, name)
                 .header("Authorization", "Bearer " + token)
-                .contentType(MediaType.parseMediaType("application/javascript"))
-                .body(code).retrieve().body(String.class));
+                .body(parts.build()).retrieve().body(String.class));
         if (!r.path("success").asBoolean(false)) {
             return "Cloudflare rejected the Worker: " + r.path("errors");
         }
-        return "✅ Deployed Worker \"" + name + "\". Enable a workers.dev route or map a custom domain in the dashboard.";
+        return "✅ Deployed Worker \"" + name + "\" (module syntax). Enable a workers.dev route or "
+                + "map a custom domain in the dashboard.";
     }
 
     private String requireAccount(JsonNode a) {

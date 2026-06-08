@@ -28,7 +28,10 @@ public class ShopifyConnector extends AbstractRestConnector {
         super(mapper);
     }
 
-    private static final String API_VERSION = "2024-10";
+    /** Shopify versions are date-stamped and rotate quarterly (supported ~12 months), so this WILL age —
+     *  callers can override per request with an {@code apiVersion} arg. (An unsupported version doesn't
+     *  hard-fail; Shopify serves the oldest supported one — but pin a current one for the right schema.) */
+    private static final String DEFAULT_API_VERSION = "2025-10";
 
     private final RestClient client = RestClient.create();
 
@@ -121,7 +124,8 @@ public class ShopifyConnector extends AbstractRestConnector {
             throw new NotFoundException("Provide 'shop' (your myshopify subdomain, e.g. \"my-store\").");
         }
         String host = shop.contains(".") ? shop : shop + ".myshopify.com";
-        return "https://" + host + "/admin/api/" + API_VERSION;
+        String version = a.path("apiVersion").asText(DEFAULT_API_VERSION);
+        return "https://" + host + "/admin/api/" + version;
     }
 
     private String get(String url, String token) {

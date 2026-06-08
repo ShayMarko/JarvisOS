@@ -28,6 +28,10 @@ public class EtsyConnector extends AbstractRestConnector {
     private static final String BASE = "https://openapi.etsy.com";
 
     private final RestClient client = RestClient.create(BASE);
+    private final RestClient authClient = RestClient.create("https://api.etsy.com");   // OAuth token host
+    // Cached short-lived access token, refreshed from the long-lived (90-day) refresh token on demand.
+    private volatile String cachedAccessToken;
+    private volatile long cachedExpiryEpoch;
 
     @Override public String id() { return "etsy"; }
     @Override public String name() { return "Etsy"; }
@@ -52,18 +56,48 @@ public class EtsyConnector extends AbstractRestConnector {
     @Override
     public String invoke(String actionId, String argumentsJson, String credential) throws Exception {
         JsonNode a = Json.read(mapper, argumentsJson);
-        String[] parts = (credential == null ? "" : credential).split("\\|", 2);
-        String accessToken = parts.length > 0 ? parts[0].trim() : "";
+        // Vault entry "etsy-token" = <refresh_token>|<keystring>  (optionally |<shared_secret>).
+        // The keystring is both the OAuth client_id AND the x-api-key. The refresh token (90-day) is
+        // exchanged for a fresh 1-hour access token on demand — no more manual token babysitting.
+        String[] parts = (credential == null ? "" : credential).split("\\|", 3);
+        String refreshToken = parts.length > 0 ? parts[0].trim() : "";
         String apiKey = parts.length > 1 ? parts[1].trim() : "";
-        if (apiKey.isBlank()) {
-            return "Etsy needs both creds. Store the \"etsy-token\" vault entry as <access_token>|<api_key>.";
+        String clientSecret = parts.length > 2 ? parts[2].trim() : "";
+        if (refreshToken.isBlank() || apiKey.isBlank()) {
+            return "Store the \"etsy-token\" vault entry as <refresh_token>|<keystring> (optionally |<shared_secret>). "
+                    + "Get the initial refresh token once via Etsy's OAuth (PKCE) consent; Jarvis refreshes it after.";
         }
         return switch (actionId) {
-            case "find_shop" -> findShop(a, apiKey);
-            case "list_listings" -> listListings(a, apiKey);
-            case "create_draft_listing" -> createDraft(a, accessToken, apiKey);
+            case "find_shop" -> findShop(a, apiKey);                                    // x-api-key only
+            case "list_listings" -> listListings(a, apiKey);                            // x-api-key only
+            case "create_draft_listing" -> createDraft(a, accessToken(refreshToken, apiKey, clientSecret), apiKey);
             default -> throw new NotFoundException("Unknown Etsy action '" + actionId + "'");
         };
+    }
+
+    /** Exchange the long-lived refresh token for a fresh access token (cached in-memory until ~expiry). */
+    private synchronized String accessToken(String refreshToken, String apiKey, String clientSecret) {
+        long now = java.time.Instant.now().getEpochSecond();
+        if (cachedAccessToken != null && now < cachedExpiryEpoch - 60) {
+            return cachedAccessToken;
+        }
+        StringBuilder form = new StringBuilder("grant_type=refresh_token")
+                .append("&client_id=").append(enc(apiKey))
+                .append("&refresh_token=").append(enc(refreshToken));
+        if (!clientSecret.isBlank()) {
+            form.append("&client_secret=").append(enc(clientSecret));
+        }
+        JsonNode r = read(authClient.post().uri("/v3/public/oauth/token")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED).body(form.toString())
+                .retrieve().body(String.class));
+        String at = r.path("access_token").asText("");
+        if (at.isBlank()) {
+            throw new com.jarvis.error.Exceptions.ConflictException(
+                    "Etsy token refresh failed — re-authorize (refresh tokens expire after 90 days). " + r);
+        }
+        cachedAccessToken = at;
+        cachedExpiryEpoch = now + r.path("expires_in").asLong(3600);
+        return at;
     }
 
     private String findShop(JsonNode a, String apiKey) {
@@ -105,9 +139,6 @@ public class EtsyConnector extends AbstractRestConnector {
         if (shopId <= 0 || title.isBlank() || description.isBlank() || taxonomyId <= 0) {
             return "Provide 'shopId', 'title', 'description' and 'taxonomyId' (Etsy requires a taxonomy id).";
         }
-        if (accessToken.isBlank()) {
-            return "Creating a listing needs the OAuth access token half of the etsy-token (<access_token>|<api_key>).";
-        }
         double price = a.path("price").asDouble(0);
         int quantity = a.path("quantity").asInt(1);
         String form = "quantity=" + quantity
@@ -117,8 +148,9 @@ public class EtsyConnector extends AbstractRestConnector {
                 + "&who_made=i_did"
                 + "&when_made=made_to_order"
                 + "&taxonomy_id=" + taxonomyId
-                + "&type=physical"
-                + "&state=draft";
+                + "&type=physical";
+        // NOTE: no 'state' param — createDraftListing ALWAYS creates a draft; 'state' (active/inactive)
+        // is an UPDATE-only field, and Etsy's strict request validation 400s on unexpected params.
         JsonNode r = read(client.post().uri("/v3/application/shops/{id}/listings", shopId)
                 .header("Authorization", "Bearer " + accessToken)
                 .header("x-api-key", apiKey)
