@@ -205,6 +205,7 @@ jarvis:
     bot-token: ${JARVIS_DISCORD_BOT_TOKEN:}          # secret — Discord Developer Portal → Bot
     channel-id: ${JARVIS_DISCORD_CHANNEL_ID:}        # the ONE private channel Jarvis listens/replies in
     push-notifications: ${JARVIS_DISCORD_PUSH:true}  # mirror Notification Center + daily briefing here
+    voice-notes: ${JARVIS_DISCORD_VOICE_NOTES:false} # transcribe a voice note in the channel → run it like a typed msg (needs OpenAI key)
     max-message-chars: 1900        # Discord hard-caps at 2000
     reconnect-backoff-ms: 5000
   # Daily morning briefing pushed to the Discord channel (see JarvisBriefingProperties).
@@ -251,6 +252,15 @@ jarvis:
     cron: ${JARVIS_REFLECTION_CRON:0 30 23 * * *}   # 23:30 daily
     lookback-runs: 40
     max-lessons: 3
+  # Server-side voice round-trip (see JarvisVoiceProperties): audio → Whisper STT → brain → optional TTS mp3.
+  # Uses OpenAI (the local model can't do audio); dormant-until-keyed. Works headless: /api/voice/{transcribe,ask,speak}.
+  voice:
+    stt-model: ${JARVIS_VOICE_STT_MODEL:whisper-1}
+    tts-model: ${JARVIS_VOICE_TTS_MODEL:gpt-4o-mini-tts}   # steerable (honours the voice persona); tts-1 ignores it
+    tts-voice: ${JARVIS_VOICE_TTS_VOICE:fable}             # alloy|echo|fable|onyx|nova|shimmer (fable = British-leaning)
+    # voice-style (the ORIGINAL refined-British persona) defaults in JarvisVoiceProperties — NOT set here so an
+    # empty value can't blank it. Override the whole persona via env JARVIS_VOICE_VOICESTYLE if you want.
+    output-dir: Generated/voice
   # Second-brain auto-index (see JarvisSecondBrainProperties). Keeps the Knowledge Base continuously
   # in sync with notes/docs so the model's kb_search always has complete, current recall.
   second-brain:

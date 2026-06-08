@@ -24,6 +24,10 @@ public class JarvisDiscordProperties {
     /** Mirror every Notification Center event (and the daily briefing) to the channel. */
     private boolean pushNotifications = true;
 
+    /** When true, an audio attachment (a voice note) in the channel is transcribed (Whisper) and run through
+     *  Jarvis just like a typed message. OFF by default; needs an OpenAI key (the local model can't hear). */
+    private boolean voiceNotes = false;
+
     // --- Tunables ---
     private String apiBaseUrl = "https://discord.com/api/v10";
     private String gatewayUrl = "wss://gateway.discord.gg/?v=10&encoding=json";

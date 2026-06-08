@@ -2,6 +2,8 @@ package com.jarvis.discord;
 
 import java.net.URI;
 import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.net.http.WebSocket;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.Executors;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jarvis.ai.VoiceService;
 import com.jarvis.command.CommandEngine;
 import com.jarvis.command.CommandResult;
 
@@ -42,6 +45,7 @@ public class DiscordGateway {
     private final DiscordService discord;
     private final CommandEngine commandEngine;
     private final ObjectMapper mapper;
+    private final VoiceService voice;
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private final ScheduledExecutorService scheduler =
@@ -184,18 +188,60 @@ public class DiscordGateway {
         String content = msg.path("content").asText("").trim();
         log.info("Discord MESSAGE_CREATE: channel={} (configured={}), bot={}, contentLen={}",
                 channelId, props.getChannelId(), isBot, content.length());
-        if (!channelId.equals(props.getChannelId()) || isBot || authorId.equals(selfId) || content.isEmpty()) {
+        if (!channelId.equals(props.getChannelId()) || isBot || authorId.equals(selfId)) {
             return;   // only the owner's messages in the one private channel
+        }
+        // A typed message wins; otherwise, if voice-notes are enabled, transcribe an audio attachment.
+        String voiceText = content.isEmpty() && props.isVoiceNotes() ? transcribeVoiceNote(msg) : null;
+        boolean fromVoice = content.isEmpty() && voiceText != null;
+        String input = content.isEmpty() ? voiceText : content;
+        if (input == null || input.isBlank()) {
+            return;   // nothing actionable (no text, and no voice note to transcribe)
         }
         // Run off the WS thread (a model call can take seconds) so heartbeats keep flowing.
         workers.submit(() -> {
             try {
-                CommandResult r = commandEngine.execute(content, "discord");
-                discord.send(channelId, reply(r));
+                // If transcription failed (no key / fetch error), report that instead of feeding it to the brain.
+                if (fromVoice && isTranscriptionFailure(input)) {
+                    discord.send(channelId, "🎙️ " + input);
+                    return;
+                }
+                CommandResult r = commandEngine.execute(input, "discord");
+                String body = reply(r);
+                if (fromVoice) {
+                    body = "🎙️ \"" + input + "\"\n\n" + body;   // echo what I heard, then the answer
+                }
+                discord.send(channelId, body);
             } catch (Exception e) {
                 discord.send(channelId, "⚠️ I hit an error handling that: " + e.getMessage());
             }
         });
+    }
+
+    /** Download the first audio attachment (a Discord voice note) and transcribe it; null if there's none. */
+    private String transcribeVoiceNote(JsonNode msg) {
+        for (JsonNode att : msg.path("attachments")) {
+            String url = att.path("url").asText("");
+            String ct = att.path("content_type").asText("");
+            String fn = att.path("filename").asText("voice-note");
+            boolean isAudio = ct.startsWith("audio/")
+                    || fn.toLowerCase().matches(".*\\.(ogg|mp3|m4a|wav|webm|mp4|mpeg|mpga|flac)$");
+            if (url.isBlank() || !isAudio) {
+                continue;
+            }
+            try {
+                byte[] bytes = httpClient.send(HttpRequest.newBuilder(URI.create(url)).GET().build(),
+                        HttpResponse.BodyHandlers.ofByteArray()).body();
+                return voice.transcribe(bytes, fn);
+            } catch (Exception e) {
+                return "Couldn't fetch the voice note: " + e.getMessage();
+            }
+        }
+        return null;
+    }
+
+    private static boolean isTranscriptionFailure(String t) {
+        return t.startsWith("Error") || t.startsWith("Couldn't") || t.contains("needs an OpenAI API key");
     }
 
     private static String reply(CommandResult r) {

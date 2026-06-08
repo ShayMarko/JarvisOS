@@ -181,6 +181,28 @@ public class FileSystemService {
         }
     }
 
+    /** Write binary content (generated audio, images, etc.) under the root, creating parent dirs. */
+    public FileNode writeBytes(String relativePath, byte[] data) {
+        Path target = resolveScoped(relativePath);
+        boolean existed = Files.exists(target);
+        guard.check(target, existed ? Operation.WRITE : Operation.CREATE, true);
+        try {
+            if (target.getParent() != null) {
+                Files.createDirectories(target.getParent());
+            }
+            Files.write(target, data == null ? new byte[0] : data);
+            if (!existed) {
+                undo.record("Created " + relativePath, () -> {
+                    Files.deleteIfExists(target);
+                    return "removed the new file";
+                });
+            }
+            return toNode(target);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Could not write file: " + relativePath, e);
+        }
+    }
+
     /** Register how to reverse a write: delete a freshly-created file, or restore the prior content. */
     private void recordWriteUndo(String relativePath, Path target, boolean existed, String previous) {
         if (!existed) {
