@@ -16,7 +16,22 @@ import lombok.Setter;
 @ConfigurationProperties(prefix = "jarvis.voice")
 public class JarvisVoiceProperties {
 
-    /** Speech-to-text model (OpenAI). */
+    /**
+     * TTS provider: "local" = macOS `say` (FREE, offline, no key — the DEFAULT) or "openai" = neural
+     * gpt-4o-mini-tts (needs a key, more lifelike + honours the voiceStyle persona). If set to "openai"
+     * but no key is present, it falls back to the free local voice rather than going silent.
+     */
+    private String ttsProvider = "local";
+    /**
+     * macOS `say` voice for the FREE local provider. "Daniel" is the built-in British male (works out of the
+     * box, a bit robotic). For near-neural quality download a Premium/Enhanced voice (System Settings →
+     * Accessibility → Spoken Content → Manage Voices → e.g. "Daniel (Premium)") and put its exact name here.
+     */
+    private String localVoice = "Jamie (Premium)";
+    /** Speaking rate (words/min) for the local voice — lower = more composed/Jarvis-like. */
+    private int localRate = 170;
+
+    /** Speech-to-text model (OpenAI — there is no built-in free local STT). */
     private String sttModel = "whisper-1";
     /** Text-to-speech model. gpt-4o-mini-tts is steerable (honours {@code voiceStyle}); tts-1/tts-1-hd ignore it. */
     private String ttsModel = "gpt-4o-mini-tts";

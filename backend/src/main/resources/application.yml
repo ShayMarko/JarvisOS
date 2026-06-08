@@ -255,8 +255,11 @@ jarvis:
   # Server-side voice round-trip (see JarvisVoiceProperties): audio → Whisper STT → brain → optional TTS mp3.
   # Uses OpenAI (the local model can't do audio); dormant-until-keyed. Works headless: /api/voice/{transcribe,ask,speak}.
   voice:
-    stt-model: ${JARVIS_VOICE_STT_MODEL:whisper-1}
-    tts-model: ${JARVIS_VOICE_TTS_MODEL:gpt-4o-mini-tts}   # steerable (honours the voice persona); tts-1 ignores it
+    tts-provider: ${JARVIS_VOICE_PROVIDER:local}          # local = FREE macOS `say` (default, no key) | openai = neural (needs key)
+    local-voice: ${JARVIS_VOICE_LOCAL:Jamie (Premium)}    # macOS say voice (British neural). Switch e.g. to "Ava (Premium)"; GET /api/voice/voices lists installed
+    local-rate: 170                                       # words/min — lower = more composed
+    stt-model: ${JARVIS_VOICE_STT_MODEL:whisper-1}        # transcription still needs an OpenAI key (no free local STT)
+    tts-model: ${JARVIS_VOICE_TTS_MODEL:gpt-4o-mini-tts}   # used only when tts-provider=openai; steerable (honours the persona)
     tts-voice: ${JARVIS_VOICE_TTS_VOICE:fable}             # alloy|echo|fable|onyx|nova|shimmer (fable = British-leaning)
     # voice-style (the ORIGINAL refined-British persona) defaults in JarvisVoiceProperties — NOT set here so an
     # empty value can't blank it. Override the whole persona via env JARVIS_VOICE_VOICESTYLE if you want.

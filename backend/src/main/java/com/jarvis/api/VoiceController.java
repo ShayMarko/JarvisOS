@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +39,16 @@ public class VoiceController {
     public record TranscribeRequest(String path) {}
     public record AskRequest(String path, String sessionId, boolean speak) {}
     public record SpeakRequest(String text, String voice) {}
+
+    /** The voice picker: which TTS provider is active, the current default voice, and the menu to choose from. */
+    @GetMapping("/voices")
+    public Map<String, Object> voices() {
+        Map<String, Object> out = new LinkedHashMap<>();
+        out.put("provider", props.getTtsProvider());
+        out.put("current", "openai".equalsIgnoreCase(props.getTtsProvider()) ? props.getTtsVoice() : props.getLocalVoice());
+        out.put("voices", voice.availableVoices());
+        return out;
+    }
 
     /** Audio file → text. */
     @PostMapping("/transcribe")
@@ -82,7 +93,8 @@ public class VoiceController {
         }
         String path = speakToFile(req.text(), req.voice());
         return path == null
-                ? Map.of("result", "Speech needs an OpenAI API key (TTS). Add OPENAI_API_KEY, then try again.")
+                ? Map.of("result", "Couldn't synthesize speech (the local macOS 'say' voice is unavailable and "
+                        + "no OpenAI key is set).")
                 : Map.of("audioPath", path);
     }
 
@@ -101,7 +113,7 @@ public class VoiceController {
         if (mp3 == null) {
             return null;
         }
-        String rel = props.getOutputDir() + "/" + Ids.generate("speech", 8) + ".mp3";
+        String rel = props.getOutputDir() + "/" + Ids.generate("speech", 8) + "." + voice.outputExtension();
         fs.writeBytes(rel, mp3);
         return rel;
     }

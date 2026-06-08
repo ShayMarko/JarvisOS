@@ -30,9 +30,12 @@ public class SettingsController {
 
     public record BudgetRequest(Long dailyTokenBudget, Double monthlyBudgetUsd, Boolean paused) {}
 
+    public record VoiceRequest(String provider, String voice) {}
+
     private final JarvisAiProperties ai;
     private final TokenBudget budget;
     private final AuditService audit;
+    private final com.jarvis.ai.JarvisVoiceProperties voiceProps;
 
     @GetMapping
     public Map<String, Object> get() {
@@ -46,7 +49,29 @@ public class SettingsController {
         // mock = offline stub; claude = Anthropic (needs key); ollama = local model; openai = OpenAI (needs key).
         out.put("providers", List.of("mock", "claude", "ollama", "openai"));
         out.put("budget", budget.snapshot());
+        out.put("voiceProvider", voiceProps.getTtsProvider());
+        out.put("voice", "openai".equalsIgnoreCase(voiceProps.getTtsProvider())
+                ? voiceProps.getTtsVoice() : voiceProps.getLocalVoice());
         return out;
+    }
+
+    /** Switch the live TTS voice with NO restart — set provider ("local"/"openai") and/or the voice name. */
+    @PostMapping("/voice")
+    public Map<String, Object> setVoice(@RequestBody VoiceRequest req) {
+        if (req.provider() != null && !req.provider().isBlank()) {
+            voiceProps.setTtsProvider(req.provider().trim().toLowerCase());
+        }
+        if (req.voice() != null && !req.voice().isBlank()) {
+            if ("openai".equalsIgnoreCase(voiceProps.getTtsProvider())) {
+                voiceProps.setTtsVoice(req.voice().trim());
+            } else {
+                voiceProps.setLocalVoice(req.voice().trim());   // e.g. "Jamie (Premium)" or "Ava (Premium)"
+            }
+        }
+        String active = "openai".equalsIgnoreCase(voiceProps.getTtsProvider())
+                ? voiceProps.getTtsVoice() : voiceProps.getLocalVoice();
+        audit.record("SETTINGS", "set_voice", voiceProps.getTtsProvider() + ":" + active, "OK", null);
+        return Map.of("voiceProvider", voiceProps.getTtsProvider(), "voice", active);
     }
 
     @PostMapping("/provider")
