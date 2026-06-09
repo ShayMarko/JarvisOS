@@ -9,7 +9,65 @@ monitoring, workflows, sandboxed execution, and plugin extensibility.
 
 Full specification: `Jarvis_AI_OS_Full_Specification_HE.pdf` + architecture diagram (`*.png`) in this folder.
 
-## Status — Phases 1–11 (roadmap complete)
+---
+
+## What Jarvis can do today
+
+The current, living capability map. (The chronological **Build history — Phases 1–11** is preserved further
+down; everything below it still holds, and the list here is what the system has grown into on top of it.)
+Local-first, voice/phone/Discord-first, **agentic — not hard-coded** (every capability is a tool the Brain
+*chooses*). **312 backend tests green + a full `@SpringBootTest` boot** prove the wiring end-to-end.
+
+**Brain & agents**
+- **49 agents** loaded from editable markdown (`backend/src/main/resources/agents/<slug>.md`) — general +
+  specialists (file, research, system, knowledge, data, code, devops, trading, notion, meeting, author &
+  book-critic) + a `revenue` family (product-builder, app-factory, micro-api, seo-site, POD, video, growth,
+  opportunity-scout, analyst, coordinator). `AgentSelector` routes by md-declared keywords/priority.
+- **Pluggable model adapters** behind one `LanguageModel`: Mock (offline), **Anthropic** (full tool-use),
+  **Ollama** (local default, e.g. `qwen2.5-coder`), OpenAI — fronted by `ProviderSwitchingLanguageModel`
+  (per-call provider, transient-fallback to local Ollama, surfaces auth errors honestly).
+- **~65 tools** (the capability bridge) + a tool-calling agent runtime with DAG planning, streaming (SSE),
+  Reflexion retry, and a verify-before-claim honesty critic.
+
+**Knowledge, memory & continuity**
+- Transparent **Memory Manager** + agentic auto-memory (`memory_write`), nightly self-reflection + dedup.
+- **Knowledge Base / RAG** with neural Ollama embeddings + auto-indexing second-brain sweep; `kb_search`.
+- **Conversation continuity** (per-session history into the Brain) + **episodic timeline** memory.
+
+**Connectors (21)** — credentials only from the encrypted **Secrets Vault**; HIGH/CRITICAL actions are
+**approval-gated** (the bell). GitHub, Slack, Gmail (full client), Google Calendar/Drive, Notion, Stripe,
+Gumroad, Netlify, Cloudflare, Plausible, Ayrshare, Resend, Printful, Shopify, Etsy, market-data, RSS, maps,
+MongoDB, MySQL. OAuth auto-refresh (Google/Etsy). MCP client with 8 curated servers (default off).
+
+**Voice & remote (headless-first)**
+- Server-side voice round-trip: **Whisper STT** + **TTS** with a provider switch — FREE macOS `say` (default,
+  e.g. Jamie/Ava Premium) or neural OpenAI; live voice switch via `POST /api/settings/voice`.
+- **Discord** 2-way control + approvals + voice-notes; **Telegram** bridge; scheduled morning briefing.
+
+**Automation & autonomy**
+- **Workflows** (durable, per-step retries, approval-gated pauses) + real cron + NL routines.
+- **Coordinator** (autonomous "CEO" loop, default OFF), proactive initiative pushes, watchdog/self-healing.
+
+**Safety & governance**
+- PermissionGuard + modes, `RiskClassifier`, **Approval Center**, Sandbox (Docker `--network none`),
+  AES-GCM Secrets Vault, declarative restrictions policy, privacy/PII router, and a **TokenBudget**
+  (daily-token + **$80/mo USD** cap with conserve→refuse).
+- Observability: per-run traces, model router, cost/token dashboard, an eval/LLM-judge harness.
+
+**Revenue lanes (RevenueOS)** — end-to-end build→package→list→track: paid-boilerplate generator, App Factory,
+RapidAPI micro-API, SEO/affiliate sites, KDP ebooks (author⇄critic), print-on-demand, faceless video; ROI
+dashboard + product portfolio.
+
+**Self-development (in progress, OFF by default)** — see `SELF-DEV-SETUP.md`. A gated "self-PR author":
+external immovable guard → isolated git worktree → green-gated change loop. Phases 0–3 built; never deploys
+to the running instance.
+
+---
+
+## Build history — Phases 1–11 (chronological)
+
+> This is the original phase-by-phase log (per-phase test counts are point-in-time snapshots; the current
+> total is 312). The **What Jarvis can do today** section above supersedes it as the source of truth.
 
 Implements **Phase 1** (spine), **Phase 2** (files + permissions), **Phase 3** (Memory + Flyway), **Phase 4** (real-time monitor), **Phase 5** (Approval + Sandbox + Secrets), **Phase 6** (the Jarvis Brain + agents), **Phase 7** (Connectors / MCPs), **Phase 8** (Workflows + Scheduler + durable runs), **Phase 9** (Knowledge Base / RAG), **Phase 10** (Model Router + Agent Debugger / Observability), and **Phase 11** (Voice + Web search + Plugins). Plus a gap-closure pass: macOS Local Actions, conversation continuity, agentic auto-memory, and a Notification Center.
 
@@ -124,16 +182,27 @@ Implements **Phase 1** (spine), **Phase 2** (files + permissions), **Phase 3** (
 
 ```
 backend/   Spring Boot core (com.jarvis.*)
-  ├─ command/    Command Engine, registry, handlers
-  ├─ input/      Input Router
-  ├─ explorer/   Jarvis Explorer file system capability
-  ├─ system/     System monitor
+  ├─ command/    Command Engine, registry, slash handlers
+  ├─ input/      Input Router (slash vs. Brain)
+  ├─ explorer/   Jarvis Explorer file-system capability
+  ├─ system/     System monitor (+ SSE stream)
   ├─ audit/      Audit log (JPA + SQLite)
-  ├─ config/     Filesystem properties, CORS
-  └─ api/        REST controllers
-client/    React + Vite client
+  ├─ ai/         LanguageModel adapters, ~65 tools, TokenBudget, VoiceService, ModelRouter
+  ├─ agent/      AgentDefinitionLoader (agents/*.md), registry, selector
+  ├─ brain/      Orchestrator, DAG planner, GoalService, ResponseCache
+  ├─ connectors/ 21 real connectors + registry (+ AbstractRestConnector base)
+  ├─ secrets/    AES-GCM Secrets Vault                 security/  policy, RiskClassifier, restrictions
+  ├─ approval/   Approval Center (the bell)            sandbox/   sandboxed command runtime
+  ├─ kb/         Knowledge Base / RAG + embeddings      memory/    Memory Manager + auto-memory
+  ├─ workflow/   durable workflows + cron scheduler     coordinator/ autonomous CEO loop (off)
+  ├─ revenue/    RevenueOS (lanes, ROI, portfolio)      discord/ + telegram/  remote bridges
+  ├─ selfdev/    self-development guard + worktree + green-gate (Phases 0–3, off)
+  ├─ oauth/ mcp/ plugin/ notification/ proactive/ ...   and  api/  REST controllers
+  └─ resources/agents/<slug>.md   the 49 editable agent prompts
+client/    React 19 + Vite client
 data/      SQLite database file (created at runtime, git-ignored)
-JarvisExplorer/  Virtual Jarvis home (created at runtime, git-ignored)
+~/Documents/jarvis_drive/  the Jarvis Explorer root at runtime (configurable; git-ignored)
+~/.jarvis/selfdev-guard.yml  external self-dev rulebook (out of repo; absent ⇒ self-dev OFF)
 ```
 
 ## Running it
@@ -162,6 +231,10 @@ Jarvis Explorer root, allowed external folders, and blocked paths. Overridable v
 env vars: `JARVIS_PORT`, `JARVIS_DB_PATH`, `JARVIS_ROOT`.
 
 ## API
+
+A **representative subset** of the REST surface (the live API is larger — e.g. `/api/voice/*`,
+`/api/settings/{provider,budget,voice}`, `/api/eval`, `/api/coordinator`, `/api/revenue/*`, `/api/oauth/*`,
+`/api/kb/*`, `/api/timeline`, `/api/notifications`). The primary entrypoint is `POST /api/command`.
 
 | Method | Endpoint                          | Purpose                               |
 | ------ | --------------------------------- | ------------------------------------- |
@@ -200,9 +273,14 @@ env vars: `JARVIS_PORT`, `JARVIS_DB_PATH`, `JARVIS_ROOT`.
 
 Errors return the `ApiError` envelope and an `X-Trace-Id` header.
 
-## Roadmap (next)
+## Roadmap & in progress
 
-Per the spec: Phase 2 — File access + Permissions; Phase 3 — Memory Manager;
-Phase 4 — System Monitor UI; Phase 5 — Sandbox + Approval Center; Phase 6 — Agent
-system + Jarvis Brain; then Connectors/MCPs, Workflows, Knowledge Base/RAG, Model
-Router + Observability, and Media/automation.
+Phases 1–11 and the large post-11 build (see **What Jarvis can do today**) are complete. Active / near-term:
+
+- **Self-development** (`SELF-DEV-SETUP.md`): Phases 0–3 built (immovable guard → isolated worktree →
+  green-gated change loop). Next: **Phase 4** push-only to a feature branch via a scoped token + approval
+  bell (never merge to master), **Phase 5** control surface + the Anthropic-only change-author agent.
+- **Switch the brain to Anthropic/Opus** (`SWITCH-TO-CLAUDE.md`): real model IDs + the $80/mo cap + a
+  pre/post eval baseline; validate each connector live (one key at a time); rotate the Discord token.
+- **Parked ideas** (revisit on a capable model / when needed): trace-learning model router, more MCP servers,
+  per-claim LLM honesty critic, hybrid RRF retrieval. See the project feature backlog.
