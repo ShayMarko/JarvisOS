@@ -63,6 +63,9 @@ public class Orchestrator {
     private final TaskService tasks;
     private final AuditService audit;
     private final ModelRouter modelRouter;
+    private final com.jarvis.model.LearnedRouter learnedRouter;
+    private final CostEstimator costEstimator;
+    private final PlaybookService playbooks;
     private final ObservabilityService observability;
     private final ResponseCache responseCache;
     private final JarvisAiProperties ai;
@@ -117,15 +120,21 @@ public class Orchestrator {
         String context = contextBuilder.build();
 
         // Task decomposition: a compound request fans out to parallel sub-agents (spec §6).
-        List<PlanStep> plan = planner.plan(message);
+        // Skill/playbook formation: replay a proven plan for a near-identical past request, else plan fresh.
+        List<PlanStep> plan = playbooks.match(message).orElseGet(() -> planner.plan(message));
         if (plan.size() > 1) {
+            double est = costEstimator.estimatePlanCost(plan);
+            if (est > 0) {
+                addStep(steps, onStep, new Step("plan", "Plan: " + plan.size() + " steps",
+                        String.format("estimated cost ≈ $%.4f", est)));
+            }
             return executePlan(message, session, task, steps, history, context, onStep, plan);
         }
 
         AgentDefinition agent = registry.find(plan.get(0).agentSlug()).orElseGet(() -> selector.select(message));
         addStep(steps, onStep, new Step("agent", "Routed to " + agent.name(), agent.role()));
 
-        ModelDescriptor model = modelRouter.route(agent.slug(), message);
+        ModelDescriptor model = learnedRouter.route(agent.slug(), agent.name(), message);
         // Privacy Router: sensitive content stays on-device instead of going to a cloud provider.
         if (!model.local() && privacyGuard.keepLocal(message)) {
             ModelDescriptor localM = modelRouter.localModel();
@@ -328,7 +337,7 @@ public class Orchestrator {
                 CompletableFuture<SubResult> fut = gate.thenApplyAsync(v -> {
                     AgentDefinition a = registry.find(ps.agentSlug()).orElseGet(registry::general);
                     String stepContext = withDependencyOutputs(context, deps);
-                    ModelDescriptor subModel = modelRouter.route(a.slug(), ps.task());   // model per sub-task (content-aware)
+                    ModelDescriptor subModel = learnedRouter.route(a.slug(), a.name(), ps.task());   // learned model per sub-task
                     if (!subModel.local() && privacyGuard.keepLocal(ps.task())) {   // sensitive → stay on-device
                         ModelDescriptor localM = modelRouter.localModel();
                         if (localM != null) {
@@ -371,6 +380,7 @@ public class Orchestrator {
                     promptTokens, completionTokens, cost, durationMs, writeSteps(steps));
             audit.record("BRAIN", "planner", message, "OK",
                     "task=" + task.getId() + "; subtasks=" + results.size() + "; tokens=" + (promptTokens + completionTokens));
+            playbooks.capture(message, plan);   // remember this winning plan for near-identical future requests
             String modelName = results.isEmpty() ? model.id() : results.get(0).run().model();
             return new ChatResponse(merged, "Planner (" + results.size() + " agents)", steps, task.getId(),
                     promptTokens + completionTokens, modelName);

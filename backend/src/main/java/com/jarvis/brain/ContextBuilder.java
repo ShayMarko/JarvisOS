@@ -44,8 +44,12 @@ public class ContextBuilder {
         String roster = skills.roster(MAX_SKILLS);
         if (!roster.isBlank()) {
             ctx.append("Skills you've been taught (use skill_search to recall the steps, then perform them with your tools):\n")
-                    .append(roster);
+                    .append(roster).append("\n\n");
         }
+
+        // Confidence / abstention guard — applies to every agent and survives any model choice.
+        ctx.append("If you are not reasonably confident, or a key detail is missing that you can't infer, "
+                + "say so plainly or ask ONE short clarifying question instead of guessing.");
 
         return ctx.toString().strip();
     }

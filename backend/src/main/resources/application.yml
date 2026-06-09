@@ -148,6 +148,30 @@ jarvis:
         command: npx
         args: ["-y", "@modelcontextprotocol/server-brave-search"]
         enabled: ${JARVIS_MCP_BRAVE_ENABLED:false}
+      # ---- Phase G: daily-driver + product MCP servers (each OFF by default). ----
+      # macOS-native personal assistant: Messages / Notes / Contacts / Calendar / Reminders (community
+      # 'apple-mcp', Node). THE big daily-driver unlock on the Mac mini. Grants Jarvis the system permissions
+      # the app already has — review before enabling. Set JARVIS_MCP_APPLE_ENABLED=true.
+      - name: apple
+        command: npx
+        args: ["-y", "apple-mcp"]
+        enabled: ${JARVIS_MCP_APPLE_ENABLED:false}
+      - name: notion                         # richer Notion than the connector (official; needs NOTION_TOKEN env)
+        command: npx
+        args: ["-y", "@notionhq/notion-mcp-server"]
+        enabled: ${JARVIS_MCP_NOTION_ENABLED:false}
+      - name: stripe                         # official Stripe MCP (needs STRIPE_API_KEY env)
+        command: npx
+        args: ["-y", "@stripe/mcp", "--tools=all"]
+        enabled: ${JARVIS_MCP_STRIPE_ENABLED:false}
+      - name: gdrive                         # Google Drive search/read (official; needs OAuth creds env)
+        command: npx
+        args: ["-y", "@modelcontextprotocol/server-gdrive"]
+        enabled: ${JARVIS_MCP_GDRIVE_ENABLED:false}
+      - name: youtube-transcript             # pull a video's transcript for repurposing (community, Node)
+        command: npx
+        args: ["-y", "@kimtaeyoon83/mcp-server-youtube-transcript"]
+        enabled: ${JARVIS_MCP_YT_TRANSCRIPT_ENABLED:false}
   # OAuth providers (see JarvisOAuthProperties). Tokens are stored encrypted in the vault
   # and auto-refreshed. Empty by default; add a provider's client id/secret to enable.
   oauth:
@@ -246,6 +270,15 @@ jarvis:
     cron: ${JARVIS_COORDINATOR_CRON:0 0 10 * * *}     # 10:00 daily when armed
     max-actions-per-run: 1
     goal: ${JARVIS_COORDINATOR_GOAL:Grow the product portfolio toward steady passive income — build small useful products, improve listings, and market what's already live.}
+  # SEO performance loop (see JarvisSeoPerformanceProperties). DEFAULT OFF. When armed, a weekly job reads
+  # real Plausible traffic and steers the SEO agent to compound winning pages + cut losers. Reads are free;
+  # any publish/deploy the agent triggers stays approval-gated.
+  seo-performance:
+    enabled: ${JARVIS_SEO_PERFORMANCE_ENABLED:false}
+    cron: ${JARVIS_SEO_PERFORMANCE_CRON:0 0 12 * * MON}   # Monday 12:00 when armed
+    site: ${JARVIS_SEO_PERFORMANCE_SITE:}                 # Plausible site domain (blank = skip)
+    period: ${JARVIS_SEO_PERFORMANCE_PERIOD:30d}
+    top-pages: 5
   # Nightly self-reflection (see JarvisReflectionProperties): review runs → distil durable lessons to memory.
   reflection:
     enabled: ${JARVIS_REFLECTION_ENABLED:true}
