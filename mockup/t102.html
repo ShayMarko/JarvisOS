@@ -1,0 +1,72 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T102</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf2;background:#0c1014}
+.top{display:flex;align-items:center;gap:14px;padding:18px 34px;border-bottom:1px solid #182028}
+.wm{font-size:17px;font-weight:800;letter-spacing:3px;color:#5fd0c0}
+.sub{font-size:12px;color:#5f7488}.r{margin-left:auto;font-size:12px;color:#5f7488}
+.summary{display:flex;gap:14px;padding:14px 34px}
+.chip{font-size:13px;color:#9aa6b2;background:#121a20;border:1px solid #1c2730;border-radius:20px;padding:7px 16px}
+.chip b{color:#46e0a0}
+.rooms{padding:6px 34px;height:calc(100vh - 150px);overflow:hidden;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(3,1fr);gap:16px}
+.room{background:linear-gradient(160deg,#121a20,#0e1418);border:1px solid #1c2730;border-radius:18px;padding:16px 18px;display:flex;flex-direction:column}
+.rhead{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.rico{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px}
+.rname{font-size:15px;font-weight:700}.rmeta{font-size:11px;color:#5f7488}
+.ron{margin-left:auto;font-size:11px;color:#46e0a0;font-weight:700}
+.devs{display:flex;flex-direction:column;gap:9px;flex:1;justify-content:center}
+.dev{display:flex;align-items:center;gap:10px;font-size:13.5px;color:#cdd6de}
+.dev .dn{margin-left:auto;font-size:11px;color:#5f7488}
+.sw{width:42px;height:24px;border-radius:14px;flex:none;position:relative;background:#23303a;transition:0}
+.sw.on{background:#46e0a0}
+.knob{position:absolute;top:3px;width:18px;height:18px;border-radius:50%;background:#0c1014;left:3px}
+.sw.on .knob{left:21px;background:#06281e}
+.warn{color:#ffb454}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS</div><div class="sub">home · agents & connectors by room</div><div class="r">● Online · Opus · 20:34 · Tue Jun 09</div></div>
+<div class="summary"><span class="chip">Net <b>$3,840</b> · ROI 4.2×</span><span class="chip"><b>51</b> agents</span><span class="chip"><b>26</b> connectors · <b>9 live</b></span><span class="chip">AI cost <b>$58</b>/$80</span><span class="chip warn" style="color:#ffb454">⚑ 3 need you</span></div>
+<div class="rooms">
+
+<div class="room"><div class="rhead"><div class="rico" style="background:rgba(70,224,160,.15)">💰</div><div><div class="rname">Money</div><div class="rmeta">Finance · EA</div></div><div class="ron">3 ON</div></div>
+<div class="devs">
+<div class="dev"><span>Finance / bookkeeping</span><span class="dn">net $3,840</span><span class="sw on"><span class="knob"></span></span></div>
+<div class="dev"><span>Stripe billing</span><span class="dn">$1,240</span><span class="sw on"><span class="knob"></span></span></div>
+<div class="dev"><span>Tax set-aside auto</span><span class="dn">28%</span><span class="sw on"><span class="knob"></span></span></div>
+</div></div>
+
+<div class="room"><div class="rhead"><div class="rico" style="background:rgba(124,142,255,.15)">🛠️</div><div><div class="rname">Workshop</div><div class="rmeta">Code · Scout</div></div><div class="ron">2 ON</div></div>
+<div class="devs">
+<div class="dev"><span>Code agent — habit-tracker</span><span class="dn">72%</span><span class="sw on"><span class="knob"></span></span></div>
+<div class="dev"><span>Scout — note-taking niche</span><span class="dn">40%</span><span class="sw on"><span class="knob"></span></span></div>
+<div class="dev"><span>POD trend engine</span><span class="dn warn">idle</span><span class="sw"><span class="knob"></span></span></div>
+</div></div>
+
+<div class="room"><div class="rhead"><div class="rico" style="background:rgba(255,180,84,.15)">📣</div><div><div class="rname">Distribution</div><div class="rmeta">Newsletter · SEO</div></div><div class="ron">2 ON</div></div>
+<div class="devs">
+<div class="dev"><span>Newsletter — #14</span><span class="dn warn">queued</span><span class="sw on"><span class="knob"></span></span></div>
+<div class="dev"><span>SEO site loop</span><span class="dn">61% traffic</span><span class="sw on"><span class="knob"></span></span></div>
+<div class="dev"><span>YouTube lane</span><span class="dn">off</span><span class="sw"><span class="knob"></span></span></div>
+</div></div>
+
+<div class="room"><div class="rhead"><div class="rico" style="background:rgba(95,208,192,.15)">🔌</div><div><div class="rname">Connectors</div><div class="rmeta">9 live / 26</div></div><div class="ron">9 ON</div></div>
+<div class="devs">
+<div class="dev"><span>Gumroad · Lemon Sq</span><span class="dn">live</span><span class="sw on"><span class="knob"></span></span></div>
+<div class="dev"><span>Cloudflare R2 · Resend</span><span class="dn">live</span><span class="sw on"><span class="knob"></span></span></div>
+<div class="dev"><span>Reddit · WhatsApp</span><span class="dn">paused</span><span class="sw"><span class="knob"></span></span></div>
+</div></div>
+
+<div class="room"><div class="rhead"><div class="rico" style="background:rgba(122,228,255,.15)">🏠</div><div><div class="rname">Comms</div><div class="rmeta">Discord · Telegram</div></div><div class="ron">2 ON</div></div>
+<div class="devs">
+<div class="dev"><span>Discord remote control</span><span class="dn">live</span><span class="sw on"><span class="knob"></span></span></div>
+<div class="dev"><span>Morning briefing</span><span class="dn">07:00</span><span class="sw on"><span class="knob"></span></span></div>
+<div class="dev"><span>macOS MCP (opt-in)</span><span class="dn">off</span><span class="sw"><span class="knob"></span></span></div>
+</div></div>
+
+<div class="room"><div class="rhead"><div class="rico" style="background:rgba(255,107,129,.15)">⚡</div><div><div class="rname">Needs you</div><div class="rmeta">approvals</div></div><div class="ron" style="color:#ff8c8c">3 ⚑</div></div>
+<div class="devs">
+<div class="dev"><span style="color:#ff8c8c">Invoice → 14 customers</span><span class="dn">$1,240</span><span class="sw"><span class="knob"></span></span></div>
+<div class="dev"><span>Publish SaaS → Gumroad</span><span class="dn">$39</span><span class="sw"><span class="knob"></span></span></div>
+<div class="dev"><span>Deploy micro-API</span><span class="dn">CF</span><span class="sw"><span class="knob"></span></span></div>
+</div></div>
+
+</div>
+</body></html>

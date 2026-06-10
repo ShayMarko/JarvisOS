@@ -1,0 +1,57 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T83</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf6;background:#0a0d14}
+.top{display:flex;align-items:center;gap:14px;padding:20px 36px}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#5fd0c0}.st{font-size:12px;color:#5f8278}.r{margin-left:auto;font-size:13px;color:#8a98a4}
+.cap{padding:0 36px 6px}.cap h1{font-size:22px;font-weight:600}.cap h1 b{color:#5fd0c0}.cap p{color:#6f8a86;font-size:13px;margin-top:3px}
+.gantt{margin:6px 36px 0;background:#0e1419;border:1px solid #19232a;border-radius:16px;padding:0;overflow:hidden;height:calc(100vh - 182px)}
+.head{display:grid;grid-template-columns:200px 1fr;border-bottom:1px solid #19232a}
+.head .lab{padding:11px 16px;font-size:10px;letter-spacing:1.3px;text-transform:uppercase;color:#5f8278}
+.days{display:grid;grid-template-columns:repeat(7,1fr)}
+.days span{padding:11px 0;text-align:center;font-size:11px;color:#7e9aa0;border-left:1px solid #141d23}
+.today{color:#ffd27a !important;font-weight:700}
+.rows{position:relative}
+.row{display:grid;grid-template-columns:200px 1fr;height:54px;border-bottom:1px solid #121a20}
+.row .name{padding:0 16px;display:flex;flex-direction:column;justify-content:center}
+.row .name b{font-size:13px}.row .name s{text-decoration:none;font-size:11px;color:#5f8278;margin-top:2px}
+.track{position:relative}
+.gl{position:absolute;top:0;bottom:0;border-left:1px solid #121a20}
+.barbit{position:absolute;top:13px;height:28px;border-radius:7px;display:flex;align-items:center;padding:0 10px;font-size:11px;font-weight:600;color:#04120c;white-space:nowrap;overflow:hidden}
+.prog{position:absolute;inset:0;border-radius:7px 0 0 7px;opacity:.35;background:#000}
+.now{position:absolute;top:0;bottom:0;width:2px;background:#ffd27a;box-shadow:0 0 10px #ffd27a}
+.now b{position:absolute;top:-1px;left:-15px;font-size:9px;color:#ffd27a;background:#0e1419;padding:1px 4px;border-radius:4px}
+.bar{position:fixed;bottom:20px;left:36px;right:36px;display:flex;align-items:center;gap:12px;background:#0e1419;border:1px solid #19232a;border-radius:13px;padding:11px 15px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e6edf6;font-size:14px}.bar input::placeholder{color:#5f8278}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · GANTT</div><div class="st">● Online · Opus · 20:34</div><div class="r">2 jobs running · newsletter #14 queued</div></div>
+<div class="cap"><h1>This week's runway, <b>Shay</b>.</h1><p>jobs & projects across the week · vertical line = now (Tue 20:34)</p></div>
+<div class="gantt">
+<div class="head"><div class="lab">Job / project</div><div class="days"><span>Mon 08</span><span class="today">Tue 09</span><span>Wed 10</span><span>Thu 11</span><span>Fri 12</span><span>Sat 13</span><span>Sun 14</span></div></div>
+<div class="rows">
+<!-- now line at Tue ~mid: col 2 of 7, ~21% across track -->
+<div class="now" style="left:calc(200px + (100% - 200px) * 0.214)"><b>NOW</b></div>
+<div class="row"><div class="name"><b>habit-tracker app</b><s>Code agent · 72%</s></div><div class="track">
+<div class="gl" style="left:14.28%"></div><div class="gl" style="left:28.57%"></div><div class="gl" style="left:42.85%"></div><div class="gl" style="left:57.14%"></div><div class="gl" style="left:71.42%"></div><div class="gl" style="left:85.71%"></div>
+<div class="barbit" style="left:1%;width:30%;background:linear-gradient(90deg,#46e0a0,#5fd0c0)">build · 72%<div class="prog" style="right:28%"></div></div></div></div>
+<div class="row"><div class="name"><b>research: note niche</b><s>Scout · 40%</s></div><div class="track">
+<div class="gl" style="left:14.28%"></div><div class="gl" style="left:28.57%"></div><div class="gl" style="left:42.85%"></div><div class="gl" style="left:57.14%"></div><div class="gl" style="left:71.42%"></div><div class="gl" style="left:85.71%"></div>
+<div class="barbit" style="left:8%;width:18%;background:linear-gradient(90deg,#7c5cff,#b69dff);color:#fff">scout · 40%<div class="prog" style="right:60%"></div></div></div></div>
+<div class="row"><div class="name"><b>newsletter #14</b><s>queued → Fri send</s></div><div class="track">
+<div class="gl" style="left:14.28%"></div><div class="gl" style="left:28.57%"></div><div class="gl" style="left:42.85%"></div><div class="gl" style="left:57.14%"></div><div class="gl" style="left:71.42%"></div><div class="gl" style="left:85.71%"></div>
+<div class="barbit" style="left:43%;width:22%;background:#1c2a30;color:#9fb6bc;border:1px dashed #2c4048">draft → send</div></div></div>
+<div class="row"><div class="name"><b>Deploy micro-API</b><s>Cloudflare · HIGH</s></div><div class="track">
+<div class="gl" style="left:14.28%"></div><div class="gl" style="left:28.57%"></div><div class="gl" style="left:42.85%"></div><div class="gl" style="left:57.14%"></div><div class="gl" style="left:71.42%"></div><div class="gl" style="left:85.71%"></div>
+<div class="barbit" style="left:22%;width:16%;background:linear-gradient(90deg,#ffd27a,#ffb347);">deploy</div></div></div>
+<div class="row"><div class="name"><b>Publish SaaS starter</b><s>Gumroad $39 · HIGH</s></div><div class="track">
+<div class="gl" style="left:14.28%"></div><div class="gl" style="left:28.57%"></div><div class="gl" style="left:42.85%"></div><div class="gl" style="left:57.14%"></div><div class="gl" style="left:71.42%"></div><div class="gl" style="left:85.71%"></div>
+<div class="barbit" style="left:30%;width:14%;background:linear-gradient(90deg,#ffd27a,#ffb347)">publish</div></div></div>
+<div class="row"><div class="name"><b>Send invoices</b><s>EA · Resend · CRITICAL</s></div><div class="track">
+<div class="gl" style="left:14.28%"></div><div class="gl" style="left:28.57%"></div><div class="gl" style="left:42.85%"></div><div class="gl" style="left:57.14%"></div><div class="gl" style="left:71.42%"></div><div class="gl" style="left:85.71%"></div>
+<div class="barbit" style="left:15%;width:8%;background:linear-gradient(90deg,#ff7a7a,#ff5470);color:#fff">$1,240</div></div></div>
+<div class="row"><div class="name"><b>SEO double-down loop</b><s>Plausible → ab_test</s></div><div class="track">
+<div class="gl" style="left:14.28%"></div><div class="gl" style="left:28.57%"></div><div class="gl" style="left:42.85%"></div><div class="gl" style="left:57.14%"></div><div class="gl" style="left:71.42%"></div><div class="gl" style="left:85.71%"></div>
+<div class="barbit" style="left:50%;width:42%;background:#13302b;color:#8fd6c5;border:1px solid #1d5a4a">ongoing experiment</div></div></div>
+</div>
+</div>
+<div class="bar"><span style="color:#5fd0c0">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#5f8278;font-size:12px">⌘K</span></div>
+</body></html>

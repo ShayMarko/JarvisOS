@@ -1,0 +1,53 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T84</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;color:#dde7ea;background:#070a0d}
+.top{display:flex;align-items:center;gap:14px;padding:20px 36px}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#46e0a0}.st{font-size:12px;color:#5f8278}.r{margin-left:auto;font-size:13px;color:#8a98a4;font-variant-numeric:tabular-nums}
+.cap{padding:0 36px 6px}.cap h1{font-size:22px;font-weight:600}.cap h1 b{color:#46e0a0}.cap p{color:#6f8a86;font-size:13px;margin-top:3px}
+.chart{margin:6px 36px 0;background:linear-gradient(#0b1014,#080b0e);border:1px solid #16202455;border-radius:16px;padding:16px 8px 6px;height:calc(100vh - 182px)}
+.cl{display:flex;justify-content:space-between;padding:0 16px 6px;font-size:11px;letter-spacing:1.3px;text-transform:uppercase;color:#5f8278}
+.cl b{font-family:ui-monospace,'SF Mono',monospace;color:#dde7ea}
+.bar{position:fixed;bottom:20px;left:36px;right:36px;display:flex;align-items:center;gap:12px;background:#0b1014;border:1px solid #19232a;border-radius:13px;padding:11px 15px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#dde7ea;font-size:14px}.bar input::placeholder{color:#5f8278}
+.mono{font-family:ui-monospace,'SF Mono',monospace}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · OHLC</div><div class="st">● Online · Opus</div><div class="r">Net this month $3,840 · ▲18%</div></div>
+<div class="cap"><h1>Daily net, candle by candle, <b>Shay</b>.</h1><p>OHLC of daily net cashflow · last 22 trading days · green up / red down</p></div>
+<div class="chart">
+<div class="cl"><span>Daily net · OHLC ($)</span><span><b style="color:#46e0a0">▲ close $312</b> · O 268 · H 340 · L 244</span></div>
+<svg viewBox="0 0 1180 330" style="width:100%;height:calc(100% - 26px)" preserveAspectRatio="none">
+<!-- gridlines + y labels -->
+<g stroke="rgba(120,180,170,.08)"><line x1="48" y1="40" x2="1180" y2="40"/><line x1="48" y1="110" x2="1180" y2="110"/><line x1="48" y1="180" x2="1180" y2="180"/><line x1="48" y1="250" x2="1180" y2="250"/><line x1="48" y1="305" x2="1180" y2="305"/></g>
+<g fill="#5f8278" font-size="10" class="mono" font-family="monospace"><text x="8" y="44">400</text><text x="8" y="114">320</text><text x="8" y="184">240</text><text x="8" y="254">160</text><text x="8" y="309">80</text></g>
+<!-- candles: x from 70, step 48; body width 18 -->
+<g stroke-width="1.5">
+<!-- green = #2fd08a, red = #ff5e6b -->
+<g stroke="#2fd08a"><line x1="79" y1="180" x2="79" y2="240"/></g><rect x="70" y="200" width="18" height="30" fill="#2fd08a"/>
+<g stroke="#ff5e6b"><line x1="127" y1="170" x2="127" y2="235"/></g><rect x="118" y="200" width="18" height="22" fill="#ff5e6b"/>
+<g stroke="#2fd08a"><line x1="175" y1="160" x2="175" y2="225"/></g><rect x="166" y="178" width="18" height="34" fill="#2fd08a"/>
+<g stroke="#2fd08a"><line x1="223" y1="150" x2="223" y2="205"/></g><rect x="214" y="165" width="18" height="28" fill="#2fd08a"/>
+<g stroke="#ff5e6b"><line x1="271" y1="158" x2="271" y2="210"/></g><rect x="262" y="172" width="18" height="26" fill="#ff5e6b"/>
+<g stroke="#2fd08a"><line x1="319" y1="140" x2="319" y2="200"/></g><rect x="310" y="158" width="18" height="32" fill="#2fd08a"/>
+<g stroke="#2fd08a"><line x1="367" y1="128" x2="367" y2="185"/></g><rect x="358" y="142" width="18" height="30" fill="#2fd08a"/>
+<g stroke="#ff5e6b"><line x1="415" y1="135" x2="415" y2="195"/></g><rect x="406" y="150" width="18" height="34" fill="#ff5e6b"/>
+<g stroke="#2fd08a"><line x1="463" y1="120" x2="463" y2="178"/></g><rect x="454" y="138" width="18" height="28" fill="#2fd08a"/>
+<g stroke="#2fd08a"><line x1="511" y1="110" x2="511" y2="165"/></g><rect x="502" y="125" width="18" height="30" fill="#2fd08a"/>
+<g stroke="#ff5e6b"><line x1="559" y1="118" x2="559" y2="170"/></g><rect x="550" y="132" width="18" height="24" fill="#ff5e6b"/>
+<g stroke="#2fd08a"><line x1="607" y1="100" x2="607" y2="158"/></g><rect x="598" y="116" width="18" height="30" fill="#2fd08a"/>
+<g stroke="#2fd08a"><line x1="655" y1="92" x2="655" y2="148"/></g><rect x="646" y="106" width="18" height="32" fill="#2fd08a"/>
+<g stroke="#ff5e6b"><line x1="703" y1="98" x2="703" y2="150"/></g><rect x="694" y="112" width="18" height="26" fill="#ff5e6b"/>
+<g stroke="#2fd08a"><line x1="751" y1="84" x2="751" y2="140"/></g><rect x="742" y="100" width="18" height="28" fill="#2fd08a"/>
+<g stroke="#2fd08a"><line x1="799" y1="74" x2="799" y2="128"/></g><rect x="790" y="90" width="18" height="30" fill="#2fd08a"/>
+<g stroke="#ff5e6b"><line x1="847" y1="80" x2="847" y2="135"/></g><rect x="838" y="96" width="18" height="24" fill="#ff5e6b"/>
+<g stroke="#2fd08a"><line x1="895" y1="66" x2="895" y2="120"/></g><rect x="886" y="82" width="18" height="28" fill="#2fd08a"/>
+<g stroke="#2fd08a"><line x1="943" y1="58" x2="943" y2="110"/></g><rect x="934" y="72" width="18" height="30" fill="#2fd08a"/>
+<g stroke="#ff5e6b"><line x1="991" y1="64" x2="991" y2="118"/></g><rect x="982" y="80" width="18" height="26" fill="#ff5e6b"/>
+<g stroke="#2fd08a"><line x1="1039" y1="48" x2="1039" y2="104"/></g><rect x="1030" y="62" width="18" height="32" fill="#2fd08a"/>
+<g stroke="#2fd08a"><line x1="1087" y1="40" x2="1087" y2="92"/></g><rect x="1078" y="54" width="18" height="30" fill="#2fd08a"/>
+</g>
+<!-- x labels -->
+<g fill="#5f8278" font-size="9.5" font-family="monospace"><text x="60" y="322">May 19</text><text x="330" y="322">May 26</text><text x="600" y="322">Jun 02</text><text x="1010" y="322">Jun 09</text></g>
+</svg>
+</div>
+<div class="bar"><span style="color:#46e0a0">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#5f8278;font-size:12px">⌘K</span></div>
+</body></html>

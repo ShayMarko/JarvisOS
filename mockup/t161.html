@@ -1,0 +1,70 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T161</title><style>
+*{margin:0;box-sizing:border-box;font-family:ui-monospace,'SF Mono',monospace}
+body{height:100vh;overflow:hidden;color:#7fffd4;background:#03060a;
+  background-image:linear-gradient(rgba(0,255,200,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,200,.045) 1px,transparent 1px);
+  background-size:46px 46px}
+.wrap{height:100vh;display:flex;flex-direction:column;padding:34px 46px;position:relative}
+.top{display:flex;justify-content:space-between;align-items:baseline}
+.wm{font-size:16px;font-weight:700;letter-spacing:6px;color:#3affc8;text-shadow:0 0 12px rgba(58,255,200,.6)}
+.st{font-size:11px;letter-spacing:1px;color:#3f8a76}
+.greet{font-size:24px;font-weight:400;margin:18px 0 6px;color:#bfffe9;letter-spacing:1px}
+.greet b{color:#3affc8;text-shadow:0 0 10px rgba(58,255,200,.5)}
+.mid{flex:1;display:grid;grid-template-columns:1.1fr 1fr;gap:30px;align-items:center}
+.frame{border:1px solid rgba(58,255,200,.4);position:relative;padding:0}
+.frame::before,.frame::after{content:"";position:absolute;width:12px;height:12px;border:2px solid #3affc8}
+.frame::before{top:-1px;left:-1px;border-right:0;border-bottom:0}
+.frame::after{bottom:-1px;right:-1px;border-left:0;border-top:0}
+.flbl{position:absolute;top:-9px;left:14px;background:#03060a;padding:0 8px;font-size:10px;letter-spacing:2px;color:#3f8a76}
+svg{display:block;width:100%}
+.txt{display:flex;flex-direction:column;gap:14px}
+.li{border:1px solid rgba(58,255,200,.3);padding:11px 14px;display:flex;justify-content:space-between;align-items:center;font-size:13px;position:relative}
+.li::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:#3affc8;box-shadow:0 0 8px #3affc8}
+.li.crit::before{background:#ff5d8f;box-shadow:0 0 8px #ff5d8f}.li.crit{border-color:rgba(255,93,143,.4)}
+.tag{font-size:9px;letter-spacing:1px;color:#3f8a76}
+.amt{color:#3affc8;font-weight:700}
+.bignum{font-size:54px;font-weight:700;color:#3affc8;text-shadow:0 0 18px rgba(58,255,200,.5);letter-spacing:-1px}
+.row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:14px}
+.cell{border:1px solid rgba(58,255,200,.25);padding:10px 12px;text-align:center}
+.cell .v{font-size:18px;font-weight:700;color:#bfffe9}.cell .l{font-size:9px;letter-spacing:1px;color:#3f8a76;margin-top:3px}
+.bar{margin-top:auto;border:1px solid rgba(58,255,200,.4);padding:12px 16px;display:flex;align-items:center;gap:12px;font-size:13px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#7fffd4;font-size:13px}.bar input::placeholder{color:#3f8a76}
+.bar .km{color:#3f8a76;font-size:11px}
+</style></head><body><div class="wrap">
+<div class="top"><div class="wm">JARVIS</div><div class="st">● ONLINE · OPUS · 20:34 · TUE JUN 09</div></div>
+<div class="greet">Good evening, <b>Shay.</b></div>
+<div class="mid">
+<div class="frame"><div class="flbl">REVENUE · WIREFRAME</div>
+<svg viewBox="0 0 600 420" stroke="#3affc8" fill="none" stroke-width="1.2">
+<g stroke="rgba(58,255,200,.18)">
+<path d="M60 60 L420 30 L540 110 L180 150 Z"/>
+<path d="M60 60 L60 300 M420 30 L420 270 M540 110 L540 350 M180 150 L180 390"/>
+<path d="M60 300 L420 270 L540 350 L180 390 Z"/>
+</g>
+<polyline stroke="#3affc8" stroke-width="2" points="80,330 170,300 260,310 350,250 440,270 520,180"/>
+<polyline stroke="#ff5d8f" stroke-width="1.5" stroke-dasharray="4 4" points="80,360 170,350 260,330 350,340 440,300 520,280"/>
+<g fill="#3affc8" stroke="none"><circle cx="80" cy="330" r="3"/><circle cx="260" cy="310" r="3"/><circle cx="350" cy="250" r="3"/><circle cx="520" cy="180" r="4"/></g>
+<g stroke="rgba(58,255,200,.25)"><line x1="80" y1="180" x2="520" y2="180"/><line x1="80" y1="250" x2="520" y2="250"/></g>
+</svg>
+<div style="padding:0 20px 18px">
+<div class="bignum">$3,840</div>
+<div style="font-size:11px;color:#3f8a76;letter-spacing:1px">NET · ROI 4.2× · ▲18% · AI $58/$80</div>
+<div class="row">
+<div class="cell"><div class="v">$1,240</div><div class="l">STRIPE</div></div>
+<div class="cell"><div class="v">$890</div><div class="l">GUMROAD</div></div>
+<div class="cell"><div class="v">$710</div><div class="l">LEMON+NEWS</div></div>
+</div>
+</div>
+</div>
+<div class="txt">
+<div style="font-size:10px;letter-spacing:2px;color:#3f8a76">// NEEDS YOU · 3</div>
+<div class="li crit"><span><span class="tag">[CRIT]</span> Send invoice → 14 customers</span><span class="amt">$1,240</span></div>
+<div class="li"><span><span class="tag">[HIGH]</span> Publish SaaS starter → Gumroad</span><span class="amt">$39</span></div>
+<div class="li"><span><span class="tag">[HIGH]</span> Deploy micro-API → Cloudflare</span><span class="tag">queued</span></div>
+<div style="font-size:10px;letter-spacing:2px;color:#3f8a76;margin-top:6px">// JOBS RUNNING · 2</div>
+<div class="li"><span>habit-tracker app · Code</span><span class="amt">72%</span></div>
+<div class="li"><span>research note-taking · Scout</span><span class="amt">40%</span></div>
+<div class="li"><span>SYSTEM · 51 agents · 26 connectors · 9 live</span><span class="tag">7 prod</span></div>
+</div>
+</div>
+<div class="bar"><span style="color:#3affc8">▸</span><input placeholder="Ask Jarvis, or type a /command…"><span class="km">⌘K</span></div>
+</div></body></html>

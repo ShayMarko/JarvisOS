@@ -1,0 +1,38 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T169</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf6;background:#000;display:flex;align-items:center;justify-content:center}
+.case{width:560px;height:560px;border-radius:50%;background:radial-gradient(420px 420px at 50% 38%,#0c1620,#05080d);border:14px solid #14181d;box-shadow:0 0 0 4px #23282e,0 40px 90px rgba(0,0,0,.7),inset 0 0 70px rgba(0,0,0,.6);position:relative}
+.face{position:absolute;inset:0;border-radius:50%;overflow:hidden}
+.ticks{position:absolute;inset:0}
+.ticks i{position:absolute;left:50%;top:8px;width:2px;height:14px;background:rgba(95,208,192,.25);transform-origin:0 252px}
+.ticks i.maj{height:22px;width:3px;background:rgba(95,208,192,.6)}
+.center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.wm{font-size:11px;font-weight:800;letter-spacing:4px;color:#5fd0c0}
+.time{font-size:54px;font-weight:800;letter-spacing:-1px;margin-top:2px;font-variant-numeric:tabular-nums}
+.date{font-size:11px;color:#5f8278;letter-spacing:2px;text-transform:uppercase;margin-top:-2px}
+.greet{font-size:12px;color:#8a98a4;margin-top:8px}
+.comp{position:absolute;width:118px;text-align:center}
+.comp .ic{font-size:13px;letter-spacing:1px;text-transform:uppercase;color:#5f8278}
+.comp .v{font-size:22px;font-weight:800;margin-top:1px}
+.up{color:#46e0a0}.amber{color:#f2c14e}.crit{color:#ff7a7a}
+.cTop{left:50%;top:78px;transform:translateX(-50%)}
+.cBot{left:50%;bottom:74px;transform:translateX(-50%)}
+.cL{left:60px;top:50%;transform:translateY(-50%)}
+.cR{right:60px;top:50%;transform:translateY(-50%)}
+.ring{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:248px;height:248px}
+.dot{position:absolute;top:14px;left:50%;transform:translateX(-50%);width:6px;height:6px;border-radius:50%;background:#46e0a0;box-shadow:0 0 8px #46e0a0}
+</style></head><body>
+<div class="case"><div class="face">
+<div class="ticks" id="tk"></div>
+<svg class="ring" viewBox="0 0 248 248"><circle cx="124" cy="124" r="112" fill="none" stroke="#16202400" stroke-width="6"/><circle cx="124" cy="124" r="112" fill="none" stroke="rgba(70,224,160,.18)" stroke-width="6"/><circle cx="124" cy="124" r="112" fill="none" stroke="#46e0a0" stroke-width="6" stroke-linecap="round" stroke-dasharray="703" stroke-dashoffset="190" transform="rotate(-90 124 124)"/></svg>
+<div class="ring"><div class="dot"></div></div>
+<div class="comp cTop"><div class="ic">NET · MO</div><div class="v up">$3,840</div></div>
+<div class="comp cL"><div class="ic">Jobs</div><div class="v">2</div></div>
+<div class="comp cR"><div class="ic">ROI</div><div class="v up">4.2×</div></div>
+<div class="comp cBot"><div class="ic">Needs you</div><div class="v crit">3</div></div>
+<div class="center"><div class="wm">JARVIS</div><div class="time">20:34</div><div class="date">Tue · Jun 09</div><div class="greet">Good evening, Shay</div></div>
+</div></div>
+<script>
+var tk=document.getElementById('tk'),h='';for(var i=0;i<60;i++){h+='<i class="'+(i%5===0?'maj':'')+'" style="transform:rotate('+(i*6)+'deg)"></i>';}tk.innerHTML=h;
+</script>
+</body></html>

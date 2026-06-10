@@ -34,7 +34,7 @@ public class StripeConnector extends AbstractRestConnector {
 
     @Override
     public com.jarvis.security.RiskLevel actionRisk(String actionId) {
-        return "create_payment_link".equals(actionId)
+        return "create_payment_link".equals(actionId) || "create_subscription_link".equals(actionId)
                 ? com.jarvis.security.RiskLevel.HIGH : com.jarvis.security.RiskLevel.LOW;
     }
 
@@ -45,7 +45,10 @@ public class StripeConnector extends AbstractRestConnector {
                 new ConnectorAction("recent_revenue", "Recent revenue", "Sum of recent successful charges (feeds ROI)"),
                 new ConnectorAction("balance", "Balance", "Available + pending Stripe balance"),
                 new ConnectorAction("create_payment_link", "Create payment link",
-                        "Create a sellable payment link {name, price (USD), currency?} — product+price+link in one step"));
+                        "Create a sellable payment link {name, price (USD), currency?} — product+price+link in one step"),
+                new ConnectorAction("create_subscription_link", "Create subscription link",
+                        "Create a RECURRING payment link {name, price (USD), interval? (month|year), currency?} — "
+                        + "the recurring-revenue rail for a micro-SaaS or membership"));
     }
 
     @Override
@@ -56,6 +59,7 @@ public class StripeConnector extends AbstractRestConnector {
             case "recent_revenue" -> recentRevenue(key);
             case "balance" -> balance(key);
             case "create_payment_link" -> createPaymentLink(a, key);
+            case "create_subscription_link" -> createSubscriptionLink(a, key);
             default -> throw new NotFoundException("Unknown Stripe action '" + actionId + "'");
         };
     }
@@ -111,6 +115,34 @@ public class StripeConnector extends AbstractRestConnector {
         String url = link.path("url").asText("");
         return url.isBlank() ? "Stripe didn't return a link: " + link
                 : "✅ Payment link for \"" + name + "\" ($" + fmt(cents / 100.0) + "): " + url;
+    }
+
+    private String createSubscriptionLink(JsonNode a, String key) {
+        String name = a.path("name").asText("");
+        if (name.isBlank()) {
+            return "Provide a product 'name'.";
+        }
+        int cents = (int) Math.round(a.path("price").asDouble(0) * 100);
+        if (cents <= 0) {
+            return "Provide a positive 'price' in USD.";
+        }
+        String currency = a.path("currency").asText("usd").toLowerCase();
+        String interval = a.path("interval").asText("month").toLowerCase();
+        if (!interval.equals("month") && !interval.equals("year")) {
+            interval = "month";
+        }
+        JsonNode product = read(post("/v1/products", "name=" + enc(name), key));
+        String productId = product.path("id").asText("");
+        // A RECURRING price (this is what makes it a subscription rather than a one-off).
+        JsonNode price = read(post("/v1/prices",
+                "product=" + enc(productId) + "&unit_amount=" + cents + "&currency=" + enc(currency)
+                        + "&recurring[interval]=" + enc(interval), key));
+        String priceId = price.path("id").asText("");
+        JsonNode link = read(post("/v1/payment_links",
+                "line_items[0][price]=" + enc(priceId) + "&line_items[0][quantity]=1", key));
+        String url = link.path("url").asText("");
+        return url.isBlank() ? "Stripe didn't return a link: " + link
+                : "✅ Subscription link for \"" + name + "\" ($" + fmt(cents / 100.0) + "/" + interval + "): " + url;
     }
 
     private double sumAmounts(JsonNode arr) {

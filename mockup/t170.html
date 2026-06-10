@@ -1,0 +1,36 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T170</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#eef3fb;background:radial-gradient(1400px 900px at 50% 0%,#101b2c,#070a11 70%)}
+.wrap{height:100vh;display:flex;flex-direction:column;padding:48px 60px}
+.shelf{display:flex;align-items:center;gap:18px}
+.wm{font-size:22px;font-weight:800;letter-spacing:4px;color:#6cd3ff}
+.tabs{display:flex;gap:30px;margin-left:30px}
+.tab{font-size:17px;color:#5e7088;font-weight:600}.tab.on{color:#eef3fb}.tab.on::after{content:"";display:block;height:3px;background:#6cd3ff;border-radius:2px;margin-top:6px}
+.clock{margin-left:auto;font-size:15px;color:#7e93ad}
+.greet{font-size:40px;font-weight:800;letter-spacing:-1px;margin:30px 0 6px}.greet b{color:#6cd3ff}
+.sub{font-size:16px;color:#7e93ad;margin-bottom:30px}
+.row{display:flex;gap:26px;align-items:stretch;flex:1;overflow:hidden}
+.card{flex:1;background:linear-gradient(160deg,#121c2a,#0b121c);border:1px solid #1d2c3e;border-radius:22px;padding:26px;display:flex;flex-direction:column;justify-content:flex-end;transition:.2s}
+.card .ic{font-size:34px}
+.card .k{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#5e7088;margin-top:auto}
+.card .t{font-size:24px;font-weight:700;margin-top:8px}
+.card .d{font-size:15px;color:#8ea3bc;margin-top:6px}
+.focus{flex:1.7;background:linear-gradient(160deg,#14324a,#0d2235);border:2px solid #6cd3ff;border-radius:22px;box-shadow:0 0 0 6px rgba(108,211,255,.12),0 30px 70px rgba(0,0,0,.5);transform:scale(1.02)}
+.focus .t{font-size:34px}
+.pill{display:inline-block;font-size:12px;font-weight:700;letter-spacing:1px;padding:5px 12px;border-radius:20px;background:rgba(255,122,122,.15);color:#ff9a9a;align-self:flex-start;margin-bottom:auto}
+.up{color:#46e0a0}
+.hint{margin-top:26px;font-size:14px;color:#5e7088;display:flex;align-items:center;gap:14px}
+.btn{border:1px solid #2a3c52;border-radius:8px;padding:6px 12px}
+</style></head><body>
+<div class="wrap">
+<div class="shelf"><div class="wm">JARVIS</div><div class="tabs"><div class="tab on">Today</div><div class="tab">Money</div><div class="tab">Jobs</div><div class="tab">Agents</div></div><div class="clock">● Online · Opus · 20:34 · Tue Jun 09</div></div>
+<div class="greet">Good evening, <b>Shay.</b></div>
+<div class="sub">3 things need you · 2 jobs running · Net $3,840 this month</div>
+<div class="row">
+<div class="card"><span class="ic">📈</span><div class="k">Money</div><div class="t">$3,840 <span class="up" style="font-size:18px">▲18%</span></div><div class="d">ROI 4.2× · AI cost $58/$80</div></div>
+<div class="card focus"><span class="pill">● CRITICAL</span><span class="ic">🧾</span><div class="k">Needs you · approve</div><div class="t">Send invoice → 14 customers</div><div class="d">$1,240 · EA via Resend · press OK to bill</div></div>
+<div class="card"><span class="ic">⚙️</span><div class="k">Jobs running</div><div class="t">habit-tracker · 72%</div><div class="d">Code agent · research niche 40%</div></div>
+</div>
+<div class="hint"><span style="color:#6cd3ff">🎙 "Hey Jarvis"</span><span class="btn">◀ ▶ navigate</span><span class="btn">OK select</span><span>Ask Jarvis, or type a /command…</span></div>
+</div>
+</body></html>

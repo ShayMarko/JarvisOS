@@ -1,0 +1,51 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T233</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf6;background:radial-gradient(1000px 700px at 25% 20%,#0f1622,#070a0f 70%)}
+.top{display:flex;align-items:center;gap:14px;padding:22px 40px}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#5fd0c0}.st{font-size:12px;color:#5d7290}.r{margin-left:auto;font-size:13px;color:#5d7290}
+.cap{padding:6px 40px 0}.cap h1{font-size:30px;font-weight:800}.cap h1 b{color:#5fd0c0}.cap p{font-size:14px;color:#5d7290;margin-top:6px;max-width:520px;line-height:1.5}
+.dim{position:fixed;inset:0;background:rgba(4,7,11,.35);pointer-events:none}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:380px;background:linear-gradient(180deg,#0c1219,#0a0f15);border-left:1px solid #1a2533;box-shadow:-30px 0 70px rgba(0,0,0,.5);padding:24px 22px;z-index:5}
+.dh{display:flex;align-items:center;justify-content:space-between}
+.dh h2{font-size:16px;font-weight:800}.dh .x{color:#5d7290;font-size:18px}
+.dh .sub{font-size:11px;color:#5d7290}
+.feed{margin-top:18px}
+.ev{display:flex;gap:12px;padding-bottom:18px;position:relative}
+.ev::before{content:"";position:absolute;left:7px;top:18px;bottom:-2px;width:1px;background:#1c2836}
+.ev:last-child::before{display:none}
+.ev .dot{width:15px;height:15px;border-radius:50%;border:3px solid #0c1219;flex:none;margin-top:2px;z-index:1}
+.d-ok{background:#46e0a0}.d-run{background:#5fd0c0}.d-warn{background:#f0b54d}.d-info{background:#7fb2ff}
+.ev .body{flex:1}.ev h4{font-size:13px;font-weight:700}.ev p{font-size:12px;color:#7b90ad;margin-top:2px;line-height:1.45}.ev .t{font-size:10px;color:#46586a;margin-top:3px}
+.toasts{position:fixed;right:404px;bottom:26px;display:flex;flex-direction:column;gap:12px;z-index:6;width:340px}
+.toast{background:rgba(14,22,30,.95);border:1px solid #233140;border-radius:14px;padding:14px 16px;box-shadow:0 20px 50px rgba(0,0,0,.5);display:flex;gap:12px;align-items:flex-start}
+.toast .ic{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex:none}
+.i-ok{background:rgba(70,224,160,.16);color:#5fe0b0}.i-money{background:rgba(95,208,192,.16);color:#5fd0c0}.i-info{background:rgba(127,178,255,.14);color:#9cc2ff}
+.toast h4{font-size:13px;font-weight:700}.toast p{font-size:12px;color:#8aa0b2;margin-top:2px}
+.toast.s1{transform:scale(1)}.toast.s2{transform:scale(.97);opacity:.9}.toast.s3{transform:scale(.94);opacity:.78}
+.actions{display:flex;gap:8px;margin-top:9px}
+.actions a{font-size:11px;font-weight:700;padding:5px 11px;border-radius:8px;border:1px solid #2a3645;color:#cfe0f2}
+.actions a.go{background:linear-gradient(120deg,#46e0a0,#5fd0c0);border:0;color:#04110c}
+.center{padding:28px 40px 0;max-width:560px}
+.stat{display:flex;gap:30px;margin-top:18px}.stat .v{font-size:34px;font-weight:800}.stat .l{font-size:11px;color:#5d7290;text-transform:uppercase;letter-spacing:1px}.stat .v small{font-size:13px;color:#46e0a0;font-weight:700;margin-left:6px}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · ACTIVITY</div><div class="st">● Online · Opus</div><div class="r">20:34 · Tue Jun 09</div></div>
+<div class="cap"><h1>Good evening, <b>Shay.</b></h1><p>Your agents have been busy. Three actions just completed and one needs a tap.</p>
+<div class="center"><div class="stat"><div><div class="v">$3,840 <small>▲18%</small></div><div class="l">net · this month</div></div><div><div class="v">4.2×</div><div class="l">ROI</div></div><div><div class="v">2</div><div class="l">jobs running</div></div></div></div></div>
+<div class="dim"></div>
+<div class="toasts">
+<div class="toast s1"><div class="ic i-ok">✓</div><div><h4>Invoice approved</h4><p>EA billed 14 customers via Resend — $1,240 booked.</p></div></div>
+<div class="toast s2"><div class="ic i-money">$</div><div><h4>Gumroad sale</h4><p>SaaS starter sold ×2 · +$78</p></div></div>
+<div class="toast s3"><div class="ic i-info">⚡</div><div><h4>Deploy ready</h4><p>micro-API cleared green-gate on Cloudflare.<div class="actions"><a>Later</a><a class="go">Deploy now</a></div></p></div></div>
+</div>
+<div class="drawer">
+<div class="dh"><div><h2>Activity</h2><div class="sub">today · live</div></div><div class="x">✕</div></div>
+<div class="feed">
+<div class="ev"><div class="dot d-ok"></div><div class="body"><h4>Invoice sent → 14 customers</h4><p>EA via Resend · $1,240 billed</p><div class="t">just now</div></div></div>
+<div class="ev"><div class="dot d-run"></div><div class="body"><h4>habit-tracker app · 72%</h4><p>Code agent building in background</p><div class="t">2m ago</div></div></div>
+<div class="ev"><div class="dot d-info"></div><div class="body"><h4>Newsletter #14 queued</h4><p>2,100 subscribers · ships Tuesday 06:00</p><div class="t">11m ago</div></div></div>
+<div class="ev"><div class="dot d-warn"></div><div class="body"><h4>Deploy awaiting approval</h4><p>micro-API → Cloudflare · green-gated</p><div class="t">18m ago</div></div></div>
+<div class="ev"><div class="dot d-run"></div><div class="body"><h4>Research: note-taking niche · 40%</h4><p>Scout · 12 sources analysed</p><div class="t">26m ago</div></div></div>
+<div class="ev"><div class="dot d-ok"></div><div class="body"><h4>All 9 connectors healthy</h4><p>Watchdog · self-heal ran on Stripe</p><div class="t">1h ago</div></div></div>
+</div>
+</div>
+</body></html>

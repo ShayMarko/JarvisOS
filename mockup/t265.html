@@ -1,0 +1,44 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T265</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,-apple-system,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6e0ea;background:#070509}
+.smoke{position:absolute;inset:0;z-index:1}
+.top{display:flex;align-items:center;gap:14px;padding:24px 44px;position:relative;z-index:5}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#d0b0ff}
+.st{font-size:12px;color:#6a5a78}.r{margin-left:auto;font-size:13px;color:#8a7a98}
+.hero{position:fixed;top:34%;left:44px;z-index:6;max-width:520px}
+.hero h1{font-size:46px;font-weight:200;letter-spacing:-1px;line-height:1.08}
+.hero h1 b{font-weight:800;background:linear-gradient(90deg,#fff,#d0b0ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:#9a8aa8;font-size:15px;margin-top:14px;font-weight:300;line-height:1.6;max-width:440px}
+.panels{position:fixed;bottom:34px;right:44px;z-index:6;display:flex;gap:14px}
+.glass{width:170px;background:rgba(30,22,42,.35);border:1px solid rgba(208,176,255,.16);border-radius:16px;padding:16px 18px;backdrop-filter:blur(14px);box-shadow:0 18px 50px rgba(0,0,0,.4)}
+.glass .l{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:#8a7aa0}
+.glass .v{font-size:28px;font-weight:800;margin-top:5px}
+.glass .d{font-size:12px;color:#b89cd8;margin-top:2px}
+.bar{position:fixed;bottom:36px;left:44px;width:440px;display:flex;align-items:center;gap:12px;background:rgba(20,14,28,.45);border:1px solid rgba(208,176,255,.2);border-radius:14px;padding:12px 16px;z-index:7;backdrop-filter:blur(14px)}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e6e0ea;font-size:14px}.bar input::placeholder{color:#6a5a78}
+</style></head><body>
+<svg class="smoke" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+<defs>
+<radialGradient id="s1" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="rgba(160,90,220,.5)"/><stop offset="100%" stop-color="rgba(160,90,220,0)"/></radialGradient>
+<radialGradient id="s2" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="rgba(70,120,210,.45)"/><stop offset="100%" stop-color="rgba(70,120,210,0)"/></radialGradient>
+<radialGradient id="s3" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="rgba(210,130,180,.4)"/><stop offset="100%" stop-color="rgba(210,130,180,0)"/></radialGradient>
+<radialGradient id="s4" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="rgba(40,60,140,.5)"/><stop offset="100%" stop-color="rgba(40,60,140,0)"/></radialGradient>
+<filter id="sm"><feTurbulence type="fractalNoise" baseFrequency="0.012 0.02" numOctaves="3" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="120"/></filter>
+</defs>
+<g filter="url(#sm)">
+<ellipse cx="980" cy="380" rx="420" ry="360" fill="url(#s1)"/>
+<ellipse cx="700" cy="600" rx="500" ry="320" fill="url(#s2)"/>
+<ellipse cx="1180" cy="700" rx="360" ry="320" fill="url(#s3)"/>
+<ellipse cx="500" cy="280" rx="380" ry="300" fill="url(#s4)"/>
+<ellipse cx="1240" cy="240" rx="280" ry="260" fill="url(#s1)" opacity=".7"/>
+</g>
+</svg>
+<div class="top"><div class="wm">JARVIS</div><div class="st">● Online · Opus · 20:34 · Tue Jun 09</div><div class="r">good evening, Shay</div></div>
+<div class="hero"><h1>Quiet power,<br><b>working in the dark.</b></h1><p>Two jobs running, the books in the green, and one decision that needs your nod. Everything else, I've got.</p></div>
+<div class="panels">
+<div class="glass"><div class="l">Net · this month</div><div class="v">$3,840</div><div class="d">▲ 18% · ROI 4.2×</div></div>
+<div class="glass"><div class="l">Needs you</div><div class="v" style="color:#ffb0c8">3</div><div class="d">invoice · publish · deploy</div></div>
+<div class="glass"><div class="l">Running</div><div class="v" style="color:#b0c0ff">2</div><div class="d">72% · 40%</div></div>
+</div>
+<div class="bar"><span style="color:#d0b0ff">🎙</span><input placeholder="Ask Jarvis, or type a /command… · say “Hey Jarvis”"><span style="color:#6a5a78;font-size:12px">⌘K</span></div>
+</body></html>

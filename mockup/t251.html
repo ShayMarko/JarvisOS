@@ -1,0 +1,56 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T251</title><style>
+*{margin:0;box-sizing:border-box;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace}
+body{height:100vh;overflow:hidden;color:#c9d1d9;background:#0d1117;font-size:14px}
+.term{height:100vh;display:flex;flex-direction:column;padding:0}
+.tabbar{display:flex;align-items:center;gap:0;background:#010409;border-bottom:1px solid #21262d;padding:0 14px;height:38px}
+.dot{width:11px;height:11px;border-radius:50%;margin-right:7px}
+.r{background:#ff5f56}.y{background:#ffbd2e}.g{background:#27c93f}
+.tab{padding:0 16px;color:#7d8590;font-size:12px;border-right:1px solid #21262d;height:100%;display:flex;align-items:center}
+.tab.on{color:#3fb950;background:#0d1117}
+.path{margin-left:auto;color:#484f58;font-size:12px}
+.body{flex:1;overflow:hidden;padding:18px 24px;display:flex;flex-direction:column;gap:2px;line-height:1.65}
+.cm{color:#484f58}
+.pr{color:#3fb950}.pr b{color:#58a6ff}
+.out{color:#c9d1d9}
+.key{color:#79c0ff}.str{color:#a5d6ff}.num{color:#d2a8ff}.warn{color:#f0883e}.ok{color:#3fb950}.crit{color:#ff7b72}
+.tablebox{margin:6px 0;border:1px solid #21262d;border-radius:6px;overflow:hidden;width:fit-content}
+.tr{display:flex;border-bottom:1px solid #161b22}.tr:last-child{border:0}
+.td{padding:4px 16px;border-right:1px solid #161b22;min-width:90px}.td:last-child{border:0}
+.th{background:#161b22;color:#7d8590}
+.bar{display:inline-block;color:#3fb950}
+.prompt{border-top:1px solid #21262d;padding:14px 24px;display:flex;align-items:center;gap:10px;background:#010409}
+.prompt .pr{font-size:14px}
+.prompt input{flex:1;background:0;border:0;outline:0;color:#c9d1d9;font-family:inherit;font-size:14px}
+.prompt input::placeholder{color:#484f58}
+.cursor{width:8px;height:16px;background:#3fb950;display:inline-block;animation:b 1s steps(2) infinite}
+@keyframes b{0%,50%{opacity:1}51%,100%{opacity:0}}
+</style></head><body><div class="term">
+<div class="tabbar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+  <span class="tab on">jarvis — zsh</span><span class="tab">logs</span><span class="tab">monitor</span>
+  <span class="path">~/jarvis · ● online · opus · 20:34 · Tue Jun 09</span>
+</div>
+<div class="body">
+  <div class="cm"># JARVIS v3 · local AI OS · 51 agents · 26 connectors (9 live) · 7 products live</div>
+  <div><span class="pr">shay@jarvis</span> <span class="pr"><b>~</b></span> <span class="ok">$</span> <span class="out">jarvis status</span></div>
+  <div class="out">  Good evening, Shay. <span class="cm"># all systems nominal</span></div>
+  <div class="out"></div>
+  <div class="out"><span class="key">money</span>: { net_month: <span class="num">$3,840</span>, roi: <span class="num">4.2×</span>, delta: <span class="ok">▲18%</span>, ai_cost: <span class="warn">$58</span>/<span class="num">$80</span> }</div>
+  <div class="out"><span class="key">revenue</span>: stripe=<span class="num">$1,240</span> gumroad=<span class="num">$890</span> lemonsqueezy=<span class="num">$310</span> newsletter=<span class="num">$400</span></div>
+  <div class="out"></div>
+  <div class="cm"># needs_you (3) — run `jarvis approve &lt;id&gt;`</div>
+  <div class="tablebox">
+    <div class="tr th"><div class="td">id</div><div class="td">priority</div><div class="td" style="min-width:230px">task</div><div class="td">value</div></div>
+    <div class="tr"><div class="td">01</div><div class="td crit">CRITICAL</div><div class="td" style="min-width:230px">send invoice → 14 customers</div><div class="td num">$1,240</div></div>
+    <div class="tr"><div class="td">02</div><div class="td warn">HIGH</div><div class="td" style="min-width:230px">publish SaaS starter → Gumroad</div><div class="td num">$39</div></div>
+    <div class="tr"><div class="td">03</div><div class="td warn">HIGH</div><div class="td" style="min-width:230px">deploy micro-API → Cloudflare</div><div class="td">—</div></div>
+  </div>
+  <div class="cm"># jobs running (2)</div>
+  <div class="out">  [<span class="bar">██████████████░░░░░</span>] <span class="num">72%</span> habit-tracker app <span class="cm">(Code)</span></div>
+  <div class="out">  [<span class="bar">████████░░░░░░░░░░░</span>] <span class="num">40%</span> research note-taking niche <span class="cm">(Scout)</span></div>
+  <div class="out">  [<span class="cm">queued</span>] newsletter #14</div>
+  <div class="out"></div>
+  <div class="cm"># proactive: double down → "REST API + auth" guide drove <span class="ok">61%</span> of traffic</div>
+  <div><span class="pr">shay@jarvis</span> <span class="pr"><b>~</b></span> <span class="ok">$</span> <span class="cursor"></span></div>
+</div>
+<div class="prompt"><span class="pr">❯</span><input placeholder="Ask Jarvis, or type a /command…   (say “Hey Jarvis”)"><span style="color:#484f58;font-size:12px">⌘K</span></div>
+</div></body></html>

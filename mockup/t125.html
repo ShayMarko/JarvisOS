@@ -1,0 +1,67 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T125</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e8edf4;background:#0a0c11}
+.top{display:flex;align-items:center;gap:14px;padding:16px 24px;border-bottom:1px solid #161d27}
+.wm{font-size:16px;font-weight:800;letter-spacing:3px;color:#5fd0c0}
+.crumb{font-size:12px;color:#6b7888}.crumb b{color:#cdd6e2}
+.r{margin-left:auto;font-size:12px;color:#5b6678}
+.cols{display:flex;height:calc(100vh - 57px)}
+.col{border-right:1px solid #161d27;overflow:hidden;display:flex;flex-direction:column}
+.c1{width:230px}.c2{width:320px}.c3{flex:1;border-right:0}
+.ch{font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:#5b6678;padding:14px 16px 8px}
+.li{display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:14px;color:#cdd6e2;border-left:2px solid transparent;cursor:default}
+.li .ic{width:20px;text-align:center;color:#6b7888}
+.li .ch2{margin-left:auto;color:#4b5666}
+.li.sel{background:rgba(95,208,192,.12);border-left-color:#5fd0c0;color:#fff}
+.li .amt{margin-left:auto;font-size:12px;color:#46e0a0;font-weight:600}
+.pill{font-size:8px;font-weight:700;padding:1px 6px;border-radius:9px;background:rgba(255,90,110,.18);color:#ff7a8c;margin-left:auto}
+/* detail */
+.detail{padding:26px 28px;overflow:hidden}
+.dk{font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:#5b6678}
+.dt{font-size:24px;font-weight:800;margin:6px 0 4px;letter-spacing:-.5px}
+.dsub{color:#8a96a8;font-size:13px}
+.amtbig{font-size:46px;font-weight:800;color:#46e0a0;letter-spacing:-2px;margin:22px 0 6px}
+.meta{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#161d27;border:1px solid #161d27;border-radius:14px;overflow:hidden;margin-top:18px}
+.cell{background:#11151d;padding:14px 16px}
+.cl{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#5b6678}.cv{font-size:18px;font-weight:700;margin-top:4px}
+.btns{display:flex;gap:10px;margin-top:22px}
+.btn{padding:11px 20px;border-radius:11px;font-size:13px;font-weight:700;border:1px solid #2a3445;color:#cdd6e2}
+.btn.go{background:linear-gradient(90deg,#46e0a0,#5fd0c0);color:#06140f;border:0}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS</div><div class="crumb">Money › Revenue › <b>Send invoice → 14</b></div><div class="r">● Online · Opus · 20:34</div></div>
+<div class="cols">
+  <div class="col c1">
+    <div class="ch">Categories</div>
+    <div class="li"><span class="ic">◎</span>Today<span class="ch2">›</span></div>
+    <div class="li sel"><span class="ic">$</span>Money<span class="ch2">›</span></div>
+    <div class="li"><span class="ic">▤</span>Jobs<span class="ch2">›</span></div>
+    <div class="li"><span class="ic">⊞</span>Agents<span class="ch2">›</span></div>
+    <div class="li"><span class="ic">⇄</span>Connectors<span class="ch2">›</span></div>
+    <div class="li"><span class="ic">✉</span>Inbox<span class="ch2">›</span></div>
+  </div>
+  <div class="col c2">
+    <div class="ch">Money · actions & sources</div>
+    <div class="li sel">Send invoice → 14 <span class="pill">CRIT</span></div>
+    <div class="li">Publish SaaS starter<span class="amt">$39</span></div>
+    <div class="li">Deploy micro-API<span class="amt">—</span></div>
+    <div class="li">Stripe subs<span class="amt">$1,240</span></div>
+    <div class="li">Gumroad<span class="amt">$890</span></div>
+    <div class="li">Lemon Squeezy<span class="amt">$310</span></div>
+    <div class="li">Newsletter<span class="amt">$400</span></div>
+  </div>
+  <div class="col c3 detail">
+    <div class="dk">Critical · Executive Assistant</div>
+    <div class="dt">Send invoice → 14 customers</div>
+    <div class="dsub">Drafted via Resend · awaiting your approval</div>
+    <div class="amtbig">$1,240</div>
+    <div class="dsub">Estimated billing across 14 active customers this cycle.</div>
+    <div class="meta">
+      <div class="cell"><div class="cl">Owner</div><div class="cv">EA agent</div></div>
+      <div class="cell"><div class="cl">Channel</div><div class="cv">Resend</div></div>
+      <div class="cell"><div class="cl">Net · month</div><div class="cv">$3,840</div></div>
+      <div class="cell"><div class="cl">ROI</div><div class="cv">4.2×</div></div>
+    </div>
+    <div class="btns"><div class="btn go">Approve & send</div><div class="btn">Preview draft</div></div>
+  </div>
+</div>
+</body></html>

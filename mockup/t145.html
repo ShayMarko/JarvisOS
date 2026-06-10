@@ -1,0 +1,80 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T145</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Futura','Century Gothic',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;background:#ece7dd;color:#1a1a1a}
+.wrap{height:100vh;display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:88px repeat(2,1fr) 70px;gap:8px;padding:8px;background:#1a1a1a}
+.cell{background:#ece7dd;position:relative;overflow:hidden}
+.wm-cell{grid-column:1/4;grid-row:1;background:#1a1a1a;color:#ece7dd;display:flex;align-items:center;justify-content:center}
+.wm{font-size:30px;font-weight:800;letter-spacing:6px;color:#ece7dd}
+.head{grid-column:4/13;grid-row:1;display:flex;align-items:center;gap:24px;padding:0 26px;background:#ece7dd}
+.head .greet{font-size:24px;font-weight:800;letter-spacing:-.5px}
+.head .greet b{color:#d6332e}
+.head .st{margin-left:auto;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#555;text-align:right;line-height:1.5}
+.red{background:#d6332e;color:#fff}
+.blue{background:#1742a8;color:#fff}
+.yellow{background:#f2c30f;color:#1a1a1a}
+.dark{background:#1a1a1a;color:#ece7dd}
+.net{grid-column:1/4;grid-row:2}
+.net .pad{padding:24px}
+.net .l{font-size:11px;letter-spacing:2px;text-transform:uppercase;opacity:.85}
+.net .v{font-size:54px;font-weight:800;letter-spacing:-2px;line-height:1;margin-top:6px}
+.net .d{font-size:13px;font-weight:700;margin-top:8px}
+.needs{grid-column:4/9;grid-row:2;padding:22px 26px}
+.h{font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:800;margin-bottom:16px}
+.row{display:flex;align-items:center;gap:14px;padding:11px 0;border-top:2px solid #1a1a1a;font-size:15px;font-weight:600}
+.row:last-child{border-bottom:2px solid #1a1a1a}
+.geo{width:20px;height:20px;flex:none}
+.cir{border-radius:50%}
+.tag{margin-left:auto;font-size:10px;font-weight:800;letter-spacing:1px}
+.sources{grid-column:9/13;grid-row:2;padding:22px 24px}
+.sources .row{justify-content:space-between;font-size:14px}
+.jobs{grid-column:1/7;grid-row:3;padding:22px 26px}
+.j{margin-bottom:18px}
+.j-h{display:flex;justify-content:space-between;font-size:15px;font-weight:700;margin-bottom:8px}
+.j-h span{opacity:.7;font-size:12px}
+.track{height:18px;background:#dcd5c7}.track i{display:block;height:100%}
+.shapes{grid-column:7/10;grid-row:3;display:flex;align-items:center;justify-content:center}
+.bigcircle{width:130px;height:130px;border-radius:50%;background:#f2c30f;position:relative}
+.bigcircle::after{content:"";position:absolute;left:0;top:0;width:65px;height:130px;background:#d6332e;border-radius:130px 0 0 130px}
+.sys{grid-column:10/13;grid-row:3;display:grid;grid-template-rows:repeat(3,1fr);gap:8px;background:#1a1a1a;padding:0}
+.sys .s{display:flex;align-items:center;justify-content:space-between;padding:0 22px}
+.sys .v{font-size:32px;font-weight:800}.sys .k{font-size:11px;letter-spacing:1px;text-transform:uppercase}
+.foot{grid-column:1/13;grid-row:4;display:flex;align-items:center;gap:16px;padding:0 26px}
+.foot input{flex:1;background:0;border:0;outline:0;font-size:15px;font-weight:600}.foot input::placeholder{color:#888}
+.kk{font-size:12px;font-weight:800;border:2px solid #1a1a1a;padding:4px 10px}
+</style></head><body>
+<div class="wrap">
+<div class="cell wm-cell"><div class="wm">JARVIS</div></div>
+<div class="cell head"><div class="greet">Good evening, <b>Shay.</b></div><div class="st">● ONLINE · OPUS<br>20:34 · TUE JUN 09 · "HEY JARVIS"</div></div>
+
+<div class="cell net red"><div class="pad"><div class="l">Net this month</div><div class="v">$3,840</div><div class="d">ROI 4.2× · ▲18%<br>AI cost $58 / $80</div></div></div>
+
+<div class="cell needs"><div class="h">3 Things Need You</div>
+<div class="row"><span class="geo cir" style="background:#d6332e"></span>Send invoice → 14 customers · $1,240<span class="tag" style="color:#d6332e">CRITICAL</span></div>
+<div class="row"><span class="geo" style="background:#1742a8"></span>Publish SaaS starter → Gumroad $39<span class="tag" style="color:#1742a8">HIGH</span></div>
+<div class="row"><span class="geo" style="width:0;height:0;background:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:18px solid #f2c30f"></span>Deploy micro-API → Cloudflare<span class="tag" style="color:#1742a8">HIGH</span></div>
+</div>
+
+<div class="cell sources blue"><div class="h">Revenue</div>
+<div class="row" style="border-color:#fff">Stripe subs<b>$1,240</b></div>
+<div class="row" style="border-color:#fff">Gumroad<b>$890</b></div>
+<div class="row" style="border-color:#fff">Newsletter<b>$400</b></div>
+<div class="row" style="border-color:#fff;border-bottom-color:#fff">Lemon Squeezy<b>$310</b></div>
+</div>
+
+<div class="cell jobs yellow"><div class="h">Jobs Running</div>
+<div class="j"><div class="j-h">habit-tracker app <span>Code · 72%</span></div><div class="track"><i style="width:72%;background:#d6332e"></i></div></div>
+<div class="j"><div class="j-h">research note-taking niche <span>Scout · 40%</span></div><div class="track"><i style="width:40%;background:#1742a8"></i></div></div>
+<div class="j" style="margin:0"><div class="j-h">newsletter #14 <span>queued</span></div><div class="track"><i style="width:6%;background:#1a1a1a"></i></div></div>
+</div>
+
+<div class="cell shapes"><div class="bigcircle"></div></div>
+
+<div class="cell sys">
+<div class="s yellow"><span class="k">Agents</span><span class="v">51</span></div>
+<div class="s red"><span class="k">Connectors · 9 live</span><span class="v">26</span></div>
+<div class="s blue"><span class="k">Products live</span><span class="v">7</span></div>
+</div>
+
+<div class="cell foot"><span style="color:#d6332e;font-size:18px">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span class="kk">⌘K</span></div>
+</div>
+</body></html>

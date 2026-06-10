@@ -1,0 +1,52 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T279</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;background:#06080c;display:flex;align-items:center;justify-content:center}
+/* blurred wallpaper behind a frosted control center */
+.wall{position:absolute;inset:0;background:
+ radial-gradient(50% 40% at 25% 20%,rgba(90,160,255,.4),transparent 60%),
+ radial-gradient(50% 50% at 80% 30%,rgba(123,92,255,.35),transparent 60%),
+ radial-gradient(60% 50% at 50% 100%,rgba(70,224,160,.28),transparent 60%),#0a0e16;filter:saturate(1.1)}
+.cc{position:relative;width:460px;display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:96px;gap:14px}
+.hdr{grid-column:1/5;display:flex;align-items:center;justify-content:space-between;height:auto;padding-bottom:2px}
+.hdr .wm{font-size:13px;letter-spacing:3px;font-weight:800;color:#cfe0ff}
+.hdr .t{font-size:12px;color:#9fb0c4}
+.tile{background:rgba(255,255,255,.08);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;color:#eaf0f8}
+.tile .ic{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px}
+.tile .lb{font-size:12px;font-weight:600}.tile .sb{font-size:11px;color:#a9bcd2}
+.on .ic{color:#fff}
+.b-blue.on .ic{background:#4da3ff}.b-green.on .ic{background:#46e0a0}.b-violet.on .ic{background:#a78bff}.b-amber.on .ic{background:#ffb454}.b-pink.on .ic{background:#ff5d73}.b-cyan.on .ic{background:#5fd0c0}
+.off .ic{background:rgba(255,255,255,.14);color:#9fb0c4}
+/* big agents module 2x2 */
+.big{grid-column:1/3;grid-row:2/4;background:rgba(255,255,255,.08);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:18px;display:flex;flex-direction:column}
+.big .h{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#a9bcd2}
+.big .v{font-size:40px;font-weight:800;margin-top:4px}.big .v small{font-size:14px;color:#9fb0c4;font-weight:600}
+.big .agents{margin-top:auto;display:flex;gap:8px;flex-wrap:wrap}
+.ag{font-size:11px;padding:5px 10px;border-radius:12px;background:rgba(255,255,255,.1);color:#cfe0ff}
+.ag.live{background:rgba(70,224,160,.2);color:#7fffc6}
+/* slider tiles */
+.sl{grid-column:3/5;background:rgba(255,255,255,.08);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:14px 16px;display:flex;flex-direction:column;justify-content:center}
+.sl .top{display:flex;justify-content:space-between;font-size:12px;color:#cfe0ff;margin-bottom:8px}
+.sl .top b{font-weight:700}
+.bar{height:10px;border-radius:8px;background:rgba(255,255,255,.14);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:8px}
+</style></head><body>
+<div class="wall"></div>
+<div class="cc">
+<div class="hdr"><span class="wm">JARVIS · CONTROL</span><span class="t">● Online · Opus · 20:34 Tue</span></div>
+
+<div class="tile b-pink on"><div class="ic">⚠️</div><div><div class="lb">Needs you</div><div class="sb">3 · 1 critical</div></div></div>
+<div class="tile b-blue on"><div class="ic">⚡</div><div><div class="lb">Auto-pilot</div><div class="sb">On · 2 jobs</div></div></div>
+<div class="tile b-green on"><div class="ic">🔌</div><div><div class="lb">Connectors</div><div class="sb">9 live · 26</div></div></div>
+<div class="tile b-violet off"><div class="ic">🔒</div><div><div class="lb">Private mode</div><div class="sb">Off</div></div></div>
+
+<div class="big"><div class="h">Agents</div><div class="v">51 <small>· 5 active</small></div><div class="agents"><span class="ag live">Code</span><span class="ag live">Scout</span><span class="ag">EA</span><span class="ag">Finance</span><span class="ag live">Newsletter</span><span class="ag">CRM</span></div></div>
+
+<div class="sl"><div class="top"><span>AI budget</span><b>$58 / $80</b></div><div class="bar"><i style="width:72%;background:linear-gradient(90deg,#46e0a0,#5fd0c0)"></i></div></div>
+<div class="sl"><div class="top"><span>Voice volume</span><b>70%</b></div><div class="bar"><i style="width:70%;background:linear-gradient(90deg,#4da3ff,#7b5cff)"></i></div></div>
+
+<div class="tile b-cyan on"><div class="ic">🎙</div><div><div class="lb">Wake word</div><div class="sb">“Hey Jarvis”</div></div></div>
+<div class="tile b-amber on"><div class="ic">🔔</div><div><div class="lb">Alerts</div><div class="sb">Discord + phone</div></div></div>
+<div class="tile b-green on"><div class="ic">💰</div><div><div class="lb">Money</div><div class="sb">$3,840 ▲18%</div></div></div>
+<div class="tile b-blue off"><div class="ic">🌙</div><div><div class="lb">Do not disturb</div><div class="sb">Off</div></div></div>
+</div>
+</body></html>

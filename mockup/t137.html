@@ -1,0 +1,69 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T137</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e8edf4;background:#0a0c11;display:flex;flex-direction:column}
+.top{display:flex;align-items:center;gap:14px;padding:14px 28px;border-bottom:1px solid #161d27}
+.wm{font-size:16px;font-weight:800;letter-spacing:3px;color:#5fc7ff}.st{font-size:12px;color:#5b6678}.r{margin-left:auto;font-size:12px;color:#8a96a8}
+/* top pane: live feed */
+.feed{flex:1;overflow:hidden;padding:16px 28px}
+.ph{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.ph .h{font-size:13px;letter-spacing:1.4px;text-transform:uppercase;color:#5b6678}
+.ph .live{font-size:11px;color:#46e0a0;display:flex;align-items:center;gap:5px}.ph .live i{width:7px;height:7px;border-radius:50%;background:#46e0a0;box-shadow:0 0 8px #46e0a0}
+.line{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #11161f;font-size:13px}
+.time{font-family:ui-monospace,monospace;font-size:11px;color:#5b6678;width:54px}
+.tag{font-size:9px;font-weight:700;padding:2px 7px;border-radius:7px;flex-shrink:0}
+.tg{background:rgba(70,224,160,.15);color:#46e0a0}.tb{background:rgba(95,199,255,.15);color:#5fc7ff}.tv{background:rgba(177,140,255,.15);color:#b18cff}.tr{background:rgba(255,90,110,.15);color:#ff7a8c}
+.line .txt{color:#cdd6e2}.line .amt{margin-left:auto;color:#46e0a0;font-weight:700;font-size:12px}
+.divider{height:1px;background:linear-gradient(90deg,transparent,#2a3445,transparent)}
+.dgrab{height:18px;display:flex;align-items:center;justify-content:center}.dgrab i{width:46px;height:5px;border-radius:3px;background:#2a3445}
+/* bottom pane: command + detail */
+.bottom{flex:1;display:flex;overflow:hidden}
+.cmd{flex:1.3;padding:18px 28px;border-right:1px solid #161d27}
+.cmdbox{background:#11161f;border:1px solid #232c39;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px}
+.cmdbox input{flex:1;background:0;border:0;outline:0;color:#e8edf4;font-size:15px}.cmdbox input::placeholder{color:#5b6678}
+.cmdbox .kbd{font-size:11px;color:#5b6678}
+.sug{margin-top:14px}
+.sug .k{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:#5b6678;margin-bottom:8px}
+.chip{display:inline-flex;align-items:center;gap:7px;background:#141a24;border:1px solid #222b39;border-radius:10px;padding:9px 13px;font-size:13px;margin:0 8px 8px 0;color:#cdd6e2}
+.detail{flex:1;padding:18px 26px}
+.dk{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:#5b6678}
+.dt{font-size:18px;font-weight:800;margin:6px 0 2px}
+.dsub{font-size:12px;color:#6b7888}
+.net{font-size:34px;font-weight:800;letter-spacing:-1px;margin:14px 0 2px}
+.bar{height:8px;border-radius:5px;background:#1a212c;overflow:hidden;margin-top:12px}.bar i{display:block;height:100%;background:linear-gradient(90deg,#5fc7ff,#46e0a0)}
+.mini{display:flex;justify-content:space-between;font-size:12px;color:#9aa6b4;padding:7px 0;border-bottom:1px solid #1a212c}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS</div><div class="st">● Online · Opus · 20:34 · Tue Jun 09</div><div class="r">Split · feed / command</div></div>
+<div class="feed">
+  <div class="ph"><span class="h">Live activity</span><span class="live"><i></i> streaming</span></div>
+  <div class="line"><span class="time">20:34:02</span><span class="tag tr">EA</span><span class="txt">Drafted invoice → 14 customers, awaiting approval</span><span class="amt">$1,240</span></div>
+  <div class="line"><span class="time">20:33:48</span><span class="tag tb">Code</span><span class="txt">habit-tracker app build advanced to 72%</span></div>
+  <div class="line"><span class="time">20:31:10</span><span class="tag tv">Publish</span><span class="txt">SaaS starter packaged · ready for Gumroad</span><span class="amt">$39</span></div>
+  <div class="line"><span class="time">20:28:55</span><span class="tag tg">Stripe</span><span class="txt">Subscription renewals processed</span><span class="amt">$1,240</span></div>
+  <div class="line"><span class="time">20:24:09</span><span class="tag tb">Scout</span><span class="txt">research note-taking niche reached 40%</span></div>
+  <div class="line"><span class="time">20:19:31</span><span class="tag tg">Analyst</span><span class="txt">"REST API + auth" guide drove 61% of traffic</span></div>
+</div>
+<div class="dgrab"><i></i></div>
+<div class="bottom">
+  <div class="cmd">
+    <div class="cmdbox"><span style="color:#5fc7ff">🎙</span><input placeholder="Ask Jarvis, or type a /command… · say “Hey Jarvis”"><span class="kbd">⌘K</span></div>
+    <div class="sug">
+      <div class="k">Quick actions</div>
+      <span class="chip">✓ Approve invoice · $1,240</span>
+      <span class="chip">↑ Publish SaaS starter</span>
+      <span class="chip">⚡ Deploy micro-API</span>
+      <span class="chip">📈 Open money dashboard</span>
+      <span class="chip">✉ Send newsletter #14</span>
+    </div>
+  </div>
+  <div class="detail">
+    <div class="dk">Selected · job</div>
+    <div class="dt">habit-tracker app</div>
+    <div class="dsub">Code agent · background job</div>
+    <div class="net" style="color:#5fc7ff">72%</div>
+    <div class="bar"><i style="width:72%"></i></div>
+    <div class="mini" style="margin-top:14px"><span>Net this month</span><span>$3,840</span></div>
+    <div class="mini"><span>AI cost</span><span>$58 / $80</span></div>
+    <div class="mini"><span>Other job · research niche</span><span style="color:#b18cff">40%</span></div>
+  </div>
+</div>
+</body></html>

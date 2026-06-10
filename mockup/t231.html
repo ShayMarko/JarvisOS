@@ -1,0 +1,67 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T231</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf6;background:#070a10;display:grid;grid-template-columns:248px 1fr 320px;grid-template-rows:56px 1fr}
+.hdr{grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:0 24px;border-bottom:1px solid #161f29;background:#0a0f16}
+.wm{font-size:16px;font-weight:800;letter-spacing:3px;color:#5fd0c0}.st{font-size:12px;color:#5d7290}.r{margin-left:auto;font-size:12px;color:#5d7290}
+.nav{border-right:1px solid #161f29;padding:16px 12px;background:#090d13;overflow:hidden}
+.ng{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:#46586a;margin:14px 8px 6px}
+.ni{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;font-size:13px;color:#9fb0c0;margin-bottom:2px}
+.ni .ic{width:18px;text-align:center;color:#5d7290}
+.ni.on{background:rgba(95,208,192,.12);color:#cfeee8}.ni.on .ic{color:#5fd0c0}
+.ni .ct{margin-left:auto;font-size:10px;background:#16222c;border-radius:10px;padding:1px 7px;color:#7b90ad}
+.main{padding:24px 30px;overflow:hidden}
+.crumb{font-size:12px;color:#5d7290}.crumb b{color:#9fb0c0}
+.title{font-size:26px;font-weight:800;margin-top:8px}.title b{color:#5fd0c0}
+.lede{font-size:14px;color:#8aa0b2;margin-top:6px;line-height:1.5;max-width:560px}
+.block{margin-top:22px}
+.bh{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#5d7290;margin-bottom:10px}
+.step{display:flex;gap:14px;padding:13px 16px;border:1px solid #161f29;border-radius:13px;margin-bottom:9px;background:#0c1219;align-items:center}
+.step .n{width:26px;height:26px;border-radius:8px;background:rgba(95,208,192,.14);color:#5fd0c0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex:none}
+.step .body{flex:1}.step h4{font-size:14px;font-weight:700}.step p{font-size:12px;color:#7b90ad;margin-top:3px}
+.step .tag{font-size:10px;font-weight:700;padding:3px 9px;border-radius:14px;background:rgba(70,224,160,.14);color:#5fe0b0}
+.inspect{border-left:1px solid #161f29;padding:24px 20px;background:#090d13;overflow:hidden}
+.ih{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#5d7290}
+.iname{font-size:18px;font-weight:800;margin-top:6px}
+.prop{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid #131b23;font-size:13px}
+.prop .pk{color:#5d7290}.prop .pv{font-weight:600}
+.tog{display:flex;align-items:center;justify-content:space-between;padding:11px 0;font-size:13px;color:#9fb0c0}
+.sw{width:38px;height:21px;border-radius:12px;background:#46e0a0;position:relative}.sw::after{content:"";position:absolute;right:2px;top:2px;width:17px;height:17px;border-radius:50%;background:#06110d}
+.cta{margin-top:18px;text-align:center;padding:11px;border-radius:11px;font-weight:700;font-size:13px;background:linear-gradient(120deg,#46e0a0,#5fd0c0);color:#03110d}
+</style></head><body>
+<div class="hdr"><div class="wm">JARVIS</div><div class="st">● Online · Opus</div><div class="r">20:34 · Tue Jun 09 · Good evening, Shay</div></div>
+<div class="nav">
+<div class="ng">Workspace</div>
+<div class="ni"><span class="ic">⌂</span>Today</div>
+<div class="ni on"><span class="ic">⚡</span>Workflows<span class="ct">8</span></div>
+<div class="ni"><span class="ic">◎</span>Agents<span class="ct">51</span></div>
+<div class="ni"><span class="ic">☷</span>Connectors<span class="ct">9</span></div>
+<div class="ng">Money</div>
+<div class="ni"><span class="ic">$</span>Revenue</div>
+<div class="ni"><span class="ic">▦</span>Products<span class="ct">7</span></div>
+<div class="ng">System</div>
+<div class="ni"><span class="ic">◷</span>Jobs<span class="ct">2</span></div>
+<div class="ni"><span class="ic">⚙</span>Settings</div>
+</div>
+<div class="main">
+<div class="crumb">Workflows · <b>Newsletter business loop</b></div>
+<div class="title">Newsletter <b>business loop</b></div>
+<div class="lede">Runs every Tuesday at 06:00. Drafts, fact-checks, and ships issue #14 — then bills sponsors. Currently queued for tomorrow.</div>
+<div class="block"><div class="bh">Steps · 5</div>
+<div class="step"><div class="n">1</div><div class="body"><h4>Gather topics from KB + RSS</h4><p>Scout agent · semantic search across saved notes</p></div><span class="tag">done</span></div>
+<div class="step"><div class="n">2</div><div class="body"><h4>Draft issue #14</h4><p>Newsletter agent · Opus · 1,200 words</p></div><span class="tag">done</span></div>
+<div class="step"><div class="n">3</div><div class="body"><h4>Critic pass + fact-check</h4><p>verify-before-claim critic</p></div><span class="tag" style="background:rgba(240,181,77,.16);color:#f0c878">review</span></div>
+<div class="step"><div class="n">4</div><div class="body"><h4>Send via Resend</h4><p>2,100 subscribers · approval gate</p></div><span class="tag" style="background:#16222c;color:#7b90ad">queued</span></div>
+</div></div>
+<div class="inspect">
+<div class="ih">Inspector · step 4</div>
+<div class="iname">Send via Resend</div>
+<div class="prop"><span class="pk">Type</span><span class="pv">Connector action</span></div>
+<div class="prop"><span class="pk">Recipients</span><span class="pv">2,100</span></div>
+<div class="prop"><span class="pk">Est. revenue</span><span class="pv" style="color:#46e0a0">$400</span></div>
+<div class="prop"><span class="pk">AI cost</span><span class="pv">$0.42</span></div>
+<div class="prop"><span class="pk">Risk</span><span class="pv">Medium</span></div>
+<div class="tog">Require approval<span class="sw"></span></div>
+<div class="tog">Notify on Discord<span class="sw"></span></div>
+<div class="cta">Approve & queue ↵</div>
+</div>
+</body></html>

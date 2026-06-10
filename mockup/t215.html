@@ -1,0 +1,51 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T215</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Marker Felt','Comic Sans MS','Segoe Print',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;background:#0b0b0c;display:flex;align-items:center;justify-content:center}
+.wb{width:1380px;height:840px;background:#f6f7f4;border:14px solid #c9cdd2;border-radius:12px;box-shadow:0 30px 90px rgba(0,0,0,.6),inset 0 0 60px rgba(0,0,0,.04);position:relative;overflow:hidden}
+.wb::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 38px,rgba(0,80,160,.012) 38px 39px);pointer-events:none}
+.tray{position:absolute;bottom:-8px;left:0;right:0;height:18px;background:linear-gradient(#aab0b6,#878d94)}
+.ttl{position:absolute;top:24px;left:38px;font-size:38px;color:#1f6fd6;font-weight:700;transform:rotate(-1.5deg)}
+.ttl u{text-decoration-color:#f0a500;text-decoration-thickness:3px}
+.date{position:absolute;top:34px;right:40px;font-size:16px;color:#e0533a;transform:rotate(1deg)}
+.date b{color:#11a36b}
+.note{position:absolute;padding:14px 16px;font-size:15px;line-height:1.35;box-shadow:2px 4px 8px rgba(0,0,0,.15);border-radius:2px}
+.y{background:#fff3a3}.p{background:#ffc7d6}.b{background:#bfe3ff}.g{background:#bff0cf}.o{background:#ffd9a8}
+.note .h{font-size:13px;font-weight:700;display:block;margin-bottom:4px}
+.bubble{position:absolute;border:3px solid #1f6fd6;border-radius:40px;padding:10px 18px;font-size:18px;color:#1f6fd6;font-weight:700;background:#fff}
+.cloud{position:absolute;border:3px dashed #e0533a;border-radius:18px;padding:10px 16px;font-size:15px;color:#c43c25;background:#fff}
+svg{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.lbl{position:absolute;font-size:13px;color:#555;transform:rotate(-2deg)}
+.mono{font-family:ui-monospace,monospace}
+</style></head><body><div class="wb">
+<div class="ttl">Today's Plan <u>— Hey Jarvis</u></div>
+<div class="date">Tue Jun 09 · <b>● online</b> · 20:34</div>
+
+<svg>
+<defs><marker id="ar" markerWidth="12" markerHeight="12" refX="8" refY="4" orient="auto"><path d="M0 0L9 4L0 8z" fill="#1f6fd6"/></marker>
+<marker id="ag" markerWidth="12" markerHeight="12" refX="8" refY="4" orient="auto"><path d="M0 0L9 4L0 8z" fill="#11a36b"/></marker></defs>
+<path d="M250 200 C 360 170, 440 200, 540 215" stroke="#1f6fd6" stroke-width="3" fill="none" marker-end="url(#ar)"/>
+<path d="M250 250 C 360 320, 430 360, 520 380" stroke="#1f6fd6" stroke-width="3" fill="none" marker-end="url(#ar)"/>
+<path d="M760 220 C 870 215, 950 230, 1040 245" stroke="#11a36b" stroke-width="3" fill="none" marker-end="url(#ag)"/>
+<path d="M740 400 C 870 410, 970 430, 1050 470" stroke="#11a36b" stroke-width="3" fill="none" marker-end="url(#ag)"/>
+<path d="M620 470 C 660 560, 760 600, 880 600" stroke="#e0533a" stroke-width="3" fill="none" stroke-dasharray="2 7" marker-end="url(#ar)"/>
+</svg>
+
+<div class="bubble" style="top:170px;left:80px;font-size:22px;transform:rotate(-2deg)">START · 3 need you</div>
+
+<div class="note y" style="top:160px;left:560px;width:200px;transform:rotate(-2deg)"><span class="h">① CRITICAL</span>Invoice → 14 customers<br><b class="mono">$1,240</b> · EA via Resend</div>
+<div class="note p" style="top:330px;left:560px;width:200px;transform:rotate(2deg)"><span class="h">② HIGH</span>Publish SaaS starter<br>→ Gumroad <b class="mono">$39</b></div>
+<div class="note b" style="top:500px;left:600px;width:200px;transform:rotate(-1deg)"><span class="h">③ HIGH</span>Deploy micro-API<br>→ Cloudflare edge</div>
+
+<div class="bubble" style="top:215px;left:1040px;background:#bff0cf;border-color:#11a36b;color:#0a7d4f;transform:rotate(2deg)">✓ billed · $$$</div>
+<div class="note g" style="top:430px;left:1060px;width:190px;transform:rotate(-2deg)"><span class="h">RUNNING</span>habit-tracker 72%<br>note-niche 40%<br>newsletter #14 queued</div>
+
+<div class="cloud" style="top:580px;left:880px;width:260px;transform:rotate(-1deg)"><b>💡 Double down:</b> "REST API + auth" guide drove <b>61%</b> of traffic → write 2 follow-ups</div>
+
+<div class="note o" style="bottom:60px;left:80px;width:210px;transform:rotate(1.5deg)"><span class="h">MONEY BOARD</span>Net <b class="mono">$3,840</b> · ROI 4.2× ▲18%<br>AI cost $58/$80</div>
+
+<div class="lbl" style="top:140px;left:300px">approve →</div>
+<div class="lbl" style="top:300px;left:300px;transform:rotate(2deg)">queue ↘</div>
+<div class="lbl" style="top:175px;left:880px;color:#11a36b">→ revenue</div>
+<div class="lbl" style="bottom:160px;left:60px;font-size:24px;color:#1f6fd6;transform:rotate(-3deg)">51 agents → all hands ✦</div>
+<div class="tray"></div>
+</div></body></html>

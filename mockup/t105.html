@@ -1,0 +1,57 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T105</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;color:#e8e6ef;background:#0d0b14}
+.top{display:flex;align-items:center;gap:14px;padding:18px 32px}
+.wm{font-size:17px;font-weight:800;letter-spacing:3px;color:#b48cff}
+.sub{font-size:12px;color:#7a7090}.r{margin-left:auto;font-size:12px;color:#7a7090}
+.hero{display:flex;gap:22px;padding:6px 32px 18px;align-items:center}
+.cover{width:130px;height:130px;border-radius:16px;flex:none;background:linear-gradient(150deg,#b48cff,#5e3aa8);display:flex;align-items:center;justify-content:center;font-size:50px;box-shadow:0 14px 40px rgba(94,58,168,.5)}
+.hero h1{font-size:30px;font-weight:800;letter-spacing:-.5px}
+.hero .meta{font-size:13px;color:#9a90b0;margin-top:6px}
+.hero .desc{font-size:14px;color:#bcb4cc;margin-top:10px;max-width:560px;line-height:1.5}
+.play{margin-top:14px;display:flex;gap:10px}
+.pbtn{background:#b48cff;color:#1a0f30;font-weight:700;font-size:14px;padding:9px 22px;border-radius:22px}
+.sbtn{border:1px solid #2e2840;color:#cfc6e0;font-size:14px;padding:9px 18px;border-radius:22px}
+.list{padding:0 32px;height:calc(100vh - 320px);overflow:hidden}
+.lh{display:flex;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#6a6080;padding:6px 14px;border-bottom:1px solid #1d1828}
+.ep{display:flex;align-items:center;gap:16px;padding:11px 14px;border-bottom:1px solid #16121f;border-radius:8px}
+.ep.on{background:rgba(180,140,255,.08)}
+.ep .n{width:22px;color:#6a6080;font-size:14px}
+.ep .pl{color:#b48cff;font-size:16px}
+.ep .ti{flex:1}.ep .ti b{font-size:15px}.ep .ti .d{font-size:12.5px;color:#9a90b0;margin-top:2px}
+.ep .dur{font-size:13px;color:#8a8098;width:48px;text-align:right}
+.ep .tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px}
+.t-crit{background:rgba(255,107,129,.16);color:#ff8c9c}.t-new{background:rgba(70,224,160,.16);color:#46e0a0}
+.bar{position:fixed;bottom:0;left:0;right:0;background:#161023;border-top:1px solid #2a2240;padding:14px 32px;display:flex;align-items:center;gap:18px}
+.bar .mini{width:48px;height:48px;border-radius:10px;background:linear-gradient(150deg,#b48cff,#5e3aa8);display:flex;align-items:center;justify-content:center;font-size:22px}
+.bar .now b{font-size:14px}.bar .now .d{font-size:12px;color:#9a90b0}
+.transport{display:flex;align-items:center;gap:22px;margin:0 auto;font-size:18px;color:#cfc6e0}
+.transport .big{width:46px;height:46px;border-radius:50%;background:#b48cff;color:#1a0f30;display:flex;align-items:center;justify-content:center;font-size:18px}
+.prog{flex:1;max-width:420px;display:flex;align-items:center;gap:10px;font-size:11px;color:#8a8098}
+.track{flex:1;height:4px;background:#2a2240;border-radius:2px;position:relative}
+.track i{position:absolute;left:0;top:0;bottom:0;width:46%;background:#b48cff;border-radius:2px}
+.track i::after{content:"";position:absolute;right:-5px;top:-3px;width:10px;height:10px;border-radius:50%;background:#fff}
+.vol{font-size:14px;color:#8a8098}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS</div><div class="sub">Audio · your daily feed</div><div class="r">● Online · Opus · 20:34 · Tue Jun 09</div></div>
+<div class="hero">
+<div class="cover">🎧</div>
+<div><h1>Good evening, Shay.</h1><div class="meta">JARVIS Briefings · Daily · narrated by Opus</div><div class="desc">Net $3,840 this month, ROI 4.2×, up 18%. Three things need you — one approval bills the month. Press play for the full standup.</div><div class="play"><span class="pbtn">▶ Play latest</span><span class="sbtn">+ Queue all</span></div></div>
+</div>
+<div class="list">
+<div class="lh"><span style="width:38px">#</span><span style="flex:1">Episode</span><span style="width:48px;text-align:right">Time</span></div>
+<div class="ep on"><span class="n">▶</span><div class="ti"><b>Morning Briefing</b><div class="d">Needs you: invoice → 14 customers ($1,240, EA via Resend) · publish · deploy</div></div><span class="tag t-crit">CRITICAL</span><span class="dur">4:12</span></div>
+<div class="ep"><span class="n">2</span><div class="ti"><b>Standup</b><div class="d">habit-tracker 72% · research note-taking niche 40% · newsletter #14 queued</div></div><span class="tag t-new">NEW</span><span class="dur">3:08</span></div>
+<div class="ep"><span class="n">3</span><div class="ti"><b>Money Recap</b><div class="d">Stripe $1,240 · Gumroad $890 · Lemon Sq $310 · Newsletter $400 · AI cost $58/$80</div></div><span class="dur">2:45</span></div>
+<div class="ep"><span class="n">4</span><div class="ti"><b>Proactive Suggest</b><div class="d">Double down: "REST API + auth" guide drove 61% of traffic</div></div><span class="dur">1:50</span></div>
+<div class="ep"><span class="n">5</span><div class="ti"><b>System Health</b><div class="d">51 agents · 26 connectors (9 live) · 7 products live · all nominal</div></div><span class="dur">2:20</span></div>
+<div class="ep"><span class="n">6</span><div class="ti"><b>Nightly Reflection</b><div class="d">Episodic → semantic consolidation · tomorrow's plan</div></div><span class="dur">5:01</span></div>
+</div>
+<div class="bar">
+<div class="mini">🎧</div>
+<div class="now"><b>Morning Briefing</b><div class="d">JARVIS Briefings · Opus</div></div>
+<div class="transport"><span>⏮</span><span class="big">▶</span><span>⏭</span></div>
+<div class="prog"><span>1:54</span><div class="track"><i></i></div><span>4:12</span></div>
+<div class="vol">🔊 ──●─</div>
+</div>
+</body></html>

@@ -1,0 +1,63 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T240</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,'Helvetica Neue',sans-serif}
+body{height:100vh;overflow:hidden;color:#0a3a52;background:linear-gradient(160deg,#bff0ff 0%,#7fd4f5 38%,#3aa8e0 100%)}
+.sky{height:100vh;position:relative;padding:30px 40px;display:grid;grid-template-rows:auto 1fr auto;overflow:hidden}
+.bub{position:absolute;border-radius:50%;background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.9),rgba(255,255,255,.15) 55%,rgba(120,200,240,.05));border:1px solid rgba(255,255,255,.5)}
+.b1{width:220px;height:220px;top:-40px;right:120px}.b2{width:120px;height:120px;bottom:60px;left:60px}.b3{width:70px;height:70px;top:140px;left:30%}.b4{width:160px;height:160px;bottom:-50px;right:-30px}
+.glass{background:linear-gradient(180deg,rgba(255,255,255,.75),rgba(255,255,255,.4));border:1px solid rgba(255,255,255,.8);border-radius:22px;box-shadow:0 10px 30px rgba(20,90,130,.22),inset 0 1px 0 rgba(255,255,255,.9);backdrop-filter:blur(6px)}
+.top{display:flex;align-items:center;gap:14px;padding:14px 22px;position:relative;z-index:3}
+.wm{font-size:24px;font-weight:800;letter-spacing:1px;color:#0a6aa0;text-shadow:0 1px 0 #fff}
+.status{font-size:12px;color:#2a7aa8;margin-left:auto;font-weight:600}
+.main{display:grid;grid-template-columns:1.4fr 1fr;gap:18px;position:relative;z-index:3;align-content:start;margin-top:18px}
+.hero{padding:26px 30px}
+.greet{font-size:46px;font-weight:800;color:#0a5a85;text-shadow:0 1px 1px rgba(255,255,255,.8);line-height:1.05}
+.greet b{color:#0aa0d8}
+.kpis{display:flex;gap:12px;margin-top:20px}
+.kpi{flex:1;background:linear-gradient(180deg,rgba(255,255,255,.85),rgba(220,245,255,.6));border:1px solid rgba(255,255,255,.9);border-radius:16px;padding:14px 16px;box-shadow:inset 0 1px 0 #fff,0 4px 12px rgba(20,90,130,.15)}
+.kl{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#3a85b0;font-weight:700}.kv{font-size:28px;font-weight:800;color:#0a6aa0;margin-top:3px}.kd{font-size:12px;color:#16a34a;font-weight:700}
+.side{padding:20px 22px;display:flex;flex-direction:column;gap:16px}
+.sec h3{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#0a6aa0;margin-bottom:8px;font-weight:800}
+.li{display:flex;justify-content:space-between;font-size:13.5px;padding:6px 10px;border-radius:10px;background:rgba(255,255,255,.55);margin-bottom:5px;color:#0a4a6a;font-weight:600}
+.li.crit{background:linear-gradient(90deg,rgba(255,180,120,.6),rgba(255,210,160,.4));color:#9a4a10}
+.li .v{color:#1a7ab0}
+.prog{height:8px;border-radius:6px;background:rgba(255,255,255,.6);overflow:hidden;margin-top:4px}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,#3aa8e0,#0aa0d8);border-radius:6px}
+.foot{position:relative;z-index:3;margin-top:18px;display:flex;align-items:center;gap:12px;padding:14px 22px}
+.foot input{flex:1;background:0;border:0;outline:0;color:#0a4a6a;font-size:15px;font-weight:500}
+.foot input::placeholder{color:#5a9ec0}
+.mic{width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#0aa0d8);box-shadow:0 3px 8px rgba(10,120,180,.4);display:flex;align-items:center;justify-content:center}
+</style></head><body><div class="sky">
+<div class="bub b1"></div><div class="bub b2"></div><div class="bub b3"></div><div class="bub b4"></div>
+<div class="glass top"><div class="wm">JARVIS</div><div class="status">● Online · Opus · 20:34 · Tue Jun 09</div></div>
+<div class="main">
+  <div class="glass hero">
+    <div class="greet">Good evening,<br><b>Shay.</b></div>
+    <div class="kpis">
+      <div class="kpi"><div class="kl">Net · month</div><div class="kv">$3,840</div><div class="kd">▲ 18%</div></div>
+      <div class="kpi"><div class="kl">ROI</div><div class="kv">4.2×</div><div class="kd">▲ 0.4</div></div>
+      <div class="kpi"><div class="kl">AI budget</div><div class="kv">$58</div><div class="kd" style="color:#3a85b0">/ $80</div></div>
+    </div>
+    <div class="sec" style="margin-top:20px"><h3>Revenue Streams</h3>
+      <div class="li"><span>Stripe subs</span><span class="v">$1,240</span></div>
+      <div class="li"><span>Gumroad</span><span class="v">$890</span></div>
+      <div class="li"><span>Lemon Squeezy</span><span class="v">$310</span></div>
+      <div class="li"><span>Newsletter</span><span class="v">$400</span></div>
+    </div>
+  </div>
+  <div class="glass side">
+    <div class="sec"><h3>Needs You</h3>
+      <div class="li crit"><span>Invoice → 14</span><span>$1,240</span></div>
+      <div class="li"><span>Publish starter</span><span class="v">$39</span></div>
+      <div class="li"><span>Deploy micro-API</span><span class="v">CF</span></div>
+    </div>
+    <div class="sec"><h3>Running</h3>
+      <div class="li"><span>habit-tracker</span><span class="v">72%</span></div><div class="prog"><i style="width:72%"></i></div>
+      <div class="li" style="margin-top:8px"><span>research niche</span><span class="v">40%</span></div><div class="prog"><i style="width:40%"></i></div>
+    </div>
+    <div class="sec"><h3>System</h3>
+      <div class="li"><span>51 agents · 26 connectors</span><span class="v">7 live</span></div>
+    </div>
+  </div>
+</div>
+<div class="glass foot"><span class="mic" style="color:#fff">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#3a85b0;font-weight:700">⌘K</span></div>
+</div></body></html>

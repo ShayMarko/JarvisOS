@@ -1,0 +1,51 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T176</title><style>
+*{margin:0;box-sizing:border-box;font-family:'SF Mono',ui-monospace,'JetBrains Mono',monospace}
+body{height:100vh;overflow:hidden;color:#cfe3dd;background:linear-gradient(135deg,#0a1418 0%,#0f1d24 45%,#13242b 100%)}
+.desktop{height:100vh;display:flex;flex-direction:column;position:relative}
+/* faint wallpaper texture */
+.desktop::before{content:"";position:absolute;inset:0;background:radial-gradient(700px 500px at 75% 30%,rgba(70,224,160,.05),transparent 60%);pointer-events:none}
+.statusbar{display:flex;align-items:stretch;font-size:12.5px;height:26px;background:#06100c;border-bottom:1px solid #14352a;flex-shrink:0;z-index:2}
+.seg{display:flex;align-items:center;padding:0 12px;gap:7px;border-right:1px solid rgba(70,224,160,.12)}
+.seg.brand{background:#46e0a0;color:#04140e;font-weight:800;letter-spacing:2px}
+.seg .lab{color:#5f8a7c;text-transform:uppercase;letter-spacing:1px;font-size:10px}
+.seg .v{color:#cfe3dd}
+.crit{color:#ff8a8a}.amber{color:#f2c14e}.up{color:#46e0a0}
+.dot{width:7px;height:7px;border-radius:50%;background:#46e0a0;box-shadow:0 0 6px #46e0a0}
+.spacer{flex:1;border-right:1px solid rgba(70,224,160,.12)}
+.body{flex:1;position:relative}
+.ghost{position:absolute;left:30px;top:50%;transform:translateY(-50%);opacity:.18}
+.ghost .wm{font-size:120px;font-weight:800;letter-spacing:14px;color:#46e0a0}
+.ghost .sub{font-size:20px;letter-spacing:8px;color:#cfe3dd;margin-top:6px;padding-left:6px}
+.botbar{display:flex;align-items:stretch;font-size:12.5px;height:26px;background:#06100c;border-top:1px solid #14352a;flex-shrink:0;z-index:2}
+.botbar .seg.brand{background:#1b3a2e;color:#46e0a0;font-weight:700;letter-spacing:1px}
+.workspaces .ws{padding:0 11px;display:flex;align-items:center;color:#5f8a7c}
+.workspaces .ws.on{background:rgba(70,224,160,.18);color:#cfe3dd}
+</style></head><body>
+<div class="desktop">
+<div class="statusbar">
+<div class="seg brand">JARVIS</div>
+<div class="seg"><span class="dot"></span><span class="v">Online · Opus</span></div>
+<div class="seg"><span class="lab">net</span><span class="v up">$3,840</span><span class="lab">roi</span><span class="v up">4.2×</span></div>
+<div class="seg"><span class="lab">jobs</span><span class="v">2 ▸ 72% · 40%</span></div>
+<div class="spacer"></div>
+<div class="seg"><span class="lab">agents</span><span class="v">51</span></div>
+<div class="seg"><span class="lab">conn</span><span class="v">26/9live</span></div>
+<div class="seg"><span class="lab">alerts</span><span class="v crit">!3</span></div>
+<div class="seg"><span class="lab">cpu</span><span class="v">14%</span></div>
+<div class="seg"><span class="lab">ai$</span><span class="v amber">58/80</span></div>
+<div class="seg"><span class="v">20:34</span></div>
+<div class="seg"><span class="v">Tue Jun 09</span></div>
+</div>
+<div class="body">
+<div class="ghost"><div class="wm">JARVIS</div><div class="sub">GOOD EVENING, SHAY.</div></div>
+</div>
+<div class="botbar workspaces">
+<div class="seg brand">WS</div>
+<div class="ws on">1:today</div><div class="ws">2:money</div><div class="ws">3:jobs</div><div class="ws">4:agents</div><div class="ws">5:chat</div>
+<div class="spacer"></div>
+<div class="seg crit">! invoice → 14 customers · $1,240 [approve]</div>
+<div class="seg amber">▸ publish starter · deploy api</div>
+<div class="seg"><span class="lab">hey</span><span class="v">jarvis</span></div>
+</div>
+</div>
+</body></html>

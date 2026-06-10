@@ -1,0 +1,33 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T80</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Helvetica Neue','Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#f2f2f0;background:#0b0b0c}
+.grid{height:100vh;display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:auto auto 1fr auto;gap:0;padding:34px 44px;position:relative}
+.grid::before{content:"";position:absolute;inset:34px 44px;background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 1px,transparent 1px calc(100%/12));pointer-events:none}
+.rule{grid-column:1/-1;border-top:1px solid #2a2a2c}
+.wm{grid-column:1/4;font-size:15px;font-weight:700;letter-spacing:3px}
+.meta{grid-column:10/13;text-align:right;font-size:11px;letter-spacing:1px;color:#8a8a86}
+.huge{grid-column:1/9;font-size:80px;font-weight:800;letter-spacing:-3px;line-height:.95;align-self:end;padding:30px 0 10px}
+.huge b{color:#46e0a0}
+.idx{grid-column:9/13;align-self:end;text-align:right;padding-bottom:14px}
+.idx .v{font-size:46px;font-weight:800;letter-spacing:-2px}.idx .l{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#8a8a86}
+.body{grid-column:1/-1;display:grid;grid-template-columns:repeat(12,1fr);gap:0;padding-top:20px}
+.col{padding:16px 0 0;border-right:1px solid #1c1c1e}
+.c1{grid-column:1/5;padding-right:24px}.c2{grid-column:5/9;padding:16px 24px 0}.c3{grid-column:9/13;padding-left:24px;border-right:0}
+.k{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#8a8a86}
+.li{display:flex;gap:10px;font-size:14px;padding:9px 0;border-bottom:1px solid #1a1a1c}
+.num{color:#8a8a86;font-variant-numeric:tabular-nums}
+.rk{font-size:9px;font-weight:700;color:#ff6b81}
+.foot{grid-column:1/-1;align-self:end;display:flex;align-items:center;gap:14px;padding-top:16px;border-top:1px solid #2a2a2c;font-size:13px;color:#9a9a96}
+.foot input{flex:1;background:0;border:0;outline:0;color:#f2f2f0;font-size:14px}.foot input::placeholder{color:#6a6a66}
+</style></head><body><div class="grid">
+<div class="wm">JARVIS</div><div class="meta">TUE 09 JUN · 20:34<br>● ONLINE · OPUS</div>
+<div class="rule" style="grid-row:2"></div>
+<div class="huge">Good<br>evening,<br><b>Shay.</b></div>
+<div class="idx"><div class="v">$3,840</div><div class="l">net · month · ROI 4.2×</div></div>
+<div class="body">
+<div class="col c1"><div class="k">01 — Needs you</div><div class="li"><span class="num">01</span><span class="rk">CRIT</span>Invoice → 14</div><div class="li"><span class="num">02</span>Publish starter</div><div class="li"><span class="num">03</span>Deploy API</div></div>
+<div class="col c2"><div class="k">02 — Running</div><div class="li"><span class="num">01</span>habit-tracker · 72%</div><div class="li"><span class="num">02</span>research niche · 40%</div><div class="li"><span class="num">03</span>newsletter #14 · queued</div></div>
+<div class="col c3"><div class="k">03 — System</div><div class="li"><span class="num">—</span>51 agents</div><div class="li"><span class="num">—</span>26 connectors · 9 live</div><div class="li"><span class="num">—</span>7 products live</div></div>
+</div>
+<div class="foot"><span style="color:#46e0a0">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span>⌘K</span></div>
+</div></body></html>

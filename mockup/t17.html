@@ -1,0 +1,48 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T17</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#dde6f0;background:#0c0f14}
+.app{display:grid;grid-template-columns:300px 1fr;height:100vh}
+.list{border-right:1px solid #1b2230;background:#0e1219;display:flex;flex-direction:column}
+.lh{padding:18px 18px 12px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #1b2230}
+.bd{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#9fb4c8,#5f7characters);display:grid;place-items:center;color:#0c0f14;font-weight:800}.bd{background:linear-gradient(135deg,#aebccd,#6c7c8f)}
+.lh b{letter-spacing:2px;font-size:14px}.lh .st{margin-left:auto;font-size:11px;color:#5cd6a0}
+.seg{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:#56607a;padding:14px 18px 6px}
+.it{padding:13px 18px;border-left:2px solid transparent;cursor:pointer}
+.it:hover{background:#121826}.it.on{background:#141b2b;border-left-color:#9fc2e6}
+.it .t{font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
+.it .d{font-size:12px;color:#6b7691;margin-top:3px}
+.rk{font-size:9px;font-weight:700;padding:2px 6px;border-radius:5px;color:#ffce5a;background:rgba(255,206,90,.12)}.rk.c{color:#ff6b81;background:rgba(255,107,129,.12)}
+.detail{padding:34px 44px;overflow:hidden}
+.dh{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#56607a}
+.dt{font-size:26px;font-weight:700;margin:8px 0 4px}
+.meta{font-size:13px;color:#7a86a3;margin-bottom:22px}
+.panel{background:#11161f;border:1px solid #1f2736;border-radius:16px;padding:20px;margin-bottom:16px}
+.panel .pl{font-size:11px;letter-spacing:1.3px;text-transform:uppercase;color:#56607a;margin-bottom:12px}
+.kv{display:flex;justify-content:space-between;font-size:14px;padding:8px 0;border-bottom:1px solid #1a212e}.kv:last-child{border:0}.kv b{color:#eaf2fb}
+.actions{display:flex;gap:12px;margin-top:6px}
+.btn{font-size:13px;font-weight:600;border-radius:11px;padding:11px 18px;border:1px solid #2a3346;background:#141b2b;color:#dde6f0}
+.btn.go{background:linear-gradient(135deg,#7fd0ff,#9fb4ff);color:#0c0f14;border:0}
+.prev{font-size:13px;color:#9fb0c8;background:#0c1119;border:1px solid #1a212e;border-radius:12px;padding:14px;line-height:1.6}
+</style></head><body><div class="app">
+<div class="list">
+<div class="lh"><div class="bd">J</div><b>JARVIS</b><span class="st">● Opus</span></div>
+<div class="seg">Needs you · 3</div>
+<div class="it on"><div class="t"><span class="rk c">CRIT</span>Invoice → 14 customers</div><div class="d">EA · drafted via Resend · 1m ago</div></div>
+<div class="it"><div class="t"><span class="rk">HIGH</span>Publish "SaaS starter"</div><div class="d">Product Builder · Gumroad · $39</div></div>
+<div class="it"><div class="t"><span class="rk">HIGH</span>Deploy micro-API</div><div class="d">Micro-API Factory · green-gate ok</div></div>
+<div class="seg">Jobs · 2 running</div>
+<div class="it"><div class="t">Build habit-tracker</div><div class="d">Code · 72%</div></div>
+<div class="it"><div class="t">Research niche</div><div class="d">Scout · 40%</div></div>
+<div style="margin-top:auto;padding:14px 18px;font-size:12px;color:#56607a;border-top:1px solid #1b2230">Net $3,840 · ROI 4.2×</div>
+</div>
+<div class="detail">
+<div class="dh">Approval · Critical</div><div class="dt">Send invoice email → 14 customers</div>
+<div class="meta">Requested by Executive Assistant · via Resend · drafted, awaiting your send</div>
+<div class="panel"><div class="pl">Summary</div>
+<div class="kv"><span>Recipients</span><b>14 customers</b></div>
+<div class="kv"><span>Channel</span><b>Resend (verified domain)</b></div>
+<div class="kv"><span>Risk</span><b style="color:#ff6b81">CRITICAL · sends real email</b></div>
+<div class="kv"><span>Est. value</span><b>$1,240 billed</b></div></div>
+<div class="panel"><div class="pl">Draft preview</div><div class="prev">Subject: Your June invoice is ready<br><br>Hi {name}, thanks for being a customer this month. Your invoice for {plan} is attached and payable via the secure link below…</div></div>
+<div class="actions"><button class="btn">Edit draft</button><button class="btn">Decline</button><button class="btn go">Approve &amp; send</button></div>
+</div></div></body></html>

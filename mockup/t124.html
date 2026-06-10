@@ -1,0 +1,50 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T124</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e8edf4;background:#0a0c11}
+.overlay{position:absolute;inset:0;background:radial-gradient(1100px 800px at 80% 20%,#13203a,#0a0c11 70%);padding:40px 56px;display:flex;flex-direction:column}
+.top{display:flex;align-items:center;justify-content:space-between}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#7c9cff}
+.st{font-size:12px;color:#5b6678}
+.close{width:46px;height:46px;border-radius:50%;border:1px solid #2a3445;display:flex;align-items:center;justify-content:center;font-size:22px;color:#9aa6b4}
+.nav{flex:1;display:flex;align-items:center;gap:60px}
+.menu{flex:1}
+.menu .num{font-size:11px;color:#5b6678;letter-spacing:2px;font-variant-numeric:tabular-nums}
+.menu a{display:flex;align-items:baseline;gap:18px;text-decoration:none;color:#e8edf4;padding:6px 0;border-bottom:1px solid #181f2b}
+.menu a .lbl{font-size:54px;font-weight:800;letter-spacing:-2px;line-height:1.05}
+.menu a.on .lbl{color:#7c9cff}
+.menu a .meta{margin-left:auto;font-size:13px;color:#6b7888;align-self:center}
+.side{width:300px}
+.k{font-size:10px;letter-spacing:1.8px;text-transform:uppercase;color:#5b6678;margin-bottom:14px}
+.glance{background:#11151d;border:1px solid #1d2531;border-radius:18px;padding:20px}
+.net{font-size:40px;font-weight:800;letter-spacing:-2px}.gsub{color:#46e0a0;font-size:13px;font-weight:600;margin-top:2px}
+.row{display:flex;justify-content:space-between;font-size:13px;color:#9aa6b4;padding:7px 0;border-top:1px solid #1a212c;margin-top:6px}
+.pill{font-size:8px;font-weight:700;padding:2px 7px;border-radius:10px;background:rgba(255,90,110,.18);color:#ff7a8c}
+.bot{display:flex;align-items:center;gap:12px;font-size:13px;color:#6b7888;padding-top:18px;border-top:1px solid #181f2b}
+.bot input{flex:1;background:0;border:0;outline:0;color:#e8edf4;font-size:15px}.bot input::placeholder{color:#5b6678}
+</style></head><body>
+<div class="overlay">
+  <div class="top"><div class="wm">JARVIS</div><div class="close">✕</div></div>
+  <div class="nav">
+    <div class="menu">
+      <a class="on" href="#"><span class="num">01</span><span class="lbl">Today</span><span class="meta">Good evening, Shay</span></a>
+      <a href="#"><span class="num">02</span><span class="lbl">Money</span><span class="meta">$3,840 · ROI 4.2×</span></a>
+      <a href="#"><span class="num">03</span><span class="lbl">Jobs</span><span class="meta">2 running · 1 queued</span></a>
+      <a href="#"><span class="num">04</span><span class="lbl">Agents</span><span class="meta">51 ready</span></a>
+      <a href="#"><span class="num">05</span><span class="lbl">Connectors</span><span class="meta">26 · 9 live</span></a>
+      <a href="#"><span class="num">06</span><span class="lbl">Inbox</span><span class="meta">3 need you</span></a>
+    </div>
+    <div class="side">
+      <div class="k">At a glance</div>
+      <div class="glance">
+        <div class="net">$3,840</div>
+        <div class="gsub">▲18% net · this month</div>
+        <div class="row"><span><span class="pill">CRIT</span> Send invoice → 14</span><span>$1,240</span></div>
+        <div class="row"><span>habit-tracker app</span><span>72%</span></div>
+        <div class="row"><span>research niche</span><span>40%</span></div>
+        <div class="row"><span>AI cost</span><span>$58 / $80</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="bot"><span style="color:#7c9cff">🎙</span><input placeholder="Ask Jarvis, or type a /command… · say “Hey Jarvis”"><span>⌘K</span></div>
+</div>
+</body></html>

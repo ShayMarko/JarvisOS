@@ -1,0 +1,31 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T38</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#dfeaf0;background:radial-gradient(900px 700px at 50% 120%,#10202c,#05080d)}
+.top{display:flex;justify-content:space-between;padding:22px 36px}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#46d6e0}.st{font-size:12px;color:#5a8290}
+.cluster{display:flex;align-items:flex-end;justify-content:center;gap:30px;height:calc(100vh - 230px);margin-top:10px}
+.g{text-align:center}
+.dial{position:relative;border-radius:50%}
+.big{width:300px;height:300px;background:conic-gradient(from 135deg,#46d6e0 0 60%,rgba(70,200,224,.1) 60% 75%);}
+.mid{width:180px;height:180px;background:conic-gradient(from 135deg,#9b8cff 0 52%,rgba(155,140,255,.1) 52% 75%)}
+.dial::after{content:"";position:absolute;inset:14px;border-radius:50%;background:#070b11}
+.gv{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2}
+.gv .n{font-size:46px;font-weight:800}.big .n{font-size:64px}.gv .u{font-size:11px;letter-spacing:2px;color:#5a8290;text-transform:uppercase}
+.gl{margin-top:14px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:#7fb0bc}
+.side{display:flex;flex-direction:column;gap:14px;justify-content:center}
+.mini{width:150px;height:150px;border-radius:50%;border:6px solid rgba(255,200,90,.2);border-top-color:#ffc85a;display:grid;place-items:center;transform:rotate(45deg)}
+.mini .inner{transform:rotate(-45deg);text-align:center}.mini .n{font-size:30px;font-weight:800;color:#ffc85a}
+.greet{text-align:center;font-size:14px;color:#9fc0cc;margin-top:6px}.greet b{color:#dfeaf0}
+.bar{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);width:500px;display:flex;align-items:center;gap:12px;background:rgba(10,20,30,.8);border:1px solid rgba(70,200,224,.3);border-radius:14px;padding:11px 15px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#dfeaf0;font-size:14px}.bar input::placeholder{color:#5a8290}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · DASH</div><div class="st">● ONLINE · OPUS · TUE JUN 09</div></div>
+<div class="cluster">
+<div class="g"><div class="dial mid"><div class="gv"><div class="n">4.2×</div><div class="u">ROI</div></div></div><div class="gl">return</div></div>
+<div class="g"><div class="dial big"><div class="gv"><div class="n">$3.8k</div><div class="u">net · month</div></div></div><div class="gl">money</div></div>
+<div class="side"><div class="mini"><div class="inner"><div class="n">3</div><div style="font-size:10px;color:#5a8290">NEEDS YOU</div></div></div>
+<div style="text-align:center;font-size:13px;color:#7fb0bc">2 jobs · 51 agents</div></div>
+</div>
+<div class="greet">Good evening, <b>Shay</b> · 3 approvals waiting · budget $58/$80</div>
+<div class="bar"><span style="color:#46d6e0">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#5a8290;font-size:12px">⌘K</span></div>
+</body></html>

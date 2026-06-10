@@ -1,0 +1,63 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T249</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Arial Black','Helvetica Neue',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#fff;background:#ff3d7f}
+.max{height:100vh;display:grid;grid-template-columns:1.6fr 1fr;grid-template-rows:auto 1fr auto;gap:10px;padding:14px;
+background:
+repeating-linear-gradient(45deg,#ff3d7f 0 28px,#ff6a3d 28px 56px),#ff3d7f}
+.tile{border:4px solid #111;border-radius:14px;padding:16px 18px;position:relative;overflow:hidden}
+.t-top{grid-column:1/3;background:#111;color:#7dff5a;display:flex;align-items:center;gap:14px}
+.wm{font-size:24px;font-weight:900;letter-spacing:3px;color:#7dff5a;text-shadow:2px 2px 0 #ff3d7f}
+.badge{background:#ffd400;color:#111;border:3px solid #111;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;transform:rotate(-12deg)}
+.status{font-size:11px;font-weight:bold;color:#fff;margin-left:auto;letter-spacing:1px}
+.hero{grid-column:1;background:#2d8cff;background-image:radial-gradient(circle at 80% 20%,#7dff5a 0 30px,transparent 31px),radial-gradient(circle at 20% 90%,#ffd400 0 24px,transparent 25px);display:flex;flex-direction:column;justify-content:center}
+.greet{font-size:58px;font-weight:900;line-height:.9;text-shadow:4px 4px 0 #111,8px 8px 0 #ff3d7f}
+.sticker{position:absolute;font-size:11px;font-weight:900;background:#7dff5a;color:#111;border:3px solid #111;border-radius:8px;padding:5px 9px;transform:rotate(-8deg);box-shadow:3px 3px 0 #111}
+.s1{top:14px;left:14px;background:#ffd400;transform:rotate(8deg)}
+.netbig{margin-top:20px;background:#111;color:#ffd400;border:3px solid #fff;padding:8px 14px;font-size:18px;font-weight:900;align-self:flex-start;transform:rotate(-2deg)}
+.right-top{grid-column:2;grid-row:2;background:#7dff5a;color:#111}
+.tt{font-size:12px;font-weight:900;letter-spacing:1px;text-transform:uppercase;background:#111;color:#7dff5a;display:inline-block;padding:3px 8px;border-radius:6px;margin-bottom:8px}
+.li{display:flex;justify-content:space-between;font-size:13px;font-weight:900;padding:4px 0;border-bottom:3px dotted #111}
+.hero .li{color:#fff;border-bottom-color:rgba(255,255,255,.4)}
+.run{grid-column:1;grid-row:2;background:#a64dff;display:none}
+.left2{grid-column:1;grid-row:2;background:#a64dff;display:flex;gap:16px}
+.minicard{flex:1;background:#111;border-radius:10px;padding:12px;color:#fff}
+.minicard .tt2{font-size:10px;color:#ffd400;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.bar{height:12px;background:#fff;border:2px solid #fff;border-radius:6px;margin:4px 0;overflow:hidden}
+.bar i{display:block;height:100%;background:#7dff5a}
+.foot{grid-column:1/3;background:#111;display:flex;align-items:center;gap:12px;color:#ffd400}
+.foot input{flex:1;background:0;border:0;outline:0;color:#fff;font-size:14px;font-weight:900;text-transform:uppercase}
+.foot input::placeholder{color:#888}
+</style></head><body><div class="max">
+<div class="tile t-top"><div class="badge">J</div><div class="wm">JARVIS</div><div class="status">● ONLINE · OPUS · 20:34 · TUE JUN 09 · 51 AGENTS · 7 LIVE</div></div>
+<div class="tile hero">
+  <span class="sticker s1">★ ROI 4.2×</span>
+  <span class="sticker" style="bottom:14px;right:14px">▲18% NICE</span>
+  <div class="greet">GOOD<br>EVENING,<br>SHAY!</div>
+  <div class="netbig">NET $3,840 THIS MONTH</div>
+  <div style="margin-top:14px;max-width:300px">
+    <div class="li"><span>STRIPE</span><span>$1,240</span></div>
+    <div class="li"><span>GUMROAD</span><span>$890</span></div>
+    <div class="li"><span>LEMON SQ</span><span>$310</span></div>
+    <div class="li" style="border:0"><span>NEWSLETTER</span><span>$400</span></div>
+  </div>
+</div>
+<div class="tile left2">
+  <div class="minicard"><div class="tt2">Jobs running</div>
+    <div style="font-size:12px;font-weight:900">habit-tracker 72%</div><div class="bar"><i style="width:72%"></i></div>
+    <div style="font-size:12px;font-weight:900;margin-top:6px">research 40%</div><div class="bar"><i style="width:40%"></i></div>
+    <div style="font-size:11px;font-weight:900;margin-top:8px;color:#ffd400">newsletter #14 → QUEUED</div>
+  </div>
+  <div class="minicard" style="background:#ff3d7f"><div class="tt2">AI budget</div>
+    <div style="font-size:30px;font-weight:900">$58</div><div style="font-size:12px;font-weight:900">of $80</div>
+    <div class="bar" style="margin-top:8px"><i style="width:72%;background:#ffd400"></i></div>
+    <div style="font-size:11px;font-weight:900;margin-top:10px">26 CONNECTORS<br>9 LIVE</div>
+  </div>
+</div>
+<div class="tile right-top"><div class="tt">⚡ Needs You</div>
+  <div class="li" style="color:#b80038"><span>INVOICE → 14</span><span>$1,240</span></div>
+  <div class="li"><span>PUBLISH STARTER</span><span>$39</span></div>
+  <div class="li" style="border:0"><span>DEPLOY MICRO-API</span><span>CF</span></div>
+  <div class="sticker" style="position:static;display:inline-block;margin-top:12px;background:#2d8cff;color:#fff">DOUBLE DOWN: "REST API + AUTH" → 61% traffic</div>
+</div>
+<div class="tile foot"><span>🎙</span><input placeholder="Ask Jarvis, or /command…"><span>⌘K</span></div>
+</div></body></html>

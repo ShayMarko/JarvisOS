@@ -1,0 +1,207 @@
+<!doctype html><html><head><meta charset="utf-8"><title>JARVIS MVP — Main</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;background:#05070d;color:#dce6f7}
+.app{height:100vh;display:grid;grid-template-columns:206px 322px 1fr}
+/* ZONE 1 organized menu (t27 groups + subtitles, t125 flyout) */
+.menu{background:#080b14;border-right:1px solid #141b2b;display:flex;flex-direction:column;padding:14px 0;position:relative}
+.menu .brand{display:flex;align-items:center;gap:9px;padding:0 14px 12px}
+.menu .brand b{font-size:14px;letter-spacing:3px;color:#cfe0f8}
+.grp{padding:11px 14px 3px;font-size:9.5px;letter-spacing:1.6px;text-transform:uppercase;color:#46546d}
+.mi{display:flex;align-items:center;gap:10px;padding:7px 14px;font-size:13px;color:#8a99b6;position:relative}
+.mi .ic{width:17px;text-align:center;color:#5f6f8c;font-size:14px}
+.mi.on{color:#dcecff;background:rgba(90,160,255,.12)}
+.mi.on .ic{color:#9cd0ff}
+.mi.on::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;border-radius:2px;background:#6cb6ff}
+.mi .cnt{margin-left:auto;font-size:10px;color:#7e8ca8;background:#0e1626;border:1px solid #1c2740;border-radius:8px;padding:1px 7px}
+.mi .cnt.crit{color:#ff9cb0;border-color:#5a2030;background:#2a131a}
+.mi .cnt.good{color:#7fe0b4;border-color:#1c4a38;background:#0e2218}
+.flyout{position:absolute;left:200px;top:182px;width:184px;background:#0e1422;border:1px solid #243048;border-radius:11px;padding:9px;box-shadow:0 18px 44px rgba(0,0,0,.55);z-index:30}
+.flyout::before{content:"";position:absolute;left:-6px;top:18px;width:10px;height:10px;background:#0e1422;border-left:1px solid #243048;border-bottom:1px solid #243048;transform:rotate(45deg)}
+.flyout .ft{font-size:9.5px;color:#6b7790;letter-spacing:1.4px;text-transform:uppercase;padding:1px 6px 7px}
+.flyout .fi{display:flex;justify-content:space-between;font-size:12px;color:#aebbd6;padding:5px 6px;border-radius:6px}
+.flyout .fi:hover{background:#15203400}
+.flyout .fi b{color:#dbe7fa}
+/* corner frame brackets */
+.fr{position:fixed;width:26px;height:26px;border:2px solid rgba(110,180,255,.45);z-index:40;pointer-events:none}
+.fr.tl{top:12px;left:12px;border-right:0;border-bottom:0}.fr.tr{top:12px;right:12px;border-left:0;border-bottom:0}
+.fr.bl{bottom:12px;left:12px;border-right:0;border-top:0}.fr.br{bottom:12px;right:12px;border-left:0;border-top:0}
+/* ZONE 1 nav rail */
+.rail{background:#080b14;border-right:1px solid #141b2b;display:flex;flex-direction:column;align-items:center;padding:14px 0;gap:6px}
+.logo{width:34px;height:34px;border-radius:10px;background:radial-gradient(circle at 50% 38%,#eafaff,#6cb6ff 55%,#1d5fae);display:grid;place-items:center;font-weight:800;color:#06121f;margin-bottom:12px}
+.ni{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;color:#5f6f8c;font-size:17px;position:relative}
+.ni.on{background:rgba(90,160,255,.14);color:#9cd0ff}
+.ni.on::before{content:"";position:absolute;left:-12px;top:9px;width:3px;height:22px;border-radius:2px;background:#6cb6ff}
+.ni .sub{position:absolute;left:46px;white-space:nowrap;background:#0e1422;border:1px solid #20293c;padding:5px 9px;border-radius:7px;font-size:11px;color:#9fb0cc;display:none}
+.spacer{flex:1}
+/* ZONE 2 chat */
+.chat{background:#070a12;border-right:1px solid #141b2b;display:flex;flex-direction:column}
+.greet{padding:18px 18px 12px}
+.greet h1{font-size:20px;font-weight:600}.greet h1 b{color:#6cb6ff}
+.greet .clk{font-size:13px;color:#6b7790;margin-top:3px;font-variant-numeric:tabular-nums}
+.latest{margin:0 14px;border:1px solid #1a2336;border-radius:10px;padding:9px 11px;font-size:12px;color:#90a0bd;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.latest b{color:#cfe0f8}
+.thread{flex:1;overflow:hidden;padding:14px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:86%;padding:9px 12px;border-radius:13px;font-size:13px;line-height:1.45}
+.msg.j{align-self:flex-start;background:#111a2b;border:1px solid #1d2a42;border-bottom-left-radius:4px}
+.msg.u{align-self:flex-end;background:linear-gradient(180deg,#3b7de0,#2b62c0);color:#fff;border-bottom-right-radius:4px}
+.msg .who{font-size:10px;letter-spacing:.5px;text-transform:uppercase;opacity:.6;margin-bottom:3px}
+.box{margin:12px;border-top:1px solid #243149;padding-top:11px}
+.boxin{display:flex;align-items:center;gap:9px;background:#0c1320;border:1px solid #1c2740;border-radius:12px;padding:10px 12px}
+.boxin input{flex:1;background:0;border:0;outline:0;color:#dce6f7;font-size:13px}.boxin input::placeholder{color:#56657f}
+.boxin .mic{color:#6cb6ff}
+.recents{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap}
+.rc{font-size:11px;color:#8a99b6;background:#0d1422;border:1px solid #1a2336;border-radius:7px;padding:4px 8px}
+/* ZONE 3 stage */
+.stage{position:relative;overflow:hidden;background:radial-gradient(1100px 800px at 60% 42%,#0a1424,#05070d 75%)}
+.stage .top{position:absolute;top:0;left:0;right:0;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;z-index:20}
+.st-l{display:flex;align-items:center;gap:10px;font-size:12px;color:#8a9ab8;letter-spacing:.5px}
+.dot{width:7px;height:7px;border-radius:50%;background:#46e0a0;box-shadow:0 0 8px #46e0a0}
+.sys{display:flex;align-items:center;gap:14px;font-size:11.5px;color:#92a2bf}
+.sys b{color:#dbe7fa;font-weight:600}
+.bud{display:flex;align-items:center;gap:7px}
+.budbar{width:74px;height:6px;border-radius:4px;background:#1a2336;overflow:hidden;border:1px solid #232f47}
+.budbar i{display:block;height:100%;width:72%;background:linear-gradient(90deg,#46e0a0,#e0c046)}
+/* toggle t102 style */
+.tog{display:flex;align-items:center;gap:9px;font-size:11.5px;color:#9fb0cc}
+.sw{width:42px;height:23px;border-radius:99px;background:#1a2740;border:1px solid #2a3a5a;position:relative}
+.sw i{position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:#6cb6ff;box-shadow:0 0 8px rgba(108,182,255,.7);transition:.2s}
+/* needs-you pill */
+.needs{position:absolute;top:64px;left:22px;z-index:20;display:flex;align-items:center;gap:12px;background:rgba(20,11,15,.7);border:1px solid #5a2030;border-radius:12px;padding:10px 14px;backdrop-filter:blur(8px)}
+.needs .ico{width:26px;height:26px;border-radius:8px;background:#ff5d73;color:#fff;display:grid;place-items:center;font-weight:800}
+.needs b{font-size:14px;color:#ffd7de}.needs span{font-size:11px;color:#c98ea0;letter-spacing:1px;text-transform:uppercase}
+/* brain svg */
+.brainwrap{position:absolute;inset:52px 0 0 0;display:grid;place-items:center}
+svg.brain{width:96%;height:96%}
+.hublabel{font-size:12px;font-weight:600;fill:#dce8fb}
+.hubsub{font-size:9px;fill:#7f93b5}
+/* sonar */
+.sonar{position:absolute;right:22px;bottom:20px;width:150px;height:150px;z-index:20}
+.sonar .cap{position:absolute;bottom:-2px;left:0;right:0;text-align:center;font-size:9.5px;color:#5fae8e;letter-spacing:.5px}
+</style></head><body>
+<div class="fr tl"></div><div class="fr tr"></div><div class="fr bl"></div><div class="fr br"></div>
+<div class="app">
+  <!-- ZONE 1 organized menu -->
+  <div class="menu">
+    <div class="brand"><div class="logo">J</div><b>JARVIS</b></div>
+    <div class="grp">Workspace</div>
+    <div class="mi on"><span class="ic">🏠</span>Today</div>
+    <div class="mi"><span class="ic">✦</span>Chat<span class="cnt">12</span></div>
+    <div class="mi"><span class="ic">◷</span>Timeline</div>
+    <div class="grp">Money</div>
+    <div class="mi"><span class="ic">◈</span>Revenue<span class="cnt good">$3.8k</span></div>
+    <div class="mi"><span class="ic">⚑</span>Approvals<span class="cnt crit">3</span></div>
+    <div class="mi"><span class="ic">▣</span>Products<span class="cnt">7</span></div>
+    <div class="grp">Brain</div>
+    <div class="mi"><span class="ic">⚇</span>Agents<span class="cnt">51</span></div>
+    <div class="mi"><span class="ic">⊞</span>Connectors<span class="cnt good">9</span></div>
+    <div class="mi"><span class="ic">⟲</span>Workflows</div>
+    <div class="mi"><span class="ic">🧠</span>Memory · KB</div>
+    <div class="grp">System</div>
+    <div class="mi"><span class="ic">≋</span>Jobs<span class="cnt">2</span></div>
+    <div class="mi"><span class="ic">⚙</span>Settings</div>
+    <!-- t125 side flyout opened on Revenue -->
+    <div class="flyout">
+      <div class="ft">Revenue · sources</div>
+      <div class="fi">Stripe subs <b>$1,240</b></div>
+      <div class="fi">Gumroad <b>$890</b></div>
+      <div class="fi">Lemon Squeezy <b>$310</b></div>
+      <div class="fi">Newsletter <b>$400</b></div>
+      <div class="fi" style="border-top:1px solid #1c2740;margin-top:4px;padding-top:7px">ROI <b style="color:#46e0a0">4.2×</b></div>
+    </div>
+  </div>
+  <!-- ZONE 2 -->
+  <div class="chat">
+    <div class="greet"><h1>Good evening, <b>Shay</b>.</h1><div class="clk">20:34 · Tue Jun 09 · 3 need you</div></div>
+    <div class="latest"><span>↑ Latest · alerts &amp; chats</span><b>3 ⌃</b></div>
+    <div class="thread">
+      <div class="msg u"><div class="who">Shay</div>what's the plan tonight?</div>
+      <div class="msg j"><div class="who">Jarvis</div>3 things need you first — the <b>critical</b> invoice to 14 customers, publishing the SaaS starter, and a micro-API deploy. Net's $3,840 (ROI 4.2×). Want me to queue them?</div>
+      <div class="msg u"><div class="who">Shay</div>approve the invoice, hold the rest</div>
+      <div class="msg j"><div class="who">Jarvis</div>Done ✓ Invoice sent to 14. I'll keep the other two waiting for you.</div>
+    </div>
+    <div class="box">
+      <div class="boxin"><span class="mic">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#56657f">⌘K</span></div>
+      <div class="recents"><span class="rc">⟲ Money</span><span class="rc">⟲ habit-tracker</span><span class="rc">⟲ Inbox</span><span class="rc">⟲ SEO winners</span></div>
+    </div>
+  </div>
+  <!-- ZONE 3 -->
+  <div class="stage">
+    <div class="top">
+      <div class="st-l"><span class="dot"></span>JARVIS · ONLINE · OPUS</div>
+      <div class="sys">
+        <span>CPU <b>12%</b></span><span>MEM <b>6.1G</b></span><span><b>51</b> agents</span><span><b>26</b> conn · 9 live</span>
+        <span class="bud">BUDGET <div class="budbar"><i></i></div><b>$58/$80</b></span>
+        <div class="tog"><span>Windows</span><div class="sw"><i></i></div></div>
+      </div>
+    </div>
+    <div class="needs"><div class="ico">!</div><div><b>3 need you</b><br><span>action required</span></div></div>
+    <div class="brainwrap"><svg class="brain" id="brain" viewBox="0 0 1000 640" preserveAspectRatio="xMidYMid meet"></svg></div>
+    <svg class="sonar" viewBox="0 0 150 150">
+      <defs><radialGradient id="sg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#0d3a2a"/><stop offset="100%" stop-color="#06140f"/></radialGradient>
+      <linearGradient id="sweep" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#46e0a0" stop-opacity="0"/><stop offset="100%" stop-color="#46e0a0" stop-opacity=".55"/></linearGradient></defs>
+      <circle cx="75" cy="75" r="70" fill="url(#sg)" stroke="#1c5a44" stroke-width="1"/>
+      <circle cx="75" cy="75" r="48" fill="none" stroke="#164a38" stroke-width="1"/>
+      <circle cx="75" cy="75" r="26" fill="none" stroke="#164a38" stroke-width="1"/>
+      <line x1="75" y1="75" x2="75" y2="5" stroke="#1c5a44"/><line x1="75" y1="75" x2="145" y2="75" stroke="#1c5a44"/>
+      <path d="M75 75 L75 5 A70 70 0 0 1 130 40 Z" fill="url(#sweep)"/>
+      <circle cx="108" cy="52" r="3.2" fill="#7dffc4"/><circle cx="54" cy="48" r="2.6" fill="#46e0a0"/>
+      <circle cx="92" cy="104" r="2.6" fill="#46e0a0"/><circle cx="46" cy="96" r="2.2" fill="#3bbf88"/>
+      <text class="cap" x="75" y="146" text-anchor="middle" fill="#5fae8e" font-size="9.5">scanning · 9 live · 2 jobs</text>
+    </svg>
+  </div>
+</div>
+<script>
+(function(){
+  // seeded RNG (mulberry32)
+  let s=20240610>>>0; function rnd(){s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;}
+  const NS="http://www.w3.org/2000/svg", svg=document.getElementById('brain');
+  function el(n,a){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e;}
+  // hemispheres
+  const H=[{cx:372,cy:312,rx:240,ry:286},{cx:628,cy:312,rx:240,ry:286}];
+  function ptIn(h){const t=rnd()*Math.PI*2,r=Math.sqrt(rnd());let x=h.cx+h.rx*0.92*r*Math.cos(t),y=h.cy+h.ry*0.92*r*Math.sin(t);return{x,y};}
+  // soft glow + outline
+  const defs=el('defs',{});
+  defs.innerHTML='<radialGradient id="bg" cx="50%" cy="46%" r="55%"><stop offset="0%" stop-color="#0e2238" stop-opacity=".9"/><stop offset="100%" stop-color="#070f1c" stop-opacity="0"/></radialGradient>'+
+    '<radialGradient id="hub" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#eafaff"/><stop offset="45%" stop-color="#7cc0ff"/><stop offset="100%" stop-color="#1d63b4"/></radialGradient>'+
+    '<filter id="glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>';
+  svg.appendChild(defs);
+  svg.appendChild(el('ellipse',{cx:500,cy:312,rx:470,ry:300,fill:'url(#bg)'}));
+  // gyri texture (wavy arcs) per hemisphere
+  for(const h of H){for(let g=0;g<7;g++){const yy=h.cy-200+g*58, amp=18+rnd()*14;let d=`M ${h.cx-h.rx*0.8} ${yy}`;for(let x=-h.rx*0.8;x<=h.rx*0.8;x+=26){d+=` Q ${h.cx+x+13} ${yy+(g%2?amp:-amp)} ${h.cx+x+26} ${yy}`;}svg.appendChild(el('path',{d,fill:'none',stroke:'#173153',"stroke-width":1,opacity:.5}));}}
+  // central fissure
+  svg.appendChild(el('path',{d:'M500 60 C 486 200 514 430 500 566',fill:'none',stroke:'#0c1a2e',"stroke-width":6,opacity:.8}));
+  // nodes
+  const nodes=[];const N=92;
+  for(let i=0;i<N;i++){const h=H[i%2];let p=ptIn(h);if(Math.abs(p.x-500)<16)p.x+=(p.x<500?-1:1)*22;nodes.push(p);}
+  // synapses: connect to nearest neighbors
+  const lines=[];
+  for(let i=0;i<N;i++){const d=[];for(let j=0;j<N;j++)if(i!=j){const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y;d.push([dx*dx+dy*dy,j]);}d.sort((a,b)=>a[0]-b[0]);const k=1+Math.floor(rnd()*2);for(let m=0;m<k;m++){const j=d[m][1];if(d[m][0]<8200){const a=nodes[i],b=nodes[j],mx=(a.x+b.x)/2+(rnd()-.5)*20,my=(a.y+b.y)/2+(rnd()-.5)*20;svg.appendChild(el('path',{d:`M${a.x} ${a.y} Q ${mx} ${my} ${b.x} ${b.y}`,fill:'none',stroke:'#2a6fb0',"stroke-width":(rnd()<.2?1.3:0.7),opacity:.18+rnd()*.22}));lines.push([a,b]);}}}
+  // pulses on some synapses
+  for(let i=0;i<14;i++){const L=lines[Math.floor(rnd()*lines.length)];if(!L)continue;const mx=(L[0].x+L[1].x)/2,my=(L[0].y+L[1].y)/2;svg.appendChild(el('circle',{cx:mx,cy:my,r:1.8,fill:'#aee9ff',opacity:.9}));}
+  // small nodes
+  for(const p of nodes){svg.appendChild(el('circle',{cx:p.x,cy:p.y,r:1.6+rnd()*1.7,fill:'#5aa0e0',opacity:.55+rnd()*.35}));}
+  // HUB neurons = window buttons, wired to nearby nodes
+  const hubs=[
+    {x:500,y:96,t:'Today',s:'home'},{x:300,y:158,t:'Chat',s:'12 today'},{x:236,y:312,t:'Memory',s:'3.1k'},
+    {x:300,y:470,t:'Knowledge',s:'index'},{x:420,y:548,t:'Timeline',s:'today'},{x:430,y:226,t:'Voice',s:'wake'},
+    {x:700,y:158,t:'Money',s:'$3,840'},{x:764,y:312,t:'Agents',s:'51'},{x:700,y:470,t:'Connectors',s:'9 live'},
+    {x:580,y:548,t:'Jobs',s:'2 running'},{x:566,y:160,t:'Approvals',s:'3 need you'},{x:500,y:556,t:'Settings',s:''}
+  ];
+  for(const hb of hubs){
+    // spokes to 4 nearest nodes
+    const d=nodes.map(n=>[((n.x-hb.x)**2+(n.y-hb.y)**2),n]).sort((a,b)=>a[0]-b[0]);
+    for(let m=0;m<5;m++){const n=d[m][1];svg.appendChild(el('line',{x1:hb.x,y1:hb.y,x2:n.x,y2:n.y,stroke:'#4f93d8',"stroke-width":1,opacity:.5}));}
+  }
+  for(const hb of hubs){
+    const crit=hb.t==='Approvals';
+    svg.appendChild(el('circle',{cx:hb.x,cy:hb.y,r:11,fill:'url(#hub)',filter:'url(#glow)',stroke:crit?'#ff8aa0':'#bfe2ff',"stroke-width":crit?2:1}));
+    svg.appendChild(el('circle',{cx:hb.x,cy:hb.y,r:19,fill:'none',stroke:crit?'#ff5d73':'#6cb6ff',opacity:.35}));
+    const left=hb.x<495, top=hb.y<120, bot=hb.y>520;
+    let tx=hb.x+ (left?-18:18), ty=hb.y- (top?20:(bot?-26:2)), anc=left?'end':'start';
+    if(top||bot){tx=hb.x;anc='middle';ty=top?hb.y-22:hb.y+30;}
+    const lab=el('text',{x:tx,y:ty,"text-anchor":anc,class:'hublabel'});lab.textContent=hb.t;svg.appendChild(lab);
+    if(hb.s){const sub=el('text',{x:tx,y:ty+13,"text-anchor":anc,class:'hubsub',fill:crit?'#ff9cb0':'#7f93b5'});sub.textContent=hb.s;svg.appendChild(sub);}
+  }
+})();
+</script>
+</body></html>

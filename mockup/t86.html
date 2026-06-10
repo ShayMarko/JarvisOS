@@ -1,0 +1,56 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T86</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf6;background:radial-gradient(800px 800px at 50% 50%,#0e1320,#05070c)}
+.top{display:flex;align-items:center;gap:14px;padding:20px 36px}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#7c9bff}.st{font-size:12px;color:#5f6f96}.r{margin-left:auto;font-size:13px;color:#8a98a4}
+.cap{padding:0 36px 0}.cap h1{font-size:22px;font-weight:600}.cap h1 b{color:#7c9bff}.cap p{color:#6f7c96;font-size:13px;margin-top:3px}
+.net{position:relative;height:calc(100vh - 168px)}
+.bar{position:fixed;bottom:20px;left:36px;right:36px;display:flex;align-items:center;gap:12px;background:rgba(14,19,32,.85);border:1px solid #1d2538;border-radius:13px;padding:11px 15px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e6edf6;font-size:14px}.bar input::placeholder{color:#5f6f96}
+text{font-family:system-ui,sans-serif}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · NETWORK</div><div class="st">● Online · Opus · Tue Jun 09</div><div class="r">51 agents · 26 connectors (9 live)</div></div>
+<div class="cap"><h1>The constellation, <b>Shay</b>.</h1><p>force-directed graph — agents, tools & connectors orbiting the core</p></div>
+<div class="net">
+<svg viewBox="0 0 1360 700" style="width:100%;height:100%">
+<defs>
+<radialGradient id="core" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#aab8ff"/><stop offset="1" stop-color="#4a5fd9"/></radialGradient>
+<radialGradient id="glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#7c9bff" stop-opacity=".35"/><stop offset="1" stop-color="#7c9bff" stop-opacity="0"/></radialGradient>
+</defs>
+<!-- edges -->
+<g stroke-linecap="round" fill="none">
+<g stroke="#46e0a0" stroke-opacity=".5"><line x1="680" y1="350" x2="350" y2="180" stroke-width="3"/><line x1="680" y1="350" x2="1010" y2="170" stroke-width="2.4"/><line x1="680" y1="350" x2="300" y2="430" stroke-width="2.6"/></g>
+<g stroke="#7c9bff" stroke-opacity=".45"><line x1="680" y1="350" x2="1050" y2="430" stroke-width="2.6"/><line x1="680" y1="350" x2="520" y2="560" stroke-width="2"/><line x1="680" y1="350" x2="850" y2="560" stroke-width="2.2"/><line x1="680" y1="350" x2="690" y2="130" stroke-width="2.4"/></g>
+<g stroke="#ffc46b" stroke-opacity=".4"><line x1="350" y1="180" x2="200" y2="280" stroke-width="1.6"/><line x1="1010" y1="170" x2="1180" y2="250" stroke-width="1.6"/><line x1="300" y1="430" x2="180" y2="520" stroke-width="1.6"/><line x1="1050" y1="430" x2="1200" y2="510" stroke-width="1.6"/></g>
+<g stroke="#ff8cc0" stroke-opacity=".35"><line x1="850" y1="560" x2="980" y2="620" stroke-width="1.4"/><line x1="520" y1="560" x2="400" y2="630" stroke-width="1.4"/><line x1="690" y1="130" x2="560" y2="70" stroke-width="1.4"/><line x1="690" y1="130" x2="820" y2="70" stroke-width="1.4"/></g>
+</g>
+<!-- core -->
+<circle cx="680" cy="350" r="110" fill="url(#glow)"/>
+<circle cx="680" cy="350" r="46" fill="url(#core)" stroke="#cdd6ff" stroke-width="1.5"/>
+<text x="680" y="347" text-anchor="middle" font-size="14" font-weight="800" letter-spacing="2" fill="#0a0e1a">JARVIS</text>
+<text x="680" y="362" text-anchor="middle" font-size="8.5" fill="#1a2240">orchestrator</text>
+<!-- primary agent nodes -->
+<g>
+<circle cx="350" cy="180" r="26" fill="#13352b" stroke="#46e0a0" stroke-width="1.6"/><text x="350" y="184" text-anchor="middle" font-size="10" fill="#9fe8c8">EA</text>
+<circle cx="1010" cy="170" r="26" fill="#13352b" stroke="#46e0a0" stroke-width="1.6"/><text x="1010" y="174" text-anchor="middle" font-size="10" fill="#9fe8c8">Code</text>
+<circle cx="300" cy="430" r="24" fill="#13352b" stroke="#46e0a0" stroke-width="1.6"/><text x="300" y="434" text-anchor="middle" font-size="10" fill="#9fe8c8">Scout</text>
+<circle cx="1050" cy="430" r="24" fill="#1a2548" stroke="#7c9bff" stroke-width="1.6"/><text x="1050" y="434" text-anchor="middle" font-size="9.5" fill="#bcc8ff">Finance</text>
+<circle cx="520" cy="560" r="22" fill="#1a2548" stroke="#7c9bff" stroke-width="1.6"/><text x="520" y="564" text-anchor="middle" font-size="9" fill="#bcc8ff">Newsltr</text>
+<circle cx="850" cy="560" r="22" fill="#1a2548" stroke="#7c9bff" stroke-width="1.6"/><text x="850" y="564" text-anchor="middle" font-size="9.5" fill="#bcc8ff">CRM</text>
+<circle cx="690" cy="130" r="22" fill="#1a2548" stroke="#7c9bff" stroke-width="1.6"/><text x="690" y="134" text-anchor="middle" font-size="9.5" fill="#bcc8ff">Intel</text>
+</g>
+<!-- connector / tool leaves -->
+<g font-size="8.5">
+<circle cx="200" cy="280" r="15" fill="#352a16" stroke="#ffc46b"/><text x="200" y="283" text-anchor="middle" fill="#ffd690">Resend</text>
+<circle cx="1180" cy="250" r="15" fill="#352a16" stroke="#ffc46b"/><text x="1180" y="253" text-anchor="middle" fill="#ffd690">CFlare</text>
+<circle cx="180" cy="520" r="15" fill="#352a16" stroke="#ffc46b"/><text x="180" y="523" text-anchor="middle" fill="#ffd690">Notion</text>
+<circle cx="1200" cy="510" r="15" fill="#352a16" stroke="#ffc46b"/><text x="1200" y="513" text-anchor="middle" fill="#ffd690">Stripe</text>
+<circle cx="980" cy="620" r="13" fill="#3a1f30" stroke="#ff8cc0"/><text x="980" y="623" text-anchor="middle" fill="#ffb6d6">Gum</text>
+<circle cx="400" cy="630" r="13" fill="#3a1f30" stroke="#ff8cc0"/><text x="400" y="633" text-anchor="middle" fill="#ffb6d6">Lemon</text>
+<circle cx="560" cy="70" r="13" fill="#3a1f30" stroke="#ff8cc0"/><text x="560" y="73" text-anchor="middle" fill="#ffb6d6">Disc</text>
+<circle cx="820" cy="70" r="13" fill="#3a1f30" stroke="#ff8cc0"/><text x="820" y="73" text-anchor="middle" fill="#ffb6d6">YT</text>
+</g>
+</svg>
+</div>
+<div class="bar"><span style="color:#7c9bff">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#5f6f96;font-size:12px">⌘K</span></div>
+</body></html>

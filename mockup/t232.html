@@ -1,0 +1,49 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T232</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf6;background:#0a0d13;display:grid;grid-template-rows:54px 1fr 40px}
+.hdr{display:flex;align-items:center;gap:14px;padding:0 26px;border-bottom:1px solid #181f29}
+.wm{font-size:16px;font-weight:800;letter-spacing:3px;color:#7fb2ff}.st{font-size:12px;color:#56708c}
+.tabs{margin-left:24px;display:flex;gap:4px}.tabs span{font-size:12px;padding:6px 12px;border-radius:8px;color:#7b90ad}.tabs span.on{background:#141d29;color:#cfe0f2}
+.r{margin-left:auto;font-size:12px;color:#56708c}
+.list{overflow:hidden}
+.row{display:flex;align-items:center;gap:14px;padding:0 26px;height:46px;border-bottom:1px solid #11171f;font-size:13px}
+.row .star{color:#33414f;width:14px}.row.sel .star,.row .star.on{color:#f0b54d}
+.row .from{width:170px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .subj{flex:1;color:#aeb9c6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .subj b{color:#e6edf6;font-weight:600}
+.row .subj .snip{color:#56708c;font-weight:400}
+.row .lbl{font-size:9px;font-weight:700;letter-spacing:.6px;padding:2px 7px;border-radius:5px;text-transform:uppercase}
+.l-crit{background:rgba(255,107,129,.16);color:#ff8c9c}.l-money{background:rgba(70,224,160,.16);color:#5fe0b0}.l-info{background:rgba(127,178,255,.14);color:#9cc2ff}
+.row .time{width:62px;text-align:right;color:#56708c;font-variant-numeric:tabular-nums}
+.row.sel{background:linear-gradient(90deg,rgba(127,178,255,.16),rgba(127,178,255,.05));box-shadow:inset 3px 0 0 #7fb2ff}
+.row.unread .from,.row.unread .subj b{color:#fff}
+.row.unread::before{content:"";position:absolute}
+.foot{display:flex;align-items:center;gap:18px;padding:0 26px;border-top:1px solid #181f29;background:#0c1019}
+.key{display:flex;align-items:center;gap:7px;font-size:12px;color:#7b90ad}
+.kbd{font-family:ui-monospace,monospace;font-size:11px;background:#1a2330;border:1px solid #2a3543;border-bottom-width:2px;border-radius:5px;padding:2px 7px;color:#cfe0f2;font-weight:600}
+.foot .r{font-size:12px;color:#56708c}
+</style></head><body>
+<div class="hdr"><div class="wm">JARVIS</div><div class="st">● Opus</div>
+<div class="tabs"><span class="on">Inbox</span><span>Needs you</span><span>Running</span><span>Done</span></div>
+<div class="r">Good evening, Shay · 20:34 · 14 items</div></div>
+<div class="list">
+<div class="row unread"><span class="star on">★</span><span class="from">Executive Assistant</span><span class="subj"><span class="lbl l-crit">Critical</span> <b>Invoice ready → 14 customers</b> <span class="snip">— drafted via Resend, approve to bill $1,240</span></span><span class="time">20:31</span></div>
+<div class="row sel unread"><span class="star on">★</span><span class="from">Finance agent</span><span class="subj"><span class="lbl l-money">Money</span> <b>Net crossed $3,840 this month</b> <span class="snip">— ROI 4.2×, up 18% vs. last period</span></span><span class="time">20:18</span></div>
+<div class="row unread"><span class="star">☆</span><span class="from">Product Builder</span><span class="subj"><span class="lbl l-money">Money</span> <b>SaaS starter ready to publish</b> <span class="snip">— Gumroad listing drafted at $39</span></span><span class="time">19:52</span></div>
+<div class="row"><span class="star">☆</span><span class="from">Code agent</span><span class="subj"><b>habit-tracker app · 72%</b> <span class="snip">— building in background, ETA ~40m</span></span><span class="time">19:40</span></div>
+<div class="row"><span class="star">☆</span><span class="from">Scout</span><span class="subj"><b>Research: note-taking niche · 40%</b> <span class="snip">— 12 sources analysed so far</span></span><span class="time">18:55</span></div>
+<div class="row"><span class="star">☆</span><span class="from">Newsletter agent</span><span class="subj"><span class="lbl l-info">Queued</span> <b>Issue #14 ready for Tuesday</b> <span class="snip">— 2,100 subscribers, est. $400</span></span><span class="time">18:30</span></div>
+<div class="row"><span class="star">☆</span><span class="from">Cloudflare connector</span><span class="subj"><span class="lbl l-info">Deploy</span> <b>micro-API cleared green-gate</b> <span class="snip">— awaiting deploy approval</span></span><span class="time">17:44</span></div>
+<div class="row"><span class="star">☆</span><span class="from">Proactive watcher</span><span class="subj"><b>Double down: "REST API + auth" guide</b> <span class="snip">— drove 61% of traffic this week</span></span><span class="time">16:10</span></div>
+<div class="row"><span class="star">☆</span><span class="from">Watchdog</span><span class="subj"><b>All 9 live connectors healthy</b> <span class="snip">— self-heal ran once on Stripe</span></span><span class="time">14:02</span></div>
+<div class="row"><span class="star">☆</span><span class="from">CRM agent</span><span class="subj"><b>3 follow-ups due this week</b> <span class="snip">— nudges drafted, awaiting review</span></span><span class="time">11:20</span></div>
+</div>
+<div class="foot">
+<div class="key"><span class="kbd">J</span><span class="kbd">K</span> navigate</div>
+<div class="key"><span class="kbd">E</span> approve</div>
+<div class="key"><span class="kbd">H</span> snooze</div>
+<div class="key"><span class="kbd">↵</span> open</div>
+<div class="key"><span class="kbd">⌘K</span> command</div>
+<div class="r">selected · 2 of 14</div>
+</div>
+</body></html>

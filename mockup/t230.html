@@ -1,0 +1,60 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T230</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf6;background:#080c12}
+.top{display:flex;align-items:center;gap:14px;padding:20px 36px 10px}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#5fd0c0}.st{font-size:12px;color:#5d7290}
+.r{margin-left:auto;display:flex;align-items:center;gap:14px}
+.range{display:flex;align-items:center;gap:9px;background:#0e1722;border:1px solid #1c2838;border-radius:11px;padding:9px 14px;font-size:13px;color:#cdd9e6}
+.range .cal{color:#5fd0c0}.range .arrow{color:#5d7290}
+.seg{display:flex;background:#0e1722;border:1px solid #1c2838;border-radius:11px;padding:4px}
+.seg span{font-size:12px;padding:6px 14px;border-radius:8px;color:#7b90ad;font-weight:600}
+.seg span.on{background:rgba(95,208,192,.16);color:#7fe6d6}
+.cap{padding:6px 36px 0}.cap h1{font-size:22px;font-weight:700}.cap h1 b{color:#5fd0c0}.cap p{font-size:13px;color:#5d7290;margin-top:2px}
+.kpis{display:flex;gap:14px;padding:14px 36px 0}
+.k{flex:1;background:#0e1722;border:1px solid #1c2838;border-radius:14px;padding:14px 16px}
+.kl{font-size:10px;letter-spacing:1.3px;text-transform:uppercase;color:#5d7290}.kv{font-size:27px;font-weight:800;margin-top:5px}.kd{font-size:12px;margin-top:2px;color:#46e0a0}
+.charts{display:grid;grid-template-columns:1.8fr 1fr;gap:14px;padding:14px 36px 0}
+.panel{background:#0e1722;border:1px solid #1c2838;border-radius:16px;padding:16px 18px 8px}
+.pl{font-size:11px;letter-spacing:1.3px;text-transform:uppercase;color:#5d7290;display:flex;justify-content:space-between}
+.legend span{margin-left:14px;color:#9aa6ac;font-size:12px}.dot{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px}
+.bars{display:flex;align-items:flex-end;gap:14px;height:200px;padding:18px 6px 0}
+.bg{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px}
+.bcol{width:100%;border-radius:6px 6px 0 0;background:linear-gradient(180deg,#5fd0c0,#3a9c8c)}
+.bcol.c2{background:linear-gradient(180deg,#6fa8ff,#3a6cc4)}
+.bg .lab{font-size:10px;color:#5d7290}
+.donut{display:flex;align-items:center;gap:18px;padding:14px 4px}
+.leg2{font-size:12px;color:#bcc8d4}.leg2 div{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #16202a}
+.bar{position:fixed;bottom:18px;left:36px;right:36px;display:flex;align-items:center;gap:12px;background:rgba(12,20,27,.9);border:1px solid #1c2838;border-radius:13px;padding:11px 16px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e6edf6;font-size:14px}.bar input::placeholder{color:#5d7290}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · DASHBOARD</div><div class="st">● Opus</div>
+<div class="r"><div class="seg"><span>Day</span><span>Week</span><span class="on">Month</span><span>Quarter</span><span>Year</span></div>
+<div class="range"><span class="cal">▦</span> May 10 <span class="arrow">→</span> Jun 09 <span class="arrow">▾</span></div></div></div>
+<div class="cap"><h1>Good evening, <b>Shay.</b></h1><p>last 30 days · vs. previous period</p></div>
+<div class="kpis">
+<div class="k"><div class="kl">Net</div><div class="kv">$3,840</div><div class="kd">▲ 18%</div></div>
+<div class="k"><div class="kl">ROI</div><div class="kv">4.2×</div><div class="kd">▲ 0.4</div></div>
+<div class="k"><div class="kl">AI cost</div><div class="kv">$58<span style="font-size:13px;color:#5d7290">/$80</span></div><div class="kd" style="color:#5d7290">73% of budget</div></div>
+<div class="k"><div class="kl">Products live</div><div class="kv">7</div><div class="kd">+2</div></div>
+</div>
+<div class="charts">
+<div class="panel"><div class="pl"><span>Revenue by source · weekly</span><span class="legend"><span><span class="dot" style="background:#5fd0c0"></span>revenue</span><span><span class="dot" style="background:#6fa8ff"></span>cost</span></span></div>
+<div class="bars">
+<div class="bg"><div class="bcol" style="height:54%"></div><div class="lab">W1</div></div>
+<div class="bg"><div class="bcol" style="height:68%"></div><div class="lab">W2</div></div>
+<div class="bg"><div class="bcol" style="height:60%"></div><div class="lab">W3</div></div>
+<div class="bg"><div class="bcol" style="height:82%"></div><div class="lab">W4</div></div>
+<div class="bg"><div class="bcol c2" style="height:96%"></div><div class="lab">W5</div></div>
+</div></div>
+<div class="panel"><div class="pl"><span>Mix · this period</span></div>
+<div class="donut">
+<svg viewBox="0 0 120 120" width="130" height="130"><circle cx="60" cy="60" r="44" fill="none" stroke="#16202a" stroke-width="18"/>
+<circle cx="60" cy="60" r="44" fill="none" stroke="#5fd0c0" stroke-width="18" stroke-dasharray="92 184" transform="rotate(-90 60 60)"/>
+<circle cx="60" cy="60" r="44" fill="none" stroke="#6fa8ff" stroke-width="18" stroke-dasharray="66 210" stroke-dashoffset="-92" transform="rotate(-90 60 60)"/>
+<circle cx="60" cy="60" r="44" fill="none" stroke="#b794f6" stroke-width="18" stroke-dasharray="30 246" stroke-dashoffset="-158" transform="rotate(-90 60 60)"/>
+<text x="60" y="58" text-anchor="middle" fill="#e6edf6" font-size="17" font-weight="800">$3,840</text><text x="60" y="74" text-anchor="middle" fill="#5d7290" font-size="8">net</text></svg>
+<div class="leg2" style="flex:1"><div><span><span class="dot" style="background:#5fd0c0"></span>Stripe</span><b>$1,240</b></div><div><span><span class="dot" style="background:#6fa8ff"></span>Gumroad</span><b>$890</b></div><div><span><span class="dot" style="background:#b794f6"></span>Newsletter</span><b>$400</b></div><div style="border:0"><span><span class="dot" style="background:#f0b54d"></span>Lemon Sq</span><b>$310</b></div></div>
+</div></div>
+</div>
+<div class="bar"><span style="color:#5fd0c0">🎙</span><input placeholder="Ask Jarvis about the numbers…"><span style="color:#5d7290;font-size:12px">⌘K</span></div>
+</body></html>

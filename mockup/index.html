@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Jarvis — concept</title>
+<style>
+  :root{
+    --bg:#070a14; --bg2:#0a0f1f;
+    --panel:rgba(20,28,48,.55); --panel2:rgba(26,36,60,.45);
+    --line:rgba(130,160,220,.12); --line2:rgba(130,160,220,.20);
+    --text:#eaf1fb; --muted:#8a9ac0; --dim:#5d6b88;
+    --cyan:#46e6d6; --blue:#4aa8ff; --violet:#9b8cff;
+    --good:#43e0a0; --warn:#ffd166; --bad:#ff6b81;
+    --grad:linear-gradient(135deg,var(--cyan),var(--violet));
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:
+      radial-gradient(1200px 700px at 78% -8%, rgba(74,168,255,.16), transparent 60%),
+      radial-gradient(1000px 700px at 12% 108%, rgba(155,140,255,.16), transparent 60%),
+      linear-gradient(160deg,var(--bg),var(--bg2));
+    color:var(--text); height:100vh; overflow:hidden;
+    -webkit-font-smoothing:antialiased; letter-spacing:.2px;
+  }
+  .grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(130,160,220,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(130,160,220,.05) 1px,transparent 1px);background-size:48px 48px;mask:radial-gradient(circle at 50% 40%,black,transparent 85%);pointer-events:none}
+  .app{display:grid;grid-template-columns:74px 1fr;height:100vh;position:relative;z-index:1}
+
+  /* ---- left rail ---- */
+  .rail{display:flex;flex-direction:column;align-items:center;gap:6px;padding:18px 0;border-right:1px solid var(--line);backdrop-filter:blur(8px)}
+  .logo{width:40px;height:40px;border-radius:13px;background:var(--grad);display:grid;place-items:center;font-weight:800;font-size:18px;color:#06121f;box-shadow:0 0 24px rgba(70,230,214,.45);margin-bottom:14px}
+  .nav{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:var(--muted);font-size:19px;cursor:pointer;border:1px solid transparent;transition:.2s}
+  .nav:hover{color:var(--text);background:var(--panel2)}
+  .nav.on{color:var(--cyan);background:rgba(70,230,214,.10);border-color:rgba(70,230,214,.30);box-shadow:inset 0 0 16px rgba(70,230,214,.12)}
+  .rail .spacer{flex:1}
+  .me{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#1b2742,#243456);display:grid;place-items:center;font-weight:700;color:var(--cyan);border:1px solid var(--line2)}
+
+  /* ---- main ---- */
+  .main{display:flex;flex-direction:column;overflow:hidden}
+  .topbar{display:flex;align-items:center;gap:18px;padding:20px 30px}
+  .word{font-size:20px;font-weight:800;letter-spacing:3px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .pill{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);background:var(--panel);border:1px solid var(--line);padding:7px 12px;border-radius:999px}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--good);box-shadow:0 0 10px var(--good)}
+  .search{flex:1;max-width:420px;display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:11px 14px;color:var(--dim);font-size:13px}
+  .kbd{margin-left:auto;font-size:11px;color:var(--muted);border:1px solid var(--line2);border-radius:6px;padding:2px 7px}
+  .tb-icons{margin-left:auto;display:flex;gap:10px}
+  .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--panel);border:1px solid var(--line);color:var(--muted);font-size:16px;position:relative}
+  .badge{position:absolute;top:-4px;right:-4px;background:var(--bad);color:#fff;font-size:10px;font-weight:700;width:17px;height:17px;border-radius:50%;display:grid;place-items:center}
+  .clock{font-variant-numeric:tabular-nums;font-size:13px;color:var(--muted)}
+
+  .head{padding:6px 30px 18px}
+  .hello{font-size:27px;font-weight:700}
+  .hello b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--muted);font-size:14px;margin-top:4px}
+
+  .board{flex:1;overflow:auto;padding:6px 30px 24px;display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:18px;align-content:start}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px 18px 16px;backdrop-filter:blur(14px);position:relative;overflow:hidden}
+  .card::before{content:"";position:absolute;inset:0 0 auto 0;height:1px;background:linear-gradient(90deg,transparent,rgba(130,180,255,.5),transparent)}
+  .lbl{font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--dim);font-weight:600}
+  .ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .chip{font-size:11px;color:var(--cyan);background:rgba(70,230,214,.10);border:1px solid rgba(70,230,214,.25);padding:3px 9px;border-radius:999px}
+
+  .span2{grid-column:span 2}
+  /* approvals */
+  .appr{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+  .appr:first-of-type{border-top:none}
+  .risk{font-size:10px;font-weight:700;padding:3px 8px;border-radius:7px}
+  .risk.h{color:var(--warn);background:rgba(255,209,102,.12);border:1px solid rgba(255,209,102,.3)}
+  .risk.c{color:var(--bad);background:rgba(255,107,129,.12);border:1px solid rgba(255,107,129,.3)}
+  .appr .t{flex:1}.appr .t .n{font-size:14px;font-weight:600}.appr .t .d{font-size:12px;color:var(--muted);margin-top:2px}
+  .btn{font-size:12px;font-weight:600;border-radius:10px;padding:8px 13px;border:1px solid var(--line2);background:var(--panel2);color:var(--text);cursor:pointer}
+  .btn.go{background:var(--grad);color:#06121f;border:none;box-shadow:0 0 18px rgba(70,230,214,.35)}
+
+  /* money */
+  .big{font-size:34px;font-weight:800;letter-spacing:.5px}
+  .big small{font-size:15px;color:var(--muted);font-weight:600}
+  .up{color:var(--good);font-size:13px;font-weight:600}
+  .spark{margin-top:12px;width:100%;height:54px}
+  .mrow{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);margin-top:12px}
+  .mrow b{color:var(--text)}
+
+  /* jobs */
+  .job{padding:11px 0;border-top:1px solid var(--line)}.job:first-of-type{border-top:none}
+  .job .jt{display:flex;justify-content:space-between;font-size:13px}.job .jt span{color:var(--muted)}
+  .bar{height:6px;border-radius:6px;background:rgba(130,160,220,.14);margin-top:8px;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:6px;background:var(--grad)}
+
+  /* suggestions */
+  .sug{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--line)}.sug:first-of-type{border-top:none}
+  .sug .si{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--panel2);border:1px solid var(--line);font-size:15px;flex:none}
+  .sug .st{font-size:13px;line-height:1.45}.sug .st b{color:var(--text)}.sug .st span{color:var(--muted)}
+
+  /* stat strip */
+  .stats{display:flex;gap:18px}
+  .stat{flex:1;text-align:left}.stat .v{font-size:22px;font-weight:700}.stat .v.cy{color:var(--cyan)}.stat .v.vi{color:var(--violet)}
+
+  /* command bar */
+  .cmdwrap{padding:14px 30px 22px;display:flex;justify-content:center}
+  .cmd{width:100%;max-width:840px;display:flex;align-items:center;gap:14px;background:linear-gradient(180deg,rgba(26,36,60,.7),rgba(16,22,40,.7));border:1px solid var(--line2);border-radius:18px;padding:12px 14px;backdrop-filter:blur(14px);box-shadow:0 18px 60px rgba(0,0,0,.45)}
+  .orb{width:42px;height:42px;flex:none;border-radius:50%;background:radial-gradient(circle at 50% 38%,#bff7f0,var(--cyan) 40%,#2b6fc7 100%);box-shadow:0 0 26px rgba(70,230,214,.6),inset 0 0 10px rgba(255,255,255,.5)}
+  .cmd input{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:15px}
+  .cmd input::placeholder{color:var(--dim)}
+  .send{width:42px;height:42px;border-radius:13px;background:var(--grad);display:grid;place-items:center;color:#06121f;font-size:17px;flex:none}
+  .voicepill{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="app">
+
+  <!-- left rail -->
+  <aside class="rail">
+    <div class="logo">J</div>
+    <div class="nav on" title="Home">⌂</div>
+    <div class="nav" title="Chat">✦</div>
+    <div class="nav" title="Agents">⚇</div>
+    <div class="nav" title="Connectors">⊞</div>
+    <div class="nav" title="Money">◈</div>
+    <div class="nav" title="Files">▤</div>
+    <div class="nav" title="Activity">≋</div>
+    <div class="spacer"></div>
+    <div class="nav" title="Settings">⚙</div>
+    <div class="me">S</div>
+  </aside>
+
+  <!-- main -->
+  <section class="main">
+    <div class="topbar">
+      <div class="word">JARVIS</div>
+      <div class="pill"><span class="dot"></span> Online · Opus</div>
+      <div class="search">⌕ Ask or search… <span class="kbd">⌘K</span></div>
+      <div class="tb-icons">
+        <div class="ic">◷<span class="clock" style="position:absolute"></span></div>
+        <div class="ic">✉<span class="badge">2</span></div>
+        <div class="ic">🔔<span class="badge">3</span></div>
+      </div>
+    </div>
+
+    <div class="head">
+      <div class="hello">Good evening, <b>Shay</b>.</div>
+      <div class="sub">3 things need you · 2 jobs running · Jarvis paid for itself 4.2× this month.</div>
+    </div>
+
+    <div class="board">
+      <!-- NEEDS YOU -->
+      <div class="card span2">
+        <div class="ch"><span class="lbl">Needs you</span><span class="chip">3 pending</span></div>
+        <div class="appr">
+          <span class="risk c">CRITICAL</span>
+          <div class="t"><div class="n">Send invoice email → 14 customers</div><div class="d">EA · via Resend · drafted, awaiting send</div></div>
+          <button class="btn">Review</button><button class="btn go">Approve</button>
+        </div>
+        <div class="appr">
+          <span class="risk h">HIGH</span>
+          <div class="t"><div class="n">Publish "Stripe-ready SaaS starter" → Gumroad</div><div class="d">Product Builder · $39 · zip packaged</div></div>
+          <button class="btn">Review</button><button class="btn go">Approve</button>
+        </div>
+        <div class="appr">
+          <span class="risk h">HIGH</span>
+          <div class="t"><div class="n">Deploy micro-API to Cloudflare Worker</div><div class="d">Micro-API Factory · green-gate passed</div></div>
+          <button class="btn">Review</button><button class="btn go">Approve</button>
+        </div>
+      </div>
+
+      <!-- MONEY -->
+      <div class="card">
+        <div class="ch"><span class="lbl">Money · this month</span><span class="up">▲ 18%</span></div>
+        <div class="big">$3,840 <small>net</small></div>
+        <svg class="spark" viewBox="0 0 300 54" preserveAspectRatio="none">
+          <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#46e6d6" stop-opacity=".5"/><stop offset="1" stop-color="#46e6d6" stop-opacity="0"/></linearGradient></defs>
+          <path d="M0,44 L40,40 L80,42 L120,30 L160,32 L200,20 L240,22 L300,8 L300,54 L0,54 Z" fill="url(#g)"/>
+          <path d="M0,44 L40,40 L80,42 L120,30 L160,32 L200,20 L240,22 L300,8" fill="none" stroke="#46e6d6" stroke-width="2"/>
+        </svg>
+        <div class="mrow"><span>Revenue</span><b>$4,610</b></div>
+        <div class="mrow"><span>AI cost</span><b>$58 / $80</b></div>
+        <div class="mrow"><span>ROI</span><b style="color:var(--good)">4.2×</b></div>
+      </div>
+
+      <!-- RUNNING JOBS -->
+      <div class="card">
+        <div class="ch"><span class="lbl">Running jobs</span><span class="chip">2 active</span></div>
+        <div class="job"><div class="jt"><div>Build "habit-tracker" app <span>· Code</span></div><div>72%</div></div><div class="bar"><i style="width:72%"></i></div></div>
+        <div class="job"><div class="jt"><div>Research: AI note-taking niche <span>· Scout</span></div><div>40%</div></div><div class="bar"><i style="width:40%"></i></div></div>
+        <div class="job"><div class="jt"><div>Newsletter issue #14 <span>· queued</span></div><div>—</div></div><div class="bar"><i style="width:6%"></i></div></div>
+      </div>
+
+      <!-- SUGGESTIONS -->
+      <div class="card">
+        <div class="ch"><span class="lbl">Jarvis suggests</span><span class="chip">proactive</span></div>
+        <div class="sug"><div class="si">📈</div><div class="st"><b>Double down:</b> <span>"REST API + auth" guide drove 61% of traffic — write 2 follow-ups.</span></div></div>
+        <div class="sug"><div class="si">✉</div><div class="st"><b>Inbox:</b> <span>3 emails need a reply; drafts are ready for your review.</span></div></div>
+        <div class="sug"><div class="si">🗓</div><div class="st"><b>Tomorrow:</b> <span>2 meetings, a 90-min focus block free at 14:00.</span></div></div>
+      </div>
+
+      <!-- STAT STRIP -->
+      <div class="card span2">
+        <div class="ch"><span class="lbl">System</span><span class="chip">51 agents · 26 connectors</span></div>
+        <div class="stats">
+          <div class="stat"><div class="v cy">7</div><div class="lbl">products live</div></div>
+          <div class="stat"><div class="v">12%</div><div class="lbl">cpu</div></div>
+          <div class="stat"><div class="v vi">3.1k</div><div class="lbl">memories</div></div>
+          <div class="stat"><div class="v">9</div><div class="lbl">connected</div></div>
+          <div class="stat"><div class="v" style="color:var(--good)">●</div><div class="lbl">ollama · opus</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- command bar -->
+    <div class="cmdwrap">
+      <div class="cmd">
+        <div class="orb"></div>
+        <input placeholder="Ask Jarvis, or type a /command…  ·  say “Hey Jarvis”" />
+        <span class="voicepill">🎙 wake word</span>
+        <div class="send">➤</div>
+      </div>
+    </div>
+  </section>
+</div>
+</body>
+</html>

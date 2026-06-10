@@ -1,0 +1,37 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T34</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#eef2fa;background:#05070e}
+.bgwrap{position:fixed;inset:0;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55}
+.b1{width:520px;height:520px;background:#2b6fff;top:-120px;left:-80px}
+.b2{width:480px;height:480px;background:#b94cff;bottom:-140px;right:-60px}
+.b3{width:380px;height:380px;background:#19c8c0;bottom:120px;left:30%}
+.noise{position:fixed;inset:0;background:rgba(5,7,14,.4)}
+.app{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;padding:30px 40px}
+.top{display:flex;align-items:center;gap:14px}.wm{font-size:19px;font-weight:800;letter-spacing:3px}.st{font-size:12px;color:#aab6d6}
+.greet{margin:30px 0 20px}.greet h1{font-size:30px;font-weight:600}.greet p{color:#b9c2dc;font-size:14px;margin-top:4px}
+.cards{display:flex;gap:18px;flex-wrap:wrap}
+.glass{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);border-radius:22px;padding:20px;backdrop-filter:blur(22px);box-shadow:0 20px 60px rgba(0,0,0,.35);min-width:200px}
+.glass.lg{flex:1;min-width:300px}
+.cl{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:#c3ccea;font-weight:600}
+.big{font-size:34px;font-weight:800;margin-top:8px}
+.row{display:flex;align-items:center;gap:10px;font-size:14px;padding:9px 0;border-top:1px solid rgba(255,255,255,.1)}.row:first-of-type{border:0}
+.rk{font-size:9px;font-weight:700;padding:3px 7px;border-radius:6px;background:rgba(255,90,110,.25)}
+.go{margin-left:auto;font-size:11px;font-weight:700;background:rgba(255,255,255,.92);color:#05070e;border-radius:9px;padding:6px 11px}
+.bar{margin-top:auto;display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:13px 16px;backdrop-filter:blur(22px)}
+.bar input{flex:1;background:0;border:0;outline:0;color:#eef2fa;font-size:15px}.bar input::placeholder{color:#c3ccea}
+</style></head><body>
+<div class="bgwrap"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div><div class="noise"></div>
+<div class="app">
+<div class="top"><div class="wm">JARVIS</div><div class="st">● Online · Opus</div></div>
+<div class="greet"><h1>Good evening, Shay.</h1><p>3 need you · 2 jobs running · ROI 4.2×</p></div>
+<div class="cards">
+<div class="glass lg"><div class="cl">Needs you · 3</div>
+<div class="row"><span class="rk">CRIT</span>Invoice → 14 customers<span class="go">Approve</span></div>
+<div class="row"><span class="rk" style="background:rgba(255,200,90,.25)">HIGH</span>Publish SaaS starter<span class="go">Approve</span></div>
+<div class="row"><span class="rk" style="background:rgba(255,200,90,.25)">HIGH</span>Deploy micro-API<span class="go">Approve</span></div></div>
+<div class="glass"><div class="cl">Money · month</div><div class="big">$3,840</div><div style="font-size:13px;color:#bff;margin-top:4px">▲18% · ROI 4.2×</div></div>
+<div class="glass"><div class="cl">Jobs</div><div class="big">2</div><div style="font-size:13px;color:#c3ccea;margin-top:4px">habit-tracker 72%<br>research 40%</div></div>
+</div>
+<div class="bar"><span>🎙</span><input placeholder="Ask Jarvis, or type a /command… · say “Hey Jarvis”"><span style="color:#c3ccea;font-size:12px">⌘K</span></div>
+</div></body></html>

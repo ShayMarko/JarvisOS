@@ -1,0 +1,55 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T133</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e8edf4;background:#0a0c11}
+/* dimmed full app */
+.app{position:absolute;inset:0;filter:brightness(.42) saturate(.85);padding:26px 40px}
+.top{display:flex;align-items:center;gap:14px}
+.wm{font-size:17px;font-weight:800;letter-spacing:3px;color:#7c9cff}.st{font-size:12px;color:#5b6678}
+.g{font-size:38px;font-weight:800;margin-top:40px;letter-spacing:-1px}
+.kpis{display:flex;gap:16px;margin-top:24px}
+.k{flex:1;background:#11151d;border:1px solid #1d2531;border-radius:14px;padding:18px}
+.kl{font-size:10px;letter-spacing:1.3px;text-transform:uppercase;color:#5b6678}.kv{font-size:28px;font-weight:800;margin-top:6px}
+.panel{margin-top:20px;height:300px;background:#11151d;border:1px solid #1d2531;border-radius:16px}
+.scrim{position:absolute;inset:0;background:rgba(6,8,13,.35)}
+/* PiP bubble */
+.pip{position:absolute;right:32px;bottom:32px;width:340px;background:rgba(15,19,27,.97);border:1px solid #2a3445;border-radius:22px;box-shadow:0 30px 90px rgba(0,0,0,.65);overflow:hidden}
+.ph{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid #1d2531}
+.avt{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#7c9cff,#46e0a0);display:flex;align-items:center;justify-content:center;font-weight:900;color:#0a1020;font-size:13px}
+.ph .nm{font-size:13px;font-weight:700}.ph .on{font-size:11px;color:#46e0a0}
+.ph .ctrl{margin-left:auto;display:flex;gap:10px;color:#6b7888;font-size:13px}
+.body{padding:16px;display:flex;flex-direction:column;gap:12px}
+.msg{font-size:13px;line-height:1.5;max-width:88%}
+.j{background:#1a2230;border-radius:14px 14px 14px 4px;padding:11px 13px;color:#cdd6e2;align-self:flex-start}
+.u{background:linear-gradient(135deg,#7c9cff,#5872d6);border-radius:14px 14px 4px 14px;padding:11px 13px;color:#0e1426;align-self:flex-end;font-weight:500}
+.amt{color:#46e0a0;font-weight:700}
+.wave{display:flex;align-items:center;gap:10px;padding:12px 16px;border-top:1px solid #1d2531}
+.wave .bars{display:flex;gap:3px;align-items:center;height:22px}
+.wave .bars i{width:3px;border-radius:2px;background:#7c9cff}
+.wave input{flex:1;background:0;border:0;outline:0;color:#e8edf4;font-size:13px}.wave input::placeholder{color:#5b6678}
+</style></head><body>
+<div class="app">
+  <div class="top"><div class="wm">JARVIS</div><div class="st">● Online · Opus · 20:34 · Tue Jun 09</div></div>
+  <div class="g">Good evening, Shay.</div>
+  <div class="kpis">
+    <div class="k"><div class="kl">Net · month</div><div class="kv">$3,840</div></div>
+    <div class="k"><div class="kl">ROI</div><div class="kv">4.2×</div></div>
+    <div class="k"><div class="kl">Products</div><div class="kv">7</div></div>
+    <div class="k"><div class="kl">Agents</div><div class="kv">51</div></div>
+  </div>
+  <div class="panel"></div>
+</div>
+<div class="scrim"></div>
+<div class="pip">
+  <div class="ph"><div class="avt">J</div><div><div class="nm">Jarvis</div><div class="on">● listening</div></div><div class="ctrl">⤢ ✕</div></div>
+  <div class="body">
+    <div class="msg j">3 things need you tonight. The big one: an invoice to 14 customers worth <span class="amt">$1,240</span> is drafted and ready.</div>
+    <div class="msg u">Send it. What else?</div>
+    <div class="msg j">Done — sending via Resend. SaaS starter is ready for Gumroad at $39, and the micro-API passed its green-gate. Ship both?</div>
+  </div>
+  <div class="wave">
+    <span style="color:#7c9cff">🎙</span>
+    <div class="bars"><i style="height:8px"></i><i style="height:16px"></i><i style="height:22px"></i><i style="height:13px"></i><i style="height:19px"></i><i style="height:7px"></i><i style="height:14px"></i></div>
+    <input placeholder="Ask Jarvis…">
+  </div>
+</div>
+</body></html>

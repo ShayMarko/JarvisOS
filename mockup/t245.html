@@ -1,0 +1,62 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T245</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Avenir Next','Segoe UI',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#1c3a28;background:#eef6e8}
+.garden{height:100vh;display:grid;grid-template-rows:auto 1fr auto;padding:28px 40px;position:relative;background:linear-gradient(165deg,#f2f8e6 0%,#d8ecc4 100%);overflow:hidden}
+.leaf{position:absolute;border-radius:0 100% 0 100%;background:radial-gradient(circle at 30% 30%,#a8d878,#5a9a3a);opacity:.35}
+.l1{width:300px;height:300px;top:-80px;right:-60px}.l2{width:160px;height:160px;bottom:-40px;left:-30px;border-radius:100% 0 100% 0}
+.top{display:flex;align-items:center;gap:16px;position:relative;z-index:2}
+.mark{width:40px;height:40px;border-radius:50% 50% 50% 0;transform:rotate(45deg);background:linear-gradient(135deg,#e8c54a,#3a8a4a)}
+.wm{font-size:24px;font-weight:700;letter-spacing:3px;color:#2a6a3a}
+.status{font-size:12px;color:#5a8a5a;margin-left:auto;font-weight:600}
+.main{display:grid;grid-template-columns:1.5fr 1fr;gap:22px;margin-top:22px;position:relative;z-index:2;align-content:start}
+.hero{background:rgba(255,255,255,.65);border:1px solid rgba(120,170,90,.4);border-radius:34px 34px 34px 12px;padding:30px 34px;backdrop-filter:blur(4px);box-shadow:0 10px 24px rgba(60,120,60,.12)}
+.greet{font-size:48px;font-weight:700;color:#2a6a3a;line-height:1.05}
+.greet b{color:#c89a18}
+.net{font-size:15px;color:#4a7a4a;font-weight:600;margin-top:10px}
+.net b{color:#c89a18}
+.streams{margin-top:22px}
+.sl{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.sl .name{width:110px;font-size:13px;font-weight:700;color:#3a6a3a}
+.track{flex:1;height:10px;background:rgba(120,170,90,.2);border-radius:8px;overflow:hidden}
+.track i{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,#5a9a3a,#e8c54a)}
+.sl .amt{width:64px;text-align:right;font-size:13px;font-weight:700;color:#2a6a3a}
+.side{display:flex;flex-direction:column;gap:16px}
+.panel{background:rgba(255,255,255,.7);border:1px solid rgba(120,170,90,.4);border-radius:24px;padding:18px 20px}
+.pt{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#5a8a4a;font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.pt::before{content:"🌿"}
+.li{display:flex;justify-content:space-between;font-size:13.5px;padding:6px 0;border-bottom:1px solid rgba(120,170,90,.18);font-weight:600;color:#2a5a3a}
+.li .v{color:#c89a18}
+.li.crit{color:#b85a2a}.li.crit .v{color:#b85a2a}
+.foot{position:relative;z-index:2;margin-top:18px;display:flex;align-items:center;gap:14px;background:rgba(42,106,58,.92);border-radius:28px;padding:14px 22px;color:#eef6e8}
+.foot input{flex:1;background:0;border:0;outline:0;color:#eef6e8;font-size:15px;font-weight:500}
+.foot input::placeholder{color:#a8d09a}
+</style></head><body><div class="garden">
+<div class="leaf l1"></div><div class="leaf l2"></div>
+<div class="top"><div class="mark"></div><div class="wm">JARVIS</div><div class="status">● Online · Opus · 20:34 · Tue Jun 09</div></div>
+<div class="main">
+  <div class="hero">
+    <div class="greet">Good evening,<br><b>Shay.</b></div>
+    <div class="net">Net this month <b>$3,840</b> · ROI <b>4.2×</b> · ▲18% · AI cost $58 / $80</div>
+    <div class="streams" style="margin-top:24px">
+      <div class="sl"><span class="name">Stripe subs</span><div class="track"><i style="width:90%"></i></div><span class="amt">$1,240</span></div>
+      <div class="sl"><span class="name">Gumroad</span><div class="track"><i style="width:65%"></i></div><span class="amt">$890</span></div>
+      <div class="sl"><span class="name">Lemon Squeezy</span><div class="track"><i style="width:24%"></i></div><span class="amt">$310</span></div>
+      <div class="sl"><span class="name">Newsletter</span><div class="track"><i style="width:30%"></i></div><span class="amt">$400</span></div>
+    </div>
+    <div class="net" style="margin-top:18px">🌱 51 agents · 26 connectors · 9 live · 7 products growing</div>
+  </div>
+  <div class="side">
+    <div class="panel"><div class="pt">Needs You</div>
+      <div class="li crit"><span>Invoice → 14 customers</span><span class="v">$1,240</span></div>
+      <div class="li"><span>Publish SaaS starter</span><span class="v">$39</span></div>
+      <div class="li" style="border:0"><span>Deploy micro-API</span><span class="v">CF</span></div>
+    </div>
+    <div class="panel"><div class="pt">Growing Now</div>
+      <div class="li"><span>habit-tracker app</span><span class="v">72%</span></div>
+      <div class="li"><span>research niche</span><span class="v">40%</span></div>
+      <div class="li" style="border:0"><span>newsletter #14</span><span class="v">queued</span></div>
+    </div>
+  </div>
+</div>
+<div class="foot"><span style="color:#e8c54a">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#a8d09a">⌘K</span></div>
+</div></body></html>

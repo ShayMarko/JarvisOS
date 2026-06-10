@@ -1,0 +1,78 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T191</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf6;background:radial-gradient(900px 800px at 50% 45%,#0c1422,#070a10)}
+.top{display:flex;align-items:center;gap:14px;padding:22px 40px}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#7cc4ff}.st{font-size:12px;color:#5f7488}.r{margin-left:auto;font-size:13px;color:#8a98a4}
+.wrap{display:grid;grid-template-columns:1fr 320px;height:calc(100vh - 200px);padding:0 40px;align-items:center;gap:24px}
+.hd{position:absolute;left:40px;top:78px}.hd h1{font-size:22px;font-weight:600}.hd h1 b{color:#7cc4ff}.hd p{font-size:13px;color:#5f7488;margin-top:4px}
+.left{display:flex;justify-content:center}
+.side{border-left:1px solid #18222e;padding-left:26px;display:flex;flex-direction:column;gap:9px}
+.side .k{font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:#5f7488}
+.ev{display:flex;gap:10px;align-items:baseline;padding:7px 0;border-bottom:1px solid #131c26;font-size:13px}
+.ev .t{font-variant-numeric:tabular-nums;color:#7cc4ff;font-weight:700;width:54px}
+.bar{position:fixed;bottom:22px;left:40px;right:40px;display:flex;align-items:center;gap:12px;background:rgba(12,17,26,.9);border:1px solid #18222e;border-radius:13px;padding:11px 15px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e6edf6;font-size:14px}.bar input::placeholder{color:#5f7488}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · CLOCK PLOT</div><div class="st">● ONLINE · OPUS · 20:34</div><div class="r">24-hour radial · today</div></div>
+<div class="hd"><h1>Good evening, <b>Shay.</b></h1><p>system load and key events around the clock face</p></div>
+<div class="wrap">
+<div class="left">
+<svg viewBox="0 0 480 480" style="width:min(460px,46vw);height:auto">
+<g transform="translate(240,240)">
+<circle r="200" fill="none" stroke="rgba(124,196,255,.10)"/><circle r="150" fill="none" stroke="rgba(124,196,255,.10)"/><circle r="100" fill="none" stroke="rgba(124,196,255,.10)"/><circle r="55" fill="none" stroke="rgba(124,196,255,.14)"/>
+<!-- hour ticks (24) -->
+<g stroke="rgba(124,196,255,.18)">
+<!-- generated via transforms -->
+</g>
+<!-- hour spokes + labels for 0,6,12,18 -->
+<g stroke="rgba(124,196,255,.18)"><line x1="0" y1="-200" x2="0" y2="-55"/><line x1="200" y1="0" x2="55" y2="0"/><line x1="0" y1="200" x2="0" y2="55"/><line x1="-200" y1="0" x2="-55" y2="0"/></g>
+<g fill="#5f7488" font-size="12" text-anchor="middle"><text x="0" y="-210">00</text><text x="218" y="5">06</text><text x="0" y="226">12</text><text x="-216" y="5">18</text></g>
+<!-- load wedges: 24 bars radiating, length = load -->
+<g id="bars"></g>
+<!-- event markers -->
+<g fill="#46e0a0"><circle cx="0" cy="0" r="0"/></g>
+<circle r="55" fill="#0a121c" stroke="#7cc4ff" stroke-width="1.5"/>
+<text x="0" y="-6" text-anchor="middle" fill="#cfe" font-size="13" font-weight="700">20:34</text>
+<text x="0" y="14" text-anchor="middle" fill="#5f7488" font-size="10">now</text>
+<script>
+(function(){
+ var g=document.getElementById('bars');var ns='http://www.w3.org/2000/svg';
+ // load per hour 0..23
+ var load=[8,5,4,3,3,4,9,22,40,55,62,58,70,66,52,48,60,72,80,74,68,50,30,18];
+ for(var h=0;h<24;h++){
+  var ang=(h/24)*2*Math.PI - Math.PI/2; // 0h at top
+  var inner=58, outer=58+load[h]*1.6;
+  var x1=Math.cos(ang)*inner,y1=Math.sin(ang)*inner;
+  var x2=Math.cos(ang)*outer,y2=Math.sin(ang)*outer;
+  var l=document.createElementNS(ns,'line');
+  l.setAttribute('x1',x1.toFixed(1));l.setAttribute('y1',y1.toFixed(1));
+  l.setAttribute('x2',x2.toFixed(1));l.setAttribute('y2',y2.toFixed(1));
+  var hot=load[h]>60;
+  l.setAttribute('stroke',hot?'#46e0a0':(load[h]>30?'#7cc4ff':'#3b6fa0'));
+  l.setAttribute('stroke-width','7');l.setAttribute('stroke-linecap','round');
+  l.setAttribute('opacity', hot?'0.95':'0.8');
+  g.appendChild(l);
+ }
+ // event dots at specific hours on outer ring
+ var ev=[[8,'#ffce6b'],[12,'#7cc4ff'],[17,'#46e0a0'],[20,'#b48cff']];
+ ev.forEach(function(e){var ang=(e[0]/24)*2*Math.PI-Math.PI/2;var r=210;
+  var c=document.createElementNS(ns,'circle');
+  c.setAttribute('cx',(Math.cos(ang)*r).toFixed(1));c.setAttribute('cy',(Math.sin(ang)*r).toFixed(1));
+  c.setAttribute('r','5');c.setAttribute('fill',e[1]);c.setAttribute('stroke','#0a121c');c.setAttribute('stroke-width','2');
+  g.parentNode.appendChild(c);});
+})();
+</script>
+</g></svg>
+</div>
+<div class="side">
+<div class="k">Today's timeline</div>
+<div class="ev"><span class="t">08:00</span><span>Morning briefing → Discord</span></div>
+<div class="ev"><span class="t">11:00</span><span>habit-tracker build · 72%</span></div>
+<div class="ev"><span class="t">12:30</span><span>Peak load · Scout research</span></div>
+<div class="ev"><span class="t">17:00</span><span>Revenue sync · Stripe</span></div>
+<div class="ev"><span class="t">18:00</span><span>Newsletter #14 queued</span></div>
+<div class="ev"><span class="t">20:34</span><span style="color:#7cc4ff">Now · 3 things need you</span></div>
+</div>
+</div>
+<div class="bar"><span style="color:#7cc4ff">🎙</span><input placeholder="Ask Jarvis what's scheduled next…"><span style="color:#5f7488;font-size:12px">⌘K</span></div>
+</body></html>

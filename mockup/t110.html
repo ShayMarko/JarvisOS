@@ -1,0 +1,54 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T110</title><style>
+*{margin:0;box-sizing:border-box}
+body{height:100vh;overflow:hidden;color:#2b2118;background:#f4ece0;font-family:Georgia,'Times New Roman',serif}
+.card{height:100vh;display:grid;grid-template-columns:1.05fr 1fr;background:#fbf6ee}
+.hero{position:relative;background:linear-gradient(150deg,#caa86a,#9c7a3e);display:flex;flex-direction:column;justify-content:flex-end;padding:34px;color:#fff8ec}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 70% 25%,rgba(255,255,255,.28),transparent 55%)}
+.badge{position:absolute;top:26px;left:26px;display:flex;gap:8px;flex-wrap:wrap;z-index:2}
+.b{font-family:system-ui,sans-serif;font-size:11px;font-weight:700;letter-spacing:.5px;background:rgba(40,28,14,.32);color:#fff8ec;padding:5px 11px;border-radius:20px;backdrop-filter:blur(3px)}
+.hero .wm{position:absolute;top:26px;right:26px;font-family:system-ui,sans-serif;font-weight:800;letter-spacing:3px;font-size:14px;z-index:2}
+.hero .plate{position:relative;z-index:2}
+.kicker{font-family:system-ui,sans-serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;opacity:.85}
+.hero h1{font-size:46px;line-height:1.02;margin:8px 0 14px;font-weight:400}
+.stat{display:flex;gap:26px;font-family:system-ui,sans-serif}
+.stat div small{display:block;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;opacity:.8}
+.stat div b{font-size:22px}
+.body{padding:34px 38px;overflow:hidden}
+.lead{font-style:italic;color:#6a5a44;font-size:16px;line-height:1.5;border-left:3px solid #caa86a;padding-left:14px;margin-bottom:22px}
+h2{font-family:system-ui,sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#9c7a3e;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+h2::after{content:"";flex:1;height:1px;background:#e3d6c0}
+.ing{list-style:none;margin-bottom:24px}
+.ing li{display:flex;align-items:center;gap:11px;padding:7px 0;font-size:15px;border-bottom:1px dotted #ddcdb2}
+.chk{width:15px;height:15px;border:1.5px solid #b89a64;border-radius:4px;flex-shrink:0}
+.chk.x{background:#9c7a3e;border-color:#9c7a3e;position:relative}
+.chk.x::after{content:"✓";color:#fff;font-size:11px;font-family:system-ui;position:absolute;top:-2px;left:2px}
+.amt{margin-left:auto;font-family:system-ui,sans-serif;font-weight:700;color:#7a5e2e;font-size:13px}
+.crit{margin-left:auto;font-family:system-ui;font-size:10px;font-weight:700;background:#c0392b;color:#fff;padding:2px 7px;border-radius:10px}
+.steps{counter-reset:s}
+.steps li{counter-increment:s;display:flex;gap:13px;padding:8px 0;font-size:14px;line-height:1.45;color:#3a2e1e}
+.steps li::before{content:counter(s);flex-shrink:0;width:26px;height:26px;background:#9c7a3e;color:#fff8ec;border-radius:50%;font-family:system-ui;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+</style></head><body><div class="card">
+<div class="hero">
+<div class="badge"><span class="b">⏱ Serves the day</span><span class="b">★ 4.2× ROI</span><span class="b">● Opus</span></div>
+<div class="wm">JARVIS</div>
+<div class="plate"><div class="kicker">Tonight's Plan · Tue Jun 09</div><h1>Good evening,<br>Shay.</h1>
+<div class="stat"><div><small>Net · month</small><b>$3,840</b></div><div><small>Yield</small><b>7 products</b></div><div><small>Prep cost</small><b>$58/$80</b></div></div></div>
+</div>
+<div class="body">
+<p class="lead">A hearty money-loop, slow-cooked across 51 agents. Three items need your hand before service; two are already simmering.</p>
+<h2>Ingredients · needs you</h2>
+<ul class="ing">
+<li><span class="chk"></span>Send invoice → 14 customers<span class="crit">CRITICAL</span><span class="amt">$1,240</span></li>
+<li><span class="chk"></span>Publish SaaS starter → Gumroad<span class="amt">$39</span></li>
+<li><span class="chk"></span>Deploy micro-API → Cloudflare<span class="amt">HIGH</span></li>
+<li><span class="chk x"></span>Prep newsletter #14 · 2,310 subs<span class="amt">$400</span></li>
+</ul>
+<h2>Method · steps</h2>
+<ol class="steps">
+<li>Fold in 14 Stripe invoices via EA + Resend; let revenue rest at <b>$1,240</b>.</li>
+<li>Publish the SaaS starter to Gumroad; garnish the listing with the REST + auth guide (drove 61% of traffic).</li>
+<li>Deploy the micro-API to Cloudflare; bring uptime to a gentle 99.9%.</li>
+<li>Serve newsletter #14 warm to 2,310 subscribers; reduce churn to taste.</li>
+</ol>
+</div>
+</div></body></html>

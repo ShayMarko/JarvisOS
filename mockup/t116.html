@@ -1,0 +1,77 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T116</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,-apple-system,sans-serif}
+body{height:100vh;overflow:hidden;background:#0b0a12;color:#e6e2f0}
+.bg{position:fixed;inset:0;background:radial-gradient(circle at 25% 25%,#1a142e,transparent 55%),radial-gradient(circle at 85% 80%,#12101e,transparent 55%)}
+.top{position:relative;display:flex;align-items:center;gap:14px;padding:18px 32px}
+.wm{font-size:17px;font-weight:800;letter-spacing:3px;color:#a98bff}
+.sub{font-size:12px;color:#7c7494}
+.r{margin-left:auto;font-size:12px;color:#7c7494}.r b{color:#a98bff}
+.wrap{position:relative;display:grid;grid-template-columns:1fr 360px;gap:26px;padding:6px 32px 0;height:calc(100vh - 64px)}
+.left{display:flex;flex-direction:column}
+.tabs{display:flex;gap:8px;margin-bottom:16px}
+.tb{font-size:12px;padding:7px 15px;border-radius:9px;background:#161426;color:#9a92b4;border:1px solid #241f3a}
+.tb.on{background:#2a2046;color:#d8ccff;border-color:#4a3a7a}
+.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.slot{aspect-ratio:1;border-radius:13px;background:#15131f;border:1px solid #221d33;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;position:relative;cursor:pointer}
+.slot .ic{font-size:24px}
+.slot .nm{font-size:10px;color:#9a92b4;text-align:center;padding:0 4px;line-height:1.2}
+.slot .ct{position:absolute;bottom:5px;right:7px;font-size:10px;font-weight:700;color:#cfc4e8}
+.rar-c{border-color:#3a3550}
+.rar-r{border-color:#3f7fd1;box-shadow:0 0 0 1px rgba(63,127,209,.4),inset 0 0 20px rgba(63,127,209,.12)}
+.rar-e{border-color:#a98bff;box-shadow:0 0 0 1px rgba(169,139,255,.5),inset 0 0 22px rgba(169,139,255,.16)}
+.rar-l{border-color:#ffb347;box-shadow:0 0 0 1px rgba(255,179,71,.55),inset 0 0 24px rgba(255,179,71,.2)}
+.slot.sel{outline:2px solid #ffd86b;outline-offset:1px}
+.slot.empty{background:repeating-linear-gradient(45deg,#0f0e16,#0f0e16 7px,#12111b 7px,#12111b 14px);border-style:dashed;border-color:#221d33}
+.gold{font-size:13px;color:#ffd86b;margin-top:auto;padding:14px 0 0;display:flex;gap:24px}
+.gold b{font-weight:800}
+/* detail */
+.detail{background:linear-gradient(160deg,#1a1530,#120e22);border:1px solid #2e2748;border-radius:16px;padding:22px;display:flex;flex-direction:column}
+.dhd{display:flex;align-items:center;gap:14px}
+.dic{width:58px;height:58px;border-radius:14px;background:linear-gradient(150deg,#3a2a6a,#1e1640);display:flex;align-items:center;justify-content:center;font-size:28px;border:1px solid #ffb347;box-shadow:0 0 22px rgba(255,179,71,.3)}
+.dnm{font-size:19px;font-weight:800}.drar{font-size:11px;letter-spacing:1.5px;color:#ffb347;text-transform:uppercase}
+.dtype{font-size:12px;color:#9a92b4;margin:12px 0 4px}
+.ddesc{font-size:13px;line-height:1.5;color:#c0b8d6;font-style:italic;border-left:2px solid #ffb347;padding-left:11px;margin:8px 0 16px}
+.dstats .row{display:flex;justify-content:space-between;font-size:13px;padding:7px 0;border-bottom:1px solid #221d33}
+.dstats .row span{color:#9a92b4}.dstats .row b{color:#e6e2f0}
+.dbtn{margin-top:auto;background:#ffb347;color:#1a1208;font-weight:700;text-align:center;padding:11px;border-radius:10px;font-size:14px}
+</style></head><body><div class="bg"></div>
+<div class="top"><div class="wm">JARVIS</div><div class="sub">INVENTORY · tools & skills</div><div class="r">● Online · <b>Opus</b> · 51 agents</div></div>
+<div class="wrap">
+<div class="left">
+<div class="tabs"><div class="tb on">Tools</div><div class="tb">Skills</div><div class="tb">Connectors</div><div class="tb">Consumables</div></div>
+<div class="grid">
+<div class="slot rar-l sel"><span class="ic">📨</span><span class="nm">Invoice→Resend</span><span class="ct">14</span></div>
+<div class="slot rar-e"><span class="ic">💳</span><span class="nm">Stripe</span><span class="ct">$1.2k</span></div>
+<div class="slot rar-e"><span class="ic">🛒</span><span class="nm">Gumroad</span><span class="ct">41</span></div>
+<div class="slot rar-r"><span class="ic">🍋</span><span class="nm">Lemon Sq.</span><span class="ct">$310</span></div>
+<div class="slot rar-r"><span class="ic">☁️</span><span class="nm">Cloudflare</span></div>
+<div class="slot rar-e"><span class="ic">⚙️</span><span class="nm">Code build</span><span class="ct">72%</span></div>
+<div class="slot rar-r"><span class="ic">🔭</span><span class="nm">Scout</span><span class="ct">40%</span></div>
+<div class="slot rar-c"><span class="ic">📰</span><span class="nm">Newsletter</span><span class="ct">#14</span></div>
+<div class="slot rar-r"><span class="ic">🔍</span><span class="nm">Web search</span></div>
+<div class="slot rar-c"><span class="ic">📝</span><span class="nm">Docgen</span></div>
+<div class="slot rar-e"><span class="ic">🧠</span><span class="nm">Memory RAG</span></div>
+<div class="slot rar-c"><span class="ic">📊</span><span class="nm">Charts</span></div>
+<div class="slot rar-l"><span class="ic">🚀</span><span class="nm">Deploy</span></div>
+<div class="slot rar-r"><span class="ic">🎙</span><span class="nm">Voice/TTS</span></div>
+<div class="slot rar-c"><span class="ic">🖼</span><span class="nm">Image gen</span></div>
+<div class="slot rar-c"><span class="ic">🗓</span><span class="nm">Calendar</span></div>
+<div class="slot empty"></div>
+<div class="slot empty"></div>
+</div>
+<div class="gold"><span>💰 Net <b>$3,840</b></span><span>✦ ROI <b>4.2×</b></span><span>⛁ Budget <b>$58/$80</b></span></div>
+</div>
+<div class="detail">
+<div class="dhd"><div class="dic">📨</div><div><div class="dnm">Invoice → Resend</div><div class="drar">★ Legendary tool</div></div></div>
+<div class="dtype">Money-loop · Executive Assistant</div>
+<div class="ddesc">"Sends invoices to 14 customers via Resend. Collects $1,240 on use. CRITICAL — awaiting your approval."</div>
+<div class="dstats">
+<div class="row"><span>Equipped by</span><b>EA agent</b></div>
+<div class="row"><span>Value on use</span><b style="color:#46e0a0">+$1,240</b></div>
+<div class="row"><span>Charges</span><b>14 customers</b></div>
+<div class="row"><span>Cost / use</span><b>~$0.40</b></div>
+<div class="row"><span>Priority</span><b style="color:#ff5b6e">CRITICAL</b></div>
+</div>
+<div class="dbtn">▶ Approve & Use</div>
+</div>
+</div></body></html>

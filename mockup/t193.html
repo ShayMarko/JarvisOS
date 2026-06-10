@@ -1,0 +1,51 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T193</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf6;background:#080b12}
+.top{display:flex;align-items:center;gap:14px;padding:22px 40px}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#7cc4ff}.st{font-size:12px;color:#5f7488}.r{margin-left:auto;font-size:13px;color:#8a98a4}
+.hd{padding:0 40px}.hd h1{font-size:22px;font-weight:600}.hd h1 b{color:#7cc4ff}.hd p{font-size:13px;color:#5f7488;margin-top:4px}
+.plot{margin:14px 40px 0;background:#0c1119;border:1px solid #16202c;border-radius:16px;padding:20px 26px;height:calc(100vh - 250px)}
+.cl{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#5f7488;display:flex;justify-content:space-between}
+.bar{position:fixed;bottom:22px;left:40px;right:40px;display:flex;align-items:center;gap:12px;background:rgba(12,17,25,.9);border:1px solid #16202c;border-radius:13px;padding:11px 15px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e6edf6;font-size:14px}.bar input::placeholder{color:#5f7488}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · BEESWARM</div><div class="st">● ONLINE · OPUS · 20:34</div><div class="r">Connector latency · 26 connectors</div></div>
+<div class="hd"><h1>Good evening, <b>Shay.</b></h1><p>each dot is one connector, placed by response time — grouped by category</p></div>
+<div class="plot">
+<div class="cl"><span>response time (ms) · live = filled · idle = hollow</span><span style="color:#46e0a0">9 live</span></div>
+<svg viewBox="0 0 1080 470" style="width:100%;height:calc(100% - 22px)">
+<!-- x axis ms -->
+<g stroke="rgba(120,160,200,.10)"><line x1="60" y1="60" x2="60" y2="430"/><line x1="280" y1="60" x2="280" y2="430"/><line x1="500" y1="60" x2="500" y2="430"/><line x1="720" y1="60" x2="720" y2="430"/><line x1="940" y1="60" x2="940" y2="430"/></g>
+<g fill="#5f7488" font-size="11" text-anchor="middle"><text x="60" y="450">0ms</text><text x="280" y="450">200</text><text x="500" y="450">400</text><text x="720" y="450">600</text><text x="940" y="450">800ms</text></g>
+<g fill="#8a98a4" font-size="12" font-weight="600"><text x="60" y="100">Money</text><text x="60" y="210">Comms</text><text x="60" y="320">Dev / Host</text><text x="60" y="410">Data / MCP</text></g>
+<g id="swarm"></g>
+<script>
+(function(){
+ var g=document.getElementById('swarm');var ns='http://www.w3.org/2000/svg';
+ function band(cy,col,arr){ // arr=[ms,live]
+  // jitter dots within band avoiding heavy overlap
+  arr.forEach(function(d,i){
+   var ms=d[0],live=d[1];
+   var x=60+(ms/800)*880;
+   var jitter=((i%2?1:-1)*(8+(i%4)*9));
+   var y=cy+jitter;
+   var c=document.createElementNS(ns,'circle');
+   c.setAttribute('cx',x.toFixed(1));c.setAttribute('cy',y.toFixed(1));c.setAttribute('r','7');
+   if(live){c.setAttribute('fill',col);c.setAttribute('opacity','0.92');}
+   else{c.setAttribute('fill','none');c.setAttribute('stroke',col);c.setAttribute('stroke-width','1.6');c.setAttribute('opacity','0.7');}
+   g.appendChild(c);
+  });
+ }
+ band(100,'#46e0a0',[[90,1],[120,1],[150,1],[210,0],[260,0],[300,0],[180,1]]);
+ band(210,'#7cc4ff',[[140,1],[170,1],[230,0],[280,0],[330,0],[400,0],[460,0]]);
+ band(320,'#b48cff',[[110,1],[190,1],[250,0],[340,0],[420,0],[520,0]]);
+ band(410,'#ffce6b',[[220,1],[310,0],[380,0],[540,0],[640,0],[760,0]]);
+})();
+</script>
+<!-- callout for fastest -->
+<circle cx="159" cy="92" r="11" fill="none" stroke="#46e0a0" stroke-dasharray="3 3"/>
+<text x="175" y="80" fill="#9fdcc0" font-size="11">Stripe · 90ms</text>
+</svg>
+</div>
+<div class="bar"><span style="color:#7cc4ff">🎙</span><input placeholder="Ask Jarvis which connector is slowest…"><span style="color:#5f7488;font-size:12px">⌘K</span></div>
+</body></html>

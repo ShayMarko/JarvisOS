@@ -1,0 +1,38 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T51</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#dfeee6;background:radial-gradient(900px 700px at 50% 40%,#06201a,#04100c)}
+.top{display:flex;justify-content:space-between;padding:22px 36px}.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#46e0a0}.st{font-size:12px;color:#4f8a72}
+.cap{padding:0 36px}.cap h1{font-size:22px;font-weight:600}.cap h1 b{color:#46e0a0}.cap p{color:#5f9c84;font-size:13px;margin-top:3px}
+.flow{position:relative;height:calc(100vh - 250px);margin:10px 36px}
+.col{position:absolute;top:0;bottom:0;display:flex;flex-direction:column;justify-content:center;gap:14px;width:200px}
+.c1{left:0}.c2{left:50%;transform:translateX(-50%)}.c3{right:0}
+.node{background:rgba(12,40,32,.8);border:1px solid rgba(70,224,160,.25);border-radius:12px;padding:12px 14px}
+.node .l{font-size:12px;color:#8fd0bf}.node .v{font-size:20px;font-weight:800}
+.net{background:linear-gradient(135deg,rgba(70,224,160,.25),rgba(12,40,32,.8));border-color:rgba(70,224,160,.6)}
+svg{position:absolute;inset:0;pointer-events:none}
+.bar{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);width:500px;display:flex;align-items:center;gap:12px;background:rgba(8,26,20,.85);border:1px solid rgba(70,224,160,.3);border-radius:14px;padding:11px 15px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#dfeee6;font-size:14px}.bar input::placeholder{color:#4f8a72}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · CASHFLOW</div><div class="st">● ONLINE · OPUS</div></div>
+<div class="cap"><h1>Good evening, <b>Shay</b>.</h1><p>where the money flows this month · ROI 4.2×</p></div>
+<div class="flow">
+<svg viewBox="0 0 1308 560" preserveAspectRatio="none"><g fill="none" stroke-linecap="round">
+<path d="M200,90 C400,90 450,260 654,260" stroke="rgba(70,224,160,.3)" stroke-width="26"/>
+<path d="M200,230 C400,230 450,270 654,270" stroke="rgba(70,224,160,.25)" stroke-width="18"/>
+<path d="M200,360 C400,360 450,285 654,285" stroke="rgba(70,224,160,.2)" stroke-width="12"/>
+<path d="M200,470 C400,470 450,300 654,300" stroke="rgba(70,224,160,.16)" stroke-width="9"/>
+<path d="M654,270 C900,270 950,160 1108,160" stroke="rgba(255,120,120,.25)" stroke-width="12"/>
+<path d="M654,280 C900,280 950,400 1108,400" stroke="rgba(70,224,160,.4)" stroke-width="22"/>
+</g></svg>
+<div class="col c1">
+<div class="node"><div class="l">Stripe subs</div><div class="v">$1,240</div></div>
+<div class="node"><div class="l">Gumroad</div><div class="v">$890</div></div>
+<div class="node"><div class="l">Lemon Sq</div><div class="v">$310</div></div>
+<div class="node"><div class="l">Newsletter</div><div class="v">$400</div></div></div>
+<div class="col c2"><div class="node net"><div class="l">Gross → net</div><div class="v">$3,840</div><div style="font-size:12px;color:#8fd0bf;margin-top:4px">after $58 AI cost</div></div></div>
+<div class="col c3">
+<div class="node" style="border-color:rgba(255,120,120,.4)"><div class="l">Tax set-aside (~28%)</div><div class="v" style="color:#ff8c8c">$1,075</div></div>
+<div class="node net"><div class="l">Keep · profit</div><div class="v">$2,765</div></div></div>
+</div>
+<div class="bar"><span style="color:#46e0a0">🎙</span><input placeholder="Ask Jarvis about the money…"><span style="color:#4f8a72;font-size:12px">⌘K</span></div>
+</body></html>

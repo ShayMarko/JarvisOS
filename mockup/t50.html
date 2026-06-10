@@ -1,0 +1,31 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T50</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#dff1ff;background:radial-gradient(900px 900px at 50% 50%,#06182e,#01060e)}
+.top{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;padding:22px 36px;z-index:6}
+.wm{font-size:18px;font-weight:800;letter-spacing:4px;color:#6fe0ff}.st{font-size:12px;letter-spacing:2px;color:#4e86a8}
+.stage{position:absolute;inset:0;display:grid;place-items:center}
+.reactor{position:relative;width:520px;height:520px;border-radius:50%;display:grid;place-items:center}
+.r{position:absolute;border-radius:50%}
+.r1{inset:0;border:2px solid rgba(111,224,255,.25)}
+.r2{inset:50px;border:1px solid rgba(111,224,255,.5);box-shadow:0 0 40px rgba(111,224,255,.15) inset}
+.r3{inset:110px;border:6px solid rgba(111,224,255,.18);border-top-color:#6fe0ff;border-right-color:#6fe0ff}
+.r4{inset:160px;border:2px dashed rgba(111,224,255,.3)}
+.seg{position:absolute;inset:30px;border-radius:50%;background:conic-gradient(from 0deg,#6fe0ff 0 8%,transparent 8% 12.5%,#6fe0ff 12.5% 20.5%,transparent 20.5% 25%,#6fe0ff 25% 33%,transparent 33% 37.5%,#6fe0ff 37.5% 45.5%,transparent 45.5% 50%,#6fe0ff 50% 58%,transparent 58% 62.5%,#6fe0ff 62.5% 70.5%,transparent 70.5% 75%,#6fe0ff 75% 83%,transparent 83% 87.5%,#6fe0ff 87.5% 95.5%,transparent 95.5% 100%);opacity:.35;-webkit-mask:radial-gradient(circle,transparent 56%,#000 57%,#000 66%,transparent 67%)}
+.core{width:150px;height:150px;border-radius:50%;background:radial-gradient(circle at 50% 42%,#ffffff,#9becff 35%,#2b9fe0 70%,#13628f);box-shadow:0 0 90px rgba(111,224,255,.7),0 0 160px rgba(111,224,255,.35),inset 0 0 30px rgba(255,255,255,.6);z-index:3}
+.tag{position:absolute;font-size:11px;letter-spacing:1px;color:#bfeaff;background:rgba(6,24,46,.7);border:1px solid rgba(111,224,255,.3);border-radius:99px;padding:6px 12px}
+.greet{position:fixed;bottom:96px;left:0;right:0;text-align:center;z-index:6}.greet h1{font-size:18px;font-weight:300}.greet h1 b{color:#6fe0ff;font-weight:600}.greet p{font-size:12px;color:#4e86a8;margin-top:3px;letter-spacing:1px}
+.bar{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);width:480px;display:flex;align-items:center;gap:12px;background:rgba(6,22,42,.85);border:1px solid rgba(111,224,255,.3);border-radius:14px;padding:11px 15px;z-index:6}
+.bar input{flex:1;background:0;border:0;outline:0;color:#dff1ff;font-size:14px}.bar input::placeholder{color:#4e86a8}
+</style></head><body>
+<div class="top"><div class="wm">J A R V I S</div><div class="st">● ONLINE · OPUS · CORE STABLE</div></div>
+<div class="stage"><div class="reactor">
+<div class="r r1"></div><div class="seg"></div><div class="r r2"></div><div class="r r3"></div><div class="r r4"></div>
+<div class="core"></div>
+<div class="tag" style="top:6%;left:50%;transform:translateX(-50%)">◈ $3,840 · ROI 4.2×</div>
+<div class="tag" style="top:46%;right:-30px">⚠ 3 need you</div>
+<div class="tag" style="bottom:6%;left:50%;transform:translateX(-50%)">≋ 2 jobs · 51 agents</div>
+<div class="tag" style="top:46%;left:-30px">⊞ 26 connectors</div>
+</div></div>
+<div class="greet"><h1>Good evening, <b>Shay</b>.</h1><p>ALL SYSTEMS NOMINAL · STANDING BY</p></div>
+<div class="bar"><span style="color:#6fe0ff">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#4e86a8;font-size:12px">⌘K</span></div>
+</body></html>

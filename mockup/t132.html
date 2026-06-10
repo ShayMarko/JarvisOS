@@ -1,0 +1,53 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T132</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e8edf4;background:#0a0c11}
+.top{display:flex;align-items:center;gap:14px;padding:18px 36px}
+.wm{font-size:17px;font-weight:800;letter-spacing:3px;color:#7c9cff}.st{font-size:12px;color:#5b6678}
+.r{margin-left:auto;font-size:13px;color:#8a96a8}
+.head{text-align:center;padding:4px 36px 14px}
+.head h1{font-size:22px;font-weight:700}.head h1 b{color:#7c9cff}.head p{font-size:13px;color:#6b7888;margin-top:3px}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:0;margin:0 36px 26px;height:calc(100vh - 150px);position:relative}
+.vs{position:absolute;left:50%;top:24px;transform:translateX(-50%);z-index:5;width:46px;height:46px;border-radius:50%;background:#11151d;border:1px solid #2a3445;display:flex;align-items:center;justify-content:center;font-weight:800;color:#9aa6b4;font-size:13px}
+.pane{padding:26px 30px}
+.pl{border-right:1px solid #161d27}
+.tag{display:inline-block;font-size:11px;letter-spacing:1px;font-weight:700;padding:4px 12px;border-radius:8px}
+.tA{background:rgba(124,156,255,.16);color:#7c9cff}.tB{background:rgba(70,224,160,.16);color:#46e0a0}
+.name{font-size:24px;font-weight:800;letter-spacing:-.5px;margin:10px 0 2px}
+.sub{font-size:13px;color:#6b7888}
+.big{font-size:46px;font-weight:800;letter-spacing:-2px;margin:22px 0 4px}
+.metric{margin-top:18px}
+.ml{display:flex;justify-content:space-between;font-size:12px;color:#9aa6b4;margin-bottom:6px}
+.ml b{color:#cdd6e2;font-variant-numeric:tabular-nums}
+.diff{height:10px;border-radius:6px;background:#161d27;overflow:hidden;display:flex}
+.diff i{height:100%}
+.win{color:#46e0a0;font-size:11px;font-weight:700;margin-left:6px}
+.lose{color:#ff7a8c}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS</div><div class="st">● Online · Opus · 20:34</div><div class="r">Compare · agents</div></div>
+<div class="head"><h1>Which lane earns harder, <b>Shay?</b></h1><p>Executive Assistant vs Newsletter · this month, side by side</p></div>
+<div class="compare">
+  <div class="vs">VS</div>
+  <div class="pane pl">
+    <span class="tag tA">AGENT A</span>
+    <div class="name">Executive Assistant</div>
+    <div class="sub">Invoicing · scheduling · inbox · via Resend</div>
+    <div class="big" style="color:#7c9cff">$1,240</div>
+    <div class="sub">Revenue attributed this month</div>
+    <div class="metric"><div class="ml"><span>Revenue</span><b>$1,240 <span class="win">+ leads</span></b></div><div class="diff"><i style="width:76%;background:#7c9cff"></i></div></div>
+    <div class="metric"><div class="ml"><span>AI cost</span><b>$22</b></div><div class="diff"><i style="width:38%;background:#f5b34a"></i></div></div>
+    <div class="metric"><div class="ml"><span>ROI</span><b>56× <span class="win">▲</span></b></div><div class="diff"><i style="width:92%;background:#46e0a0"></i></div></div>
+    <div class="metric"><div class="ml"><span>Actions needing you</span><b>1 <span class="lose">CRIT</span></b></div><div class="diff"><i style="width:20%;background:#ff7a8c"></i></div></div>
+  </div>
+  <div class="pane">
+    <span class="tag tB">AGENT B</span>
+    <div class="name">Newsletter</div>
+    <div class="sub">Issue #14 queued · paid subscriptions</div>
+    <div class="big" style="color:#46e0a0">$400</div>
+    <div class="sub">Revenue attributed this month</div>
+    <div class="metric"><div class="ml"><span>Revenue</span><b>$400</b></div><div class="diff"><i style="width:25%;background:#46e0a0"></i></div></div>
+    <div class="metric"><div class="ml"><span>AI cost</span><b>$14 <span class="win">cheaper</span></b></div><div class="diff"><i style="width:24%;background:#f5b34a"></i></div></div>
+    <div class="metric"><div class="ml"><span>ROI</span><b>29×</b></div><div class="diff"><i style="width:48%;background:#46e0a0"></i></div></div>
+    <div class="metric"><div class="ml"><span>Actions needing you</span><b>0 <span class="win">clear</span></b></div><div class="diff"><i style="width:4%;background:#46e0a0"></i></div></div>
+  </div>
+</div>
+</body></html>

@@ -1,0 +1,32 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T31</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e8e0ff;background:radial-gradient(800px 800px at 50% 50%,#1a1338,#06040e)}
+.top{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;padding:22px 34px;z-index:5}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#b9a0ff}.st{font-size:12px;color:#7a6fb0}
+.stage{position:absolute;inset:0;display:grid;place-items:center}
+.pie{position:relative;width:480px;height:480px;border-radius:50%}
+.seg{position:absolute;inset:0;border-radius:50%}
+.center{position:absolute;inset:150px;border-radius:50%;background:radial-gradient(circle at 50% 40%,#f0ecff,#b9a0ff 50%,#5a3fb0);display:grid;place-items:center;box-shadow:0 0 60px rgba(150,120,255,.5);z-index:3}
+.center b{font-size:13px;color:#1a0f30;font-weight:800;letter-spacing:1px}
+.lab{position:absolute;text-align:center;z-index:2;transform:translate(-50%,-50%)}
+.lab .i{font-size:22px}.lab .t{font-size:12px;color:#cabff0}.lab .v{font-size:15px;font-weight:700}
+.spoke{position:absolute;left:50%;top:50%;width:1px;height:240px;background:rgba(150,120,255,.18);transform-origin:top}
+.greet{position:fixed;bottom:96px;left:0;right:0;text-align:center;z-index:5}.greet h1{font-size:18px;font-weight:300}.greet h1 b{color:#b9a0ff;font-weight:600}.greet p{font-size:12px;color:#7a6fb0;margin-top:3px}
+.bar{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);width:480px;display:flex;align-items:center;gap:12px;background:rgba(20,14,40,.8);border:1px solid rgba(150,120,255,.3);border-radius:14px;padding:11px 15px;z-index:5}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e8e0ff;font-size:14px}.bar input::placeholder{color:#6a5fa0}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · RADIAL</div><div class="st">● ONLINE · OPUS</div></div>
+<div class="stage"><div class="pie">
+<div class="seg" style="background:conic-gradient(from 0deg, rgba(185,160,255,.22) 0 60deg, rgba(110,200,255,.18) 60deg 120deg, rgba(255,140,210,.18) 120deg 180deg, rgba(70,224,160,.18) 180deg 240deg, rgba(255,200,90,.18) 240deg 300deg, rgba(150,160,255,.18) 300deg 360deg);border:1px solid rgba(150,120,255,.25)"></div>
+<div class="spoke" style="transform:rotate(60deg)"></div><div class="spoke" style="transform:rotate(120deg)"></div><div class="spoke" style="transform:rotate(180deg)"></div><div class="spoke" style="transform:rotate(240deg)"></div><div class="spoke" style="transform:rotate(300deg)"></div><div class="spoke"></div>
+<div class="lab" style="left:72%;top:24%"><div class="i">◈</div><div class="t">Money</div><div class="v">$3,840</div></div>
+<div class="lab" style="left:90%;top:62%"><div class="i">⚇</div><div class="t">Agents</div><div class="v">51</div></div>
+<div class="lab" style="left:62%;top:90%"><div class="i">≋</div><div class="t">Jobs</div><div class="v">2</div></div>
+<div class="lab" style="left:24%;top:78%"><div class="i">⚠</div><div class="t">Needs you</div><div class="v">3</div></div>
+<div class="lab" style="left:8%;top:38%"><div class="i">⊞</div><div class="t">Connectors</div><div class="v">26</div></div>
+<div class="lab" style="left:38%;top:10%"><div class="i">✉</div><div class="t">Inbox</div><div class="v">3</div></div>
+<div class="center"><b>JARVIS</b></div>
+</div></div>
+<div class="greet"><h1>Good evening, <b>Shay</b>.</h1><p>ROI 4.2× · standing by</p></div>
+<div class="bar"><span style="color:#b9a0ff">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#6a5fa0;font-size:12px">⌘K</span></div>
+</body></html>

@@ -1,0 +1,63 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T100</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Helvetica Neue',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e8eef2;background:#0b1016}
+.top{display:flex;align-items:center;gap:14px;padding:18px 34px}
+.wm{font-size:17px;font-weight:800;letter-spacing:3px;color:#5fd0c0}
+.sub{font-size:12px;color:#5f7488}.r{margin-left:auto;font-size:12px;color:#5f7488}
+.legend{display:flex;gap:20px;padding:2px 34px 8px;font-size:12px;color:#9aa6b2}
+.legend i{display:inline-block;width:18px;height:4px;border-radius:2px;margin-right:7px;vertical-align:3px}
+.map{height:calc(100vh - 92px);padding:0 20px}
+svg{width:100%;height:100%}
+.stn{font-size:12.5px;fill:#cdd6de;font-weight:600}
+.stn.s{font-size:11px;fill:#8a98a6;font-weight:400}
+.line-lbl{font-size:11px;font-weight:800;letter-spacing:1px}
+.crit{fill:#ff8c8c;font-weight:800}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS</div><div class="sub">workflow transit map · lines = money lanes · stations = steps</div><div class="r">● Online · Opus · 20:34 · Tue Jun 09</div></div>
+<div class="legend"><span><i style="background:#46e0a0"></i>Newsletter lane</span><span><i style="background:#8a98ff"></i>Micro-SaaS lane</span><span><i style="background:#ffb454"></i>POD trend lane</span><span><i style="background:#ff6b81"></i>Needs-you interchange</span></div>
+<div class="map">
+<svg viewBox="0 0 1360 720" preserveAspectRatio="xMidYMid meet">
+<defs><filter id="g"><feGaussianBlur stdDeviation="2"/></filter></defs>
+<!-- LINES -->
+<g fill="none" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+<!-- newsletter (green) horizontal top -->
+<path d="M110,150 H360 L460,250 H820 L920,150 H1240" stroke="#46e0a0"/>
+<!-- micro-saas (blue) middle -->
+<path d="M110,380 H360 L460,250 M460,250 L560,380 H980 L1080,480 H1240" stroke="#8a98ff"/>
+<!-- POD (amber) bottom -->
+<path d="M110,600 H560 L660,500 H980 L1080,480" stroke="#ffb454"/>
+</g>
+<!-- interchange highlight ring at gross→net -->
+<circle cx="460" cy="250" r="18" fill="none" stroke="#fff" stroke-width="3"/>
+<circle cx="1080" cy="480" r="14" fill="none" stroke="#ff6b81" stroke-width="3"/>
+<!-- STATIONS -->
+<g>
+<!-- newsletter -->
+<circle cx="110" cy="150" r="7" fill="#0b1016" stroke="#46e0a0" stroke-width="3.5"/><text class="stn" x="110" y="128" text-anchor="middle">Draft #14</text>
+<circle cx="360" cy="150" r="7" fill="#0b1016" stroke="#46e0a0" stroke-width="3.5"/><text class="stn" x="360" y="128" text-anchor="middle">Critic pass</text>
+<circle cx="820" cy="250" r="7" fill="#0b1016" stroke="#46e0a0" stroke-width="3.5"/><text class="stn" x="820" y="232" text-anchor="middle">Resend send</text>
+<circle cx="920" cy="150" r="7" fill="#0b1016" stroke="#46e0a0" stroke-width="3.5"/><text class="stn s" x="920" y="128" text-anchor="middle">$400 collected</text>
+<circle cx="1240" cy="150" r="9" fill="#46e0a0"/><text class="stn" x="1240" y="128" text-anchor="middle">Net +$400</text>
+<!-- micro-saas -->
+<circle cx="110" cy="380" r="7" fill="#0b1016" stroke="#8a98ff" stroke-width="3.5"/><text class="stn" x="110" y="412" text-anchor="middle">habit-tracker 72%</text>
+<circle cx="360" cy="380" r="7" fill="#0b1016" stroke="#8a98ff" stroke-width="3.5"/><text class="stn s" x="360" y="412" text-anchor="middle">green-gate</text>
+<circle cx="560" cy="380" r="7" fill="#0b1016" stroke="#8a98ff" stroke-width="3.5"/><text class="stn s" x="560" y="412" text-anchor="middle">Cloudflare deploy</text>
+<circle cx="980" cy="380" r="7" fill="#0b1016" stroke="#8a98ff" stroke-width="3.5"/><text class="stn" x="980" y="362" text-anchor="middle">Stripe billing</text>
+<!-- POD -->
+<circle cx="110" cy="600" r="7" fill="#0b1016" stroke="#ffb454" stroke-width="3.5"/><text class="stn" x="110" y="630" text-anchor="middle">Trend scan</text>
+<circle cx="560" cy="600" r="7" fill="#0b1016" stroke="#ffb454" stroke-width="3.5"/><text class="stn s" x="560" y="630" text-anchor="middle">Design + mockup</text>
+<circle cx="660" cy="500" r="7" fill="#0b1016" stroke="#ffb454" stroke-width="3.5"/><text class="stn s" x="660" y="482" text-anchor="middle">Gumroad listing $39</text>
+<!-- INTERCHANGES -->
+<text class="stn" x="460" y="236" text-anchor="middle" style="font-weight:800">Gross → Net</text>
+<text class="stn s" x="460" y="288" text-anchor="middle">$3,840 · ROI 4.2×</text>
+<text class="crit" x="1080" y="462" text-anchor="middle">⚑ NEEDS YOU</text>
+<text class="stn s" x="1080" y="510" text-anchor="middle">Invoice → 14 · $1,240</text>
+<circle cx="1240" cy="480" r="9" fill="#8a98ff"/><text class="stn" x="1240" y="510" text-anchor="middle">Publish · Deploy</text>
+</g>
+<!-- line labels -->
+<text class="line-lbl" x="60" y="154" fill="#46e0a0">N</text>
+<text class="line-lbl" x="60" y="384" fill="#8a98ff">S</text>
+<text class="line-lbl" x="60" y="604" fill="#ffb454">P</text>
+</svg>
+</div>
+</body></html>

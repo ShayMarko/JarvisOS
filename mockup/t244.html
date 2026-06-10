@@ -1,0 +1,54 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T244</title><style>
+*{margin:0;box-sizing:border-box;font-family:Georgia,'Times New Roman',serif}
+body{height:100vh;overflow:hidden;color:#e4d4b0;background:#1a140c}
+.lib{height:100vh;display:grid;grid-template-columns:1.5fr 1fr;padding:34px 44px;gap:40px;position:relative;background:radial-gradient(ellipse at 30% 20%,#2a2014 0%,#140e08 70%)}
+.lib::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 25% 25%,rgba(220,170,90,.12) 0%,transparent 45%);pointer-events:none}
+.left{position:relative;z-index:2;display:flex;flex-direction:column}
+.top{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid #4a3a22;padding-bottom:12px}
+.wm{font-size:24px;letter-spacing:8px;color:#d8b878;font-variant:small-caps;font-weight:bold}
+.status{font-size:11px;letter-spacing:2px;color:#8a7448;font-style:italic;margin-left:auto}
+.drop{font-size:64px;font-style:italic;line-height:1;margin:30px 0 8px;color:#e8d8b4}
+.drop b{color:#d8b878}
+.lede{font-size:16px;line-height:1.6;color:#bca878;font-style:italic;max-width:34ch;border-left:2px solid #5a4528;padding-left:16px;margin-top:8px}
+.figures{margin-top:auto;display:flex;gap:34px;border-top:1px solid #4a3a22;padding-top:18px}
+.fig .v{font-size:34px;color:#d8b878;font-style:italic}.fig .l{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#8a7448;font-variant:small-caps}
+.right{position:relative;z-index:2;border-left:1px solid #4a3a22;padding-left:36px;display:flex;flex-direction:column;gap:22px}
+.chap{}
+.ch{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#a88c54;font-variant:small-caps;border-bottom:1px solid #4a3a22;padding-bottom:6px;margin-bottom:10px}
+.ch::before{content:"§ ";color:#d8b878}
+.entry{display:flex;justify-content:space-between;font-size:14.5px;padding:7px 0;border-bottom:1px dotted #3a2c18;color:#cdb888}
+.entry .pg{font-style:italic;color:#9a8050}
+.crit{color:#c9743c}
+.foot{position:absolute;left:44px;right:44px;bottom:24px;z-index:3;display:flex;align-items:center;gap:14px;border-top:1px solid #4a3a22;padding-top:14px}
+.foot input{flex:1;background:0;border:0;outline:0;color:#e4d4b0;font-size:15px;font-style:italic}
+.foot input::placeholder{color:#7a6440}
+</style></head><body><div class="lib">
+<div class="left">
+  <div class="top"><div class="wm">Jarvis</div><div class="status">● Online · Opus · 20:34 · Tue, the ninth of June</div></div>
+  <div class="drop">Good evening,<br><b>Shay.</b></div>
+  <div class="lede">The ledger is favourable this fortnight — net three thousand eight hundred and forty dollars, a return of 4.2 times, risen eighteen parts in the hundred.</div>
+  <div class="figures">
+    <div class="fig"><div class="v">$3,840</div><div class="l">Net · month</div></div>
+    <div class="fig"><div class="v">4.2×</div><div class="l">Return</div></div>
+    <div class="fig"><div class="v">$58</div><div class="l">AI · of $80</div></div>
+    <div class="fig"><div class="v">7</div><div class="l">Products</div></div>
+  </div>
+</div>
+<div class="right">
+  <div class="chap"><div class="ch">Matters Requiring Your Hand</div>
+    <div class="entry crit"><span>Invoice unto fourteen patrons</span><span class="pg">$1,240</span></div>
+    <div class="entry"><span>Publish the SaaS starter</span><span class="pg">$39</span></div>
+    <div class="entry"><span>Deploy the micro-API</span><span class="pg">Cloudflare</span></div>
+  </div>
+  <div class="chap"><div class="ch">Labours Underway</div>
+    <div class="entry"><span>The habit-tracker</span><span class="pg">72%</span></div>
+    <div class="entry"><span>Research, note-taking niche</span><span class="pg">40%</span></div>
+    <div class="entry"><span>Newsletter, the fourteenth</span><span class="pg">queued</span></div>
+  </div>
+  <div class="chap"><div class="ch">The Household</div>
+    <div class="entry"><span>Agents in service</span><span class="pg">51</span></div>
+    <div class="entry"><span>Connectors</span><span class="pg">26 · 9 live</span></div>
+  </div>
+</div>
+<div class="foot"><span style="color:#d8b878">🖊</span><input placeholder="Ask Jarvis, or inscribe a /command…"><span style="color:#8a7448">⌘K</span></div>
+</div></body></html>

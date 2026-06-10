@@ -1,0 +1,23 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T78</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#eef3fb;background:#04060c}
+.wall{position:fixed;inset:0;background:
+ radial-gradient(1200px 800px at 75% 25%,rgba(70,140,255,.4),transparent 55%),
+ radial-gradient(900px 800px at 20% 80%,rgba(150,90,255,.35),transparent 55%),
+ radial-gradient(700px 600px at 50% 50%,rgba(40,200,200,.18),transparent 60%),
+ linear-gradient(160deg,#070a18,#04060c)}
+.wall::after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.5) .5px,transparent .5px);background-size:46px 46px;opacity:.06}
+.clock{position:absolute;top:16%;left:0;right:0;text-align:center;z-index:2}
+.t{font-size:96px;font-weight:200;letter-spacing:2px;font-variant-numeric:tabular-nums}
+.d{font-size:14px;letter-spacing:4px;text-transform:uppercase;color:#b9c6e6;margin-top:-6px}
+.greet{position:absolute;top:46%;left:0;right:0;text-align:center;z-index:2}.greet h1{font-size:24px;font-weight:300}.greet h1 b{color:#7ab6ff}.greet p{color:#aeb9d8;font-size:13px;margin-top:6px}
+.dock{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);display:flex;gap:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:22px;padding:12px 16px;backdrop-filter:blur(24px);z-index:2}
+.dap{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;font-size:21px;background:rgba(30,40,70,.6);border:1px solid rgba(255,255,255,.12);position:relative}
+.dap.go{background:radial-gradient(circle at 50% 38%,#eafaff,#6cb6ff 50%,#1d5fae)}
+.badge{position:absolute;top:-3px;right:-3px;background:#ff6b81;color:#fff;font-size:10px;font-weight:700;width:17px;height:17px;border-radius:50%;display:grid;place-items:center}
+</style></head><body>
+<div class="wall"></div>
+<div class="clock"><div class="t">20:34</div><div class="d">Tuesday · June 09 · ● Jarvis Online · Opus</div></div>
+<div class="greet"><h1>Good evening, <b>Shay</b>.</h1><p>3 need you · 2 jobs running · ROI 4.2× — tap me or say “Hey Jarvis”</p></div>
+<div class="dock"><div class="dap go">J</div><div class="dap" style="position:relative">⚠<span class="badge">3</span></div><div class="dap">◈</div><div class="dap">⚇</div><div class="dap">≋</div><div class="dap" style="position:relative">🔔<span class="badge">3</span></div><div class="dap">⚙</div></div>
+</body></html>

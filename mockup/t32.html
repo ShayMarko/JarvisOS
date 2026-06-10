@@ -1,0 +1,25 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T32</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e8eef7;background:#070910}
+.stage{position:relative;height:100vh}
+.panel{position:absolute;top:-10%;height:120%;width:42%;display:flex;flex-direction:column;justify-content:center;padding:50px;transform:skewX(-9deg)}
+.panel>*{transform:skewX(9deg)}
+.p1{left:-3%;background:linear-gradient(160deg,#0e1730,#070b16);border-right:2px solid #2b6fff;padding-left:70px}
+.p2{left:30%;background:linear-gradient(160deg,#161022,#0b0814);border-right:2px solid #9b6cff;z-index:2}
+.p3{left:63%;background:linear-gradient(160deg,#07131a,#050b12);padding-left:80px}
+.k{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#6f86c0;font-weight:700}
+.wm{font-size:16px;font-weight:800;letter-spacing:3px;color:#5aa0ff;margin-bottom:18px}
+.h{font-size:30px;font-weight:800;line-height:1.05;margin:6px 0}.h b{color:#5aa0ff}
+.d{font-size:13px;color:#9fb0d0;line-height:1.5;max-width:240px;margin-top:8px}
+.big{font-size:40px;font-weight:800}.big small{font-size:14px;color:#9a8fc8}
+.go{margin-top:14px;display:inline-block;font-size:12px;font-weight:700;color:#070910;background:linear-gradient(135deg,#9b6cff,#5aa0ff);border-radius:10px;padding:9px 15px}
+.row{font-size:13px;color:#9fb0d0;padding:6px 0;display:flex;justify-content:space-between;width:200px}.row b{color:#cfe0f5}
+.bar{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:6;width:480px;display:flex;align-items:center;gap:12px;background:rgba(14,20,40,.85);border:1px solid rgba(120,150,255,.3);border-radius:14px;padding:11px 15px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e8eef7;font-size:14px}.bar input::placeholder{color:#5d6f9c}
+</style></head><body><div class="stage">
+<div class="panel p1"><div class="wm">JARVIS</div><div class="k">Good evening</div><div class="h"><b>Shay.</b></div><div class="d">3 things need you, 2 jobs running. ● Online · Opus.</div></div>
+<div class="panel p2"><div class="k">Critical · needs you</div><div class="h">Invoice → 14</div><div class="d">EA drafted via Resend. Bill the month.</div><span class="go">Approve & send →</span></div>
+<div class="panel p3"><div class="k">Money · month</div><div class="big">$3,840 <small>net</small></div><div class="row" style="margin-top:14px"><span>ROI</span><b style="color:#46dca0">4.2×</b></div><div class="row"><span>Agents</span><b>51</b></div><div class="row"><span>Connectors</span><b>26</b></div></div>
+</div>
+<div class="bar"><span style="color:#5aa0ff">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#5d6f9c;font-size:12px">⌘K</span></div>
+</body></html>

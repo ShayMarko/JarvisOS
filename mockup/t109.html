@@ -1,0 +1,60 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T109</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,-apple-system,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6ecf3;background:#0a0b0e;background-image:linear-gradient(#0c0e12,#08090c)}
+.top{display:flex;align-items:center;gap:14px;padding:15px 30px;border-bottom:1px solid #1a1d24}
+.wm{font-size:16px;font-weight:800;letter-spacing:3px;color:#ff9f43}
+.sub{font-size:12px;color:#7a8290}
+.r{margin-left:auto;font-size:12px;color:#7a8290}.r b{color:#ff9f43}
+.console{padding:22px 30px;height:calc(100vh - 56px);display:flex;flex-direction:column}
+.mixer{flex:1;display:flex;gap:10px;background:#101216;border:1px solid #20242d;border-radius:14px;padding:18px 16px 14px;box-shadow:inset 0 1px 0 #2a2e38}
+.ch{flex:1;display:flex;flex-direction:column;align-items:center;gap:9px;border-right:1px solid #181b22;padding:0 4px}
+.ch:last-child{border:0}
+.cname{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#9aa3b0;font-weight:700;text-align:center}
+.knob{width:38px;height:38px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#3a3f4a,#16181f);border:1px solid #2a2e38;position:relative;box-shadow:0 2px 5px rgba(0,0,0,.5)}
+.knob::after{content:"";position:absolute;top:4px;left:50%;width:2px;height:10px;background:#ff9f43;transform-origin:bottom;border-radius:1px}
+.kl{font-size:9px;color:#5f6877;letter-spacing:1px}
+.meter{display:flex;gap:3px;height:120px;align-items:flex-end}
+.mcol{width:6px;border-radius:2px;background:linear-gradient(#101216 60%,transparent);position:relative}
+.fader{flex:1;width:36px;position:relative;border-radius:8px;background:linear-gradient(#0c0e12,#181b22);border:1px solid #20242d;min-height:160px}
+.track{position:absolute;left:50%;top:10px;bottom:10px;width:4px;transform:translateX(-50%);background:#23272f;border-radius:3px}
+.cap{position:absolute;left:50%;width:30px;height:16px;transform:translateX(-50%);border-radius:4px;background:linear-gradient(#4a505d,#22262f);border:1px solid #565d6c;box-shadow:0 2px 4px rgba(0,0,0,.6)}
+.cap::after{content:"";position:absolute;left:5px;right:5px;top:50%;height:2px;background:#ff9f43;transform:translateY(-50%)}
+.db{font-size:9px;color:#7a8290;font-variant-numeric:tabular-nums}
+.sm{display:flex;gap:5px}
+.sm span{font-size:8px;font-weight:700;width:18px;height:14px;line-height:14px;text-align:center;border-radius:3px;background:#1a1d24;color:#5f6877}
+.master{background:#15171d;margin-left:6px;border-radius:8px}
+.foot{display:flex;align-items:center;gap:12px;margin-top:14px;background:#101216;border:1px solid #20242d;border-radius:12px;padding:11px 16px;font-size:13px;color:#7a8290}
+.foot input{flex:1;background:0;border:0;outline:0;color:#e6ecf3;font-size:14px}.foot input::placeholder{color:#5f6877}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS</div><div class="sub">MIXER · 51 agents · 26 connectors</div><div class="r">Net <b>$3,840</b> · AI cost <b>$58/$80</b> · ● Opus</div></div>
+<div class="console"><div class="mixer">
+<div class="ch"><div class="cname">Code</div><div class="knob" style="transform:rotate(35deg)"></div><div class="kl">pan</div>
+<div class="meter"><div class="mcol" style="height:96px;background:linear-gradient(#33d18a,#ffb347 75%,#ff5b6e)"></div><div class="mcol" style="height:80px;background:linear-gradient(#33d18a,#ffb347 80%)"></div></div>
+<div class="fader"><div class="track"></div><div class="cap" style="top:24%"></div></div><div class="db">+4 dB</div><div class="sm"><span style="color:#ff9f43;background:#3a2a14">M</span><span>S</span></div></div>
+
+<div class="ch"><div class="cname">Scout</div><div class="knob" style="transform:rotate(-20deg)"></div><div class="kl">pan</div>
+<div class="meter"><div class="mcol" style="height:58px;background:linear-gradient(#33d18a,#ffb347 90%)"></div><div class="mcol" style="height:64px;background:linear-gradient(#33d18a,#ffb347 88%)"></div></div>
+<div class="fader"><div class="track"></div><div class="cap" style="top:48%"></div></div><div class="db">−2 dB</div><div class="sm"><span>M</span><span>S</span></div></div>
+
+<div class="ch"><div class="cname">EA</div><div class="knob" style="transform:rotate(10deg)"></div><div class="kl">pan</div>
+<div class="meter"><div class="mcol" style="height:108px;background:linear-gradient(#33d18a,#ffb347 70%,#ff5b6e)"></div><div class="mcol" style="height:100px;background:linear-gradient(#33d18a,#ffb347 75%,#ff5b6e)"></div></div>
+<div class="fader"><div class="track"></div><div class="cap" style="top:14%"></div></div><div class="db">+6 dB</div><div class="sm"><span style="color:#ff5b6e;background:#3a1418">M</span><span>S</span></div></div>
+
+<div class="ch"><div class="cname">Finance</div><div class="knob" style="transform:rotate(0deg)"></div><div class="kl">pan</div>
+<div class="meter"><div class="mcol" style="height:72px;background:linear-gradient(#33d18a,#ffb347 92%)"></div><div class="mcol" style="height:68px;background:linear-gradient(#33d18a,#ffb347 92%)"></div></div>
+<div class="fader"><div class="track"></div><div class="cap" style="top:40%"></div></div><div class="db">0 dB</div><div class="sm"><span>M</span><span>S</span></div></div>
+
+<div class="ch"><div class="cname">News<br>letter</div><div class="knob" style="transform:rotate(-35deg)"></div><div class="kl">pan</div>
+<div class="meter"><div class="mcol" style="height:44px;background:linear-gradient(#33d18a,#ffb347 95%)"></div><div class="mcol" style="height:50px;background:linear-gradient(#33d18a,#ffb347 95%)"></div></div>
+<div class="fader"><div class="track"></div><div class="cap" style="top:56%"></div></div><div class="db">−4 dB</div><div class="sm"><span>M</span><span style="color:#3fb8ff;background:#142a3a">S</span></div></div>
+
+<div class="ch"><div class="cname">Design</div><div class="knob" style="transform:rotate(25deg)"></div><div class="kl">pan</div>
+<div class="meter"><div class="mcol" style="height:62px;background:linear-gradient(#33d18a,#ffb347 90%)"></div><div class="mcol" style="height:56px;background:linear-gradient(#33d18a,#ffb347 92%)"></div></div>
+<div class="fader"><div class="track"></div><div class="cap" style="top:46%"></div></div><div class="db">−1 dB</div><div class="sm"><span>M</span><span>S</span></div></div>
+
+<div class="ch master"><div class="cname" style="color:#ff9f43">MASTER</div><div class="knob" style="transform:rotate(15deg);border-color:#ff9f43"></div><div class="kl">out</div>
+<div class="meter"><div class="mcol" style="width:8px;height:114px;background:linear-gradient(#33d18a,#ffb347 70%,#ff5b6e)"></div><div class="mcol" style="width:8px;height:110px;background:linear-gradient(#33d18a,#ffb347 72%,#ff5b6e)"></div></div>
+<div class="fader" style="background:linear-gradient(#1a1014,#2a1a14)"><div class="track" style="background:#3a2a1a"></div><div class="cap" style="top:18%"></div></div><div class="db">+5 dB</div><div class="sm"><span>REC</span></div></div>
+</div>
+<div class="foot"><span style="color:#ff9f43">🎙</span><input placeholder="Ask Jarvis, or type a /command…  ·  say “Hey Jarvis”"><span>⌘K</span></div>
+</div></body></html>

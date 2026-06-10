@@ -1,0 +1,73 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T148</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Comic Sans MS','Segoe Print','Bradley Hand',cursive,system-ui}
+body{height:100vh;overflow:hidden;background:#fbfaf5;color:#2b2b2b}
+.paper{position:relative;height:100vh;padding:28px 36px;background:#fbfaf5;
+background-image:radial-gradient(circle,rgba(0,0,0,.03) 1px,transparent 1px);background-size:22px 22px}
+.wrap{height:100%;display:grid;grid-template-columns:1.25fr 1fr 1fr;grid-template-rows:auto 1fr auto;gap:20px}
+.sk{border:2.5px solid #2b2b2b;border-radius:14px 10px 16px 8px/8px 16px 10px 14px;background:#fff;padding:18px 20px;position:relative;
+box-shadow:3px 3px 0 rgba(0,0,0,.06)}
+.top{grid-column:1/-1;display:flex;align-items:center;gap:18px;border:none;background:0;box-shadow:none;padding:0}
+.wm{font-size:34px;font-weight:800;letter-spacing:1px;border:2.5px solid #2b2b2b;border-radius:30px 12px 30px 12px;padding:6px 22px;background:#fff;transform:rotate(-1.5deg);box-shadow:3px 3px 0 rgba(0,0,0,.08)}
+.st{font-size:13px;color:#666;transform:rotate(.5deg)}
+.r{margin-left:auto;font-size:13px;color:#888;transform:rotate(-1deg)}
+.note{position:absolute;font-size:12px;color:#3a6ad6;transform:rotate(-4deg)}
+.arrow{font-size:18px;color:#3a6ad6}
+.greet{font-size:34px;font-weight:800;line-height:1.05}
+.greet u{text-decoration:underline wavy #e0563a}
+.net{margin-top:18px;border:2.5px dashed #2b2b2b;border-radius:12px;padding:14px 16px}
+.net .v{font-size:46px;font-weight:800;color:#e0563a}
+.net .d{font-size:14px;color:#555}
+.src{display:flex;justify-content:space-between;font-size:14px;padding:8px 0;border-bottom:2px dotted #ccc}.src:last-child{border:0}.src b{font-weight:800}
+.h{font-size:15px;font-weight:800;margin-bottom:16px;display:inline-block;border-bottom:3px solid #2b2b2b;padding-bottom:3px;transform:rotate(-.8deg)}
+.task{display:flex;align-items:flex-start;gap:10px;font-size:15px;padding:11px 0;border-bottom:1.5px solid #eee}
+.chk{width:18px;height:18px;border:2.5px solid #2b2b2b;border-radius:5px;flex:none;margin-top:2px}
+.chk.x{position:relative}.chk.x::after{content:"✗";position:absolute;left:1px;top:-4px;font-size:16px;color:#e0563a}
+.tag{font-size:11px;font-weight:800;margin-left:auto;color:#e0563a;transform:rotate(2deg)}
+.tsub{font-size:11px;color:#888}
+.j{margin-bottom:18px}
+.j-h{display:flex;justify-content:space-between;font-size:15px;font-weight:700;margin-bottom:8px}
+.j-h span{color:#888;font-size:12px}
+.track{height:20px;border:2.5px solid #2b2b2b;border-radius:12px;background:#fff;overflow:hidden}
+.track i{display:block;height:100%;background:repeating-linear-gradient(45deg,#3a6ad6 0 6px,#fff 6px 8px)}
+.sys{display:flex;gap:12px;margin-top:6px}
+.sys .s{flex:1;border:2.5px solid #2b2b2b;border-radius:50% 12px 50% 12px/12px 50% 12px 50%;padding:12px;text-align:center}
+.sys .v{font-size:24px;font-weight:800}.sys .k{font-size:11px;color:#777}
+.foot{grid-column:1/-1;display:flex;align-items:center;gap:14px;border:2.5px solid #2b2b2b;border-radius:30px;background:#fff;padding:14px 22px;box-shadow:3px 3px 0 rgba(0,0,0,.08)}
+.foot input{flex:1;background:0;border:0;outline:0;font-size:16px;font-family:inherit;color:#2b2b2b}.foot input::placeholder{color:#aaa}
+.kk{font-size:13px;border:2.5px solid #2b2b2b;border-radius:8px;padding:4px 10px}
+</style></head><body>
+<div class="paper"><div class="wrap">
+<div class="sk top"><div class="wm">JARVIS</div><div class="st">● online · Opus · 20:34 · Tue Jun 09</div><div class="r">say "Hey Jarvis" ↝</div></div>
+
+<div class="sk">
+<span class="note" style="top:-12px;right:30px">today!</span>
+<div class="greet">Good evening,<br><u>Shay.</u></div>
+<div class="net"><div class="v">$3,840</div><div class="d">net / month · ROI 4.2× · ▲18% · AI $58/$80</div></div>
+<div class="h" style="margin-top:18px">where the money came from</div>
+<div class="src"><span>Stripe subs</span><b>$1,240</b></div>
+<div class="src"><span>Gumroad</span><b>$890</b></div>
+<div class="src"><span>Newsletter</span><b>$400</b></div>
+<div class="src"><span>Lemon Squeezy</span><b>$310</b></div>
+</div>
+
+<div class="sk">
+<span class="note" style="top:-10px;right:20px;color:#e0563a">do these first! <span class="arrow">↓</span></span>
+<div class="h">3 things need you</div>
+<div class="task"><span class="chk x"></span><div><div>Send invoice → 14 customers</div><div class="tsub">$1,240 · EA via Resend</div></div><span class="tag">!! CRIT</span></div>
+<div class="task"><span class="chk"></span><div><div>Publish SaaS starter → Gumroad</div><div class="tsub">$39</div></div><span class="tag" style="color:#d99a00">HIGH</span></div>
+<div class="task" style="border:0"><span class="chk"></span><div><div>Deploy micro-API → Cloudflare</div><div class="tsub">edge worker</div></div><span class="tag" style="color:#d99a00">HIGH</span></div>
+<div class="note" style="position:static;display:block;margin-top:14px;transform:rotate(-1deg)">★ tip: "REST API + auth" guide drove 61% of traffic — double down?</div>
+</div>
+
+<div class="sk">
+<div class="h">jobs running</div>
+<div class="j"><div class="j-h">habit-tracker app <span>Code · 72%</span></div><div class="track"><i style="width:72%"></i></div></div>
+<div class="j"><div class="j-h">research niche <span>Scout · 40%</span></div><div class="track"><i style="width:40%;background:repeating-linear-gradient(45deg,#e0563a 0 6px,#fff 6px 8px)"></i></div></div>
+<div class="j"><div class="j-h">newsletter #14 <span>queued</span></div><div class="track"><i style="width:6%;background:#ccc"></i></div></div>
+<div class="h" style="margin-top:8px">system</div>
+<div class="sys"><div class="s"><div class="v">51</div><div class="k">agents</div></div><div class="s"><div class="v">9/26</div><div class="k">conns</div></div><div class="s"><div class="v">7</div><div class="k">live</div></div></div>
+</div>
+
+<div class="sk foot"><span style="font-size:18px">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span class="kk">⌘K</span></div>
+</div></div>
+</body></html>

@@ -1,0 +1,30 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T16</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#cfe9da;background:#05100b}
+.tick{display:flex;align-items:center;gap:30px;background:#071a12;border-bottom:1px solid rgba(60,220,140,.2);padding:9px 24px;font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tick b{color:#3ee08a}.up{color:#3ee08a}.dn{color:#ff6b81}.dim{color:#4f8a6c}
+.hero{display:flex;align-items:baseline;gap:24px;padding:18px 28px 8px}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#3ee08a}
+.bignum{font-size:48px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-1px}.bignum small{font-size:16px;color:#5f9c7c}
+.delta{color:#3ee08a;font-size:15px;font-weight:700}
+.greet{margin-left:auto;text-align:right;color:#7fb89e;font-size:13px}.greet b{color:#dff;font-size:15px}
+.cols{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(60,220,140,.15);height:calc(100vh - 200px);margin:8px 0}
+.col{background:#05120c;padding:12px 14px;overflow:hidden}
+.ch{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#4f8a6c;border-bottom:1px solid rgba(60,220,140,.15);padding-bottom:8px;margin-bottom:8px}
+.r{display:flex;justify-content:space-between;font-size:12.5px;padding:6px 0;border-bottom:1px solid rgba(60,220,140,.06);font-variant-numeric:tabular-nums}
+.r .l{color:#bfe6d2}.r .v{color:#3ee08a;font-weight:600}
+.r.warn .v{color:#ffce5a}.r.bad .v{color:#ff6b81}
+.dock{display:flex;align-items:center;gap:12px;background:#071a12;border-top:1px solid rgba(60,220,140,.2);padding:12px 24px}
+.dock input{flex:1;background:0;border:0;outline:0;color:#cfe9da;font-size:14px}.dock input::placeholder{color:#4f8a6c}
+.snd{width:34px;height:34px;border-radius:9px;background:#3ee08a;display:grid;place-items:center;color:#05100b}
+</style></head><body>
+<div class="tick"><span><b>JARVIS</b> ●LIVE</span><span>NET <b class="up">$3,840 ▲18%</b></span><span>ROI <b class="up">4.2×</b></span><span>STRIPE <span class="up">+$1,240</span></span><span>GUMROAD <span class="up">+$890</span></span><span>AI-COST <span class="dn">$58/$80</span></span><span class="dim">PRODUCTS LIVE 7 · AGENTS 51 · CONNECTORS 26</span></div>
+<div class="hero"><div class="wm">JARVIS</div><div><div class="bignum">$3,840 <small>net · month</small></div></div><div class="delta">▲ 18%</div><div class="greet">Good evening, <b>Shay</b><br>3 need you · 2 jobs running</div></div>
+<div class="cols">
+<div class="col"><div class="ch">Needs you · 3</div><div class="r bad"><span class="l">Invoice → 14</span><span class="v">CRIT</span></div><div class="r warn"><span class="l">Publish starter</span><span class="v">HIGH</span></div><div class="r warn"><span class="l">Deploy API</span><span class="v">HIGH</span></div></div>
+<div class="col"><div class="ch">Revenue stream</div><div class="r"><span class="l">Stripe sub ×3</span><span class="v">+$1,240</span></div><div class="r"><span class="l">Gumroad ×6</span><span class="v">+$890</span></div><div class="r"><span class="l">Lemon Sq ×2</span><span class="v">+$310</span></div><div class="r"><span class="l">Newsletter spon</span><span class="v">+$400</span></div></div>
+<div class="col"><div class="ch">Jobs · live</div><div class="r"><span class="l">habit-tracker</span><span class="v">72%</span></div><div class="r"><span class="l">research niche</span><span class="v">40%</span></div><div class="r warn"><span class="l">newsletter #14</span><span class="v">queue</span></div></div>
+<div class="col"><div class="ch">Activity feed</div><div class="r"><span class="l">20:34 approvals</span><span class="v">3</span></div><div class="r"><span class="l">19:10 draft sent</span><span class="v">ok</span></div><div class="r"><span class="l">15:08 sale</span><span class="v">+$240</span></div><div class="r"><span class="l">09:00 briefing</span><span class="v">ok</span></div></div>
+</div>
+<div class="dock"><span style="color:#3ee08a">🎙</span><input placeholder="ask jarvis, or /command · say “hey jarvis”"><div class="snd">➤</div></div>
+</body></html>

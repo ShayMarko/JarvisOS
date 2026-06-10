@@ -279,6 +279,12 @@ jarvis:
     site: ${JARVIS_SEO_PERFORMANCE_SITE:}                 # Plausible site domain (blank = skip)
     period: ${JARVIS_SEO_PERFORMANCE_PERIOD:30d}
     top-pages: 5
+  # Recurring newsletter income lane (see JarvisNewsletterProperties). DEFAULT OFF. When armed, dispatches
+  # the Newsletter Studio agent on a schedule to research + write (+ send, approval-gated) an issue.
+  newsletter:
+    enabled: ${JARVIS_NEWSLETTER_ENABLED:false}
+    cron: ${JARVIS_NEWSLETTER_CRON:0 0 9 * * TUE}        # Tuesday 09:00 when armed
+    topic: ${JARVIS_NEWSLETTER_TOPIC:}                   # the niche/theme (blank = skip)
   # Nightly self-reflection (see JarvisReflectionProperties): review runs → distil durable lessons to memory.
   reflection:
     enabled: ${JARVIS_REFLECTION_ENABLED:true}

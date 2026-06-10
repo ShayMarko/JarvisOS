@@ -1,0 +1,67 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T134</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e8edf4;background:#0a0c11}
+.nav{display:flex;align-items:center;gap:28px;padding:16px 40px;border-bottom:1px solid #161d27;position:relative;z-index:20}
+.wm{font-size:17px;font-weight:800;letter-spacing:3px;color:#7c9cff}
+.nav a{font-size:14px;color:#9aa6b4;text-decoration:none;padding:6px 0}
+.nav a.on{color:#fff}.nav a.on::after{content:"▾";font-size:10px;margin-left:5px;color:#7c9cff}
+.r{margin-left:auto;display:flex;align-items:center;gap:16px;font-size:12px;color:#5b6678}
+.r .av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#7c9cff,#46e0a0);display:flex;align-items:center;justify-content:center;font-weight:900;color:#0a1020;font-size:12px}
+.mega{position:absolute;top:53px;left:40px;right:40px;background:#0e131b;border:1px solid #1d2531;border-radius:0 0 20px 20px;box-shadow:0 40px 90px rgba(0,0,0,.6);padding:30px 36px;display:grid;grid-template-columns:1.2fr 1fr 1fr 1.1fr;gap:36px;z-index:15}
+.col .ch{font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:#5b6678;margin-bottom:14px}
+.link{display:flex;align-items:center;gap:12px;padding:9px 0;text-decoration:none}
+.link .ic{width:32px;height:32px;border-radius:9px;background:#1a2230;display:flex;align-items:center;justify-content:center;font-size:14px;color:#7c9cff;flex-shrink:0}
+.link .t{font-size:14px;font-weight:600;color:#e8edf4}.link .s{font-size:11px;color:#6b7888}
+.link .amt{margin-left:auto;font-size:12px;color:#46e0a0;font-weight:700}
+.pill{font-size:8px;font-weight:700;padding:1px 6px;border-radius:9px;background:rgba(255,90,110,.18);color:#ff7a8c}
+.feat{background:radial-gradient(300px 200px at 80% 0%,rgba(70,224,160,.16),transparent),#11161f;border:1px solid #1d2533;border-radius:16px;padding:18px}
+.feat .net{font-size:34px;font-weight:800;letter-spacing:-1px}.feat .nsub{color:#46e0a0;font-size:12px;font-weight:600}
+.feat p{font-size:12px;color:#9aa6b4;line-height:1.5;margin-top:10px}
+/* page behind */
+.page{padding:60px 40px;opacity:.35}
+.ph{font-size:48px;font-weight:800;letter-spacing:-1px}
+.psub{font-size:15px;color:#6b7888;margin-top:8px}
+</style></head><body>
+<div class="nav">
+  <div class="wm">JARVIS</div>
+  <a href="#">Today</a>
+  <a href="#" class="on">Money</a>
+  <a href="#">Agents</a>
+  <a href="#">Connectors</a>
+  <a href="#">Jobs</a>
+  <div class="r"><span>● Opus · 20:34</span><div class="av">S</div></div>
+</div>
+<div class="mega">
+  <div class="col">
+    <div class="ch">Revenue sources</div>
+    <a class="link" href="#"><span class="ic">💳</span><div><div class="t">Stripe subscriptions</div><div class="s">14 active customers</div></div><span class="amt">$1,240</span></a>
+    <a class="link" href="#"><span class="ic">🛒</span><div><div class="t">Gumroad</div><div class="s">7 products live</div></div><span class="amt">$890</span></a>
+    <a class="link" href="#"><span class="ic">🍋</span><div><div class="t">Lemon Squeezy</div><div class="s">merchant-of-record</div></div><span class="amt">$310</span></a>
+    <a class="link" href="#"><span class="ic">✉</span><div><div class="t">Newsletter</div><div class="s">#14 queued</div></div><span class="amt">$400</span></a>
+  </div>
+  <div class="col">
+    <div class="ch">Actions</div>
+    <a class="link" href="#"><span class="ic">!</span><div><div class="t">Send invoice → 14 <span class="pill">CRIT</span></div><div class="s">EA via Resend</div></div></a>
+    <a class="link" href="#"><span class="ic">↑</span><div><div class="t">Publish SaaS starter</div><div class="s">to Gumroad · $39</div></div></a>
+    <a class="link" href="#"><span class="ic">⚡</span><div><div class="t">Deploy micro-API</div><div class="s">to Cloudflare</div></div></a>
+  </div>
+  <div class="col">
+    <div class="ch">Reports</div>
+    <a class="link" href="#"><span class="ic">📈</span><div><div class="t">ROI dashboard</div><div class="s">4.2× this month</div></div></a>
+    <a class="link" href="#"><span class="ic">$</span><div><div class="t">AI cost</div><div class="s">$58 / $80 budget</div></div></a>
+    <a class="link" href="#"><span class="ic">📊</span><div><div class="t">Cashflow sankey</div><div class="s">where money flows</div></div></a>
+  </div>
+  <div class="col">
+    <div class="ch">This month</div>
+    <div class="feat">
+      <div class="net">$3,840</div>
+      <div class="nsub">▲18% net · ROI 4.2×</div>
+      <p>Double down: the "REST API + auth" guide drove <b style="color:#46e0a0">61%</b> of all traffic this week.</p>
+    </div>
+  </div>
+</div>
+<div class="page">
+  <div class="ph">Money</div>
+  <div class="psub">Good evening, Shay — everything across your revenue lanes.</div>
+</div>
+</body></html>

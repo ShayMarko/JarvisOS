@@ -1,0 +1,42 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T129</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e8edf4;background:#0a0c11}
+.top{display:flex;align-items:center;gap:14px;padding:16px 26px}
+.wm{font-size:17px;font-weight:800;letter-spacing:3px;color:#5fc7ff}.st{font-size:12px;color:#5b6678}
+.mode{margin-left:auto;display:flex;gap:8px;font-size:12px}
+.mode span{padding:5px 12px;border-radius:8px;border:1px solid #232c39;color:#9aa6b4}.mode .on{background:rgba(95,199,255,.14);border-color:#5fc7ff;color:#fff}
+.canvas{position:relative;display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:128px;gap:18px;padding:8px 26px 26px;height:calc(100vh - 64px);
+ background:radial-gradient(circle at 1px 1px,rgba(255,255,255,.05) 1px,transparent 0);background-size:30px 30px}
+.w{background:#11151d;border:1px solid #1d2531;border-radius:16px;padding:16px 18px;position:relative}
+.w:hover,.w.act{border-color:#5fc7ff}
+.handle{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:30px;height:5px;border-radius:3px;background:#33404f;cursor:grab}
+.resize{position:absolute;right:5px;bottom:5px;width:14px;height:14px;border-right:2px solid #4b5a6b;border-bottom:2px solid #4b5a6b;border-radius:0 0 4px 0;cursor:nwse-resize}
+.dots-grip{position:absolute;top:10px;right:12px;color:#3a4656;font-size:14px;letter-spacing:1px}
+.k{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:#5b6678;margin-top:6px}
+.v{font-size:30px;font-weight:800;letter-spacing:-1px;margin-top:6px}
+.sub{font-size:12px;color:#46e0a0;font-weight:600;margin-top:2px}
+.w2{grid-column:span 2}.w2r{grid-row:span 2}
+.row{display:flex;justify-content:space-between;font-size:13px;color:#9aa6b4;padding:6px 0;border-bottom:1px solid #1a212c}.row:last-child{border:0}
+.row .amt{color:#cdd6e2;font-variant-numeric:tabular-nums}
+.pill{font-size:8px;font-weight:700;padding:1px 6px;border-radius:9px;background:rgba(255,90,110,.18);color:#ff7a8c}
+.bar{height:7px;border-radius:5px;background:#1a212c;overflow:hidden;margin-top:8px}.bar i{display:block;height:100%;background:linear-gradient(90deg,#5fc7ff,#46e0a0)}
+.ghost{border:1.5px dashed #2f3a48;background:rgba(95,199,255,.03)}
+.spark{position:absolute;left:14px;right:14px;bottom:14px;height:44px}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS</div><div class="st">● Online · Opus · 20:34 · Tue Jun 09</div><div class="mode"><span class="on">Edit layout</span><span>Done</span></div></div>
+<div class="canvas">
+  <div class="w w2 act"><div class="handle"></div><div class="dots-grip">⠿</div><div class="k">Net this month</div><div class="v">$3,840</div><div class="sub">▲18% · ROI 4.2×</div><svg class="spark" viewBox="0 0 400 44" preserveAspectRatio="none"><path d="M0,38 L60,30 L120,34 L180,20 L240,26 L300,12 L400,6" fill="none" stroke="#46e0a0" stroke-width="2.5"/></svg><div class="resize"></div></div>
+  <div class="w"><div class="handle"></div><div class="dots-grip">⠿</div><div class="k">AI budget</div><div class="v" style="color:#f5b34a">$58</div><div style="font-size:11px;color:#5b6678">of $80</div><div class="bar"><i style="width:72%"></i></div><div class="resize"></div></div>
+  <div class="w"><div class="handle"></div><div class="dots-grip">⠿</div><div class="k">Products</div><div class="v">7</div><div style="font-size:11px;color:#9aa6b4">live · +2</div><div class="resize"></div></div>
+  <div class="w w2 w2r"><div class="handle"></div><div class="dots-grip">⠿</div><div class="k">Needs you · 3</div>
+    <div class="row"><span><span class="pill">CRIT</span> Send invoice → 14</span><span class="amt">$1,240</span></div>
+    <div class="row"><span>Publish SaaS starter</span><span class="amt">$39</span></div>
+    <div class="row"><span>Deploy micro-API</span><span class="amt">—</span></div>
+    <div class="row"><span>Newsletter #14</span><span class="amt">queued</span></div>
+    <div class="resize"></div></div>
+  <div class="w"><div class="handle"></div><div class="dots-grip">⠿</div><div class="k">habit-tracker</div><div class="v" style="font-size:22px">72%</div><div class="bar"><i style="width:72%"></i></div><div class="resize"></div></div>
+  <div class="w"><div class="handle"></div><div class="dots-grip">⠿</div><div class="k">research niche</div><div class="v" style="font-size:22px;color:#b18cff">40%</div><div class="bar"><i style="width:40%;background:linear-gradient(90deg,#b18cff,#7c9cff)"></i></div><div class="resize"></div></div>
+  <div class="w"><div class="handle"></div><div class="dots-grip">⠿</div><div class="k">System</div><div style="font-size:12px;color:#9aa6b4;line-height:1.7;margin-top:8px">51 agents<br>9 / 26 live</div><div class="resize"></div></div>
+  <div class="w ghost" style="display:flex;align-items:center;justify-content:center;color:#5b6678;font-size:13px">+ Add widget</div>
+</div>
+</body></html>

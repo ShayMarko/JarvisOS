@@ -1,0 +1,78 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T140</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;background:#2a2e37;color:#c4cbd6}
+.shadow{--lo:#22252d;--hi:#32373f}
+.wrap{height:100vh;padding:26px 32px;display:grid;grid-template-columns:300px 1fr 320px;grid-template-rows:auto 1fr auto;gap:22px}
+.top{grid-column:1/-1;display:flex;align-items:center;gap:18px}
+.wm{font-size:22px;font-weight:800;letter-spacing:4px;color:#e6ebf2}
+.pill{padding:9px 18px;border-radius:30px;background:#2a2e37;box-shadow:6px 6px 12px #22252d,-6px -6px 12px #32373f;font-size:12px;color:#8e96a3}
+.r{margin-left:auto;font-size:13px;color:#8e96a3}
+.card{background:#2a2e37;border-radius:24px;box-shadow:8px 8px 18px #22252d,-8px -8px 18px #32373f;padding:24px}
+.inset{box-shadow:inset 6px 6px 12px #22252d,inset -6px -6px 12px #32373f}
+.greet{font-size:30px;font-weight:800;color:#e6ebf2;line-height:1.1;margin-bottom:8px}
+.greet span{color:#7fc8b6}
+.sub{font-size:13px;color:#8e96a3;margin-bottom:24px}
+.lbl{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#7a828f;margin-bottom:14px}
+.netbig{font-size:52px;font-weight:800;color:#e6ebf2;letter-spacing:-2px;line-height:1}
+.netsub{font-size:13px;color:#7fc8b6;margin-top:6px;font-weight:600}
+.budget{margin-top:20px;border-radius:16px;padding:14px 16px}
+.budget .row{display:flex;justify-content:space-between;font-size:12px;margin-bottom:10px;color:#9aa2af}
+.track{height:12px;border-radius:8px;background:#2a2e37;box-shadow:inset 3px 3px 6px #22252d,inset -3px -3px 6px #32373f;overflow:hidden}
+.fill{height:100%;border-radius:8px;background:linear-gradient(90deg,#6dc1ff,#7fc8b6)}
+.src{display:flex;justify-content:space-between;align-items:center;padding:11px 0;font-size:13px;border-bottom:1px solid #262a32}
+.src:last-child{border-bottom:0}.src b{color:#e6ebf2}
+.needs .item{border-radius:18px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.it-t{font-size:14px;color:#e6ebf2;font-weight:600}.it-s{font-size:11px;color:#8e96a3;margin-top:2px}
+.tag{margin-left:auto;font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;background:#2a2e37;box-shadow:3px 3px 6px #22252d,-3px -3px 6px #32373f}
+.jobs .j{margin-bottom:18px}
+.j-h{display:flex;justify-content:space-between;font-size:13px;color:#e6ebf2;margin-bottom:8px}
+.j-h span{color:#8e96a3;font-size:12px}
+.sys{display:flex;gap:14px;margin-top:6px}
+.sys .s{flex:1;border-radius:16px;padding:14px;text-align:center}
+.sys .v{font-size:24px;font-weight:800;color:#e6ebf2}.sys .k{font-size:10px;color:#8e96a3;text-transform:uppercase;letter-spacing:1px;margin-top:4px}
+.foot{grid-column:1/-1;display:flex;align-items:center;gap:14px;border-radius:30px;padding:14px 22px}
+.foot input{flex:1;background:0;border:0;outline:0;color:#e6ebf2;font-size:14px}.foot input::placeholder{color:#7a828f}
+.kk{font-size:12px;color:#8e96a3;border-radius:8px;padding:4px 10px;box-shadow:inset 2px 2px 4px #22252d,inset -2px -2px 4px #32373f}
+</style></head><body>
+<div class="wrap shadow">
+<div class="top"><div class="wm">JARVIS</div><div class="pill">● Online · Opus · 20:34 · Tue Jun 09</div><div class="r">Say "Hey Jarvis"</div></div>
+
+<div class="card">
+<div class="greet">Good evening,<br><span>Shay.</span></div>
+<div class="sub">Net this month</div>
+<div class="netbig">$3,840</div>
+<div class="netsub">ROI 4.2× · ▲18%</div>
+<div class="budget inset"><div class="row"><span>AI cost budget</span><b style="color:#e6ebf2">$58 / $80</b></div><div class="track"><div class="fill" style="width:72%"></div></div></div>
+<div class="lbl" style="margin-top:24px">Revenue sources</div>
+<div class="src"><span>Stripe subs</span><b>$1,240</b></div>
+<div class="src"><span>Gumroad</span><b>$890</b></div>
+<div class="src"><span>Newsletter</span><b>$400</b></div>
+<div class="src"><span>Lemon Squeezy</span><b>$310</b></div>
+</div>
+
+<div class="card needs">
+<div class="lbl">3 things need you</div>
+<div class="item inset"><div class="dot" style="background:#ff7b8a"></div><div><div class="it-t">Send invoice → 14 customers</div><div class="it-s">$1,240 · EA agent via Resend</div></div><div class="tag" style="color:#ff7b8a">CRITICAL</div></div>
+<div class="item inset"><div class="dot" style="background:#ffb454"></div><div><div class="it-t">Publish SaaS starter → Gumroad</div><div class="it-s">$39</div></div><div class="tag" style="color:#ffb454">HIGH</div></div>
+<div class="item inset"><div class="dot" style="background:#ffb454"></div><div><div class="it-t">Deploy micro-API → Cloudflare</div><div class="it-s">Edge worker</div></div><div class="tag" style="color:#ffb454">HIGH</div></div>
+<div class="lbl" style="margin-top:24px">Proactive</div>
+<div class="item inset"><div class="dot" style="background:#7fc8b6"></div><div class="it-t" style="font-weight:500;font-size:13px">Double down: "REST API + auth" guide drove 61% of traffic</div></div>
+</div>
+
+<div class="card jobs">
+<div class="lbl">Jobs running</div>
+<div class="j"><div class="j-h">habit-tracker app <span>Code · 72%</span></div><div class="track"><div class="fill" style="width:72%"></div></div></div>
+<div class="j"><div class="j-h">research note-taking niche <span>Scout · 40%</span></div><div class="track"><div class="fill" style="width:40%"></div></div></div>
+<div class="j"><div class="j-h">newsletter #14 <span>queued</span></div><div class="track"><div class="fill" style="width:6%"></div></div></div>
+<div class="lbl" style="margin-top:24px">System</div>
+<div class="sys">
+<div class="s inset"><div class="v">51</div><div class="k">agents</div></div>
+<div class="s inset"><div class="v">9/26</div><div class="k">connectors</div></div>
+<div class="s inset"><div class="v">7</div><div class="k">products</div></div>
+</div>
+</div>
+
+<div class="foot inset"><span style="color:#7fc8b6">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span class="kk">⌘K</span></div>
+</div>
+</body></html>

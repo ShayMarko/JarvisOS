@@ -1,0 +1,47 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T113</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,-apple-system,sans-serif}
+body{height:100vh;overflow:hidden;background:#08070d;color:#eae6f5;display:flex;align-items:center;justify-content:center}
+.bg{position:fixed;inset:0;background:radial-gradient(circle at 50% 40%,#241844,#0a0810 60%)}
+.tc{font-size:11px;letter-spacing:2px;color:#7a6fb0;position:fixed;top:30px;left:50%;transform:translateX(-50%);text-transform:uppercase}
+.wmtop{position:fixed;top:30px;left:34px;font-size:14px;font-weight:800;letter-spacing:3px;color:#b39bff}
+.card{position:relative;width:430px;height:620px;border-radius:22px;padding:5px;
+background:linear-gradient(135deg,#c9a84a,#7a5e1e 30%,#e8d27a 50%,#7a5e1e 70%,#c9a84a);
+box-shadow:0 30px 70px rgba(0,0,0,.65)}
+.inner{height:100%;border-radius:18px;background:linear-gradient(160deg,#1b1430,#120c22);padding:16px 18px;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.holo{position:absolute;inset:0;background:linear-gradient(120deg,transparent 35%,rgba(125,209,255,.10) 48%,rgba(179,155,255,.10) 52%,transparent 65%);pointer-events:none}
+.hd{display:flex;align-items:center;justify-content:space-between}
+.nm{font-size:22px;font-weight:800}
+.cost{display:flex;align-items:center;gap:6px;background:#2a1f4a;border:1px solid #4a3a7a;border-radius:50%;width:38px;height:38px;justify-content:center;font-weight:800;color:#ffd86b;font-size:15px}
+.type{font-size:10px;letter-spacing:1.5px;color:#9a8fd0;text-transform:uppercase}
+.art{margin:10px 0;height:210px;border-radius:12px;border:1px solid #4a3a7a;position:relative;overflow:hidden;background:linear-gradient(150deg,#2a1d52,#140d28)}
+.art::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 35%,rgba(125,209,255,.35),transparent 55%)}
+.orb{position:absolute;top:42%;left:50%;transform:translate(-50%,-50%);width:120px;height:120px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#9fd9ff,#3f6fd1 55%,#1a2a6a);box-shadow:0 0 50px rgba(125,209,255,.5)}
+.ring{position:absolute;top:42%;left:50%;width:170px;height:170px;border:2px solid rgba(179,155,255,.4);border-radius:50%;transform:translate(-50%,-50%) rotate(-18deg);border-right-color:transparent;border-bottom-color:transparent}
+.rarity{position:absolute;bottom:8px;right:10px;font-size:9px;letter-spacing:1.5px;background:rgba(10,8,20,.7);color:#ffd86b;padding:3px 8px;border-radius:6px;text-transform:uppercase}
+.flav{font-style:italic;font-size:12.5px;color:#a89fd6;line-height:1.4;border-left:2px solid #ffd86b;padding-left:10px;margin:4px 0 12px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}
+.stat{display:flex;align-items:center;gap:9px}
+.stat .ic{width:14px;text-align:center;color:#ffd86b}
+.stat .l{font-size:11px;color:#9a8fd0;flex:1}
+.bar{height:6px;width:78px;border-radius:3px;background:#2a1f4a;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#7d8fff,#b39bff)}
+.stat .v{font-size:12px;font-weight:700;width:30px;text-align:right}
+.foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#7a6fb0;border-top:1px solid #2e2350;padding-top:9px}
+</style></head><body><div class="bg"></div>
+<div class="wmtop">JARVIS</div>
+<div class="tc">Collectible · Agent Roster #07 of 51</div>
+<div class="card"><div class="inner"><div class="holo"></div>
+<div class="hd"><div><div class="nm">Executive Assistant</div><div class="type">⚡ Money-Loop · Ops</div></div><div class="cost">$$</div></div>
+<div class="art"><div class="ring"></div><div class="orb"></div><span class="rarity">★ Legendary</span></div>
+<div class="flav">"Send invoice → 14 customers. $1,240 collected before you finished your coffee."</div>
+<div class="stats">
+<div class="stat"><span class="ic">⚔</span><span class="l">Throughput</span><span class="bar"><i style="width:88%"></i></span><span class="v">88</span></div>
+<div class="stat"><span class="ic">🛡</span><span class="l">Reliability</span><span class="bar"><i style="width:94%"></i></span><span class="v">94</span></div>
+<div class="stat"><span class="ic">✦</span><span class="l">ROI mult.</span><span class="bar"><i style="width:84%"></i></span><span class="v">4.2×</span></div>
+<div class="stat"><span class="ic">⚡</span><span class="l">Speed</span><span class="bar"><i style="width:76%"></i></span><span class="v">76</span></div>
+<div class="stat"><span class="ic">$</span><span class="l">Earned</span><span class="bar"><i style="width:90%"></i></span><span class="v">$1.2k</span></div>
+<div class="stat"><span class="ic">⛁</span><span class="l">Cost</span><span class="bar"><i style="width:30%;background:#46e0a0"></i></span><span class="v">low</span></div>
+</div>
+<div class="foot"><span>Connectors: Resend · Stripe</span><span>● Online · Opus · Tue Jun 09</span></div>
+</div></div>
+</body></html>

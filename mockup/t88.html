@@ -1,0 +1,52 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T88</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf6;background:#0a0e13}
+.top{display:flex;align-items:center;gap:14px;padding:20px 36px}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#5fd0c0}.st{font-size:12px;color:#5f8278}.r{margin-left:auto;font-size:13px;color:#8a98a4}
+.cap{padding:0 36px 8px}.cap h1{font-size:22px;font-weight:600}.cap h1 b{color:#5fd0c0}.cap p{color:#6f8a86;font-size:13px;margin-top:3px}
+.panel{margin:6px 36px 0;background:#0e1419;border:1px solid #19232a;border-radius:16px;padding:8px 26px;height:calc(100vh - 182px);display:flex;flex-direction:column;justify-content:space-evenly}
+.row{display:grid;grid-template-columns:160px 1fr 120px;align-items:center;gap:18px}
+.rl{font-size:13px}.rl b{display:block;font-weight:600}.rl s{text-decoration:none;font-size:11px;color:#5f8278}
+.track{position:relative;height:30px;border-radius:6px;overflow:hidden}
+.rng{position:absolute;inset:0;display:flex}
+.rng i{height:100%}
+.actual{position:absolute;top:8px;height:14px;border-radius:4px}
+.target{position:absolute;top:1px;width:3px;height:28px;background:#fff;box-shadow:0 0 4px #000}
+.rv{text-align:right;font-variant-numeric:tabular-nums;font-size:13px}.rv b{font-weight:700}.rv s{text-decoration:none;display:block;font-size:11px;color:#5f8278}
+.good{color:#46e0a0}.warn{color:#ffd27a}.miss{color:#ff7a7a}
+.bar{position:fixed;bottom:20px;left:36px;right:36px;display:flex;align-items:center;gap:12px;background:#0e1419;border:1px solid #19232a;border-radius:13px;padding:11px 15px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e6edf6;font-size:14px}.bar input::placeholder{color:#5f8278}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · KPI BULLETS</div><div class="st">● Online · Opus · 20:34</div><div class="r">monthly targets · 10 of 10 days left</div></div>
+<div class="cap"><h1>Tracking to target, <b>Shay</b>.</h1><p>actual ▮ vs target ▏ across poor · ok · good bands</p></div>
+<div class="panel">
+<div class="row"><div class="rl"><b>Net revenue</b><s>goal $4,500</s></div>
+<div class="track"><div class="rng"><i style="background:#241419;width:45%"></i><i style="background:#2a2417;width:30%"></i><i style="background:#16271f;width:25%"></i></div><div class="actual" style="width:85%;background:linear-gradient(90deg,#2fb585,#5fd0c0)"></div><div class="target" style="left:100%"></div></div>
+<div class="rv"><b class="good">$3,840</b><s>85% · ▲18%</s></div></div>
+
+<div class="row"><div class="rl"><b>ROI</b><s>goal 4.0×</s></div>
+<div class="track"><div class="rng"><i style="background:#241419;width:40%"></i><i style="background:#2a2417;width:30%"></i><i style="background:#16271f;width:30%"></i></div><div class="actual" style="width:84%;background:linear-gradient(90deg,#2fb585,#5fd0c0)"></div><div class="target" style="left:80%"></div></div>
+<div class="rv"><b class="good">4.2×</b><s>over target</s></div></div>
+
+<div class="row"><div class="rl"><b>Visitors</b><s>goal 14.0k</s></div>
+<div class="track"><div class="rng"><i style="background:#241419;width:50%"></i><i style="background:#2a2417;width:30%"></i><i style="background:#16271f;width:20%"></i></div><div class="actual" style="width:88%;background:linear-gradient(90deg,#2fb585,#5fd0c0)"></div><div class="target" style="left:100%"></div></div>
+<div class="rv"><b class="warn">12.4k</b><s>89% · ▲31%</s></div></div>
+
+<div class="row"><div class="rl"><b>Paid signups</b><s>goal 20</s></div>
+<div class="track"><div class="rng"><i style="background:#241419;width:45%"></i><i style="background:#2a2417;width:30%"></i><i style="background:#16271f;width:25%"></i></div><div class="actual" style="width:70%;background:linear-gradient(90deg,#e0a040,#ffd27a)"></div><div class="target" style="left:100%"></div></div>
+<div class="rv"><b class="warn">14</b><s>70%</s></div></div>
+
+<div class="row"><div class="rl"><b>Products live</b><s>goal 8</s></div>
+<div class="track"><div class="rng"><i style="background:#241419;width:40%"></i><i style="background:#2a2417;width:35%"></i><i style="background:#16271f;width:25%"></i></div><div class="actual" style="width:87%;background:linear-gradient(90deg,#2fb585,#5fd0c0)"></div><div class="target" style="left:100%"></div></div>
+<div class="rv"><b class="good">7</b><s>+2 this mo</s></div></div>
+
+<div class="row"><div class="rl"><b>AI cost budget</b><s>cap $80</s></div>
+<div class="track"><div class="rng"><i style="background:#16271f;width:60%"></i><i style="background:#2a2417;width:25%"></i><i style="background:#241419;width:15%"></i></div><div class="actual" style="width:72%;background:linear-gradient(90deg,#2fb585,#5fd0c0)"></div><div class="target" style="left:100%"></div></div>
+<div class="rv"><b class="good">$58</b><s>under cap</s></div></div>
+
+<div class="row"><div class="rl"><b>Newsletter subs</b><s>goal 3.0k</s></div>
+<div class="track"><div class="rng"><i style="background:#241419;width:45%"></i><i style="background:#2a2417;width:30%"></i><i style="background:#16271f;width:25%"></i></div><div class="actual" style="width:62%;background:linear-gradient(90deg,#c44;)"></div><div class="actual" style="width:62%;background:linear-gradient(90deg,#d05c5c,#ff7a7a)"></div><div class="target" style="left:100%"></div></div>
+<div class="rv"><b class="miss">1.86k</b><s>62% · behind</s></div></div>
+</div>
+<div class="bar"><span style="color:#5fd0c0">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#5f8278;font-size:12px">⌘K</span></div>
+</body></html>

@@ -1,0 +1,46 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T10</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#eaf6ff;background:radial-gradient(1000px 700px at 80% -10%,rgba(255,60,200,.22),transparent 55%),radial-gradient(1000px 700px at 5% 110%,rgba(60,230,255,.22),transparent 55%),#05030c}
+.glow{position:fixed;inset:0;background:radial-gradient(circle at 50% 50%,transparent 60%,rgba(120,40,180,.12));pointer-events:none}
+.app{display:grid;grid-template-columns:78px 1fr;height:100vh;position:relative;z-index:1}
+.rail{display:flex;flex-direction:column;align-items:center;gap:10px;padding:20px 0;border-right:1px solid rgba(120,220,255,.15)}
+.lg{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#ff3cc8,#3ce6ff);display:grid;place-items:center;font-weight:800;color:#fff;box-shadow:0 0 26px rgba(255,60,200,.6);margin-bottom:10px}
+.nv{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;color:#7aa0c8;font-size:18px}.nv.on{color:#3ce6ff;border:1px solid rgba(60,230,255,.5);box-shadow:0 0 18px rgba(60,230,255,.4),inset 0 0 16px rgba(60,230,255,.1)}
+.main{padding:24px 32px;overflow:hidden}
+.top{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.wm{font-size:21px;font-weight:800;letter-spacing:4px;background:linear-gradient(135deg,#ff3cc8,#3ce6ff);-webkit-background-clip:text;color:transparent;text-shadow:0 0 30px rgba(255,60,200,.3)}
+.pill{font-size:12px;color:#9fd6ff;border:1px solid rgba(60,230,255,.4);padding:7px 13px;border-radius:99px;box-shadow:0 0 16px rgba(60,230,255,.2),inset 0 0 12px rgba(60,230,255,.06)}
+.sr{margin-left:auto;border:1px solid rgba(255,60,200,.4);border-radius:13px;padding:10px 16px;color:#ffa6e6;font-size:13px;box-shadow:0 0 16px rgba(255,60,200,.2)}
+.h1{font-size:30px;font-weight:800}.h1 b{background:linear-gradient(135deg,#ff3cc8,#3ce6ff);-webkit-background-clip:text;color:transparent}
+.sub{color:#8fb6d6;font-size:14px;margin:5px 0 20px}
+.grid{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:16px}
+.c{border-radius:20px;padding:17px;background:linear-gradient(160deg,rgba(40,20,70,.5),rgba(10,16,40,.5));border:1px solid rgba(120,220,255,.22);box-shadow:0 0 30px rgba(60,120,255,.1),inset 0 1px 0 rgba(255,255,255,.06);backdrop-filter:blur(14px)}
+.lbl{font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:#7aa0c8;font-weight:700;margin-bottom:12px}
+.row{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid rgba(120,220,255,.1);font-size:14px}.row:first-of-type{border:0}
+.rk{font-size:9px;font-weight:800;padding:3px 8px;border-radius:7px;color:#3ce6ff;border:1px solid rgba(60,230,255,.5);box-shadow:0 0 10px rgba(60,230,255,.25)}.rk.c{color:#ff5ccf;border-color:rgba(255,60,200,.5);box-shadow:0 0 10px rgba(255,60,200,.3)}
+.go{margin-left:auto;font-size:12px;font-weight:700;color:#06121f;background:linear-gradient(135deg,#ff3cc8,#3ce6ff);border-radius:10px;padding:8px 13px;box-shadow:0 0 18px rgba(255,60,200,.4)}
+.big{font-size:32px;font-weight:800;text-shadow:0 0 24px rgba(60,230,255,.4)}.big small{font-size:13px;color:#8fb6d6}
+.bar{height:7px;border-radius:7px;background:rgba(120,220,255,.12);margin-top:7px}.bar i{display:block;height:100%;border-radius:7px;background:linear-gradient(135deg,#ff3cc8,#3ce6ff);box-shadow:0 0 12px rgba(60,230,255,.5)}
+.span2{grid-column:span 2}
+.cmd{margin-top:16px;display:flex;align-items:center;gap:12px;border:1px solid rgba(120,220,255,.3);border-radius:16px;padding:11px 14px;background:linear-gradient(160deg,rgba(40,20,70,.5),rgba(10,16,40,.6));box-shadow:0 0 30px rgba(120,40,180,.2)}
+.orb{width:38px;height:38px;border-radius:50%;background:radial-gradient(circle at 50% 38%,#fff,#3ce6ff 40%,#ff3cc8);box-shadow:0 0 26px rgba(255,60,200,.6)}
+.cmd input{flex:1;background:0;border:0;outline:0;color:#eaf6ff;font-size:14px}.cmd input::placeholder{color:#6f86ad}
+.snd{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#ff3cc8,#3ce6ff);display:grid;place-items:center;color:#06121f}
+</style></head><body><div class="glow"></div><div class="app">
+<div class="rail"><div class="lg">J</div><div class="nv on">⌂</div><div class="nv">✦</div><div class="nv">⚇</div><div class="nv">◈</div><div class="nv">▤</div><div class="nv" style="margin-top:auto">⚙</div></div>
+<div class="main"><div class="top"><div class="wm">JARVIS</div><div class="pill">● Online · Opus</div><div class="sr">⌕ Ask… ⌘K</div></div>
+<div class="h1">Good evening, <b>Shay</b>.</div><div class="sub">3 things need you · 2 jobs running · ROI 4.2× this month.</div>
+<div class="grid">
+<div class="c span2"><div class="lbl">Needs you</div>
+<div class="row"><span class="rk c">CRIT</span>Send invoice email → 14 customers<span class="go">Approve</span></div>
+<div class="row"><span class="rk">HIGH</span>Publish "SaaS starter" → Gumroad<span class="go">Approve</span></div>
+<div class="row"><span class="rk">HIGH</span>Deploy micro-API → Cloudflare<span class="go">Approve</span></div></div>
+<div class="c"><div class="lbl">Money · month</div><div class="big">$3,840 <small>net</small></div>
+<svg viewBox="0 0 240 50" style="width:100%;height:44px;margin-top:8px"><path d="M0,40 L40,36 L80,38 L120,26 L160,28 L200,16 L240,6" fill="none" stroke="#3ce6ff" stroke-width="2.5"/></svg>
+<div style="font-size:13px;color:#8fb6d6;margin-top:4px">ROI <b style="color:#43e0a0">4.2×</b></div></div>
+<div class="c"><div class="lbl">Running jobs</div><div style="font-size:13px">Habit-tracker · 72%<div class="bar"><i style="width:72%"></i></div></div><div style="font-size:13px;margin-top:10px">Research niche · 40%<div class="bar"><i style="width:40%"></i></div></div></div>
+<div class="c span2"><div class="lbl">Jarvis suggests</div><div style="font-size:14px;color:#bfe0f5;line-height:1.9">📈 Double down on "REST API + auth" — 61% of traffic.&nbsp; ✉ 3 replies drafted.</div></div>
+<div class="c"><div class="lbl">System</div><div style="font-size:13px;color:#8fb6d6;line-height:2">agents <b style="color:#3ce6ff;float:right">51</b><br>connectors <b style="float:right">26</b><br>products <b style="color:#ff5ccf;float:right">7</b></div></div>
+</div>
+<div class="cmd"><div class="orb"></div><input placeholder="Ask Jarvis, or type a /command…  ·  say “Hey Jarvis”"><div class="snd">➤</div></div>
+</div></div></body></html>

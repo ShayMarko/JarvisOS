@@ -1,0 +1,55 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T95</title><style>
+*{margin:0;box-sizing:border-box;font-family:ui-monospace,'SF Mono',Menlo,monospace}
+body{height:100vh;overflow:hidden;background:#1e1e1e;color:#d4d4d4;font-size:13.5px}
+.win{height:100vh;display:flex;flex-direction:column}
+.tabbar{display:flex;align-items:center;background:#252526;border-bottom:1px solid #1b1b1b}
+.tab{padding:8px 16px;font-size:12.5px;background:#2d2d2d;color:#969696;border-right:1px solid #1b1b1b}
+.tab.on{background:#1e1e1e;color:#fff;border-top:1px solid #46e0a0}
+.tab .x{color:#666;margin-left:10px}
+.tabbar .wm{margin-left:auto;padding:0 16px;font-size:11px;letter-spacing:2px;color:#46e0a0;font-weight:800;font-family:system-ui,sans-serif}
+.body{flex:1;display:flex;overflow:hidden}
+.code{flex:1;padding:10px 0;overflow:hidden}
+.ln{display:flex;padding:0 0;line-height:1.62;white-space:pre}
+.ln .g{width:54px;text-align:right;padding-right:16px;color:#6e7681;user-select:none;flex:none}
+.ln .g.add{color:#46e0a0;background:rgba(70,224,160,.12)}.ln .g.del{color:#ff8c8c;background:rgba(255,107,129,.12)}
+.ln.add{background:rgba(70,224,160,.07)}.ln.del{background:rgba(255,107,129,.07)}
+.ln .mk{width:18px;color:#6e7681;flex:none}.ln.add .mk{color:#46e0a0}.ln.del .mk{color:#ff8c8c}
+.kw{color:#c586c0}.fn{color:#dcdcaa}.str{color:#ce9178}.num{color:#b5cea8}.cm{color:#6a9955}.cls{color:#4ec9b0}.var{color:#9cdcfe}.op{color:#d4d4d4}
+.minimap{width:108px;background:#1e1e1e;border-left:1px solid #2d2d2d;padding:10px 8px}
+.mmr{height:3px;margin:2px 0;background:#333;border-radius:1px}
+.statusbar{display:flex;align-items:center;gap:0;background:#46e0a0;color:#06281e;font-size:11.5px;font-weight:600;font-family:system-ui,sans-serif}
+.statusbar span{padding:4px 12px}.statusbar .r{margin-left:auto;display:flex}
+.act{background:#0e3a2a;color:#9febcb;display:flex;align-items:center;gap:6px}
+</style></head><body>
+<div class="win">
+<div class="tabbar"><span class="tab on">jarvis_money.ts<span class="x">●</span></span><span class="tab">briefing.md<span class="x">×</span></span><span class="tab">newsletter.agent.ts<span class="x">×</span></span><span class="wm">JARVIS · ● Online · Opus · 20:34 Tue Jun 09</span></div>
+<div class="body">
+<div class="code">
+<div class="ln"><span class="g">1</span><span class="mk"> </span><span class="cm">// jarvis · revenue rollup — net this month</span></div>
+<div class="ln"><span class="g">2</span><span class="mk"> </span><span class="kw">import</span> { <span class="var">stripe</span>, <span class="var">gumroad</span>, <span class="var">lemonSqueezy</span>, <span class="var">resend</span> } <span class="kw">from</span> <span class="str">"./connectors"</span>;</div>
+<div class="ln"><span class="g">3</span><span class="mk"> </span></div>
+<div class="ln"><span class="g">4</span><span class="mk"> </span><span class="kw">const</span> <span class="var">sources</span> = {</div>
+<div class="ln"><span class="g">5</span><span class="mk"> </span>  <span class="var">stripeSubs</span>: <span class="num">1240</span>,   <span class="cm">// 14 active subs</span></div>
+<div class="ln"><span class="g">6</span><span class="mk"> </span>  <span class="var">gumroad</span>:    <span class="num">890</span>,</div>
+<div class="ln del"><span class="g del">7</span><span class="mk">−</span>  <span class="var">lemonSqueezy</span>: <span class="num">280</span>,  <span class="cm">// stale est.</span></div>
+<div class="ln add"><span class="g add">7</span><span class="mk">+</span>  <span class="var">lemonSqueezy</span>: <span class="num">310</span>,  <span class="cm">// MoR live — actuals</span></div>
+<div class="ln add"><span class="g add">8</span><span class="mk">+</span>  <span class="var">newsletter</span>:   <span class="num">400</span>,  <span class="cm">// #14 queued</span></div>
+<div class="ln"><span class="g">9</span><span class="mk"> </span>};</div>
+<div class="ln"><span class="g">10</span><span class="mk"> </span></div>
+<div class="ln"><span class="g">11</span><span class="mk"> </span><span class="kw">export function</span> <span class="fn">netThisMonth</span>(<span class="var">aiCost</span> = <span class="num">58</span>) {</div>
+<div class="ln"><span class="g">12</span><span class="mk"> </span>  <span class="kw">const</span> <span class="var">gross</span> = <span class="cls">Object</span>.<span class="fn">values</span>(<span class="var">sources</span>).<span class="fn">reduce</span>((<span class="var">a</span>, <span class="var">b</span>) =&gt; <span class="var">a</span> + <span class="var">b</span>, <span class="num">0</span>);</div>
+<div class="ln"><span class="g">13</span><span class="mk"> </span>  <span class="kw">const</span> <span class="var">tax</span> = <span class="fn">round</span>(<span class="var">gross</span> * <span class="num">0.28</span>);  <span class="cm">// auto set-aside</span></div>
+<div class="ln add"><span class="g add">14</span><span class="mk">+</span>  <span class="cls">assert</span>(<span class="var">aiCost</span> &lt;= <span class="num">80</span>, <span class="str">"budget guard"</span>); <span class="cm">// $58/$80</span></div>
+<div class="ln"><span class="g">15</span><span class="mk"> </span>  <span class="kw">return</span> { <span class="var">net</span>: <span class="num">3840</span>, <span class="var">roi</span>: <span class="num">4.2</span>, <span class="var">delta</span>: <span class="str">"▲18%"</span> };</div>
+<div class="ln"><span class="g">16</span><span class="mk"> </span>}</div>
+<div class="ln"><span class="g">17</span><span class="mk"> </span></div>
+<div class="ln"><span class="g">18</span><span class="mk"> </span><span class="cm">// TODO(EA): approve invoice → 14 customers ($1,240) via resend</span></div>
+<div class="ln"><span class="g">19</span><span class="mk"> </span><span class="var">resend</span>.<span class="fn">sendInvoice</span>({ <span class="var">customers</span>: <span class="num">14</span>, <span class="var">amount</span>: <span class="num">1240</span> });</div>
+</div>
+<div class="minimap">
+<div class="mmr" style="width:80%"></div><div class="mmr" style="width:60%;background:#555"></div><div class="mmr" style="width:30%"></div><div class="mmr" style="width:50%"></div><div class="mmr" style="width:45%"></div><div class="mmr" style="width:55%"></div><div class="mmr" style="width:62%;background:#7c4040"></div><div class="mmr" style="width:62%;background:#2e6b4f"></div><div class="mmr" style="width:58%;background:#2e6b4f"></div><div class="mmr" style="width:20%"></div><div class="mmr" style="width:70%"></div><div class="mmr" style="width:90%"></div><div class="mmr" style="width:75%"></div><div class="mmr" style="width:65%;background:#2e6b4f"></div><div class="mmr" style="width:60%"></div><div class="mmr" style="width:15%"></div><div class="mmr" style="width:88%"></div><div class="mmr" style="width:78%"></div>
+</div>
+</div>
+<div class="statusbar"><span class="act">⎇ main +2 −1</span><span>✓ green-gate</span><span>0 ⚠ · 0 ✗</span><span class="r" style="margin-left:auto"></span><span>Ln 14, Col 9</span><span>Spaces: 2</span><span>TypeScript</span><span>Opus</span></div>
+</div>
+</body></html>

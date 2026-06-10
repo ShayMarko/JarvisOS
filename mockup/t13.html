@@ -1,0 +1,41 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T13</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e7ecff;background:radial-gradient(1000px 800px at 50% 45%,#10142e,#05060f)}
+.top{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;padding:20px 32px;z-index:5}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#8b9bff}
+.st{font-size:12px;letter-spacing:2px;color:#6a72b8}
+.legend{position:fixed;left:32px;bottom:28px;font-size:12px;color:#7a82c8;line-height:1.9;z-index:5}
+.legend b{color:#aab2ff}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:middle}
+canvas,svg{position:fixed;inset:0}
+.bar{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);width:520px;display:flex;align-items:center;gap:12px;background:rgba(14,18,42,.8);border:1px solid rgba(139,155,255,.3);border-radius:14px;padding:11px 15px;z-index:5}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e7ecff;font-size:14px}.bar input::placeholder{color:#5a62a8}
+.t{font-size:11px;fill:#aeb6f5;font-family:Inter,sans-serif}.tm{fill:#7a82c8;font-size:10px}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · NEURAL MAP</div><div class="st">● ONLINE · OPUS · 51 agents · 26 connectors</div></div>
+<svg viewBox="0 0 1380 860" preserveAspectRatio="xMidYMid meet">
+<defs><radialGradient id="core" cx="50%" cy="40%"><stop offset="0" stop-color="#dfe6ff"/><stop offset="45%" stop-color="#8b9bff"/><stop offset="100%" stop-color="#3a3fb0"/></radialGradient>
+<filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+<!-- edges -->
+<g stroke-width="1.5" filter="url(#glow)" fill="none">
+<path d="M690,430 L390,210" stroke="rgba(120,220,255,.35)"/><path d="M690,430 L1010,200" stroke="rgba(120,220,255,.35)"/>
+<path d="M690,430 L250,470" stroke="rgba(140,160,255,.35)"/><path d="M690,430 L1130,460" stroke="rgba(140,160,255,.35)"/>
+<path d="M690,430 L430,690" stroke="rgba(255,150,210,.3)"/><path d="M690,430 L960,700" stroke="rgba(255,150,210,.3)"/>
+<path d="M390,210 L250,470" stroke="rgba(120,220,255,.15)"/><path d="M1010,200 L1130,460" stroke="rgba(120,220,255,.15)"/>
+</g>
+<!-- core -->
+<circle cx="690" cy="430" r="46" fill="url(#core)" filter="url(#glow)"/>
+<text x="690" y="500" text-anchor="middle" class="t" style="font-size:13px;fill:#cdd4ff">Brain · Opus</text>
+<!-- nodes -->
+<g>
+<circle cx="390" cy="210" r="26" fill="#0e1330" stroke="#78dcff" stroke-width="1.5"/><text x="390" y="170" text-anchor="middle" class="t">Code agent</text><text x="390" y="215" text-anchor="middle" class="tm" style="fill:#78dcff">⚇</text>
+<circle cx="1010" cy="200" r="26" fill="#0e1330" stroke="#78dcff" stroke-width="1.5"/><text x="1010" y="160" text-anchor="middle" class="t">EA</text>
+<circle cx="250" cy="470" r="26" fill="#0e1330" stroke="#8b9bff" stroke-width="1.5"/><text x="250" y="515" text-anchor="middle" class="t">Gmail</text>
+<circle cx="1130" cy="460" r="26" fill="#0e1330" stroke="#8b9bff" stroke-width="1.5"/><text x="1130" y="505" text-anchor="middle" class="t">Stripe · $3,840</text>
+<circle cx="430" cy="690" r="26" fill="#0e1330" stroke="#ff96d2" stroke-width="1.5"/><text x="430" y="735" text-anchor="middle" class="t">Newsletter</text>
+<circle cx="960" cy="700" r="26" fill="#0e1330" stroke="#ff96d2" stroke-width="1.5"/><text x="960" y="745" text-anchor="middle" class="t">Job: habit-tracker 72%</text>
+</g>
+</svg>
+<div class="legend"><b>Good evening, Shay.</b><br><span class="dot" style="background:#78dcff"></span>agents active &nbsp; <span class="dot" style="background:#8b9bff"></span>connectors live<br><span class="dot" style="background:#ff96d2"></span>running / revenue · 3 need you</div>
+<div class="bar"><span style="color:#8b9bff">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#5a62a8;font-size:12px">⌘K</span></div>
+</body></html>

@@ -1,0 +1,68 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T164</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Comic Sans MS','Chalkboard SE','Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#161616;background:#f4e9c9}
+.page{height:100vh;padding:22px 28px;display:grid;grid-template-rows:auto 1fr auto;gap:14px}
+.banner{background:#ffd400;border:4px solid #161616;border-radius:6px;padding:8px 18px;display:flex;justify-content:space-between;align-items:center;
+  box-shadow:6px 6px 0 #161616}
+.wm{font-size:30px;font-weight:900;letter-spacing:1px;-webkit-text-stroke:1.5px #161616;color:#ff3b6b;text-shadow:3px 3px 0 #161616}
+.st{font-size:13px;font-weight:700}
+.grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:14px}
+.panel{border:4px solid #161616;border-radius:4px;padding:16px;position:relative;overflow:hidden;box-shadow:5px 5px 0 #161616}
+.dots{background-image:radial-gradient(#161616 1.6px,transparent 1.6px);background-size:9px 9px}
+.p-crit{background:#ff5a7a;background-image:radial-gradient(rgba(0,0,0,.18) 1.6px,transparent 1.6px);background-size:9px 9px}
+.p-blue{background:#6fd3ff}.p-green{background:#8ff0a6}.p-yellow{background:#ffe14d}.p-purple{background:#c9a6ff}
+.kicker{display:inline-block;background:#161616;color:#ffd400;font-size:11px;font-weight:900;padding:3px 8px;letter-spacing:1px;text-transform:uppercase;transform:rotate(-2deg)}
+.big{font-size:52px;font-weight:900;-webkit-text-stroke:1.5px #161616;color:#fff;text-shadow:3px 3px 0 #161616;line-height:1;margin:6px 0}
+.bubble{background:#fff;border:3px solid #161616;border-radius:20px;padding:10px 14px;font-size:14px;font-weight:700;position:relative;margin-top:8px}
+.bubble::after{content:"";position:absolute;left:24px;bottom:-13px;width:0;height:0;border:8px solid transparent;border-top-color:#161616;border-bottom:0}
+.bubble::before{content:"";position:absolute;left:26px;bottom:-8px;width:0;height:0;border:6px solid transparent;border-top-color:#fff;border-bottom:0;z-index:2}
+.narr{background:#fffbe6;border:3px solid #161616;font-size:13px;font-weight:700;padding:8px 11px;margin-bottom:8px;box-shadow:3px 3px 0 rgba(0,0,0,.4)}
+.li{font-size:14px;font-weight:700;padding:4px 0;display:flex;justify-content:space-between;border-bottom:2px solid rgba(0,0,0,.25)}
+.li:last-child{border:0}
+.boom{position:absolute;top:-6px;right:-6px;background:#ffd400;border:3px solid #161616;font-size:13px;font-weight:900;padding:8px 12px;transform:rotate(8deg);
+  clip-path:polygon(50% 0,61% 18%,82% 12%,76% 32%,98% 38%,80% 50%,98% 62%,76% 68%,82% 88%,61% 82%,50% 100%,39% 82%,18% 88%,24% 68%,2% 62%,20% 50%,2% 38%,24% 32%,18% 12%,39% 18%)}
+.bar{background:#fff;border:4px solid #161616;border-radius:6px;padding:10px 16px;display:flex;align-items:center;gap:12px;box-shadow:5px 5px 0 #161616}
+.bar input{flex:1;border:0;outline:0;background:0;font-size:15px;font-weight:700;color:#161616;font-family:inherit}
+.bar input::placeholder{color:#999}
+.bar .km{font-size:12px;font-weight:900;background:#161616;color:#ffd400;padding:3px 7px;border-radius:4px}
+</style></head><body><div class="page">
+<div class="banner"><div class="wm">JARVIS!</div><div class="st">● ONLINE · OPUS · 20:34 · TUE JUN 09 — “GOOD EVENING, SHAY!”</div></div>
+<div class="grid">
+<div class="panel p-crit" style="grid-row:1/3">
+  <span class="kicker">Panel 1 · DANGER!</span>
+  <div class="narr">Meanwhile, fourteen invoices await their hero...</div>
+  <div class="big">$1,240!</div>
+  <div class="bubble">“Send the invoice to 14 customers — one click and it's billed! Your EA has it drafted via Resend!”</div>
+  <div class="boom">CRIT!</div>
+  <div style="margin-top:14px"><span class="kicker">Also needed</span>
+  <div class="li" style="margin-top:8px">Publish SaaS starter → Gumroad<b>$39</b></div>
+  <div class="li">Deploy micro-API → Cloudflare<b>HIGH</b></div></div>
+</div>
+<div class="panel p-yellow">
+  <span class="kicker">Panel 2 · The Loot</span>
+  <div class="big" style="color:#161616;text-shadow:3px 3px 0 #fff;-webkit-text-stroke:1.5px #161616">$3,840</div>
+  <div style="font-size:13px;font-weight:900">NET THIS MONTH · ROI 4.2× · ▲18%!</div>
+  <div class="li" style="margin-top:8px">Stripe<b>$1,240</b></div>
+  <div class="li">Gumroad<b>$890</b></div>
+  <div class="li">Lemon Sq<b>$310</b></div>
+  <div class="li">Newsletter<b>$400</b></div>
+</div>
+<div class="panel p-blue">
+  <span class="kicker">Panel 3 · The Sidekicks</span>
+  <div class="bubble" style="font-size:13px">“The Code agent builds the habit-tracker... 72% done!”</div>
+  <div class="narr" style="margin-top:8px">Scout digs into the note-taking niche — 40%! Newsletter #14 stands queued!</div>
+</div>
+<div class="panel p-purple">
+  <span class="kicker">Panel 4 · HQ Roster</span>
+  <div style="font-size:22px;font-weight:900;margin-top:8px">51 AGENTS</div>
+  <div class="li" style="margin-top:6px">Connectors<b>26 · 9 LIVE</b></div>
+  <div class="li">Products<b>7 LIVE</b></div>
+  <div class="li">AI cost<b>$58/$80</b></div>
+</div>
+<div class="panel p-green">
+  <span class="kicker">Panel 5 · The Tip!</span>
+  <div class="bubble">“Double down! The ‘REST API + auth’ guide drove 61% of all traffic — write two follow-ups!”</div>
+</div>
+</div>
+<div class="bar"><span style="font-size:18px">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span class="km">⌘K</span></div>
+</div></body></html>

@@ -1,0 +1,59 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T119</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,-apple-system,sans-serif}
+body{height:100vh;overflow:hidden;background:#0a0d12;color:#e7edf4;display:flex;align-items:center;justify-content:center}
+.bg{position:fixed;inset:0;background:radial-gradient(circle at 30% 20%,#11202c,transparent 55%),radial-gradient(circle at 80% 90%,#121a26,transparent 55%)}
+.calc{position:relative;width:400px;background:linear-gradient(160deg,#161b22,#0e1217);border:1px solid #232b35;border-radius:26px;padding:22px;box-shadow:0 30px 70px rgba(0,0,0,.6)}
+.hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.wm{font-size:14px;font-weight:800;letter-spacing:3px;color:#46e0a0}
+.st{font-size:11px;color:#6b7682}
+.disp{background:#0b0e13;border:1px solid #1c232c;border-radius:16px;padding:18px 20px;text-align:right;margin-bottom:16px}
+.tape{font-size:12px;color:#5f6b78;line-height:1.7;text-align:right;font-variant-numeric:tabular-nums}
+.tape .op{color:#46e0a0}.tape .opr{color:#ff7a7a}
+.lbl{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#6b7682;margin-top:12px}
+.result{font-size:52px;font-weight:800;letter-spacing:-1px;line-height:1;margin-top:4px;font-variant-numeric:tabular-nums}
+.sub{font-size:13px;color:#46e0a0;margin-top:6px;font-weight:600}
+.pad{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
+.btn{height:62px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:15px;font-weight:600;background:#1b212a;color:#cfd8e2;border:1px solid #232b35}
+.btn small{font-size:9px;color:#7e8a96;font-weight:500;margin-top:2px}
+.btn.fn{background:#222a34;color:#9fdcff}
+.btn.op{background:#46e0a0;color:#04150d}
+.btn.op small{color:#0a3a26}
+.btn.warn{background:#2a1416;color:#ff9090}
+.btn.eq{background:linear-gradient(135deg,#46e0a0,#2fb87f);color:#04150d}
+.btn.wide{grid-column:span 2}
+</style></head><body><div class="bg"></div>
+<div class="calc">
+<div class="hd"><div class="wm">JARVIS</div><div class="st">● Opus · 20:34 Tue Jun 09</div></div>
+<div class="disp">
+<div class="tape">$2,840 revenue <span class="opr">−</span> $58 AI cost</div>
+<div class="tape"><span class="op">+</span> $1,000 invoices pending</div>
+<div class="lbl">Net · month · ROI 4.2×</div>
+<div class="result">$3,840</div>
+<div class="sub">▲ 18% &nbsp;·&nbsp; budget $58 / $80</div>
+</div>
+<div class="pad">
+<div class="btn warn">AC<small>clear day</small></div>
+<div class="btn fn">±<small>refund</small></div>
+<div class="btn fn">%<small>ROI</small></div>
+<div class="btn op">÷<small>per agent</small></div>
+
+<div class="btn fn">Stripe<small>$1,240</small></div>
+<div class="btn fn">Gumroad<small>$890</small></div>
+<div class="btn fn">Lemon<small>$310</small></div>
+<div class="btn op">×<small>scale</small></div>
+
+<div class="btn fn">News<small>$400</small></div>
+<div class="btn fn">Invoice<small>+14</small></div>
+<div class="btn fn">Deploy<small>API</small></div>
+<div class="btn op">−<small>costs</small></div>
+
+<div class="btn fn">Publish<small>$39</small></div>
+<div class="btn fn">POD<small>$120</small></div>
+<div class="btn fn">SEO<small>$240</small></div>
+<div class="btn op">+<small>earn</small></div>
+
+<div class="btn wide">Net<small>this month</small></div>
+<div class="btn fn">.<small>cost/use</small></div>
+<div class="btn eq">=<small>ROI</small></div>
+</div>
+</div></body></html>

@@ -1,0 +1,52 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T223</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Helvetica Neue','Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;background:#2a2017;display:flex;align-items:center;justify-content:center;
+ background-image:radial-gradient(circle at 30% 20%,#3a2c1c,#1c1610)}
+.rolo{position:relative;width:1180px;height:840px}
+.title{position:absolute;top:-2px;left:8px;color:#e9dcc0;font-size:13px;letter-spacing:5px;text-transform:uppercase}
+.title b{color:#e0a85a}
+.meta{position:absolute;top:0;right:8px;color:#bfa980;font-size:11px;letter-spacing:2px}
+/* tabbed dividers along the top */
+.tabs{position:absolute;top:32px;left:60px;right:60px;display:flex;gap:6px;z-index:6}
+.tab{font-size:10px;letter-spacing:1.5px;font-weight:700;color:#5a4326;background:#d9c79c;padding:6px 14px;border-radius:8px 8px 0 0;text-transform:uppercase}
+.tab.act{background:#f4ecd6;color:#9a5a18}
+.card{position:absolute;left:60px;right:60px;background:#f6efde;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.45);padding:22px 28px 18px;
+ background-image:repeating-linear-gradient(0deg,transparent 0 31px,rgba(180,40,40,.07) 31px 32px);overflow:hidden}
+.card::before{content:"";position:absolute;left:64px;top:0;bottom:0;width:1.5px;background:rgba(180,40,40,.25)}
+.card::after{content:"";position:absolute;left:0;right:0;top:54px;height:2px;background:rgba(40,90,160,.18)}
+.punch{position:absolute;left:50%;top:8px;width:26px;height:26px;margin-left:-13px;border-radius:50%;background:#2a2017;box-shadow:inset 0 2px 4px rgba(0,0,0,.5)}
+.cno{position:absolute;top:14px;right:22px;font-family:ui-monospace,monospace;font-size:11px;color:#b89a66}
+.k{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#9a5a18;font-weight:700;padding-left:42px}
+.nm{font-size:22px;font-weight:800;color:#2e2516;padding-left:42px;margin-top:18px;letter-spacing:-.3px}
+.line{padding-left:42px;font-size:13px;line-height:1.55;color:#4a4030;margin-top:3px}
+.line b{color:#2e2516}
+.line .mono{font-family:ui-monospace,monospace;color:#9a5a18;font-weight:700}
+/* stacked cards, each offset down */
+#c4{top:74px;height:120px;background:#efe6d0;transform:rotate(-.4deg)}
+#c3{top:168px;height:150px;background:#f2e9d6;transform:rotate(.3deg)}
+#c2{top:312px;height:180px;background:#f4ecda}
+#c1{top:486px;height:300px;z-index:3;box-shadow:0 18px 50px rgba(0,0,0,.55)}
+.bar{position:absolute;bottom:-8px;left:30px;right:30px;height:16px;background:linear-gradient(#5a4326,#3a2c1c);border-radius:0 0 10px 10px}
+</style></head><body><div class="rolo">
+<div class="title">JARVIS · <b>Rolodex</b> — Memory &amp; Contacts</div>
+<div class="meta">● Online · Opus · Tue Jun 09 · 20:34</div>
+<div class="tabs">
+<div class="tab act">A · Now</div><div class="tab">B · Money</div><div class="tab">C · Jobs</div><div class="tab">D · People</div><div class="tab">E · Notes</div><div class="tab">F · System</div>
+</div>
+
+<div class="card" id="c4"><div class="punch"></div><div class="cno">#11</div><div class="k">F · System</div><div class="nm">Roster &amp; Rails</div><div class="line"><b>51 agents</b> · 26 connectors (<span class="mono">9 live</span>) · 7 products live · AI cost <span class="mono">$58 / $80</span></div></div>
+
+<div class="card" id="c3"><div class="punch"></div><div class="cno">#08</div><div class="k">E · Notes</div><div class="nm">Double Down</div><div class="line">Proactive suggest: <b>"REST API + auth"</b> guide drove <span class="mono">61%</span> of traffic.</div><div class="line">Write two follow-ups to compound it.</div></div>
+
+<div class="card" id="c2"><div class="punch"></div><div class="cno">#05</div><div class="k">C · Jobs Running</div><div class="nm">In the Background</div><div class="line"><b>habit-tracker app</b> — <span class="mono">72%</span> · Code agent</div><div class="line"><b>note-taking niche</b> — <span class="mono">40%</span> · Scout</div><div class="line"><b>newsletter #14</b> — queued · <span class="mono">$400/mo</span> lane</div></div>
+
+<div class="card" id="c1"><div class="punch"></div><div class="cno">#01</div><div class="k">A · Needs You Now</div><div class="nm">Send Invoice → 14 Customers</div>
+<div class="line"><b>CRITICAL.</b> Executive Assistant drafted via Resend; one tap bills the cohort.</div>
+<div class="line">Amount: <span class="mono">$1,240</span> · Net-30 · auto-reconciled to Stripe.</div>
+<div class="line" style="margin-top:10px"><b>Also high:</b> Publish SaaS starter → Gumroad <span class="mono">$39</span></div>
+<div class="line"><b>Also high:</b> Deploy micro-API → Cloudflare (green-gate cleared)</div>
+<div class="line" style="margin-top:10px">Month: <b>Net <span class="mono">$3,840</span></b> · ROI <span class="mono">4.2×</span> · ▲18% · say "Hey Jarvis"</div>
+</div>
+
+<div class="bar"></div>
+</div></body></html>

@@ -1,0 +1,58 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T114</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,-apple-system,sans-serif}
+body{height:100vh;overflow:hidden;background:#0c0a0e;color:#ece8f0}
+.bg{position:fixed;inset:0;background:radial-gradient(circle at 30% 20%,#1d1726,transparent 55%),radial-gradient(circle at 80% 90%,#16121d,transparent 55%)}
+.top{position:relative;display:flex;align-items:center;gap:14px;padding:18px 34px}
+.wm{font-size:17px;font-weight:800;letter-spacing:3px;color:#d8a04a}
+.sub{font-size:12px;color:#8a7e72}
+.r{margin-left:auto;font-size:12px;color:#8a7e72}.r b{color:#d8a04a}
+.stage{position:relative;height:calc(100vh - 64px);display:flex;align-items:center;justify-content:center;gap:60px}
+.deck{position:relative;width:480px;height:480px;border-radius:24px;background:linear-gradient(150deg,#2a2620,#141118);border:1px solid #34302a;box-shadow:0 30px 70px rgba(0,0,0,.6),inset 0 1px 0 #3a352e}
+.platter{position:absolute;top:36px;left:36px;width:408px;height:408px;border-radius:50%;background:repeating-radial-gradient(#0c0a0d,#0c0a0d 2px,#16131a 3px,#16131a 4px);box-shadow:0 0 0 8px #141118,0 0 40px rgba(0,0,0,.7)}
+.platter::after{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,rgba(216,160,74,.0),rgba(216,160,74,.18) 12%,transparent 24%)}
+.label{position:absolute;top:50%;left:50%;width:150px;height:150px;border-radius:50%;transform:translate(-50%,-50%);background:radial-gradient(circle at 40% 35%,#d8a04a,#9c6f24);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:0 0 0 5px #16131a}
+.label .t{font-size:13px;font-weight:800;color:#1a1208;padding:0 14px;line-height:1.2}
+.label .p{font-size:10px;color:#3a2a10;margin-top:3px;letter-spacing:1px}
+.hole{position:absolute;top:50%;left:50%;width:11px;height:11px;border-radius:50%;background:#0c0a0e;transform:translate(-50%,-50%);z-index:3}
+.spin{position:absolute;top:50%;left:50%;width:170px;height:170px;border:2px dashed rgba(216,160,74,.5);border-radius:50%;transform:translate(-50%,-50%);border-right-color:transparent}
+.arm{position:absolute;top:30px;right:30px;width:180px;height:18px;z-index:5}
+.pivot{position:absolute;right:0;top:-8px;width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 38% 32%,#4a443c,#1c1916);border:1px solid #3a352e;box-shadow:0 3px 8px rgba(0,0,0,.6)}
+.tone{position:absolute;right:14px;top:7px;width:200px;height:5px;background:linear-gradient(90deg,#3a352e,#5a544a);border-radius:3px;transform-origin:right center;transform:rotate(26deg)}
+.head{position:absolute;left:0;top:-3px;width:18px;height:11px;background:#d8a04a;border-radius:2px}
+.side{width:330px}
+.np{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#d8a04a}
+.side h2{font-size:30px;font-weight:800;margin:6px 0 2px}
+.meta{font-size:13px;color:#9a8e80}
+.prog{margin:20px 0 8px;height:5px;border-radius:3px;background:#2a2620;overflow:hidden}
+.prog i{display:block;height:100%;width:72%;background:linear-gradient(90deg,#d8a04a,#f0c878)}
+.tt{display:flex;justify-content:space-between;font-size:12px;color:#8a7e72;font-variant-numeric:tabular-nums}
+.tracks{margin-top:24px}
+.trk{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid #221e26;font-size:14px}
+.trk .n{color:#6a6058;width:18px;font-variant-numeric:tabular-nums}
+.trk .nm{flex:1}.trk.act .nm{color:#d8a04a;font-weight:600}
+.trk .d{color:#8a7e72;font-size:12px;font-variant-numeric:tabular-nums}
+.ctrls{display:flex;align-items:center;gap:18px;margin-top:26px}
+.btn{width:46px;height:46px;border-radius:50%;background:#1c1820;border:1px solid #34302a;display:flex;align-items:center;justify-content:center;font-size:16px;color:#cfc4b6}
+.btn.play{width:58px;height:58px;background:#d8a04a;color:#1a1208;font-size:20px;border:0}
+.vol{flex:1;height:4px;background:#2a2620;border-radius:2px;position:relative}
+.vol::after{content:"";position:absolute;left:0;top:0;bottom:0;width:64%;background:#d8a04a;border-radius:2px}
+</style></head><body><div class="bg"></div>
+<div class="top"><div class="wm">JARVIS</div><div class="sub">TURNTABLE · jobs running</div><div class="r">● Online · <b>Opus</b> · 20:34 Tue Jun 09</div></div>
+<div class="stage">
+<div class="deck"><div class="platter"><div class="spin"></div><div class="label"><div class="t">habit-tracker app</div><div class="p">CODE AGENT · 33⅓</div></div><div class="hole"></div></div>
+<div class="arm"><div class="tone"><div class="head"></div></div><div class="pivot"></div></div></div>
+<div class="side">
+<div class="np">▶ Now Running</div>
+<h2>habit-tracker app</h2>
+<div class="meta">Code agent · side A · build + tests</div>
+<div class="prog"><i></i></div>
+<div class="tt"><span>72% · 00:24</span><span>−00:10</span></div>
+<div class="tracks">
+<div class="trk act"><span class="n">A1</span><span class="nm">habit-tracker app</span><span class="d">72%</span></div>
+<div class="trk"><span class="n">A2</span><span class="nm">research note-taking niche · Scout</span><span class="d">40%</span></div>
+<div class="trk"><span class="n">B1</span><span class="nm">newsletter #14</span><span class="d">queued</span></div>
+<div class="trk"><span class="n">B2</span><span class="nm">deploy micro-API · Cloudflare</span><span class="d">HIGH</span></div>
+</div>
+<div class="ctrls"><div class="btn">⏮</div><div class="btn play">⏸</div><div class="btn">⏭</div><div class="vol"></div></div>
+</div>
+</div></body></html>

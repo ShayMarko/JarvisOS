@@ -1,0 +1,70 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T117</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,-apple-system,sans-serif}
+body{height:100vh;overflow:hidden;background:#06090f;color:#dceaf5}
+.bg{position:fixed;inset:0;background:radial-gradient(circle at 50% 40%,#0c1826,#04070c 70%)}
+.top{position:relative;display:flex;align-items:center;gap:14px;padding:18px 32px;z-index:5}
+.wm{font-size:17px;font-weight:800;letter-spacing:3px;color:#46e0a0}
+.sub{font-size:12px;color:#5e7686}
+.r{margin-left:auto;font-size:12px;color:#5e7686}.r b{color:#46e0a0}
+.tree{position:absolute;inset:0;top:64px}
+svg{position:absolute;inset:0;width:100%;height:100%}
+.node{position:absolute;transform:translate(-50%,-50%);width:118px;text-align:center;z-index:3}
+.dot{width:54px;height:54px;border-radius:50%;margin:0 auto 7px;display:flex;align-items:center;justify-content:center;font-size:22px;position:relative}
+.un{background:radial-gradient(circle at 38% 32%,#0e3a30,#072018);border:2px solid #46e0a0;box-shadow:0 0 22px rgba(70,224,160,.45);color:#a8ffd0}
+.av{background:radial-gradient(circle at 38% 32%,#13283a,#0a1626);border:2px solid #3fb8ff;box-shadow:0 0 18px rgba(63,184,255,.35);color:#9fdcff}
+.lk{background:#0d141d;border:2px dashed #2a3645;color:#46566a}
+.node .nm{font-size:12px;font-weight:600}
+.node.locked .nm{color:#5e6b7a}
+.node .lv{font-size:10px;color:#5e7686;letter-spacing:1px}
+.node .badge{position:absolute;top:-4px;right:28px;width:18px;height:18px;border-radius:50%;background:#ffb347;color:#1a1208;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.legend{position:absolute;bottom:26px;left:32px;display:flex;gap:20px;font-size:12px;color:#7e96a6;z-index:5}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.prog{position:absolute;bottom:26px;right:32px;text-align:right;z-index:5}
+.prog .v{font-size:24px;font-weight:800;color:#46e0a0}.prog .l{font-size:11px;letter-spacing:1.5px;color:#5e7686;text-transform:uppercase}
+.pts{position:absolute;top:80px;right:34px;font-size:13px;color:#ffb347;z-index:5}
+</style></head><body><div class="bg"></div>
+<div class="top"><div class="wm">JARVIS</div><div class="sub">SKILL TREE · capabilities</div><div class="r">● Online · <b>Opus</b> · 51 agents</div></div>
+<div class="tree">
+<svg viewBox="0 0 1440 760" preserveAspectRatio="none">
+<g stroke="#46e0a0" stroke-width="2" fill="none" opacity=".7">
+<path d="M720,70 L420,200"/><path d="M720,70 L720,200"/><path d="M720,70 L1020,200"/>
+<path d="M420,200 L260,360"/><path d="M420,200 L520,360"/>
+<path d="M720,200 L720,360"/>
+<path d="M1020,200 L1180,360"/>
+</g>
+<g stroke="#3fb8ff" stroke-width="2" fill="none" opacity=".55">
+<path d="M260,360 L200,540"/><path d="M520,360 L600,540"/>
+<path d="M720,360 L720,540"/><path d="M1020,200 L900,360"/>
+</g>
+<g stroke="#2a3645" stroke-width="2" stroke-dasharray="5 6" fill="none">
+<path d="M200,540 L160,690"/><path d="M600,540 L640,690"/>
+<path d="M720,540 L820,690"/><path d="M900,360 L1080,540"/><path d="M1180,360 L1220,540"/>
+</g>
+</svg>
+<div class="node" style="left:720px;top:70px"><div class="dot un">🧠</div><div class="nm">Core Brain</div><div class="lv">LVL MAX</div></div>
+
+<div class="node" style="left:420px;top:200px"><div class="dot un">⚙️</div><div class="nm">Build & Ship</div><div class="lv">unlocked</div></div>
+<div class="node" style="left:720px;top:200px"><div class="dot un">💰</div><div class="nm">Money Loop</div><div class="lv">unlocked</div></div>
+<div class="node" style="left:1020px;top:200px"><div class="dot un">🔭</div><div class="nm">Research</div><div class="lv">unlocked</div></div>
+
+<div class="node" style="left:260px;top:360px"><div class="dot un">📱</div><div class="nm">App Factory</div><div class="lv">7 live</div></div>
+<div class="node" style="left:520px;top:360px"><div class="dot un">🚀</div><div class="nm">Auto-Deploy</div><div class="lv">unlocked</div></div>
+<div class="node" style="left:720px;top:360px"><div class="dot un">📨</div><div class="nm">Invoicing</div><div class="lv">unlocked</div></div>
+<div class="node" style="left:900px;top:360px"><div class="dot av">📰</div><div class="nm">Newsletter</div><div class="lv">in progress</div><div class="badge">!</div></div>
+<div class="node" style="left:1020px;top:200px"></div>
+<div class="node" style="left:1180px;top:360px"><div class="dot av">🏷</div><div class="nm">POD Engine</div><div class="lv">available</div><div class="badge">!</div></div>
+
+<div class="node" style="left:200px;top:540px"><div class="dot av">🌐</div><div class="nm">Micro-API</div><div class="lv">available</div></div>
+<div class="node" style="left:600px;top:540px"><div class="dot av">📈</div><div class="nm">SEO Loop</div><div class="lv">available</div></div>
+<div class="node" style="left:720px;top:540px"><div class="dot un">🔁</div><div class="nm">Subscriptions</div><div class="lv">unlocked</div></div>
+
+<div class="node locked" style="left:160px;top:690px"><div class="dot lk">🎬</div><div class="nm">Video Lane</div><div class="lv">🔒 YouTube API</div></div>
+<div class="node locked" style="left:640px;top:690px"><div class="dot lk">📲</div><div class="nm">WhatsApp</div><div class="lv">🔒 Twilio</div></div>
+<div class="node locked" style="left:820px;top:690px"><div class="dot lk">🤝</div><div class="nm">CRM Suite</div><div class="lv">🔒 lvl 9</div></div>
+<div class="node locked" style="left:1080px;top:540px"><div class="dot lk">🛍</div><div class="nm">Storefront</div><div class="lv">🔒 lvl 8</div></div>
+<div class="node locked" style="left:1220px;top:540px"><div class="dot lk">🧩</div><div class="nm">Plugin SDK</div><div class="lv">🔒 lvl 8</div></div>
+</div>
+<div class="pts">✦ 3 skill points to spend</div>
+<div class="legend"><span><i style="background:#46e0a0"></i>Unlocked</span><span><i style="background:#3fb8ff"></i>Available</span><span><i style="background:#46566a"></i>Locked</span></div>
+<div class="prog"><div class="v">LVL 7</div><div class="l">12 / 51 capabilities</div></div>
+</body></html>

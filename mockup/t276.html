@@ -1,0 +1,80 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T276</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf6;background:
+ radial-gradient(120% 100% at 30% 0%,#1c2c4a 0%,#101a30 45%,#0a0f1a 100%)}
+/* desktop wallpaper bloom */
+body::before{content:"";position:absolute;inset:0;background:radial-gradient(40% 50% at 80% 75%,rgba(123,92,255,.18),transparent 60%)}
+/* menubar */
+.menubar{position:absolute;top:0;left:0;right:0;height:30px;background:rgba(12,18,30,.6);backdrop-filter:blur(20px);border-bottom:1px solid rgba(140,180,255,.1);display:flex;align-items:center;gap:20px;padding:0 16px;font-size:13px;color:#cdd9e8;z-index:50}
+.menubar .wm{font-weight:800;letter-spacing:2px;color:#7fb4ff}
+.menubar .r{margin-left:auto;display:flex;gap:16px;color:#9fb0c4;font-size:12px}
+/* windows */
+.win{position:absolute;border-radius:12px;background:rgba(14,22,36,.86);backdrop-filter:blur(22px);border:1px solid rgba(140,180,255,.18);box-shadow:0 30px 70px rgba(0,0,0,.5);overflow:hidden}
+.wt{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid rgba(140,180,255,.1);font-size:12px;color:#9fb0c4}
+.dt{width:11px;height:11px;border-radius:50%}.r1{background:#ff5f56}.r2{background:#ffbd2e}.r3{background:#27c93f}
+.wt b{margin-left:6px;color:#cdd9e8;font-weight:600}
+.w1{left:48px;top:64px;width:560px;height:420px;z-index:10}
+.w2{left:430px;top:170px;width:600px;height:470px;z-index:20}
+.w3{right:40px;top:90px;width:360px;height:520px;z-index:15}
+.body{padding:18px}
+/* w1 — money dashboard */
+.kpis{display:flex;gap:10px}.kpi{flex:1;background:rgba(8,14,24,.6);border:1px solid rgba(140,180,255,.12);border-radius:10px;padding:12px}
+.kpi .l{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#7e93b2}.kpi .v{font-size:24px;font-weight:800;margin-top:3px}.up{color:#46e0a0}
+.bars{display:flex;align-items:flex-end;gap:14px;height:150px;margin-top:18px;padding:0 6px}
+.bars .b{flex:1;border-radius:6px 6px 0 0;background:linear-gradient(#5aaaff,#3a6edf)}
+.bars .lab{font-size:10px;color:#7e93b2;text-align:center;margin-top:6px}
+/* w2 — live run viewer */
+.run{font-family:ui-monospace,monospace;font-size:12.5px;line-height:1.7;color:#aab8c4}
+.run .ok{color:#46e0a0}.run .pr{color:#7fb4ff}.run .dim{color:#5f7a8e}.run .wn{color:#ffb454}
+.prog{margin-top:14px;background:rgba(8,14,24,.6);border:1px solid rgba(140,180,255,.12);border-radius:8px;padding:12px}
+.prog .row{display:flex;align-items:center;gap:10px;font-size:13px;margin-bottom:8px}
+.prog .bar{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden}
+.prog .bar i{display:block;height:100%;background:#5aaaff}
+/* w3 — needs you */
+.ni{display:flex;gap:10px;align-items:flex-start;padding:12px 0;border-bottom:1px solid rgba(140,180,255,.1)}
+.ni .ic{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex:none}
+.ni h4{font-size:14px;font-weight:600}.ni p{font-size:12px;color:#7e93b2;margin-top:2px}
+.tag{font-size:9px;font-weight:800;padding:2px 6px;border-radius:5px;margin-left:auto;flex:none}
+.crit{background:rgba(255,90,110,.16);color:#ff8a9a}.high{background:rgba(255,180,84,.16);color:#ffc878}
+/* dock */
+.dock{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:12px;background:rgba(14,22,36,.7);backdrop-filter:blur(22px);border:1px solid rgba(140,180,255,.18);border-radius:18px;padding:10px 16px;z-index:60}
+.dock .app{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;position:relative}
+.dock .app .d{position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:#7fb4ff}
+</style></head><body>
+<div class="menubar"><span class="wm">JARVIS</span><span>File</span><span>Agents</span><span>Money</span><span>Window</span><span class="r"><span>⚡ 51 agents</span><span>🔌 9 live</span><span>$58/$80</span><span>● Opus</span><span>20:34 Tue Jun 09</span></span></div>
+
+<div class="win w1"><div class="wt"><span class="dt r1"></span><span class="dt r2"></span><span class="dt r3"></span><b>Money</b><span style="margin-left:auto">Good evening, Shay</span></div>
+<div class="body"><div class="kpis"><div class="kpi"><div class="l">Net month</div><div class="v">$3,840</div><div class="up" style="font-size:11px">▲18%</div></div><div class="kpi"><div class="l">ROI</div><div class="v">4.2×</div></div><div class="kpi"><div class="l">Products</div><div class="v">7</div></div></div>
+<div class="bars"><div style="flex:1"><div class="b" style="height:124px"></div><div class="lab">Stripe $1,240</div></div><div style="flex:1"><div class="b" style="height:90px"></div><div class="lab">Gumroad $890</div></div><div style="flex:1"><div class="b" style="height:42px"></div><div class="lab">Newsletter $400</div></div><div style="flex:1"><div class="b" style="height:32px"></div><div class="lab">Lemon $310</div></div></div>
+</div></div>
+
+<div class="win w3"><div class="wt"><span class="dt r1"></span><span class="dt r2"></span><span class="dt r3"></span><b>Needs you · 3</b></div>
+<div class="body" style="padding-top:6px">
+<div class="ni"><div class="ic" style="background:rgba(255,90,110,.16)">📧</div><div><h4>Send invoice → 14</h4><p>EA via Resend · $1,240</p></div><span class="tag crit">CRIT</span></div>
+<div class="ni"><div class="ic" style="background:rgba(255,180,84,.16)">🚀</div><div><h4>Publish SaaS starter</h4><p>Gumroad · $39</p></div><span class="tag high">HIGH</span></div>
+<div class="ni"><div class="ic" style="background:rgba(255,180,84,.16)">☁️</div><div><h4>Deploy micro-API</h4><p>Cloudflare</p></div><span class="tag high">HIGH</span></div>
+<div style="margin-top:14px;font-size:12px;color:#7e93b2">💡 Double down: “REST API + auth” guide drove 61% of traffic</div>
+</div></div>
+
+<div class="win w2"><div class="wt"><span class="dt r1"></span><span class="dt r2"></span><span class="dt r3"></span><b>Live run · code agent</b></div>
+<div class="body"><div class="run">
+<div><span class="pr">▸</span> build <span class="dim">habit-tracker</span> · step 7/10</div>
+<div><span class="ok">✓</span> scaffold · auth · db schema · API routes</div>
+<div><span class="ok">✓</span> green-gate: tests <span class="ok">passing</span></div>
+<div><span class="wn">●</span> wiring streaks UI… <span class="dim">writing components/Streak.tsx</span></div>
+</div>
+<div class="prog"><div class="row"><span style="width:120px">habit-tracker</span><span class="bar"><i style="width:72%"></i></span><span>72%</span></div>
+<div class="row"><span style="width:120px">research niche</span><span class="bar"><i style="width:40%;background:#a08cf0"></i></span><span>40%</span></div>
+<div class="row"><span style="width:120px">newsletter #14</span><span class="bar"><i style="width:8%;background:#5fd0c0"></i></span><span>queued</span></div>
+</div></div></div>
+
+<div class="dock">
+<div class="app" style="background:linear-gradient(135deg,#4da3ff,#7b5cff)">⚡<span class="d"></span></div>
+<div class="app" style="background:linear-gradient(135deg,#46e0a0,#1f9e6e)">💰<span class="d"></span></div>
+<div class="app" style="background:linear-gradient(135deg,#ff5d73,#ff8a4a)">⚠️<span class="d"></span></div>
+<div class="app" style="background:linear-gradient(135deg,#a08cf0,#5a3edf)">🔎<span class="d"></span></div>
+<div class="app" style="background:rgba(255,255,255,.08)">📚</div>
+<div class="app" style="background:rgba(255,255,255,.08)">🔌</div>
+<div class="app" style="background:rgba(255,255,255,.08)">⚙️</div>
+</div>
+</body></html>

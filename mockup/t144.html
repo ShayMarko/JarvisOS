@@ -1,0 +1,78 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T144</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Trebuchet MS',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;background:#161324;color:#fff}
+.wrap{position:relative;height:100vh;padding:26px 34px;display:grid;grid-template-columns:1.2fr 1fr 1fr;grid-template-rows:auto 1fr auto;gap:20px;overflow:hidden}
+.bg{position:absolute;inset:0;z-index:0;overflow:hidden}
+.sh{position:absolute}
+.tri{width:0;height:0}
+.zig{stroke:#ff5da2;stroke-width:5;fill:none}
+.top{grid-column:1/-1;display:flex;align-items:center;gap:18px;position:relative;z-index:2}
+.wm{font-size:32px;font-weight:900;letter-spacing:2px;color:#ffd23f;text-shadow:3px 3px 0 #ff5da2}
+.pill{padding:8px 16px;border-radius:30px;background:#23d2c9;color:#161324;font-size:12px;font-weight:800}
+.r{margin-left:auto;font-size:12px;font-weight:700;color:#ff5da2}
+.card{position:relative;z-index:2;border-radius:20px;padding:22px;border:4px solid #161324}
+.hero{background:#ffd23f;color:#161324;transform:rotate(-1.2deg)}
+.greet{font-size:38px;font-weight:900;line-height:1}
+.greet span{color:#ff2e7e}
+.net{margin-top:18px;background:#161324;color:#fff;border-radius:16px;padding:18px}
+.net .v{font-size:46px;font-weight:900;color:#23d2c9}
+.net .d{font-size:13px;font-weight:700;color:#ffd23f}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.chip{font-size:12px;font-weight:800;padding:7px 14px;border-radius:20px;background:#161324;color:#fff}
+.c-needs{background:#ff5da2;color:#161324;transform:rotate(1deg)}
+.c-jobs{background:#23d2c9;color:#161324;transform:rotate(-1deg)}
+.h{font-size:13px;font-weight:900;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px}
+.task{background:#161324;border-radius:14px;padding:13px 15px;margin-bottom:12px}
+.task .t{font-size:14px;font-weight:800;color:#fff}.task .s{font-size:11px;font-weight:700;color:#ffd23f;margin-top:3px}
+.tag{display:inline-block;font-size:9px;font-weight:900;padding:3px 9px;border-radius:10px;margin-bottom:6px}
+.j{background:#161324;border-radius:14px;padding:13px 15px;margin-bottom:12px}
+.j .t{font-size:14px;font-weight:800;color:#fff;display:flex;justify-content:space-between}
+.j .t span{color:#ffd23f;font-size:11px}
+.bar{height:14px;border-radius:8px;background:#0c0a16;margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;background:repeating-linear-gradient(45deg,#ffd23f 0 8px,#ff5da2 8px 16px)}
+.sys{display:flex;gap:10px;margin-top:6px}
+.sys .s{flex:1;background:#161324;border-radius:14px;padding:12px;text-align:center}
+.sys .v{font-size:22px;font-weight:900;color:#23d2c9}.sys .k{font-size:9px;font-weight:800;color:#fff;text-transform:uppercase}
+.foot{grid-column:1/-1;position:relative;z-index:2;display:flex;align-items:center;gap:14px;background:#ffd23f;border:4px solid #161324;border-radius:30px;padding:14px 22px}
+.foot input{flex:1;background:0;border:0;outline:0;color:#161324;font-size:15px;font-weight:700}.foot input::placeholder{color:#9a8a3a}
+.kk{font-size:12px;font-weight:900;background:#161324;color:#ffd23f;border-radius:10px;padding:5px 11px}
+.dot{position:absolute;border-radius:50%}
+</style></head><body>
+<div class="wrap">
+<div class="bg">
+<div class="sh dot" style="width:60px;height:60px;background:#23d2c9;top:120px;right:30%"></div>
+<div class="sh dot" style="width:28px;height:28px;background:#ffd23f;top:300px;left:36%"></div>
+<div class="sh" style="top:60px;left:30%;width:0;height:0;border-left:24px solid transparent;border-right:24px solid transparent;border-bottom:44px solid #ff5da2;transform:rotate(20deg)"></div>
+<div class="sh" style="bottom:160px;right:14%;width:0;height:0;border-left:30px solid transparent;border-right:30px solid transparent;border-bottom:54px solid #ffd23f;transform:rotate(-15deg)"></div>
+<svg class="sh" style="top:200px;right:8%;width:130px;height:60px" viewBox="0 0 130 60"><path class="zig" d="M2 30 Q18 2 34 30 T66 30 T98 30 T130 30"/></svg>
+<svg class="sh" style="bottom:90px;left:12%;width:130px;height:60px" viewBox="0 0 130 60"><path class="zig" style="stroke:#23d2c9" d="M2 30 Q18 2 34 30 T66 30 T98 30 T130 30"/></svg>
+<div class="sh" style="bottom:230px;left:46%;width:46px;height:46px;background:#23d2c9;transform:rotate(35deg)"></div>
+<div class="sh dot" style="width:18px;height:18px;background:#ff5da2;bottom:300px;right:40%"></div>
+</div>
+
+<div class="top"><div class="wm">JARVIS</div><div class="pill">● Online · Opus · 20:34 · Tue Jun 09</div><div class="r">SAY "HEY JARVIS"</div></div>
+
+<div class="card hero">
+<div class="greet">Good evening,<br><span>Shay.</span></div>
+<div class="net"><div class="v">$3,840</div><div class="d">NET / MONTH · ROI 4.2× · ▲18% · AI $58/$80</div></div>
+<div class="chips"><div class="chip">Stripe $1,240</div><div class="chip">Gumroad $890</div><div class="chip">Newsletter $400</div><div class="chip">Lemon $310</div></div>
+</div>
+
+<div class="card c-needs">
+<div class="h">3 things need you</div>
+<div class="task"><span class="tag" style="background:#ff2e7e;color:#fff">CRITICAL</span><div class="t">Send invoice → 14 customers</div><div class="s">$1,240 · EA via Resend</div></div>
+<div class="task"><span class="tag" style="background:#ffd23f;color:#161324">HIGH</span><div class="t">Publish SaaS starter → Gumroad</div><div class="s">$39</div></div>
+<div class="task"><span class="tag" style="background:#ffd23f;color:#161324">HIGH</span><div class="t">Deploy micro-API → Cloudflare</div><div class="s">Edge worker</div></div>
+</div>
+
+<div class="card c-jobs">
+<div class="h">Jobs running</div>
+<div class="j"><div class="t">habit-tracker app <span>Code · 72%</span></div><div class="bar"><i style="width:72%"></i></div></div>
+<div class="j"><div class="t">research niche <span>Scout · 40%</span></div><div class="bar"><i style="width:40%"></i></div></div>
+<div class="j" style="padding:10px 15px"><div class="t">newsletter #14 <span>queued</span></div></div>
+<div class="sys"><div class="s"><div class="v">51</div><div class="k">agents</div></div><div class="s"><div class="v">9/26</div><div class="k">conn</div></div><div class="s"><div class="v">7</div><div class="k">products</div></div></div>
+</div>
+
+<div class="foot"><span>🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span class="kk">⌘K</span></div>
+</div>
+</body></html>

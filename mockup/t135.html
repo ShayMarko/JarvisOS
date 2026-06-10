@@ -1,0 +1,52 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T135</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e8edf4;background:radial-gradient(900px 700px at 50% 50%,#10182c,#0a0c11 70%);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.wm{position:absolute;top:24px;left:36px;font-size:17px;font-weight:800;letter-spacing:3px;color:#7c9cff}
+.st{position:absolute;top:27px;right:36px;font-size:12px;color:#5b6678}
+.hint{position:absolute;top:27px;left:50%;transform:translateX(-50%);font-size:12px;color:#5b6678}
+.hint b{color:#9aa6b4}
+.radial{position:relative;width:460px;height:460px}
+.radial svg{position:absolute;inset:0}
+.center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:128px;height:128px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#1a2438,#0c1220);border:1px solid #2a3445;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 40px rgba(124,156,255,.25)}
+.center .em{font-size:26px}.center .lbl{font-size:11px;color:#8a96a8;margin-top:4px}
+.wlbl{position:absolute;display:flex;flex-direction:column;align-items:center;width:120px;text-align:center;transform:translate(-50%,-50%)}
+.wlbl .em{font-size:24px}.wlbl .t{font-size:13px;font-weight:700;margin-top:5px}.wlbl .s{font-size:11px;color:#8a96a8}
+.wlbl.on .t{color:#7c9cff}
+.foot{position:absolute;bottom:30px;font-size:13px;color:#6b7888;text-align:center}
+.foot b{color:#cdd6e2}
+</style></head><body>
+<div class="wm">JARVIS</div>
+<div class="hint">Press-and-hold · release on a wedge · <b>Good evening, Shay</b></div>
+<div class="st">● Online · Opus · 20:34</div>
+<div class="radial">
+  <svg viewBox="0 0 460 460">
+    <defs>
+      <radialGradient id="hl" cx="50%" cy="50%" r="50%"><stop offset="55%" stop-color="rgba(124,156,255,.28)"/><stop offset="100%" stop-color="rgba(124,156,255,0)"/></radialGradient>
+    </defs>
+    <!-- 8 wedges, ring from r=72 to r=215 -->
+    <g stroke="#0a0c11" stroke-width="3">
+      <!-- highlighted wedge (Money, top-right) -->
+      <path d="M230,230 L230,15 A215,215 0 0,1 382,77 Z" fill="url(#hl)" stroke="#7c9cff" stroke-width="1.5"/>
+      <path d="M230,230 L382,77 A215,215 0 0,1 445,230 Z" fill="rgba(255,255,255,.04)"/>
+      <path d="M230,230 L445,230 A215,215 0 0,1 382,382 Z" fill="rgba(255,255,255,.055)"/>
+      <path d="M230,230 L382,382 A215,215 0 0,1 230,445 Z" fill="rgba(255,255,255,.04)"/>
+      <path d="M230,230 L230,445 A215,215 0 0,1 77,382 Z" fill="rgba(255,255,255,.055)"/>
+      <path d="M230,230 L77,382 A215,215 0 0,1 15,230 Z" fill="rgba(255,255,255,.04)"/>
+      <path d="M230,230 L15,230 A215,215 0 0,1 77,77 Z" fill="rgba(255,255,255,.055)"/>
+      <path d="M230,230 L77,77 A215,215 0 0,1 230,15 Z" fill="rgba(255,255,255,.04)"/>
+    </g>
+    <circle cx="230" cy="230" r="215" fill="none" stroke="#202a3a" stroke-width="1"/>
+  </svg>
+  <div class="center"><div class="em">🎙</div><div class="lbl">Hey Jarvis</div></div>
+  <!-- labels positioned at ~r=145 around 8 directions -->
+  <div class="wlbl" style="left:280px;top:80px"><div class="em">💳</div><div class="t on">Money</div><div class="s">$3,840</div></div>
+  <div class="wlbl" style="left:375px;top:230px"><div class="em">▤</div><div class="t">Jobs</div><div class="s">2 running</div></div>
+  <div class="wlbl" style="left:280px;top:380px"><div class="em">✉</div><div class="t">Inbox</div><div class="s">3 need you</div></div>
+  <div class="wlbl" style="left:180px;top:415px"><div class="em">⊞</div><div class="t">Agents</div><div class="s">51</div></div>
+  <div class="wlbl" style="left:85px;top:380px"><div class="em">⇄</div><div class="t">Connect</div><div class="s">9 live</div></div>
+  <div class="wlbl" style="left:48px;top:230px"><div class="em">◎</div><div class="t">Today</div><div class="s">digest</div></div>
+  <div class="wlbl" style="left:85px;top:80px"><div class="em">🧠</div><div class="t">Memory</div><div class="s">recall</div></div>
+  <div class="wlbl" style="left:230px;top:48px"><div class="em">⚙</div><div class="t">System</div><div class="s">nominal</div></div>
+</div>
+<div class="foot">Releasing here opens <b>Money</b> — $3,840 net, ROI 4.2×, ▲18%</div>
+</body></html>

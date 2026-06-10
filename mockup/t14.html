@@ -1,0 +1,38 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T14</title><style>
+*{margin:0;box-sizing:border-box;font-family:'IBM Plex Mono','SF Mono',ui-monospace,monospace}
+body{height:100vh;overflow:hidden;background:#060a08;color:#ffd089}
+.scan{position:fixed;inset:0;background:repeating-linear-gradient(0deg,rgba(255,180,90,.03) 0 2px,transparent 2px 4px);pointer-events:none}
+.hud{position:fixed;inset:0}
+.brk{position:absolute;width:60px;height:60px;border:2px solid rgba(255,180,90,.6)}
+.tl{top:26px;left:26px;border-right:0;border-bottom:0}.tr{top:26px;right:26px;border-left:0;border-bottom:0}
+.bl{bottom:26px;left:26px;border-right:0;border-top:0}.br{bottom:26px;right:26px;border-left:0;border-top:0}
+.rd{position:absolute;font-size:11px;letter-spacing:2px;line-height:1.9;text-shadow:0 0 8px rgba(255,180,90,.4)}
+.rd b{color:#fff0d6;font-size:13px}
+.t1{top:40px;left:48px}.t2{top:40px;right:48px;text-align:right}.b1{bottom:40px;left:48px}.b2{bottom:40px;right:48px;text-align:right}
+.dim{color:#9a7a4a}
+.center{position:absolute;inset:0;display:grid;place-items:center}
+.reticle{position:relative;width:280px;height:280px}
+.ring{position:absolute;inset:0;border:1px solid rgba(255,180,90,.35);border-radius:50%}
+.ring2{position:absolute;inset:60px;border:1px dashed rgba(255,180,90,.3);border-radius:50%}
+.cross{position:absolute;background:rgba(255,180,90,.5)}
+.ch{left:50%;top:0;bottom:0;width:1px;transform:translateX(-.5px)}.cv{top:50%;left:0;right:0;height:1px;transform:translateY(-.5px)}
+.tick{position:absolute;left:50%;width:2px;height:10px;background:#ffd089;transform:translateX(-50%)}
+.dotc{position:absolute;inset:0;display:grid;place-items:center}.dotc .o{width:40px;height:40px;border-radius:50%;background:radial-gradient(circle,#fff0d6,#ffb648);box-shadow:0 0 30px rgba(255,180,90,.7)}
+.label{position:absolute;top:calc(50% + 160px);left:50%;transform:translateX(-50%);text-align:center;font-size:13px;letter-spacing:3px;color:#ffce8a}
+.bar{position:absolute;bottom:90px;left:50%;transform:translateX(-50%);width:480px;border:1px solid rgba(255,180,90,.4);border-radius:4px;padding:10px 14px;font-size:13px;background:rgba(20,12,4,.6)}
+.cur{display:inline-block;width:8px;height:14px;background:#ffd089;vertical-align:middle;animation:b 1s steps(1) infinite}@keyframes b{50%{opacity:0}}
+</style></head><body><div class="scan"></div><div class="hud">
+<div class="brk tl"></div><div class="brk tr"></div><div class="brk bl"></div><div class="brk br"></div>
+<div class="rd t1">J.A.R.V.I.S · HEADS-UP<br><b>● ONLINE · OPUS</b><br><span class="dim">STANDBY</span></div>
+<div class="rd t2">20:34:41 · TUE JUN 09<br><b>CPU 12% · MEM 6.1G</b><br><span class="dim">BUDGET $58/$80</span></div>
+<div class="rd b1">AGENTS <b>51</b> · CONNECTORS <b>26</b><br>JOBS <b>2 RUNNING</b><br><span class="dim">habit-tracker 72% · research 40%</span></div>
+<div class="rd b2">NEEDS YOU <b style="color:#ff8c6b">× 3</b><br><span class="dim">invoice · publish · deploy</span><br>NET MONTH <b>$3,840</b> · ROI 4.2×</div>
+<div class="center"><div class="reticle">
+<div class="ring"></div><div class="ring2"></div>
+<div class="cross ch"></div><div class="cross cv"></div>
+<div class="tick" style="top:0"></div><div class="tick" style="bottom:0"></div>
+<div class="dotc"><div class="o"></div></div>
+</div></div>
+<div class="label">GOOD EVENING, SHAY · TARGET LOCKED</div>
+<div class="bar">&gt; ask jarvis, or /command <span class="dim">· say "hey jarvis"</span> <span class="cur"></span></div>
+</div></body></html>

@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JARVIS · Neural Map</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    height: 100vh;
+    overflow: hidden;
+    background: radial-gradient(1000px 760px at 50% 46%, #0a1626, #04060c 78%);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #dcf2ff;
+  }
+  .stage {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  svg { width: min(98vw, 1440px); height: auto; max-height: 96vh; display: block; }
+  .wordmark {
+    position: absolute;
+    top: 26px; left: 32px;
+    z-index: 5;
+    user-select: none;
+  }
+  .wordmark .name {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 4px;
+    color: #eaf6ff;
+    text-shadow: 0 0 18px rgba(80,180,230,.55);
+  }
+  .wordmark .status {
+    margin-top: 5px;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: #5d7c92;
+    font-weight: 600;
+  }
+  .wordmark .status .dot { color: #4ee08a; text-shadow: 0 0 8px #4ee08a; }
+  .caption {
+    position: absolute;
+    bottom: 26px; left: 0; right: 0;
+    text-align: center;
+    z-index: 5;
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: #6f93aa;
+    font-weight: 600;
+    text-transform: uppercase;
+    user-select: none;
+  }
+  .hub { cursor: pointer; }
+  .hub-label { font-weight: 700; font-size: 12px; fill: #dcf2ff; }
+  .hub-sub { font-size: 9px; font-weight: 600; }
+  .hub:hover .hub-core { filter: url(#hubGlowStrong); }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="wordmark">
+    <div class="name">JARVIS</div>
+    <div class="status"><span class="dot">●</span> ONLINE · OPUS · 20:34</div>
+  </div>
+
+  <svg viewBox="0 0 1000 680" preserveAspectRatio="xMidYMid meet" aria-label="Neural brain map">
+    <defs>
+      <radialGradient id="organGlow" cx="50%" cy="48%" r="60%">
+        <stop offset="0%" stop-color="#0f5e74" stop-opacity="0.55"/>
+        <stop offset="42%" stop-color="#0a3f55" stop-opacity="0.30"/>
+        <stop offset="100%" stop-color="#04060c" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="lobeCoreGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#2a9bbd" stop-opacity="0.45"/>
+        <stop offset="100%" stop-color="#04060c" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="nodeGrad" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#dffaff"/>
+        <stop offset="55%" stop-color="#7fd6ff"/>
+        <stop offset="100%" stop-color="#2a7fb0" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="hubGrad" cx="40%" cy="38%" r="65%">
+        <stop offset="0%" stop-color="#ffffff"/>
+        <stop offset="45%" stop-color="#8fe0ff"/>
+        <stop offset="100%" stop-color="#1d7ab0"/>
+      </radialGradient>
+      <radialGradient id="pulseGrad" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#ffffff"/>
+        <stop offset="40%" stop-color="#cffaff"/>
+        <stop offset="100%" stop-color="#cffaff" stop-opacity="0"/>
+      </radialGradient>
+
+      <filter id="softBlur" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="1.1"/>
+      </filter>
+      <filter id="nodeGlow" x="-300%" y="-300%" width="700%" height="700%">
+        <feGaussianBlur stdDeviation="2.2"/>
+      </filter>
+      <filter id="hubGlow" x="-200%" y="-200%" width="500%" height="500%">
+        <feGaussianBlur stdDeviation="5" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="hubGlowStrong" x="-250%" y="-250%" width="600%" height="600%">
+        <feGaussianBlur stdDeviation="8" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="outlineGlow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="6"/>
+      </filter>
+
+      <!-- Plump rounded double-lobe brain silhouette (~880x580 centered at 500,340) -->
+      <clipPath id="brainclip">
+        <path d="
+          M 500 70
+          C 430 50, 340 56, 270 92
+          C 175 140, 96 210, 86 318
+          C 78 405, 110 480, 190 540
+          C 270 600, 380 624, 500 620
+          C 620 624, 730 600, 810 540
+          C 890 480, 922 405, 914 318
+          C 904 210, 825 140, 730 92
+          C 660 56, 570 50, 500 70
+          Z" />
+      </clipPath>
+      <path id="brainOutlinePath" d="
+          M 500 70
+          C 430 50, 340 56, 270 92
+          C 175 140, 96 210, 86 318
+          C 78 405, 110 480, 190 540
+          C 270 600, 380 624, 500 620
+          C 620 624, 730 600, 810 540
+          C 890 480, 922 405, 914 318
+          C 904 210, 825 140, 730 92
+          C 660 56, 570 50, 500 70
+          Z" />
+    </defs>
+
+    <!-- soft organ glow behind clip -->
+    <ellipse cx="500" cy="340" rx="470" ry="330" fill="url(#organGlow)"/>
+    <ellipse cx="320" cy="330" rx="190" ry="200" fill="url(#lobeCoreGlow)"/>
+    <ellipse cx="680" cy="330" rx="190" ry="200" fill="url(#lobeCoreGlow)"/>
+
+    <!-- dense connectome clipped into brain shape -->
+    <g clip-path="url(#brainclip)">
+      <rect x="0" y="0" width="1000" height="680" fill="#06101c" opacity="0.35"/>
+      <g id="synapses"></g>
+      <g id="pulses"></g>
+      <g id="nodes"></g>
+    </g>
+
+    <!-- outline + fissure (outside clip) -->
+    <use href="#brainOutlinePath" fill="none" stroke="#1e6a82" stroke-width="3" opacity="0.55" filter="url(#outlineGlow)"/>
+    <use href="#brainOutlinePath" fill="none" stroke="#3aa0bd" stroke-width="1.2" opacity="0.5"/>
+    <!-- central fissure shadow -->
+    <path d="M 500 78 C 488 180, 512 300, 496 420 C 504 510, 498 560, 500 612"
+          fill="none" stroke="#020610" stroke-width="14" opacity="0.5" filter="url(#softBlur)"/>
+    <path d="M 500 80 C 489 180, 511 300, 497 420 C 503 510, 499 558, 500 610"
+          fill="none" stroke="#0a3346" stroke-width="2" opacity="0.4"/>
+
+    <g id="hubs"></g>
+
+  </svg>
+
+  <div class="caption">Neural Map · tap a neuron to open</div>
+</div>
+
+<script>
+(function(){
+  // deterministic RNG
+  function mulberry32(a){
+    return function(){
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      var t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  var rand = mulberry32(20340610);
+  var SVGNS = "http://www.w3.org/2000/svg";
+
+  // brain bounding-ish region for point gen
+  var cx = 500, cy = 340;
+  var lobeL = {x:330, y:330}, lobeR = {x:670, y:330};
+
+  // point-in-region test: generous ellipse covering the silhouette,
+  // the clipPath does the real cropping, this just keeps points sane
+  function inField(x, y){
+    var dx = (x - cx) / 460, dy = (y - cy) / 320;
+    return (dx*dx + dy*dy) <= 1.05;
+  }
+
+  var nodes = [];
+  var TARGET = 340;
+
+  // helper to add a clustered point near a center
+  function pushNear(c, spread){
+    for(var t=0;t<40;t++){
+      // gaussian-ish via sum of randoms
+      var gx = (rand()+rand()+rand()-1.5)/1.5;
+      var gy = (rand()+rand()+rand()-1.5)/1.5;
+      var x = c.x + gx*spread;
+      var y = c.y + gy*spread*0.92;
+      if(inField(x,y)){ nodes.push({x:x,y:y}); return true; }
+    }
+    return false;
+  }
+  function pushUniform(){
+    for(var t=0;t<40;t++){
+      var x = cx + (rand()-0.5)*940;
+      var y = cy + (rand()-0.5)*620;
+      if(inField(x,y)){ nodes.push({x:x,y:y}); return true; }
+    }
+    return false;
+  }
+
+  // dense cores near each lobe center, plus a uniform scatter
+  while(nodes.length < TARGET){
+    var r = rand();
+    if(r < 0.34) pushNear(lobeL, 150);
+    else if(r < 0.68) pushNear(lobeR, 150);
+    else if(r < 0.82) pushNear(lobeL, 78);     // ultra-dense grey-matter core L
+    else if(r < 0.96) pushNear(lobeR, 78);     // ultra-dense grey-matter core R
+    else pushUniform();
+  }
+
+  var nN = nodes.length;
+
+  // nearest neighbour edges
+  function dist2(a,b){ var dx=a.x-b.x, dy=a.y-b.y; return dx*dx+dy*dy; }
+  var edgeSet = {};
+  var edges = [];
+  for(var i=0;i<nN;i++){
+    var dists = [];
+    for(var j=0;j<nN;j++){
+      if(i===j) continue;
+      dists.push([dist2(nodes[i],nodes[j]), j]);
+    }
+    dists.sort(function(a,b){return a[0]-b[0];});
+    var k = 2 + Math.floor(rand()*3); // 2-4 neighbors
+    for(var m=0;m<k && m<dists.length;m++){
+      var j2 = dists[m][1];
+      var key = i<j2 ? i+"_"+j2 : j2+"_"+i;
+      if(edgeSet[key]) continue;
+      edgeSet[key] = true;
+      edges.push([i, j2]);
+    }
+  }
+
+  var synG = document.getElementById('synapses');
+  var pulseG = document.getElementById('pulses');
+  var nodeG = document.getElementById('nodes');
+  var hubG = document.getElementById('hubs');
+
+  var highwayEdges = [];
+
+  // curved synapses
+  edges.forEach(function(e){
+    var a = nodes[e[0]], b = nodes[e[1]];
+    var mx = (a.x+b.x)/2, my=(a.y+b.y)/2;
+    // perpendicular bow
+    var dx = b.x-a.x, dy=b.y-a.y;
+    var len = Math.sqrt(dx*dx+dy*dy)||1;
+    var bow = (rand()-0.5)* Math.min(len*0.35, 26);
+    var nx = -dy/len, ny = dx/len;
+    var cxp = mx + nx*bow, cyp = my + ny*bow;
+    var d = "M"+a.x.toFixed(1)+" "+a.y.toFixed(1)+" Q"+cxp.toFixed(1)+" "+cyp.toFixed(1)+" "+b.x.toFixed(1)+" "+b.y.toFixed(1);
+
+    var p = document.createElementNS(SVGNS,'path');
+    p.setAttribute('d', d);
+    p.setAttribute('fill','none');
+    var isHwy = rand() < 0.10;
+    if(isHwy){
+      p.setAttribute('stroke', rand()<0.5 ? '#5fcfe6' : '#7fa6ff');
+      p.setAttribute('stroke-width','1.5');
+      p.setAttribute('stroke-opacity', (0.55 + rand()*0.15).toFixed(2));
+      highwayEdges.push(d);
+    } else {
+      p.setAttribute('stroke', rand()<0.55 ? '#37b0c8' : '#5a7ee0');
+      p.setAttribute('stroke-width', (0.5 + rand()*0.6).toFixed(2));
+      p.setAttribute('stroke-opacity', (0.15 + rand()*0.30).toFixed(2));
+    }
+    synG.appendChild(p);
+  });
+
+  // glowing nodes
+  nodes.forEach(function(n){
+    var r = 1.4 + rand()*1.8;
+    var c = document.createElementNS(SVGNS,'circle');
+    c.setAttribute('cx', n.x.toFixed(1));
+    c.setAttribute('cy', n.y.toFixed(1));
+    c.setAttribute('r', r.toFixed(2));
+    c.setAttribute('fill', 'url(#nodeGrad)');
+    if(rand()<0.4) c.setAttribute('filter','url(#nodeGlow)');
+    nodeG.appendChild(c);
+  });
+
+  // traveling pulses along highway + random edges
+  var pulsePaths = [];
+  for(var h=0; h<highwayEdges.length; h++) pulsePaths.push(highwayEdges[h]);
+  // add some random edge paths too
+  var allSyn = synG.querySelectorAll('path');
+  for(var z=0; z<allSyn.length && pulsePaths.length<60; z+=7){
+    pulsePaths.push(allSyn[z].getAttribute('d'));
+  }
+
+  var PULSES = 28;
+  for(var pI=0; pI<PULSES; pI++){
+    var pd = pulsePaths[Math.floor(rand()*pulsePaths.length)];
+    if(!pd) continue;
+    var dot = document.createElementNS(SVGNS,'circle');
+    dot.setAttribute('r', (1.6 + rand()*1.4).toFixed(2));
+    dot.setAttribute('fill', 'url(#pulseGrad)');
+    pulseG.appendChild(dot);
+
+    var mp = document.createElementNS(SVGNS,'animateMotion');
+    var dur = (3.5 + rand()*4).toFixed(2);
+    mp.setAttribute('dur', dur+'s');
+    mp.setAttribute('repeatCount','indefinite');
+    mp.setAttribute('begin', (-rand()*parseFloat(dur)).toFixed(2)+'s');
+    mp.setAttribute('rotate','auto');
+    mp.setAttribute('path', pd);
+    dot.appendChild(mp);
+
+    // gentle opacity flicker
+    var an = document.createElementNS(SVGNS,'animate');
+    an.setAttribute('attributeName','opacity');
+    an.setAttribute('values','0;1;1;0');
+    an.setAttribute('dur', dur+'s');
+    an.setAttribute('begin', mp.getAttribute('begin'));
+    an.setAttribute('repeatCount','indefinite');
+    dot.appendChild(an);
+  }
+
+  // ===== HUB NEURONS embedded in lobes =====
+  var hubs = [
+    {label:'Today',      sub:'proactive',   x:300, y:150},
+    {label:'Chat',       sub:'ask jarvis',  x:470, y:128},
+    {label:'Voice',      sub:'speak',       x:640, y:152},
+    {label:'Memory',     sub:'recall',      x:210, y:280},
+    {label:'Knowledge',  sub:'KB',          x:360, y:268},
+    {label:'Timeline',   sub:'history',     x:500, y:300},
+    {label:'Money',      sub:'$3,840',      x:640, y:268,  subColor:'#7fe6b0'},
+    {label:'Agents',     sub:'51',          x:790, y:282},
+    {label:'Connectors', sub:'9 live',      x:250, y:430},
+    {label:'Jobs',       sub:'2 running',   x:430, y:460},
+    {label:'Approvals',  sub:'3 need you',  x:600, y:460, ring:'#ff5d73', subColor:'#ff9cb0'},
+    {label:'Settings',   sub:'system',      x:760, y:430}
+  ];
+
+  function nearestNodes(x,y,count){
+    var arr = nodes.map(function(n,idx){return [dist2({x:x,y:y},n), idx];});
+    arr.sort(function(a,b){return a[0]-b[0];});
+    return arr.slice(0,count).map(function(a){return nodes[a[1]];});
+  }
+
+  hubs.forEach(function(hb){
+    var g = document.createElementNS(SVGNS,'g');
+    g.setAttribute('class','hub');
+
+    // 5 bright spokes to nearest nodes
+    var nn = nearestNodes(hb.x, hb.y, 5);
+    nn.forEach(function(n){
+      var sp = document.createElementNS(SVGNS,'line');
+      sp.setAttribute('x1', hb.x); sp.setAttribute('y1', hb.y);
+      sp.setAttribute('x2', n.x.toFixed(1)); sp.setAttribute('y2', n.y.toFixed(1));
+      sp.setAttribute('stroke', '#bdeeff');
+      sp.setAttribute('stroke-width', '1.2');
+      sp.setAttribute('stroke-opacity', '0.55');
+      sp.setAttribute('filter','url(#softBlur)');
+      g.appendChild(sp);
+    });
+
+    var ringColor = hb.ring || '#56c8e6';
+
+    // outer halo ring
+    var halo = document.createElementNS(SVGNS,'circle');
+    halo.setAttribute('cx', hb.x); halo.setAttribute('cy', hb.y);
+    halo.setAttribute('r', 20);
+    halo.setAttribute('fill','none');
+    halo.setAttribute('stroke', ringColor);
+    halo.setAttribute('stroke-width','1.4');
+    halo.setAttribute('stroke-opacity','0.7');
+    halo.setAttribute('filter','url(#hubGlow)');
+    g.appendChild(halo);
+
+    var halo2 = document.createElementNS(SVGNS,'circle');
+    halo2.setAttribute('cx', hb.x); halo2.setAttribute('cy', hb.y);
+    halo2.setAttribute('r', 26);
+    halo2.setAttribute('fill','none');
+    halo2.setAttribute('stroke', ringColor);
+    halo2.setAttribute('stroke-width','0.8');
+    halo2.setAttribute('stroke-opacity','0.3');
+    g.appendChild(halo2);
+
+    // pulsing ring for emphasis
+    var pr = document.createElementNS(SVGNS,'circle');
+    pr.setAttribute('cx', hb.x); pr.setAttribute('cy', hb.y);
+    pr.setAttribute('r', 14);
+    pr.setAttribute('fill','none');
+    pr.setAttribute('stroke', ringColor);
+    pr.setAttribute('stroke-width','1');
+    pr.setAttribute('stroke-opacity','0.5');
+    var a1 = document.createElementNS(SVGNS,'animate');
+    a1.setAttribute('attributeName','r'); a1.setAttribute('values','13;26;13');
+    a1.setAttribute('dur', hb.ring ? '1.8s' : '3.4s'); a1.setAttribute('repeatCount','indefinite');
+    var a2 = document.createElementNS(SVGNS,'animate');
+    a2.setAttribute('attributeName','stroke-opacity'); a2.setAttribute('values','0.6;0;0.6');
+    a2.setAttribute('dur', hb.ring ? '1.8s' : '3.4s'); a2.setAttribute('repeatCount','indefinite');
+    pr.appendChild(a1); pr.appendChild(a2);
+    g.appendChild(pr);
+
+    // core neuron
+    var core = document.createElementNS(SVGNS,'circle');
+    core.setAttribute('class','hub-core');
+    core.setAttribute('cx', hb.x); core.setAttribute('cy', hb.y);
+    core.setAttribute('r', 12);
+    core.setAttribute('fill','url(#hubGrad)');
+    core.setAttribute('filter','url(#hubGlow)');
+    g.appendChild(core);
+
+    // label
+    var lbl = document.createElementNS(SVGNS,'text');
+    lbl.setAttribute('class','hub-label');
+    lbl.setAttribute('x', hb.x);
+    lbl.setAttribute('y', hb.y + 34);
+    lbl.setAttribute('text-anchor','middle');
+    lbl.textContent = hb.label;
+    g.appendChild(lbl);
+
+    var sub = document.createElementNS(SVGNS,'text');
+    sub.setAttribute('class','hub-sub');
+    sub.setAttribute('x', hb.x);
+    sub.setAttribute('y', hb.y + 46);
+    sub.setAttribute('text-anchor','middle');
+    sub.setAttribute('fill', hb.subColor || '#7fa8c0');
+    sub.textContent = hb.sub;
+    g.appendChild(sub);
+
+    hubG.appendChild(g);
+  });
+
+})();
+</script>
+</body>
+</html>

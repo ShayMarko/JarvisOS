@@ -1,0 +1,31 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T69</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6e9f2;background:#0c0d11}
+.app{display:grid;grid-template-columns:54px 1fr 230px;grid-template-rows:46px 1fr;height:100vh}
+.tbar{grid-column:1/-1;display:flex;align-items:center;gap:6px;padding:0 12px;background:#101117;border-bottom:1px solid #1c1e26}
+.wm{font-size:14px;font-weight:800;letter-spacing:2px;color:#7c8cff;margin-right:10px}
+.tt{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;color:#8a90a6;font-size:15px}.tt:hover{background:#191b24}.tt.on{background:#1b2138;color:#7c8cff}
+.tools{background:#101117;border-right:1px solid #1c1e26;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 0}
+.canvas{position:relative;background:
+ radial-gradient(900px 600px at 50% 40%,#11142a,#0a0b12),
+ repeating-linear-gradient(0deg,rgba(120,140,255,.05) 0 1px,transparent 1px 28px),
+ repeating-linear-gradient(90deg,rgba(120,140,255,.05) 0 1px,transparent 1px 28px)}
+.obj{position:absolute;border-radius:14px;background:rgba(22,26,44,.9);border:1px solid rgba(124,140,255,.3);padding:14px;box-shadow:0 14px 30px rgba(0,0,0,.4)}
+.sel{border-color:#7c8cff;box-shadow:0 0 0 1px #7c8cff,0 14px 30px rgba(0,0,0,.4)}
+.sel::before,.sel::after{content:"";position:absolute;width:8px;height:8px;background:#7c8cff;border-radius:2px}.sel::before{top:-4px;left:-4px}.sel::after{bottom:-4px;right:-4px}
+.cl{font-size:10px;letter-spacing:1.3px;text-transform:uppercase;color:#7681a0}.big{font-size:24px;font-weight:800;margin-top:6px}.tt2{font-size:14px;font-weight:600;margin-top:4px}.d{font-size:12px;color:#9aa3bd;margin-top:3px}
+.rk{font-size:9px;font-weight:700;padding:2px 7px;border-radius:5px;color:#ff6b81;background:rgba(255,107,129,.14)}
+.layers{background:#101117;border-left:1px solid #1c1e26;padding:14px 12px}
+.lh{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:#7681a0;margin-bottom:10px}
+.layer{display:flex;align-items:center;gap:9px;font-size:13px;color:#aab2c8;padding:8px 8px;border-radius:7px}.layer.on{background:#1b2138;color:#dfe4f5}.layer .i{opacity:.6}
+</style></head><body><div class="app">
+<div class="tbar"><span class="wm">JARVIS</span><span class="tt on">▦</span><span class="tt">✦</span><span class="tt">◈</span><span class="tt">≋</span><span style="margin-left:auto;font-size:12px;color:#7681a0">Today · canvas · ● Opus</span></div>
+<div class="tools"><span class="tt on">↖</span><span class="tt">▭</span><span class="tt">◯</span><span class="tt">T</span><span class="tt">＋</span><span class="tt" style="margin-top:auto">⚙</span></div>
+<div class="canvas">
+<div class="obj sel" style="left:60px;top:50px;width:300px"><span class="cl">Needs you · 3</span><div class="tt2"><span class="rk">CRIT</span> Invoice → 14 customers</div><div class="d">EA · Resend · approve to bill</div></div>
+<div class="obj" style="left:420px;top:60px;width:220px"><span class="cl">Money · month</span><div class="big">$3,840</div><div class="d">ROI 4.2× · ▲18%</div></div>
+<div class="obj" style="left:120px;top:240px;width:260px"><span class="cl">Job · building</span><div class="tt2">habit-tracker · 72%</div></div>
+<div class="obj" style="left:470px;top:260px;width:200px"><span class="cl">Suggests</span><div class="d">Double down "REST API + auth"</div></div>
+</div>
+<div class="layers"><div class="lh">Layers</div><div class="layer on"><span class="i">◈</span>Needs you</div><div class="layer"><span class="i">◈</span>Money</div><div class="layer"><span class="i">◈</span>Job · habit-tracker</div><div class="layer"><span class="i">◈</span>Suggests</div><div class="lh" style="margin-top:16px">Properties</div><div class="layer">opacity 100%</div><div class="layer">radius 14</div></div>
+</div></body></html>

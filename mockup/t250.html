@@ -1,0 +1,52 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T250</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Arial Black','Helvetica Neue',Impact,system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#dfff1a;background:#020302}
+.acid{height:100vh;display:grid;grid-template-rows:auto 1fr auto;padding:26px 40px;position:relative;overflow:hidden;
+background:radial-gradient(circle at 50% 40%,#0a1a05 0%,#020302 70%)}
+.acid::before{content:"";position:absolute;inset:-30%;background:repeating-conic-gradient(from 0deg at 50% 50%,rgba(223,255,26,.05) 0deg 10deg,transparent 10deg 20deg);animation:none}
+.warp{position:absolute;font-size:200px;font-weight:900;color:rgba(255,20,147,.08);top:30%;left:-5%;transform:skew(-18deg,4deg) scaleY(1.6);letter-spacing:-20px;pointer-events:none}
+.top{display:flex;align-items:center;gap:14px;position:relative;z-index:2}
+.wm{font-size:24px;font-weight:900;letter-spacing:4px;color:#dfff1a;text-shadow:3px 0 #ff14a0,-3px 0 #14ffe0;transform:skewX(-6deg)}
+.status{font-size:11px;letter-spacing:2px;color:#7aff5a;margin-left:auto;font-weight:bold;font-family:monospace}
+.hero{position:relative;z-index:2;align-self:center}
+.greet{font-size:78px;font-weight:900;line-height:.88;letter-spacing:-2px;transform:skew(-10deg,3deg) scaleY(1.25);transform-origin:left;
+color:#dfff1a;text-shadow:4px 4px 0 #ff14a0,8px 8px 0 #14ffe0;text-transform:uppercase}
+.net{font-family:monospace;font-size:17px;font-weight:bold;color:#14ffe0;margin-top:34px;letter-spacing:1px;text-shadow:0 0 8px rgba(20,255,224,.6)}
+.net b{color:#ff14a0}
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:26px}
+.panel{border:2px solid #dfff1a;padding:14px 16px;transform:skewX(-4deg);background:rgba(223,255,26,.03);box-shadow:4px 4px 0 #ff14a0}
+.panel.b{border-color:#14ffe0;box-shadow:4px 4px 0 #14ffe0}
+.panel.c{border-color:#ff14a0;box-shadow:4px 4px 0 #dfff1a}
+.pt{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#dfff1a;font-weight:900;margin-bottom:8px;transform:skewX(2deg)}
+.panel.b .pt{color:#14ffe0}.panel.c .pt{color:#ff14a0}
+.li{display:flex;justify-content:space-between;font-size:13px;font-weight:bold;padding:5px 0;border-bottom:1px dashed rgba(255,255,255,.15);color:#e8f0d8;font-family:monospace}
+.li .v{color:#ff14a0}
+.foot{position:relative;z-index:2;margin-top:22px;display:flex;align-items:center;gap:14px;border:2px solid #14ffe0;padding:13px 20px;background:rgba(0,0,0,.4)}
+.foot input{flex:1;background:0;border:0;outline:0;color:#dfff1a;font-size:15px;font-weight:bold;font-family:monospace}
+.foot input::placeholder{color:#5a7a3a}
+</style></head><body><div class="acid">
+<div class="warp">RAVE</div>
+<div class="top"><div class="wm">JARVIS</div><div class="status">● ONLINE · OPUS · 20:34 · TUE JUN 09</div></div>
+<div class="hero">
+  <div class="greet">Good_<br>evening,<br>Shay//</div>
+  <div class="net">&gt;&gt; NET <b>$3,840</b> · ROI <b>4.2×</b> · ▲18% · AI <b>$58/$80</b> &lt;&lt;</div>
+</div>
+<div class="grid">
+  <div class="panel"><div class="pt">[ Needs U ]</div>
+    <div class="li"><span>Invoice→14</span><span class="v">$1,240</span></div>
+    <div class="li"><span>Publish starter</span><span class="v">$39</span></div>
+    <div class="li"><span>Deploy API</span><span class="v">CF</span></div>
+  </div>
+  <div class="panel b"><div class="pt">[ Running ]</div>
+    <div class="li"><span>habit-tracker</span><span class="v">72%</span></div>
+    <div class="li"><span>research niche</span><span class="v">40%</span></div>
+    <div class="li"><span>newsletter#14</span><span class="v">queued</span></div>
+  </div>
+  <div class="panel c"><div class="pt">[ System ]</div>
+    <div class="li"><span>agents</span><span class="v">51</span></div>
+    <div class="li"><span>connectors</span><span class="v">26·9</span></div>
+    <div class="li"><span>products</span><span class="v">7</span></div>
+  </div>
+</div>
+<div class="foot"><span>🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#ff14a0">⌘K</span></div>
+</div></body></html>

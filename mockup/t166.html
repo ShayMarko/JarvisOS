@@ -1,0 +1,67 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T166</title><style>
+/* DUOTONE — deep indigo #1a0e4d + hot pink #ff2d8e, nothing else */
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,-apple-system,sans-serif}
+body{height:100vh;overflow:hidden;color:#ff2d8e;background:#1a0e4d}
+.wrap{height:100vh;display:grid;grid-template-rows:auto auto 1fr auto;padding:40px 54px;gap:0}
+.top{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid #ff2d8e;padding-bottom:16px}
+.wm{font-size:18px;font-weight:900;letter-spacing:6px}
+.st{font-size:11px;letter-spacing:1px;opacity:.7}
+.hero{display:grid;grid-template-columns:1fr auto;align-items:end;padding:30px 0 24px}
+.greet{font-size:38px;font-weight:300;line-height:1.05}.greet b{font-weight:800}
+.bignum{text-align:right}
+.bignum .v{font-size:78px;font-weight:900;letter-spacing:-3px;line-height:.9}
+.bignum .l{font-size:11px;letter-spacing:2px;text-transform:uppercase;opacity:.7;margin-top:6px}
+.cols{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:0;border-top:2px solid #ff2d8e}
+.col{padding:22px 28px 0;border-right:2px solid rgba(255,45,142,.3)}
+.col:first-child{padding-left:0}.col:last-child{border-right:0;padding-right:0}
+.k{font-size:10px;letter-spacing:3px;text-transform:uppercase;opacity:.65;margin-bottom:14px}
+.li{display:flex;justify-content:space-between;align-items:center;font-size:14px;padding:10px 0;border-bottom:1px solid rgba(255,45,142,.18)}
+.tag{display:inline-block;font-size:9px;font-weight:900;letter-spacing:1px;padding:3px 7px;margin-right:8px}
+.solid{background:#ff2d8e;color:#1a0e4d}
+.outline{border:1.5px solid #ff2d8e}
+.amt{font-weight:800}
+.bars{margin-top:4px}
+.brow{display:flex;align-items:center;gap:10px;font-size:12px;margin:9px 0}
+.brow .lb{width:74px;opacity:.85}
+.pb{flex:1;height:9px;border:1.5px solid #ff2d8e}
+.pf{height:100%;background:#ff2d8e}
+.pf.half{background:repeating-linear-gradient(90deg,#ff2d8e 0 3px,transparent 3px 6px)}
+.bar{display:flex;align-items:center;gap:14px;border-top:2px solid #ff2d8e;padding-top:18px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#ff2d8e;font-size:14px}.bar input::placeholder{color:rgba(255,45,142,.5)}
+.bar .km{font-size:11px;letter-spacing:1px;opacity:.6}
+</style></head><body><div class="wrap">
+<div class="top"><div class="wm">JARVIS</div><div class="st">● ONLINE · OPUS · 20:34 · TUE JUN 09</div></div>
+<div class="hero">
+<div class="greet">Good evening,<br><b>Shay.</b></div>
+<div class="bignum"><div class="v">$3,840</div><div class="l">Net this month · ROI 4.2× · ▲18% · AI $58/$80</div></div>
+</div>
+<div class="cols">
+<div class="col"><div class="k">Needs you · 3</div>
+<div class="li"><span><span class="tag solid">CRIT</span>Send invoice → 14 customers</span><span class="amt">$1,240</span></div>
+<div class="li"><span><span class="tag outline">HIGH</span>Publish SaaS starter → Gumroad</span><span class="amt">$39</span></div>
+<div class="li"><span><span class="tag outline">HIGH</span>Deploy micro-API → Cloudflare</span><span style="opacity:.6">queued</span></div>
+<div class="k" style="margin-top:22px">Revenue sources</div>
+<div class="bars">
+<div class="brow"><span class="lb">Stripe</span><div class="pb"><div class="pf" style="width:55%"></div></div><span>$1,240</span></div>
+<div class="brow"><span class="lb">Gumroad</span><div class="pb"><div class="pf" style="width:40%"></div></div><span>$890</span></div>
+<div class="brow"><span class="lb">Lemon Sq</span><div class="pb"><div class="pf half" style="width:14%"></div></div><span>$310</span></div>
+<div class="brow"><span class="lb">Newsletter</span><div class="pb"><div class="pf half" style="width:18%"></div></div><span>$400</span></div>
+</div>
+</div>
+<div class="col"><div class="k">Jobs running · 2</div>
+<div class="li"><span>habit-tracker · Code</span><span class="amt">72%</span></div>
+<div class="brow"><div class="pb"><div class="pf" style="width:72%"></div></div></div>
+<div class="li"><span>research niche · Scout</span><span class="amt">40%</span></div>
+<div class="brow"><div class="pb"><div class="pf half" style="width:40%"></div></div></div>
+<div class="li"><span>newsletter #14</span><span style="opacity:.6">queued</span></div>
+</div>
+<div class="col"><div class="k">System</div>
+<div class="li"><span>Agents</span><span class="amt">51</span></div>
+<div class="li"><span>Connectors</span><span class="amt">26 · 9 live</span></div>
+<div class="li"><span>Products live</span><span class="amt">7</span></div>
+<div class="k" style="margin-top:22px">Proactive</div>
+<div style="font-size:13px;line-height:1.5;opacity:.9">Double down: “REST API + auth” drove <b>61%</b> of traffic.</div>
+</div>
+</div>
+<div class="bar">🎙<input placeholder="Ask Jarvis, or type a /command…"><span class="km">SAY “HEY JARVIS” · ⌘K</span></div>
+</div></body></html>

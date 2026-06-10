@@ -1,0 +1,37 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T190</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6f2ee;background:#06100c}
+.top{display:flex;align-items:center;gap:14px;padding:22px 40px}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#46e0a0}.st{font-size:12px;color:#4f8a72}.r{margin-left:auto;font-size:13px;color:#7fa899}
+.hd{padding:0 40px}.hd h1{font-size:22px;font-weight:600}.hd h1 b{color:#46e0a0}.hd p{font-size:13px;color:#4f8a72;margin-top:4px}
+.plot{margin:14px 40px 0;background:#091813;border:1px solid #12281f;border-radius:16px;padding:18px 26px 12px;height:calc(100vh - 250px)}
+.cl{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#4f8a72;display:flex;justify-content:space-between}
+.lg span{margin-left:16px;color:#7fa899}.lg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.bar{position:fixed;bottom:22px;left:40px;right:40px;display:flex;align-items:center;gap:12px;background:rgba(9,24,19,.9);border:1px solid #12281f;border-radius:13px;padding:11px 15px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e6f2ee;font-size:14px}.bar input::placeholder{color:#4f8a72}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · FLOW</div><div class="st">● ONLINE · OPUS · 20:34</div><div class="r">Task pipeline · cumulative flow</div></div>
+<div class="hd"><h1>Good evening, <b>Shay.</b></h1><p>backlog, doing and done over 12 weeks — band width is work-in-progress</p></div>
+<div class="plot">
+<div class="cl"><span>work items · stacked over time</span><span class="lg"><span><i style="background:#2c4a5c"></i>backlog</span><span><i style="background:#ffce6b"></i>doing</span><span><i style="background:#46e0a0"></i>done</span></span></div>
+<svg viewBox="0 0 1080 440" style="width:100%;height:calc(100% - 22px)" preserveAspectRatio="none">
+<defs>
+<linearGradient id="fd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#46e0a0" stop-opacity=".7"/><stop offset="1" stop-color="#1f9e6e" stop-opacity=".4"/></linearGradient>
+</defs>
+<g stroke="rgba(120,180,170,.08)"><line x1="40" y1="100" x2="1060" y2="100"/><line x1="40" y1="200" x2="1060" y2="200"/><line x1="40" y1="300" x2="1060" y2="300"/></g>
+<!-- done (bottom band, grows) -->
+<path d="M40,420 L160,400 L280,380 L400,350 L520,310 L640,270 L760,225 L880,180 L1000,135 L1060,115 L1060,420 Z" fill="url(#fd)"/>
+<!-- doing band (between done-top and doing-top) -->
+<path d="M40,420 L160,400 L280,380 L400,350 L520,310 L640,270 L760,225 L880,180 L1000,135 L1060,115
+         L1060,75 L1000,98 L880,140 L760,185 L640,232 L520,272 L400,312 L280,344 L160,366 L40,388 Z" fill="rgba(255,206,107,.5)" stroke="#ffce6b" stroke-width="1.2"/>
+<!-- backlog band (top, between doing-top and backlog-top) -->
+<path d="M40,388 L160,366 L280,344 L400,312 L520,272 L640,232 L760,185 L880,140 L1000,98 L1060,75
+         L1060,40 L1000,55 L880,80 L760,110 L640,140 L520,165 L400,195 L280,230 L160,262 L40,300 Z" fill="rgba(44,74,92,.55)" stroke="#5a86a0" stroke-width="1.2"/>
+<g fill="#4f8a72" font-size="11" text-anchor="middle"><text x="40" y="435">W26</text><text x="400" y="435">W30</text><text x="760" y="435">W34</text><text x="1060" y="435">W37</text></g>
+<!-- annotation -->
+<line x1="880" y1="80" x2="880" y2="180" stroke="#ffce6b" stroke-dasharray="3 3" opacity=".5"/>
+<text x="892" y="130" fill="#ffe7b0" font-size="11">WIP ≈ 11 items</text>
+</svg>
+</div>
+<div class="bar"><span style="color:#46e0a0">🎙</span><input placeholder="Ask Jarvis why WIP is climbing…"><span style="color:#4f8a72;font-size:12px">⌘K</span></div>
+</body></html>

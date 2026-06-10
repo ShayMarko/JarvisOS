@@ -1,0 +1,48 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T227</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf6;background:#06090f}
+.canvas{position:absolute;inset:0;background:
+radial-gradient(900px 600px at 50% 45%,rgba(95,160,255,.08),transparent 70%),
+linear-gradient(0deg,rgba(255,255,255,.025) 1px,transparent 1px),
+linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px),#06090f;
+background-size:auto,46px 46px,46px 46px}
+.top{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;gap:14px;padding:20px 36px;z-index:20}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#6fa8ff}.st{font-size:12px;color:#5d7290}.r{margin-left:auto;font-size:13px;color:#5d7290}
+.zoom{position:absolute;left:50%;top:64px;transform:translateX(-50%);display:flex;gap:6px;background:rgba(12,18,28,.85);border:1px solid #1c2838;border-radius:30px;padding:5px;z-index:20}
+.zoom .pill{font-size:12px;padding:7px 16px;border-radius:24px;color:#7b90ad;font-weight:600}
+.zoom .pill.on{background:rgba(111,168,255,.18);color:#9cc2ff;box-shadow:inset 0 0 0 1px rgba(111,168,255,.4)}
+.map{position:absolute;inset:0;z-index:10}
+.cluster{position:absolute;border:1px solid #1e2c3e;border-radius:18px;background:rgba(12,20,30,.6);backdrop-filter:blur(2px)}
+.cl-title{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6fa8ff;font-weight:700;padding:9px 12px 0}
+.cl-body{display:flex;flex-wrap:wrap;gap:7px;padding:9px 12px}
+.chip{font-size:11px;padding:6px 9px;border-radius:8px;background:rgba(111,168,255,.1);border:1px solid #213245;color:#b8cce6}
+.chip b{color:#6fa8ff}
+.focus{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:340px;border:1px solid #6fa8ff;border-radius:18px;background:linear-gradient(160deg,#0f1c2c,#0a1320);box-shadow:0 30px 70px rgba(20,50,110,.5),0 0 0 1px rgba(111,168,255,.3);padding:18px 20px;z-index:14}
+.focus .k{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6fa8ff;font-weight:700}
+.focus h2{font-size:22px;font-weight:800;margin-top:6px}.focus h2 b{color:#6fa8ff}
+.focus p{font-size:13px;color:#8aa0bd;margin-top:8px;line-height:1.55}
+.focus .stat{display:flex;gap:16px;margin-top:14px}
+.focus .stat div .v{font-size:24px;font-weight:800}.focus .stat div .l{font-size:10px;color:#5d7290;text-transform:uppercase;letter-spacing:1px}
+.line{position:absolute;inset:0;z-index:8;pointer-events:none}
+.bar{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);width:540px;display:flex;align-items:center;gap:12px;background:rgba(12,18,28,.9);border:1px solid #1c2838;border-radius:14px;padding:11px 16px;z-index:20}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e6edf6;font-size:14px}.bar input::placeholder{color:#5d7290}
+.minimap{position:absolute;right:24px;bottom:80px;width:150px;height:96px;border:1px solid #1c2838;border-radius:10px;background:rgba(10,16,24,.8);z-index:20}
+.minimap .vp{position:absolute;left:38px;top:30px;width:60px;height:38px;border:1.5px solid #6fa8ff;border-radius:5px;background:rgba(111,168,255,.12)}
+</style></head><body>
+<div class="canvas"></div>
+<svg class="line"><g fill="none" stroke="rgba(111,168,255,.22)" stroke-width="1.5">
+<path d="M280,300 C480,360 560,420 700,450"/><path d="M1160,280 C980,360 880,420 740,450"/>
+<path d="M300,620 C480,560 580,500 700,470"/><path d="M1150,640 C980,560 870,500 740,470"/></g></svg>
+<div class="map">
+<div class="cluster" style="left:90px;top:200px;width:230px"><div class="cl-title">Money lanes</div><div class="cl-body"><span class="chip"><b>$1,240</b> Stripe</span><span class="chip"><b>$890</b> Gumroad</span><span class="chip"><b>$400</b> News</span><span class="chip"><b>$310</b> Lemon</span></div></div>
+<div class="cluster" style="right:80px;top:180px;width:230px"><div class="cl-title">Jobs running</div><div class="cl-body"><span class="chip">habit-tracker <b>72%</b></span><span class="chip">research <b>40%</b></span><span class="chip">newsletter #14</span></div></div>
+<div class="cluster" style="left:120px;bottom:120px;width:220px"><div class="cl-title">Connectors · 9 live</div><div class="cl-body"><span class="chip">Stripe</span><span class="chip">Gumroad</span><span class="chip">Resend</span><span class="chip">Cloudflare</span><span class="chip">Notion</span></div></div>
+<div class="cluster" style="right:90px;bottom:130px;width:210px"><div class="cl-title">Agents · 51</div><div class="cl-body"><span class="chip">EA</span><span class="chip">Finance</span><span class="chip">Code</span><span class="chip">Scout</span><span class="chip">CRM</span><span class="chip">+46</span></div></div>
+</div>
+<div class="focus"><div class="k">Today · overview</div><h2>Good evening,<br><b>Shay.</b></h2><p>Zoom in on any cluster to drill from this overview down to individual runs, invoices, and agents.</p>
+<div class="stat"><div><div class="v">$3,840</div><div class="l">net · ROI 4.2×</div></div><div><div class="v">3</div><div class="l">need you</div></div><div><div class="v">2</div><div class="l">running</div></div></div></div>
+<div class="top"><div class="wm">JARVIS · MAP</div><div class="st">● Online · Opus</div><div class="r">20:34 · Tue Jun 09</div></div>
+<div class="zoom"><span class="pill">Galaxy</span><span class="pill on">Overview</span><span class="pill">Cluster</span><span class="pill">Detail</span></div>
+<div class="minimap"><div class="vp"></div></div>
+<div class="bar"><span style="color:#6fa8ff">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#5d7290;font-size:12px">⌘K</span></div>
+</body></html>

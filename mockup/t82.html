@@ -1,0 +1,65 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T82</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;color:#e9e6f6;background:radial-gradient(900px 700px at 50% 42%,#161029,#0a0813)}
+.top{display:flex;align-items:center;gap:14px;padding:20px 36px}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#b69dff}.st{font-size:12px;color:#7c6fa6}.r{margin-left:auto;font-size:13px;color:#9a8fc4}
+.cap{padding:0 36px 4px}.cap h1{font-size:22px;font-weight:600}.cap h1 b{color:#b69dff}.cap p{color:#8479ad;font-size:13px;margin-top:3px}
+.wrap{display:flex;align-items:center;justify-content:center;height:calc(100vh - 168px);gap:40px}
+.legend{display:flex;flex-direction:column;gap:9px;min-width:190px}
+.lg{display:flex;align-items:center;gap:9px;font-size:13px;color:#b8aed8}.lg i{width:11px;height:11px;border-radius:3px;display:inline-block}
+.lg b{margin-left:auto;font-variant-numeric:tabular-nums;color:#efeafc}
+.bar{position:fixed;bottom:20px;left:36px;right:36px;display:flex;align-items:center;gap:12px;background:rgba(20,16,38,.85);border:1px solid #2a2148;border-radius:13px;padding:11px 15px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e9e6f6;font-size:14px}.bar input::placeholder{color:#7c6fa6}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · CHORD</div><div class="st">● Online · Opus · Tue Jun 09</div><div class="r">51 agents · 26 connectors (9 live)</div></div>
+<div class="cap"><h1>Who talks to what, <b>Shay</b>.</h1><p>agents ↔ connectors — ribbon width ∝ calls this week</p></div>
+<div class="wrap">
+<svg viewBox="0 0 560 560" width="540" height="540">
+<defs>
+<linearGradient id="g1" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7c5cff"/><stop offset="1" stop-color="#46e0a0"/></linearGradient>
+<linearGradient id="g2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5fd0c0"/><stop offset="1" stop-color="#ff8cc0"/></linearGradient>
+<linearGradient id="g3" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#b69dff"/><stop offset="1" stop-color="#ffc46b"/></linearGradient>
+</defs>
+<g transform="translate(280,280)">
+<!-- ribbons -->
+<path d="M-220,-40 C-60,-20 60,-120 200,-90 C70,-150 -80,-60 -218,-58 Z" fill="url(#g1)" opacity=".5"/>
+<path d="M-215,75 C-40,30 120,40 188,118 C100,40 -30,5 -210,52 Z" fill="url(#g2)" opacity=".48"/>
+<path d="M-120,-185 C-30,-60 110,80 165,150 C70,40 -60,-90 -150,-170 Z" fill="url(#g3)" opacity=".46"/>
+<path d="M60,-212 C30,-60 -60,90 -150,160 C-50,40 80,-90 130,-200 Z" fill="url(#g1)" opacity=".42"/>
+<path d="M212,-65 C60,-10 -120,30 -200,95 C-80,5 90,-30 200,-95 Z" fill="url(#g2)" opacity=".4"/>
+<path d="M-205,-95 C-50,-30 70,40 150,170 C50,60 -100,-30 -212,-72 Z" fill="url(#g3)" opacity=".34"/>
+<!-- arc segments -->
+<g fill="none" stroke-width="14" stroke-linecap="butt">
+<path d="M240,-18 A240,240 0 0 1 200,135" stroke="#7c5cff"/>
+<path d="M196,140 A240,240 0 0 1 75,228" stroke="#5fd0c0"/>
+<path d="M68,230 A240,240 0 0 1 -75,228" stroke="#46e0a0"/>
+<path d="M-82,226 A240,240 0 0 1 -200,135" stroke="#ff8cc0"/>
+<path d="M-204,130 A240,240 0 0 1 -240,-18" stroke="#b69dff"/>
+<path d="M-238,-25 A240,240 0 0 1 -160,-180" stroke="#ffc46b"/>
+<path d="M-154,-184 A240,240 0 0 1 18,-240" stroke="#5fd0c0"/>
+<path d="M25,-239 A240,240 0 0 1 195,-140" stroke="#7c5cff"/>
+<path d="M201,-135 A240,240 0 0 1 240,-25" stroke="#46e0a0"/>
+</g>
+<text x="0" y="6" text-anchor="middle" font-size="13" font-weight="800" letter-spacing="2" fill="#efeafc">JARVIS</text>
+<text x="0" y="22" text-anchor="middle" font-size="8.5" fill="#8479ad">orchestrator</text>
+<!-- labels -->
+<g font-size="10" fill="#cabff0">
+<text x="262" y="40">Stripe</text><text x="150" y="262">Resend</text><text x="-10" y="270" text-anchor="middle">Cloudflare</text>
+<text x="-262" y="160" text-anchor="end">Gumroad</text><text x="-272" y="-20" text-anchor="end">Notion</text>
+<text x="-200" y="-200" text-anchor="end">Discord</text><text x="0" y="-258" text-anchor="middle">EA agent</text>
+<text x="225" y="-160">Scout</text><text x="270" y="-30">Code agent</text>
+</g>
+</g>
+</svg>
+<div class="legend">
+<div class="lg"><i style="background:#7c5cff"></i>EA → Stripe / Resend<b>312</b></div>
+<div class="lg"><i style="background:#46e0a0"></i>Code → Cloudflare<b>248</b></div>
+<div class="lg"><i style="background:#5fd0c0"></i>Scout → Notion<b>190</b></div>
+<div class="lg"><i style="background:#ff8cc0"></i>Newsletter → Resend<b>164</b></div>
+<div class="lg"><i style="background:#b69dff"></i>Finance → Gumroad<b>121</b></div>
+<div class="lg"><i style="background:#ffc46b"></i>Orchestrator → Discord<b>88</b></div>
+<div style="margin-top:8px;font-size:11px;color:#7c6fa6;border-top:1px solid #2a2148;padding-top:9px">1,123 connector calls · 7-day window</div>
+</div>
+</div>
+<div class="bar"><span style="color:#b69dff">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#7c6fa6;font-size:12px">⌘K</span></div>
+</body></html>

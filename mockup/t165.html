@@ -1,0 +1,70 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T165</title><style>
+*{margin:0;box-sizing:border-box;font-family:ui-monospace,'SF Mono',monospace}
+body{height:100vh;overflow:hidden;color:#e6e6f0;background:#08070c;
+  background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.02) 0 1px,transparent 1px 3px)}
+.wrap{height:100vh;padding:34px 46px;display:flex;flex-direction:column}
+.top{display:flex;justify-content:space-between;align-items:baseline}
+.wm{font-size:30px;font-weight:900;letter-spacing:6px;position:relative;color:#e6e6f0}
+.wm::before,.wm::after{content:"JARVIS";position:absolute;top:0;left:0;letter-spacing:6px}
+.wm::before{color:#ff2e6e;transform:translate(-3px,1px);mix-blend-mode:screen;opacity:.9}
+.wm::after{color:#00f0ff;transform:translate(3px,-1px);mix-blend-mode:screen;opacity:.9}
+.st{font-size:11px;letter-spacing:1px;color:#6a6a82}
+.glitch{position:relative;display:inline-block}
+.glitch::before,.glitch::after{content:attr(data-t);position:absolute;top:0;left:0}
+.glitch::before{color:#ff2e6e;transform:translateX(-2px);mix-blend-mode:screen}
+.glitch::after{color:#00f0ff;transform:translateX(2px);mix-blend-mode:screen}
+.greet{font-size:26px;font-weight:700;margin:20px 0 4px}
+.greet .glitch::before,.greet .glitch::after{opacity:.85}
+.sub{font-size:12px;color:#6a6a82;letter-spacing:1px}
+.mid{flex:1;display:grid;grid-template-columns:1.2fr 1fr;gap:28px;align-items:center}
+.bignum{font-size:72px;font-weight:900;letter-spacing:-2px;line-height:1;position:relative}
+.corrupt{display:inline-block;background:linear-gradient(90deg,#ff2e6e 30%,#00f0ff 30% 60%,#e6e6f0 60%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.blocks{display:flex;gap:3px;margin:14px 0}
+.blk{height:18px;background:#1a1824;border:1px solid #2a2838}
+.blk.r{background:#ff2e6e}.blk.c{background:#00f0ff}.blk.w{background:#e6e6f0}
+.srcrow{display:flex;justify-content:space-between;font-size:13px;padding:7px 0;border-bottom:1px solid #1c1a26}
+.srcrow b{color:#00f0ff}
+.col{display:flex;flex-direction:column;gap:11px}
+.li{border-left:3px solid #2a2838;padding:9px 13px;background:rgba(255,255,255,.02);font-size:13px;display:flex;justify-content:space-between;align-items:center;position:relative}
+.li.crit{border-left-color:#ff2e6e}.li.crit::after{content:"";position:absolute;top:0;right:0;width:40%;height:2px;background:#ff2e6e;opacity:.5}
+.li.run{border-left-color:#00f0ff}
+.tag{font-size:9px;letter-spacing:1px;color:#6a6a82}
+.amt{font-weight:700;color:#7cff9b}
+.k{font-size:10px;letter-spacing:3px;color:#6a6a82;text-transform:uppercase}
+.bar{margin-top:auto;border:1px solid #2a2838;border-left:3px solid #ff2e6e;padding:12px 16px;display:flex;align-items:center;gap:12px;
+  background:rgba(255,46,110,.04)}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e6e6f0;font-size:13px}.bar input::placeholder{color:#6a6a82}
+.bar .km{font-size:11px;color:#6a6a82}
+.scan{font-size:10px;color:#3a3848;letter-spacing:2px}
+</style></head><body><div class="wrap">
+<div class="top"><div class="wm">JARVIS</div><div class="st">● ONLINE · OPUS · 20:34 · TUE JUN 09<br><span class="scan">0x4A 41 52 56 49 53 // SIGNAL OK</span></div></div>
+<div class="greet">Good evening, <span class="glitch" data-t="Shay.">Shay.</span></div>
+<div class="sub">// 3 ITEMS NEED YOU · 2 JOBS RUNNING · ▲18%</div>
+<div class="mid">
+<div>
+<div class="k">net this month</div>
+<div class="bignum"><span class="corrupt">$3,840</span></div>
+<div class="blocks">
+<span class="blk r" style="flex:3"></span><span class="blk" style="flex:1"></span><span class="blk c" style="flex:2"></span>
+<span class="blk w" style="flex:1"></span><span class="blk" style="flex:2"></span><span class="blk r" style="flex:1"></span><span class="blk c" style="flex:2"></span>
+</div>
+<div class="sub" style="margin-bottom:10px">ROI 4.2× · AI cost $58 / $80 · 7 products live</div>
+<div class="srcrow"><span>STRIPE_SUBS</span><b>$1,240</b></div>
+<div class="srcrow"><span>GUMROAD</span><b>$890</b></div>
+<div class="srcrow"><span>LEMON_SQ</span><b>$310</b></div>
+<div class="srcrow"><span>NEWSLETTER</span><b>$400</b></div>
+</div>
+<div class="col">
+<div class="k">// needs you</div>
+<div class="li crit"><span><span class="tag">[CRIT]</span> send invoice → 14 customers</span><span class="amt">$1,240</span></div>
+<div class="li"><span><span class="tag">[HIGH]</span> publish SaaS starter → gumroad</span><span class="amt">$39</span></div>
+<div class="li"><span><span class="tag">[HIGH]</span> deploy micro-API → cloudflare</span><span class="tag">queued</span></div>
+<div class="k" style="margin-top:6px">// jobs running</div>
+<div class="li run"><span>habit-tracker app · Code</span><span class="amt">72%</span></div>
+<div class="li run"><span>research note-taking · Scout</span><span class="amt">40%</span></div>
+<div class="li"><span><span class="tag">[SYS]</span> 51 agents · 26 connectors · 9 live</span><span class="tag">newsletter #14</span></div>
+</div>
+</div>
+<div class="bar"><span style="color:#ff2e6e">▮</span><input placeholder="ask jarvis, or type a /command…"><span class="km">⌘K</span></div>
+</div></body></html>

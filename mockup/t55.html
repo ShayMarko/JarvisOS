@@ -1,0 +1,38 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T55</title><style>
+*{margin:0;box-sizing:border-box;font-family:'JetBrains Mono','SF Mono',ui-monospace,monospace}
+body{height:100vh;overflow:hidden;color:#c8d3e0;background:#0a0e14}
+.bar-t{display:flex;align-items:center;gap:8px;padding:8px 14px;background:#0c1118;border-bottom:1px solid #1a2130;font-size:12px}
+.dot{width:11px;height:11px;border-radius:50%}.r{background:#ff5f56}.y{background:#ffbd2e}.g{background:#27c93f}
+.title{margin-left:10px;color:#6f86a8}.title b{color:#9fd0ff}
+.grid{display:grid;grid-template-columns:1.4fr 1fr;grid-template-rows:1fr 1fr;height:calc(100vh - 38px)}
+.pane{border-right:1px solid #16202e;border-bottom:1px solid #16202e;padding:12px 16px;overflow:hidden}
+.pl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#4f6personally;color:#4f6a86;margin-bottom:8px}
+.ln{font-size:12.5px;line-height:1.8}.dimc{color:#5f7a96}.ok{color:#46e0a0}.warn{color:#ffc85a}.err{color:#ff7a8c}.acc{color:#5fb0ff}
+.big{font-size:13px}.kv{color:#9fd0ff}
+.repl{grid-column:1 / -1;border:0;background:#0c1118;display:flex;align-items:center;gap:10px;padding:12px 16px;font-size:13.5px}
+.cur{display:inline-block;width:8px;height:15px;background:#5fb0ff;animation:b 1s steps(1) infinite}@keyframes b{50%{opacity:0}}
+</style></head><body>
+<div class="bar-t"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="title">jarvis@opus · <b>~/today</b> · 3 panes</span><span style="margin-left:auto;color:#4f6a86">● Opus · 20:34</span></div>
+<div class="grid">
+<div class="pane"><div class="pl">stream · brain</div>
+<div class="ln dimc">$ jarvis status --today</div>
+<div class="ln">&gt; good evening, <span class="acc">shay</span> · <span class="warn">3 need you</span> · <span class="ok">ROI 4.2×</span></div>
+<div class="ln"><span class="err">[CRIT]</span> invoice → 14 customers <span class="dimc">(ea/resend)</span> <span class="acc">[approve]</span></div>
+<div class="ln"><span class="warn">[HIGH]</span> publish saas-starter · deploy micro-api <span class="acc">[approve]</span></div>
+<div class="ln dimc">running: habit-tracker 72% · research 40%</div></div>
+<div class="pane"><div class="pl">money</div>
+<div class="ln big">net <span class="ok">$3,840</span> <span class="dimc">▲18%</span></div>
+<div class="ln big">roi <span class="ok">4.2×</span></div>
+<div class="ln big">ai-cost <span class="warn">$58/$80</span></div>
+<div class="ln big">products <span class="kv">7 live</span></div></div>
+<div class="pane"><div class="pl">jobs</div>
+<div class="ln">habit-tracker <span class="acc">[■■■■■■■□□□] 72%</span></div>
+<div class="ln">research &nbsp;&nbsp;&nbsp;<span class="acc">[■■■■□□□□□□] 40%</span></div>
+<div class="ln dimc">newsletter #14 · queued</div></div>
+<div class="pane"><div class="pl">system</div>
+<div class="ln">cpu <span class="kv">12%</span> · mem <span class="kv">6.1G</span></div>
+<div class="ln">agents <span class="kv">51</span> · connectors <span class="kv">26</span></div>
+<div class="ln ok">● all nominal</div></div>
+</div>
+<div class="repl"><span class="acc">jarvis ❯</span> <span class="dimc">ask anything, or /command · say "hey jarvis"</span><span class="cur"></span></div>
+</body></html>

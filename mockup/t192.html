@@ -1,0 +1,57 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T192</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6f2ee;background:#06100c}
+.top{display:flex;align-items:center;gap:14px;padding:22px 40px}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#46e0a0}.st{font-size:12px;color:#4f8a72}.r{margin-left:auto;font-size:13px;color:#7fa899}
+.hd{padding:0 40px}.hd h1{font-size:22px;font-weight:600}.hd h1 b{color:#46e0a0}.hd p{font-size:13px;color:#4f8a72;margin-top:4px}
+.plot{margin:14px 40px 0;background:#091813;border:1px solid #12281f;border-radius:16px;padding:22px 28px;height:calc(100vh - 250px);display:flex;flex-direction:column}
+.cl{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#4f8a72;display:flex;justify-content:space-between;align-items:center}
+.foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;padding-top:14px}
+.stat{display:flex;gap:30px}.stat div span{display:block}.stat .v{font-size:22px;font-weight:800}.stat .l{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:#4f8a72;margin-top:2px}
+.lg{display:flex;align-items:center;gap:6px;font-size:11px;color:#7fa899}.lg i{width:12px;height:12px;border-radius:2px;display:inline-block}
+.bar{position:fixed;bottom:22px;left:40px;right:40px;display:flex;align-items:center;gap:12px;background:rgba(9,24,19,.9);border:1px solid #12281f;border-radius:13px;padding:11px 15px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e6f2ee;font-size:14px}.bar input::placeholder{color:#4f8a72}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · CONTRIBUTIONS</div><div class="st">● ONLINE · OPUS · 20:34</div><div class="r">Tasks shipped · last 12 months</div></div>
+<div class="hd"><h1>Good evening, <b>Shay.</b></h1><p>every square is a day — darker means more agent work completed</p></div>
+<div class="plot">
+<div class="cl"><span>53 weeks · daily activity</span><div class="lg">less <i style="background:#0e241b"></i><i style="background:#16553a"></i><i style="background:#1f8a5c"></i><i style="background:#2fc07e"></i><i style="background:#46e0a0"></i> more</div></div>
+<svg viewBox="0 0 1120 200" style="width:100%;height:auto;margin-top:14px">
+<g fill="#4f8a72" font-size="10"><text x="0" y="36">Mon</text><text x="0" y="72">Wed</text><text x="0" y="108">Fri</text></g>
+<g fill="#4f8a72" font-size="10"><text x="60" y="14">Jul</text><text x="230" y="14">Sep</text><text x="400" y="14">Nov</text><text x="570" y="14">Jan</text><text x="740" y="14">Mar</text><text x="930" y="14">May</text></g>
+<g id="cells"></g>
+<script>
+(function(){
+ var g=document.getElementById('cells');var ns='http://www.w3.org/2000/svg';
+ var pal=['#0c1f17','#0e241b','#16553a','#1f8a5c','#2fc07e','#46e0a0'];
+ var x0=40,y0=22,sz=15,gap=4;
+ for(var w=0;w<53;w++){
+  for(var d=0;d<7;d++){
+   // weighted-random density, denser in recent weeks
+   var recency=w/53;
+   var seed=Math.abs(Math.sin(w*12.9898+d*78.233))%1;
+   var lvl=Math.floor(seed*(2+recency*3.5));
+   if(seed>0.9) lvl=5;
+   if(lvl>5)lvl=5;
+   var r=document.createElementNS(ns,'rect');
+   r.setAttribute('x',(x0+w*(sz+gap)).toFixed(0));
+   r.setAttribute('y',(y0+d*(sz+gap)).toFixed(0));
+   r.setAttribute('width',sz);r.setAttribute('height',sz);r.setAttribute('rx',3);
+   r.setAttribute('fill',pal[lvl]);
+   g.appendChild(r);
+  }
+ }
+})();
+</script>
+</svg>
+<div class="foot">
+<div class="stat">
+<div><span class="v">1,284</span><span class="l">tasks shipped</span></div>
+<div><span class="v">31 days</span><span class="l">current streak</span></div>
+<div><span class="v">June</span><span class="l">busiest month</span></div>
+<div><span class="v" style="color:#46e0a0">▲18%</span><span class="l">vs last quarter</span></div>
+</div>
+</div>
+</div>
+<div class="bar"><span style="color:#46e0a0">🎙</span><input placeholder="Ask Jarvis about your streak…"><span style="color:#4f8a72;font-size:12px">⌘K</span></div>
+</body></html>

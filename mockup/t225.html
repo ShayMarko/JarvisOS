@@ -1,0 +1,50 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T225</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf6;background:radial-gradient(1200px 800px at 30% 10%,#16121f,#08070c 70%)}
+.top{display:flex;align-items:center;gap:14px;padding:20px 36px}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#b794f6}.st{font-size:12px;color:#7a6f93}.r{margin-left:auto;font-size:13px;color:#8a7fa3}
+.stage{position:relative;height:calc(100vh - 132px);margin:6px 36px}
+.win{position:absolute;border-radius:14px;background:linear-gradient(170deg,#181523,#100d18);border:1px solid #2c2640;box-shadow:0 26px 60px rgba(0,0,0,.55);overflow:hidden}
+.tb{display:flex;align-items:center;gap:8px;padding:11px 14px;border-bottom:1px solid #241f33;background:rgba(40,34,58,.4)}
+.tb i{width:11px;height:11px;border-radius:50%;background:#3a3450}.tb i:nth-child(1){background:#ff6b81}.tb i:nth-child(2){background:#f0b54d}.tb i:nth-child(3){background:#5fd0c0}
+.tt{font-size:12px;color:#9a8fb3;margin-left:8px;font-weight:600;letter-spacing:.3px}
+.tb .badge{margin-left:auto;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#7a6f93}
+.body{padding:16px}
+.w1{left:0;top:8px;width:560px;height:330px;filter:brightness(.62);transform:scale(.97)}
+.w2{left:60px;top:60px;width:560px;height:340px;filter:brightness(.78)}
+.w3{left:130px;top:120px;width:560px;height:350px;filter:brightness(.9)}
+.focus{right:0;top:30px;width:660px;height:480px;border-color:#b794f6;box-shadow:0 40px 90px rgba(80,40,140,.5),0 0 0 1px rgba(183,148,246,.4);z-index:9}
+.focus .tb{background:rgba(60,44,90,.5)}
+.k{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#b794f6;font-weight:700}
+.h1{font-size:20px;font-weight:800;margin-top:8px}
+.h1 b{color:#b794f6}
+.row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid #221d30;font-size:14px}
+.row .amt{font-weight:800;font-variant-numeric:tabular-nums}
+.pill{font-size:9px;font-weight:700;letter-spacing:.6px;padding:3px 8px;border-radius:20px;text-transform:uppercase}
+.crit{background:rgba(255,107,129,.16);color:#ff8c9c}.hi{background:rgba(240,181,77,.16);color:#f0c878}
+.btns{display:flex;gap:10px;margin-top:18px}
+.btn{flex:1;text-align:center;padding:11px;border-radius:10px;font-size:13px;font-weight:700;border:1px solid #2c2640;color:#cdbfe6}
+.btn.go{background:linear-gradient(120deg,#7c5cff,#b794f6);border:0;color:#0a0710}
+.dim{font-size:13px;color:#9a8fb3;line-height:1.6;margin-top:6px}
+.bar{position:fixed;bottom:18px;left:36px;right:36px;display:flex;align-items:center;gap:12px;background:rgba(20,16,28,.85);border:1px solid #2c2640;border-radius:13px;padding:11px 16px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e6edf6;font-size:14px}.bar input::placeholder{color:#7a6f93}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · WORKSPACE</div><div class="st">● Online · Opus</div><div class="r">20:34 · Tue Jun 09 · 4 windows</div></div>
+<div class="stage">
+<div class="win w1"><div class="tb"><i></i><i></i><i></i><span class="tt">Costs · AI budget</span></div></div>
+<div class="win w2"><div class="tb"><i></i><i></i><i></i><span class="tt">Jobs running</span></div></div>
+<div class="win w3"><div class="tb"><i></i><i></i><i></i><span class="tt">Money dashboard</span></div></div>
+<div class="win focus"><div class="tb"><i></i><i></i><i></i><span class="tt">Needs you — Approval Center</span><span class="badge">3 pending</span></div>
+<div class="body">
+<div class="k">Good evening, Shay</div>
+<div class="h1">Three things need <b>your word.</b></div>
+<div class="dim">Your agents prepared the work — one tap each to ship.</div>
+<div class="row"><span><span class="pill crit">Critical</span> &nbsp;Send invoice → 14 customers</span><span class="amt">$1,240</span></div>
+<div class="row"><span><span class="pill hi">High</span> &nbsp;Publish SaaS starter → Gumroad</span><span class="amt">$39</span></div>
+<div class="row"><span><span class="pill hi">High</span> &nbsp;Deploy micro-API → Cloudflare</span><span class="amt" style="color:#9a8fb3">free</span></div>
+<div class="dim" style="margin-top:14px">EA via Resend · drafted, awaiting approval. Estimated bill this run $1,240.</div>
+<div class="btns"><div class="btn">Snooze all</div><div class="btn go">Approve top &nbsp;↵</div></div>
+</div></div>
+</div>
+<div class="bar"><span style="color:#b794f6">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#7a6f93;font-size:12px">⌘K</span></div>
+</body></html>

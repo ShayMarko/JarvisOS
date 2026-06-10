@@ -1,0 +1,77 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T141</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;background:linear-gradient(140deg,#f4ecff,#eaf4ff 60%,#fff0f6);color:#4a4360}
+.wrap{height:100vh;padding:28px 34px;display:grid;grid-template-columns:1.3fr 1fr 1fr;grid-template-rows:auto 1fr auto;gap:22px}
+.clay{border-radius:34px;background:#f3eefb;box-shadow:10px 12px 24px rgba(160,140,200,.30),-8px -8px 18px rgba(255,255,255,.9),inset 2px 2px 4px rgba(255,255,255,.7)}
+.top{grid-column:1/-1;display:flex;align-items:center;gap:18px;padding:14px 26px}
+.wm{font-size:24px;font-weight:800;letter-spacing:3px;color:#7a5cd6}
+.pill{margin-left:0;padding:10px 18px;border-radius:24px;background:#fff;box-shadow:6px 6px 14px rgba(160,140,200,.25);font-size:12px;color:#8a82a0;font-weight:600}
+.r{margin-left:auto;font-size:13px;color:#9a92b0}
+.hero{padding:30px 32px;background:linear-gradient(140deg,#ffd6ec,#d7c9ff)}
+.greet{font-size:38px;font-weight:800;color:#5a3fa0;line-height:1.05}
+.greet span{color:#ff7fb5}
+.netcard{margin-top:22px;border-radius:28px;background:#fff;padding:22px 24px;box-shadow:inset 4px 4px 10px rgba(160,140,200,.18),6px 8px 16px rgba(160,140,200,.2)}
+.netcard .l{font-size:12px;color:#9a92b0;text-transform:uppercase;letter-spacing:1px;font-weight:700}
+.netcard .v{font-size:50px;font-weight:800;color:#5a3fa0;letter-spacing:-2px;line-height:1.1}
+.netcard .d{font-size:14px;color:#3fb98a;font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.chip{padding:12px 18px;border-radius:24px;background:#fff;box-shadow:6px 6px 14px rgba(160,140,200,.25),-4px -4px 8px #fff;font-size:13px;font-weight:700;color:#6a5e90}
+.chip b{color:#7a5cd6}
+.lbl{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:#a298bc;font-weight:800;margin-bottom:16px}
+.col{padding:24px}
+.task{border-radius:24px;padding:16px 18px;margin-bottom:16px;box-shadow:6px 8px 16px rgba(160,140,200,.22),-4px -4px 8px #fff}
+.t-crit{background:linear-gradient(135deg,#ffd0dc,#ffe2ea)}
+.t-high{background:linear-gradient(135deg,#ffeac9,#fff4e2)}
+.t-t{font-size:15px;font-weight:700;color:#5a4a72}
+.t-s{font-size:12px;color:#8a7fa8;margin-top:4px}
+.tag{display:inline-block;font-size:10px;font-weight:800;padding:4px 12px;border-radius:16px;margin-bottom:8px;color:#fff}
+.j{margin-bottom:20px}
+.j-h{display:flex;justify-content:space-between;font-size:14px;font-weight:700;color:#5a4a72;margin-bottom:9px}
+.j-h span{color:#9a92b0;font-size:12px}
+.track{height:16px;border-radius:12px;background:#ece5f7;box-shadow:inset 3px 3px 6px rgba(160,140,200,.3);overflow:hidden}
+.fill{height:100%;border-radius:12px}
+.sys{display:flex;gap:14px;margin-top:8px}
+.sys .s{flex:1;border-radius:22px;padding:16px;text-align:center;background:#fff;box-shadow:6px 8px 16px rgba(160,140,200,.2),-4px -4px 8px #fff}
+.sys .v{font-size:26px;font-weight:800;color:#7a5cd6}.sys .k{font-size:10px;color:#9a92b0;font-weight:700;text-transform:uppercase;margin-top:4px}
+.foot{grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:16px 24px;border-radius:30px;background:#fff;box-shadow:8px 10px 20px rgba(160,140,200,.22)}
+.foot input{flex:1;background:0;border:0;outline:0;color:#5a4a72;font-size:15px}.foot input::placeholder{color:#a298bc}
+.mic{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#ff7fb5,#7a5cd6);display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:4px 6px 12px rgba(160,140,200,.4)}
+.kk{font-size:12px;color:#9a92b0;font-weight:700;padding:6px 12px;border-radius:14px;background:#f3eefb;box-shadow:inset 2px 2px 5px rgba(160,140,200,.2)}
+</style></head><body>
+<div class="wrap">
+<div class="top"><div class="wm">JARVIS</div><div class="pill">● Online · Opus · 20:34 · Tue Jun 09</div><div class="r">Say "Hey Jarvis"</div></div>
+
+<div class="hero clay">
+<div class="greet">Good evening,<br><span>Shay.</span></div>
+<div class="netcard"><div class="l">Net this month</div><div class="v">$3,840</div><div class="d">ROI 4.2× · ▲18% · AI cost $58 / $80</div></div>
+<div class="chips">
+<div class="chip">Stripe subs <b>$1,240</b></div>
+<div class="chip">Gumroad <b>$890</b></div>
+<div class="chip">Newsletter <b>$400</b></div>
+<div class="chip">Lemon Squeezy <b>$310</b></div>
+</div>
+</div>
+
+<div class="col clay">
+<div class="lbl">3 things need you</div>
+<div class="task t-crit"><span class="tag" style="background:#ff5c8a">CRITICAL</span><div class="t-t">Send invoice → 14 customers</div><div class="t-s">$1,240 · EA agent via Resend</div></div>
+<div class="task t-high"><span class="tag" style="background:#f5a623">HIGH</span><div class="t-t">Publish SaaS starter → Gumroad</div><div class="t-s">$39</div></div>
+<div class="task t-high"><span class="tag" style="background:#f5a623">HIGH</span><div class="t-t">Deploy micro-API → Cloudflare</div><div class="t-s">Edge worker</div></div>
+</div>
+
+<div class="col clay">
+<div class="lbl">Jobs running</div>
+<div class="j"><div class="j-h">habit-tracker app <span>Code · 72%</span></div><div class="track"><div class="fill" style="width:72%;background:linear-gradient(90deg,#7a5cd6,#a98fff)"></div></div></div>
+<div class="j"><div class="j-h">research note-taking niche <span>Scout · 40%</span></div><div class="track"><div class="fill" style="width:40%;background:linear-gradient(90deg,#ff7fb5,#ffb0d4)"></div></div></div>
+<div class="j"><div class="j-h">newsletter #14 <span>queued</span></div><div class="track"><div class="fill" style="width:8%;background:#cfc4ea"></div></div></div>
+<div class="lbl" style="margin-top:26px">System</div>
+<div class="sys">
+<div class="s"><div class="v">51</div><div class="k">agents</div></div>
+<div class="s"><div class="v">9/26</div><div class="k">connectors</div></div>
+<div class="s"><div class="v">7</div><div class="k">products</div></div>
+</div>
+</div>
+
+<div class="foot"><div class="mic">🎙</div><input placeholder="Ask Jarvis, or type a /command…"><span class="kk">⌘K</span></div>
+</div>
+</body></html>

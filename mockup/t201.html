@@ -1,0 +1,59 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T201</title><style>
+*{margin:0;box-sizing:border-box;font-family:ui-monospace,'SF Mono',monospace}
+body{height:100vh;overflow:hidden;background:#04140c;color:#5fe0a0;display:flex}
+.scope{flex:1;display:flex;align-items:center;justify-content:center;position:relative}
+.radar{width:680px;height:680px;border-radius:50%;background:radial-gradient(circle,#06241a 0%,#04140c 70%);border:2px solid #11402c;position:relative;overflow:hidden;box-shadow:inset 0 0 60px rgba(60,224,138,.12)}
+.ring{position:absolute;border:1px solid rgba(60,224,138,.18);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%)}
+.cross{position:absolute;background:rgba(60,224,138,.14)}
+.cross.h{top:50%;left:0;right:0;height:1px}.cross.v{left:50%;top:0;bottom:0;width:1px}
+.sweep{position:absolute;top:0;left:50%;width:50%;height:100%;transform-origin:left center;background:conic-gradient(from 0deg,rgba(60,224,138,.35),transparent 32%);border-radius:0 100% 100% 0/0 50% 50% 0}
+.blip{position:absolute;width:12px;height:12px;border-radius:50%;background:#5fe0a0;box-shadow:0 0 12px 3px rgba(95,224,160,.7);transform:translate(-50%,-50%)}
+.blip.warn{background:#ffce6a;box-shadow:0 0 12px 3px rgba(255,206,106,.7)}
+.blip.crit{background:#ff7a7a;box-shadow:0 0 12px 3px rgba(255,122,122,.8)}
+.tag{position:absolute;font-size:10px;color:#9af0c8;transform:translate(-50%,-50%);white-space:nowrap;letter-spacing:1px}
+.side{width:340px;background:#031009;border-left:1px solid #0d3322;padding:28px 26px;display:flex;flex-direction:column}
+.wm{font-size:18px;font-weight:800;letter-spacing:4px;color:#5fe0a0;text-shadow:0 0 10px rgba(95,224,160,.5)}
+.st{font-size:11px;color:#2f9c78;margin-top:5px;letter-spacing:1px}
+h2{font-size:11px;letter-spacing:2px;color:#2f9c78;margin:24px 0 10px}
+.con{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #0c2a1c;font-size:12px}
+.dotc{width:9px;height:9px;border-radius:50%}.cn{color:#bdf0d8}.cb{margin-left:auto;color:#5fe0a0}
+.cw{color:#ffce6a}.cc{color:#ff7a7a}
+.gauge{margin-top:auto;font-size:11px;color:#2f9c78;line-height:2;border-top:1px solid #0d3322;padding-top:14px}
+.gauge b{color:#5fe0a0}
+.brg{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);font-size:11px;color:#2f9c78;letter-spacing:3px}
+.degs{position:absolute;font-size:10px;color:#2f9c78}
+</style></head><body>
+<div class="scope">
+<div class="radar">
+<div class="ring" style="width:570px;height:570px"></div>
+<div class="ring" style="width:400px;height:400px"></div>
+<div class="ring" style="width:230px;height:230px"></div>
+<div class="ring" style="width:70px;height:70px"></div>
+<div class="cross h"></div><div class="cross v"></div>
+<div class="degs" style="top:6px;left:50%;transform:translateX(-50%)">000</div>
+<div class="degs" style="right:6px;top:50%;transform:translateY(-50%)">090</div>
+<div class="degs" style="bottom:6px;left:50%;transform:translateX(-50%)">180</div>
+<div class="degs" style="left:6px;top:50%;transform:translateY(-50%)">270</div>
+<div class="sweep"></div>
+<div class="blip" style="left:64%;top:36%"></div><div class="tag" style="left:64%;top:30%">CODE · habit-tracker 72%</div>
+<div class="blip" style="left:38%;top:58%"></div><div class="tag" style="left:38%;top:64%">SCOUT · note-niche 40%</div>
+<div class="blip warn" style="left:58%;top:64%"></div><div class="tag" style="left:58%;top:70%">EA · publish SaaS</div>
+<div class="blip warn" style="left:43%;top:38%"></div><div class="tag" style="left:43%;top:32%">DEPLOY · micro-API</div>
+<div class="blip crit" style="left:50%;top:24%"></div><div class="tag" style="left:50%;top:18%">INVOICE · 14 cust $1,240</div>
+<div class="blip" style="left:72%;top:54%"></div><div class="tag" style="left:72%;top:48%">NEWSLETTER #14 q</div>
+<div class="blip" style="left:30%;top:48%"></div><div class="tag" style="left:30%;top:42%">FINANCE idle</div>
+<div class="brg">SWEEP 360° · RANGE 4 RINGS · 51 TRACKED</div>
+</div>
+</div>
+<div class="side">
+<div class="wm">JARVIS RADAR</div><div class="st">● ONLINE · OPUS · 20:34 TUE JUN 09</div>
+<h2>CONTACTS · BEARING / STATUS</h2>
+<div class="con"><span class="dotc cc" style="background:#ff7a7a"></span><span class="cn">Send invoice → 14 cust</span><span class="cb cc">CRIT 015°</span></div>
+<div class="con"><span class="dotc cw" style="background:#ffce6a"></span><span class="cn">Publish SaaS → Gumroad</span><span class="cb cw">HIGH 124°</span></div>
+<div class="con"><span class="dotc cw" style="background:#ffce6a"></span><span class="cn">Deploy micro-API</span><span class="cb cw">HIGH 318°</span></div>
+<div class="con"><span class="dotc" style="background:#5fe0a0"></span><span class="cn">habit-tracker app</span><span class="cb">72% 048°</span></div>
+<div class="con"><span class="dotc" style="background:#5fe0a0"></span><span class="cn">research note-niche</span><span class="cb">40% 215°</span></div>
+<div class="con"><span class="dotc" style="background:#5fe0a0"></span><span class="cn">newsletter #14</span><span class="cb">QUEUED</span></div>
+<div class="gauge">TRACK QUALITY <b>HIGH</b> · CLUTTER LOW<br>AGENTS <b>51</b> · CONNECTORS <b>9 LIVE</b><br>AI COST <b>$58 / $80</b> · ROI <b>4.2×</b></div>
+</div>
+</body></html>

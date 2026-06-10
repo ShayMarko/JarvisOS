@@ -1,0 +1,24 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T62</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6ebf4;background:#0a0c12}
+.top{display:flex;align-items:center;gap:14px;padding:18px 30px}.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#7a9cff}.st{font-size:12px;color:#6a728c}.r{margin-left:auto;font-size:14px;font-weight:600}.r span{color:#6a728c;font-weight:400}
+.grid{padding:6px 30px;display:grid;grid-template-columns:repeat(7,1fr);gap:8px;height:calc(100vh - 150px)}
+.dow{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#5d6480;text-align:center;padding-bottom:4px}
+.day{background:#0e1320;border:1px solid #19202e;border-radius:10px;padding:8px;position:relative}
+.day .n{font-size:12px;color:#8a92ac}.day.dim{opacity:.4}
+.day.today{border-color:#7a9cff;box-shadow:0 0 0 1px rgba(122,156,255,.3)}.day.today .n{color:#7a9cff;font-weight:700}
+.ev{font-size:9px;border-radius:4px;padding:2px 5px;margin-top:3px;white-space:nowrap;overflow:hidden}
+.b{background:rgba(122,156,255,.18);color:#aebfff}.g{background:rgba(70,224,160,.16);color:#7fe0b0}.a{background:rgba(255,200,90,.16);color:#ffce8a}.rr{background:rgba(255,107,129,.16);color:#ff9bb0}
+.bar{position:fixed;bottom:20px;left:30px;right:30px;display:flex;align-items:center;gap:12px;background:#0e1320;border:1px solid #19202e;border-radius:13px;padding:11px 15px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e6ebf4;font-size:14px}.bar input::placeholder{color:#5d6480}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · JUNE</div><div class="st">● Opus</div><div class="r">Good evening, Shay <span>· 3 need you today · net $3,840</span></div></div>
+<div class="grid">
+<div class="dow">Mon</div><div class="dow">Tue</div><div class="dow">Wed</div><div class="dow">Thu</div><div class="dow">Fri</div><div class="dow">Sat</div><div class="dow">Sun</div>
+<div class="day dim"><div class="n">26</div></div><div class="day dim"><div class="n">27</div></div><div class="day dim"><div class="n">28</div></div><div class="day dim"><div class="n">29</div></div><div class="day dim"><div class="n">30</div></div><div class="day dim"><div class="n">31</div></div><div class="day"><div class="n">1</div><div class="ev g">launch</div></div>
+<div class="day"><div class="n">2</div><div class="ev b">standup</div></div><div class="day"><div class="n">3</div></div><div class="day"><div class="n">4</div><div class="ev g">+$240</div></div><div class="day"><div class="n">5</div><div class="ev a">newsletter</div></div><div class="day"><div class="n">6</div></div><div class="day"><div class="n">7</div></div><div class="day"><div class="n">8</div><div class="ev b">deploy</div></div>
+<div class="day today"><div class="n">9</div><div class="ev rr">3 approvals</div><div class="ev b">focus 14:00</div></div><div class="day"><div class="n">10</div><div class="ev a">issue #15</div></div><div class="day"><div class="n">11</div></div><div class="day"><div class="n">12</div><div class="ev g">ship app</div></div><div class="day"><div class="n">13</div></div><div class="day"><div class="n">14</div></div><div class="day"><div class="n">15</div></div>
+<div class="day"><div class="n">16</div></div><div class="day"><div class="n">17</div><div class="ev b">review</div></div><div class="day"><div class="n">18</div></div><div class="day"><div class="n">19</div><div class="ev a">newsletter</div></div><div class="day"><div class="n">20</div></div><div class="day"><div class="n">21</div></div><div class="day"><div class="n">22</div></div>
+</div>
+<div class="bar"><span style="color:#7a9cff">🎙</span><input placeholder="Ask Jarvis, or schedule something… · say “Hey Jarvis”"><span style="color:#5d6480;font-size:12px">⌘K</span></div>
+</body></html>

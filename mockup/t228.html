@@ -1,0 +1,38 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T228</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf6;background:#080c12;display:flex;align-items:center;justify-content:center}
+.phone{width:392px;height:840px;border-radius:46px;background:#0a0f16;border:1px solid #1a2532;box-shadow:0 40px 100px rgba(0,0,0,.6),inset 0 0 0 8px #05080d;overflow:hidden;position:relative}
+.notch{position:absolute;top:14px;left:50%;transform:translateX(-50%);width:120px;height:30px;background:#05080d;border-radius:18px;z-index:30}
+.scr{position:absolute;inset:8px;border-radius:38px;overflow:hidden;background:linear-gradient(180deg,#0b1119,#080c12)}
+.sb{display:flex;justify-content:space-between;padding:16px 26px 0;font-size:13px;font-weight:600;color:#9fb0c2}
+.pull{height:108px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:8px}
+.spin{width:34px;height:34px;border-radius:50%;border:3px solid rgba(95,160,255,.2);border-top-color:#6fa8ff;transform:scaleY(1.4) rotate(120deg)}
+.pull .txt{font-size:12px;color:#6fa8ff;margin-top:10px;font-weight:600;letter-spacing:.4px}
+.pull .sub{font-size:10px;color:#5d7290;margin-top:2px}
+.head{padding:4px 22px 12px}
+.head h1{font-size:26px;font-weight:800}.head h1 b{color:#6fa8ff}.head .st{font-size:12px;color:#5d7290;margin-top:2px}
+.list{padding:0 16px;transform:translateY(0)}
+.card{background:#0e1722;border:1px solid #1a2532;border-radius:16px;padding:14px 16px;margin-bottom:11px}
+.card .k{font-size:9px;letter-spacing:1.4px;text-transform:uppercase;font-weight:700}
+.crit .k{color:#ff8c9c}.hi .k{color:#f0c878}.ok .k{color:#46e0a0}
+.card h3{font-size:15px;font-weight:700;margin-top:6px}
+.card .meta{font-size:12px;color:#7b90ad;margin-top:5px;display:flex;justify-content:space-between}
+.card .amt{font-weight:800;color:#e6edf6}
+.dock{position:absolute;bottom:0;left:8px;right:8px;height:74px;background:rgba(10,15,22,.92);border-top:1px solid #1a2532;display:flex;align-items:center;justify-content:space-around;padding:0 20px}
+.dock i{font-size:20px;color:#5d7290}.dock i.on{color:#6fa8ff}
+.handle{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:130px;height:5px;border-radius:3px;background:#2a3a4d}
+</style></head><body>
+<div class="phone"><div class="notch"></div><div class="scr">
+<div class="sb"><span>20:34</span><span>JARVIS ● Opus</span></div>
+<div class="pull"><div class="spin"></div><div class="txt">Release to sync</div><div class="sub">checking 9 connectors · last 2m ago</div></div>
+<div class="head"><h1>Good evening, <b>Shay.</b></h1><div class="st">Net $3,840 · ROI 4.2× · 3 need you</div></div>
+<div class="list">
+<div class="card crit"><div class="k">● Critical · needs you</div><h3>Send invoice → 14 customers</h3><div class="meta"><span>EA via Resend</span><span class="amt">$1,240</span></div></div>
+<div class="card hi"><div class="k">● High</div><h3>Publish SaaS starter → Gumroad</h3><div class="meta"><span>Product agent</span><span class="amt">$39</span></div></div>
+<div class="card hi"><div class="k">● High</div><h3>Deploy micro-API → Cloudflare</h3><div class="meta"><span>green-gated</span><span class="amt">ready</span></div></div>
+<div class="card ok"><div class="k">● Running</div><h3>habit-tracker app</h3><div class="meta"><span>Code agent</span><span class="amt">72%</span></div></div>
+</div>
+<div class="dock"><i class="on">⌂</i><i>◷</i><i>⚡</i><i>◎</i><i>☰</i></div>
+<div class="handle"></div>
+</div></div>
+</body></html>

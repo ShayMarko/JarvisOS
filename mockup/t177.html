@@ -1,0 +1,46 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T177</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#fff;background:linear-gradient(165deg,#1a1430 0%,#0b1a2e 50%,#08121f 100%)}
+.phone{height:100vh;display:flex;flex-direction:column;align-items:center;padding:56px 18px 30px;position:relative}
+.phone::before{content:"";position:absolute;inset:0;background:radial-gradient(600px 500px at 50% 18%,rgba(120,160,255,.16),transparent 60%);pointer-events:none}
+.lockwrap{width:420px;display:flex;flex-direction:column;align-items:center;z-index:2}
+.lockdate{font-size:18px;color:rgba(255,255,255,.7);letter-spacing:1px}
+.lockclock{font-size:96px;font-weight:300;letter-spacing:-3px;line-height:1;margin:2px 0 4px;text-shadow:0 2px 20px rgba(0,0,0,.4)}
+.lockwm{font-size:12px;letter-spacing:5px;color:rgba(140,180,255,.9);font-weight:700}
+.stack{width:420px;margin-top:34px;display:flex;flex-direction:column;gap:11px;z-index:2}
+.notif{background:rgba(30,36,52,.55);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:14px 16px;display:flex;gap:13px;align-items:flex-start;box-shadow:0 12px 30px rgba(0,0,0,.35)}
+.ic{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;background:linear-gradient(135deg,#5b8def,#7b5bef)}
+.ic.crit{background:linear-gradient(135deg,#ff6a6a,#ff3d6e)}
+.ic.green{background:linear-gradient(135deg,#3ddc97,#27b07a)}
+.ic.amber{background:linear-gradient(135deg,#f2c14e,#e89a30)}
+.n .hdr{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,.6)}
+.n .hdr .app{font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.85)}
+.n .hdr .time{margin-left:auto}
+.n .t{font-size:15px;font-weight:600;margin-top:3px}
+.n .d{font-size:13px;color:rgba(255,255,255,.7);margin-top:2px;line-height:1.4}
+.n{flex:1}
+.collapse{text-align:center;font-size:12px;color:rgba(255,255,255,.55);margin-top:4px}
+.foot{margin-top:auto;display:flex;flex-direction:column;align-items:center;gap:16px;z-index:2}
+.flashrow{display:flex;gap:120px}
+.flash{width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:20px}
+.handle{width:130px;height:5px;border-radius:3px;background:rgba(255,255,255,.4)}
+</style></head><body>
+<div class="phone">
+<div class="lockwrap">
+<div class="lockwm">JARVIS · HEY JARVIS</div>
+<div class="lockclock">20:34</div>
+<div class="lockdate">Tuesday, June 09</div>
+</div>
+<div class="stack">
+<div class="notif"><div class="ic crit">🧾</div><div class="n"><div class="hdr"><span class="app">JARVIS</span>· CRITICAL<span class="time">now</span></div><div class="t">Approve invoice → 14 customers</div><div class="d">$1,240 ready to bill · EA via Resend. Tap to approve or steer.</div></div></div>
+<div class="notif"><div class="ic green">💸</div><div class="n"><div class="hdr"><span class="app">JARVIS</span>· money<span class="time">7m</span></div><div class="t">Net this month $3,840 ▲18%</div><div class="d">ROI 4.2× · Stripe $1,240 · Gumroad $890 · AI cost $58/$80</div></div></div>
+<div class="notif"><div class="ic">⚙️</div><div class="n"><div class="hdr"><span class="app">JARVIS</span>· jobs<span class="time">12m</span></div><div class="t">habit-tracker app · 72%</div><div class="d">Code agent building · research niche 40% (Scout)</div></div></div>
+<div class="notif"><div class="ic amber">🚀</div><div class="n"><div class="hdr"><span class="app">JARVIS</span>· 2 more<span class="time">20m</span></div><div class="t">Publish SaaS starter · Deploy micro-API</div><div class="d">Newsletter #14 queued · double down on "REST API + auth"</div></div></div>
+<div class="collapse">⌄ 2 older Jarvis notifications</div>
+</div>
+<div class="foot">
+<div class="flashrow"><div class="flash">🎙</div><div class="flash">📷</div></div>
+<div class="handle"></div>
+</div>
+</div>
+</body></html>

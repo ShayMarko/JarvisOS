@@ -1,0 +1,29 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T65</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e9e4f4;background:linear-gradient(160deg,#171029,#0a0712)}
+.top{display:flex;justify-content:space-between;padding:22px 36px}.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#c79bff}.st{font-size:12px;color:#8a7fb0}
+.wrap{display:flex;align-items:center;gap:40px;padding:30px 60px;height:calc(100vh - 220px)}
+.cover{width:300px;height:300px;border-radius:24px;background:linear-gradient(160deg,#3a2a6a,#1a1230);display:grid;place-items:center;flex:none;box-shadow:0 30px 70px rgba(0,0,0,.5);position:relative;overflow:hidden}
+.cover .orb{width:120px;height:120px;border-radius:50%;background:radial-gradient(circle at 50% 38%,#f0e8ff,#c79bff 45%,#5a3fb0);box-shadow:0 0 50px rgba(199,155,255,.6)}
+.eq{position:absolute;bottom:24px;display:flex;gap:4px;align-items:flex-end;height:34px}.eq i{width:5px;background:#c79bff;border-radius:3px}
+.info{flex:1}
+.np{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#8a7fb0}
+.track{font-size:30px;font-weight:700;margin:8px 0 4px}.artist{font-size:15px;color:#a99fc8}
+.scrub{height:6px;border-radius:6px;background:rgba(160,140,210,.18);margin:22px 0 8px}.scrub i{display:block;height:100%;width:72%;border-radius:6px;background:linear-gradient(90deg,#c79bff,#8b9bff)}
+.times{display:flex;justify-content:space-between;font-size:12px;color:#8a7fb0}
+.controls{display:flex;align-items:center;gap:22px;margin-top:24px}
+.ctl{font-size:22px;color:#c2b8e0}
+.play{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#c79bff,#8b9bff);display:grid;place-items:center;color:#0a0712;font-size:22px}
+.queue{margin-left:auto;font-size:13px;color:#8a7fb0;text-align:right;line-height:1.7}.queue b{color:#e9e4f4}
+.bar{position:fixed;bottom:24px;left:60px;right:60px;display:flex;align-items:center;gap:12px;background:rgba(26,18,48,.8);border:1px solid rgba(160,140,210,.25);border-radius:14px;padding:11px 16px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e9e4f4;font-size:14px}.bar input::placeholder{color:#8a7fb0}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · NOW RUNNING</div><div class="st">● Opus</div></div>
+<div class="wrap">
+<div class="cover"><div class="orb"></div><div class="eq"><i style="height:40%"></i><i style="height:80%"></i><i style="height:55%"></i><i style="height:95%"></i><i style="height:45%"></i><i style="height:70%"></i><i style="height:30%"></i></div></div>
+<div class="info"><div class="np">Now running · background job</div><div class="track">Building habit-tracker app</div><div class="artist">Code agent · Opus · 8 files written</div>
+<div class="scrub"><i></i></div><div class="times"><span>72%</span><span>~3 min left</span></div>
+<div class="controls"><span class="ctl">⏮</span><div class="play">⏸</div><span class="ctl">⏭</span><div class="queue"><b>Up next</b><br>Research niche · Newsletter #14</div></div></div>
+</div>
+<div class="bar"><span style="color:#c79bff">🎙</span><input placeholder="Good evening, Shay · ask anything · say “Hey Jarvis”"><span style="color:#8a7fb0;font-size:12px">⌘K</span></div>
+</body></html>

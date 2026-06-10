@@ -1,0 +1,40 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T11</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#dbeeff;background:radial-gradient(900px 900px at 50% 50%,#0a1b2e,#04080f)}
+.hud{position:fixed;inset:0}
+.corner{position:absolute;font-size:11px;letter-spacing:2px;color:#5fa8d6;text-transform:uppercase}
+.tl{top:24px;left:30px}.tr{top:24px;right:30px;text-align:right}.bl{bottom:24px;left:30px}.br{bottom:24px;right:30px;text-align:right}
+.corner b{color:#bfe6ff;font-size:14px;letter-spacing:1px}
+.stage{position:absolute;inset:0;display:grid;place-items:center}
+.dial{position:relative;width:560px;height:560px;border-radius:50%}
+.arc{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(95,168,214,.18)}
+.arc.a2{inset:50px;border-top:2px solid rgba(95,200,255,.6);border-right:2px solid rgba(95,200,255,.2)}
+.arc.a3{inset:110px;border-bottom:2px solid rgba(120,160,255,.5)}
+.core{position:absolute;inset:0;display:grid;place-items:center;flex-direction:column}
+.orb{width:150px;height:150px;border-radius:50%;background:radial-gradient(circle at 50% 38%,#e6fbff,#5fc8ff 45%,#1d5fae);box-shadow:0 0 90px rgba(95,200,255,.6),inset 0 0 30px rgba(255,255,255,.5)}
+.node{position:absolute;width:120px;text-align:center;transform:translate(-50%,-50%)}
+.nicon{width:50px;height:50px;border-radius:50%;margin:0 auto 6px;display:grid;place-items:center;font-size:20px;background:rgba(12,28,46,.8);border:1px solid rgba(95,168,214,.4);box-shadow:0 0 20px rgba(95,168,214,.2)}
+.nlbl{font-size:11px;color:#9fc8e6}.nval{font-size:15px;font-weight:700;color:#dff}
+.center-t{position:absolute;top:calc(50% + 100px);left:50%;transform:translateX(-50%);text-align:center}
+.greet{font-size:18px;font-weight:300;letter-spacing:1px}.greet b{color:#5fc8ff;font-weight:600}
+.st{font-size:12px;color:#5fa8d6;letter-spacing:2px;margin-top:4px;text-transform:uppercase}
+.bar{position:absolute;bottom:60px;left:50%;transform:translateX(-50%);width:520px;display:flex;align-items:center;gap:12px;background:rgba(8,18,32,.7);border:1px solid rgba(95,168,214,.3);border-radius:14px;padding:11px 15px;backdrop-filter:blur(10px)}
+.bar input{flex:1;background:0;border:0;outline:0;color:#dbeeff;font-size:14px}.bar input::placeholder{color:#456b88}
+</style></head><body><div class="hud">
+<div class="corner tl">J.A.R.V.I.S<br><b>● ONLINE · OPUS</b></div>
+<div class="corner tr">20:34:41<br><b>TUE · JUN 09</b></div>
+<div class="corner bl">CPU 12% · MEM 6.1G<br><b>BUDGET $58/$80</b></div>
+<div class="corner br">3 NEED YOU<br><b style="color:#ffb86b">ACTION REQUIRED</b></div>
+<div class="stage"><div class="dial">
+<div class="arc"></div><div class="arc a2"></div><div class="arc a3"></div>
+<div class="core"><div class="orb"></div></div>
+<div class="node" style="top:8%;left:50%"><div class="nicon">◈</div><div class="nlbl">Money</div><div class="nval">$3,840</div></div>
+<div class="node" style="top:30%;left:92%"><div class="nicon">⚇</div><div class="nlbl">Agents</div><div class="nval">51</div></div>
+<div class="node" style="top:74%;left:90%"><div class="nicon">⊞</div><div class="nlbl">Connectors</div><div class="nval">26</div></div>
+<div class="node" style="top:94%;left:50%"><div class="nicon">≋</div><div class="nlbl">Jobs</div><div class="nval">2</div></div>
+<div class="node" style="top:74%;left:10%"><div class="nicon">⚠</div><div class="nlbl">Needs you</div><div class="nval">3</div></div>
+<div class="node" style="top:30%;left:8%"><div class="nicon">▤</div><div class="nlbl">Files</div><div class="nval">—</div></div>
+</div></div>
+<div class="center-t"><div class="greet">Good evening, <b>Shay</b>.</div><div class="st">ROI 4.2× · standing by</div></div>
+<div class="bar"><span style="color:#5fc8ff">🎙</span><input placeholder="Say “Hey Jarvis”, or type a command…"><span style="color:#456b88;font-size:12px">⌘K</span></div>
+</div></body></html>

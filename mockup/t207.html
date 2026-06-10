@@ -1,0 +1,47 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T207</title><style>
+*{margin:0;box-sizing:border-box;font-family:ui-monospace,'SF Mono',monospace}
+body{height:100vh;overflow:hidden;background:#0d0f08;display:flex;align-items:center;justify-content:center}
+.scope{width:1180px;height:740px;background:linear-gradient(180deg,#1c1f12,#0e1008);border:6px solid #2a2e18;border-radius:16px;box-shadow:0 30px 80px rgba(0,0,0,.6);display:grid;grid-template-columns:1fr 260px}
+.crt{margin:26px;background:radial-gradient(700px 500px at 50% 50%,#0a2810,#031206);border:3px solid #04120a;border-radius:10px;position:relative;overflow:hidden;box-shadow:inset 0 0 50px rgba(120,255,120,.08)}
+.gratic{position:absolute;inset:0;background:linear-gradient(rgba(140,255,140,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(140,255,140,.12) 1px,transparent 1px);background-size:calc(100%/10) calc(100%/8)}
+.axis{position:absolute;background:rgba(140,255,140,.35)}
+.axis.h{left:0;right:0;top:50%;height:1px}.axis.v{top:0;bottom:0;left:50%;width:1px}
+.ticks{position:absolute;left:50%;top:0;bottom:0;width:0}
+svg.wave{position:absolute;inset:0;width:100%;height:100%}
+.glow{filter:drop-shadow(0 0 6px #6fff8e)}
+.osd{position:absolute;top:14px;left:16px;font-size:11px;color:#8fff9e;letter-spacing:1px}
+.osd2{position:absolute;top:14px;right:16px;font-size:11px;color:#8fff9e;text-align:right;letter-spacing:1px}
+.ctrl{margin:26px 26px 26px 0;background:#14160c;border:2px solid #2a2e18;border-radius:10px;padding:22px;display:flex;flex-direction:column;color:#9fd87a}
+.wm{font-size:15px;font-weight:800;letter-spacing:3px;color:#8fff9e;text-shadow:0 0 10px rgba(140,255,140,.5)}
+.st{font-size:10px;color:#5a7a3a;margin-top:5px;letter-spacing:1px}
+.read{margin-top:18px;border:1px solid #2a3a18;border-radius:8px;padding:12px;background:#0a1206}
+.rl{font-size:9px;color:#5a7a3a;letter-spacing:2px}.rv{font-size:22px;font-weight:800;margin-top:2px}
+.rc1{color:#8fff9e}.rc2{color:#ffce6a}
+.knobs{margin-top:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.knob{text-align:center}
+.kd{width:54px;height:54px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#2c3018,#0e1006);border:2px solid #3a4022;margin:0 auto;position:relative;box-shadow:0 3px 6px #000}
+.kd::after{content:"";position:absolute;top:6px;left:50%;width:3px;height:16px;background:#8fff9e;transform:translateX(-50%);border-radius:2px}
+.kl{font-size:9px;color:#5a7a3a;margin-top:6px;letter-spacing:1px}
+</style></head><body>
+<div class="scope">
+<div class="crt"><div class="gratic"></div><div class="axis h"></div><div class="axis v"></div>
+<div class="osd">JARVIS · CH1 5V/div · CH2 2V/div · 10ms/div</div>
+<div class="osd2">TRIG ▲ NET · 20:34 TUE JUN 09</div>
+<svg class="wave" viewBox="0 0 1000 600" preserveAspectRatio="none">
+<path class="glow" fill="none" stroke="#6fff8e" stroke-width="2.5" d="M0,300 C60,140 100,140 160,300 C220,460 260,460 320,300 C380,140 420,140 480,300 C540,460 580,460 640,300 C700,140 740,140 800,300 C860,460 900,460 960,300 L1000,300"/>
+<path class="glow" fill="none" stroke="#ffce6a" stroke-width="2" stroke-opacity=".85" d="M0,360 L100,360 L100,230 L260,230 L260,360 L420,360 L420,230 L580,230 L580,360 L740,360 L740,230 L900,230 L900,360 L1000,360"/>
+</svg></div>
+<div class="ctrl">
+<div class="wm">JARVIS·SCOPE</div><div class="st">● ONLINE · OPUS · ACQUIRING</div>
+<div class="read"><div class="rl">CH1 · REVENUE SIGNAL</div><div class="rv rc1">$3,840 ▲18%</div></div>
+<div class="read"><div class="rl">CH2 · AI COST CLOCK</div><div class="rv rc2">$58 / $80</div></div>
+<div class="read"><div class="rl">FREQ · JOBS RUNNING</div><div class="rv rc1">2 · 72% / 40%</div></div>
+<div class="read"><div class="rl">AMP · ROI</div><div class="rv rc1">4.2× pk-pk</div></div>
+<div class="knobs">
+<div class="knob"><div class="kd"></div><div class="kl">VOLTS</div></div>
+<div class="knob"><div class="kd" style="transform:rotate(120deg)"></div><div class="kl">TIME</div></div>
+<div class="knob"><div class="kd" style="transform:rotate(-70deg)"></div><div class="kl">TRIG</div></div>
+</div>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,55 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T238</title><style>
+*{margin:0;box-sizing:border-box}
+body{height:100vh;overflow:hidden;color:#f4e3b0;background:#0a0805;font-family:Georgia,'Times New Roman',serif}
+.deco{height:100vh;display:grid;grid-template-rows:auto auto 1fr auto;padding:26px 40px;position:relative;background:radial-gradient(circle at 50% -10%,#1c150a 0%,#0a0805 60%)}
+.deco::before,.deco::after{content:"";position:absolute;top:0;width:160px;height:100vh;background:repeating-linear-gradient(90deg,transparent 0 18px,rgba(201,162,77,.12) 18px 20px)}
+.deco::before{left:0}.deco::after{right:0}
+.frame{position:absolute;inset:14px;border:2px solid #c9a24d;pointer-events:none}
+.frame::before{content:"";position:absolute;inset:6px;border:1px solid rgba(201,162,77,.4)}
+.top{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:2px solid #c9a24d;padding-bottom:12px;position:relative;z-index:2}
+.wm{font-size:30px;font-weight:bold;letter-spacing:14px;color:#e8c873;text-shadow:0 1px 0 #8a6a1f}
+.status{font-size:12px;letter-spacing:4px;color:#9c8344;text-transform:uppercase}
+.fan{display:flex;justify-content:center;gap:0;margin:14px 0;position:relative;z-index:2}
+.fan span{width:0;height:0;border-left:13px solid transparent;border-right:13px solid transparent;border-bottom:46px solid #c9a24d;margin:0 2px;opacity:.85}
+.fan span:nth-child(even){border-bottom-color:#7a5e1c;height:0;border-bottom-width:30px}
+.hero{text-align:center;position:relative;z-index:2}
+.greet{font-size:54px;font-style:italic;letter-spacing:2px;color:#f0dca0;margin:6px 0}
+.greet b{color:#e8c873}
+.net{font-size:14px;letter-spacing:6px;text-transform:uppercase;color:#c9a24d;margin-top:6px}
+.cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;margin-top:24px;position:relative;z-index:2}
+.col{padding:0 26px;border-right:1px solid rgba(201,162,77,.3)}.col:last-child{border-right:0}
+.ct{font-size:12px;letter-spacing:5px;text-transform:uppercase;color:#c9a24d;text-align:center;border-bottom:1px solid rgba(201,162,77,.4);padding-bottom:8px;margin-bottom:12px}
+.item{font-size:14.5px;padding:7px 0;display:flex;justify-content:space-between;border-bottom:1px solid rgba(201,162,77,.12)}
+.item .v{color:#9c8344;font-style:italic}
+.crit{color:#d98f3f}
+.foot{position:relative;z-index:2;border-top:2px solid #c9a24d;margin-top:16px;padding-top:14px;display:flex;align-items:center;gap:14px}
+.foot input{flex:1;background:0;border:0;outline:0;color:#f4e3b0;font-size:15px;font-style:italic}
+.foot input::placeholder{color:#7a6535}
+.diamond{color:#e8c873;font-size:18px}
+</style></head><body><div class="deco">
+<div class="frame"></div>
+<div class="top"><div class="wm">JARVIS</div><div class="status">● Online · Opus · 20:34 · Tue Jun 09</div></div>
+<div class="fan"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+<div class="hero">
+  <div class="greet">Good evening, <b>Shay.</b></div>
+  <div class="net">Net this month $3,840 · ROI 4.2× · ▲18% · AI cost $58 / $80</div>
+</div>
+<div class="cols">
+  <div class="col"><div class="ct">Needs You</div>
+    <div class="item crit"><span>Invoice → 14 customers</span><span class="v">$1,240</span></div>
+    <div class="item"><span>Publish SaaS starter</span><span class="v">$39</span></div>
+    <div class="item"><span>Deploy micro-API</span><span class="v">CF</span></div>
+  </div>
+  <div class="col"><div class="ct">In Motion</div>
+    <div class="item"><span>habit-tracker app</span><span class="v">72%</span></div>
+    <div class="item"><span>research niche</span><span class="v">40%</span></div>
+    <div class="item"><span>newsletter #14</span><span class="v">queued</span></div>
+  </div>
+  <div class="col"><div class="ct">The House</div>
+    <div class="item"><span>Agents</span><span class="v">51</span></div>
+    <div class="item"><span>Connectors</span><span class="v">26 · 9 live</span></div>
+    <div class="item"><span>Products live</span><span class="v">7</span></div>
+  </div>
+</div>
+<div class="foot"><span class="diamond">◆</span><input placeholder="Ask Jarvis, or type a /command…"><span class="diamond">⌘K</span></div>
+</div></body></html>

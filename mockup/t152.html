@@ -1,0 +1,81 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T152</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Helvetica Neue',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#2a2520;
+background:#3a2c1e;
+background-image:radial-gradient(circle at 30% 20%,rgba(255,255,255,.04),transparent 40%),repeating-radial-gradient(circle at 50% 50%,rgba(0,0,0,.10) 0 1px,transparent 1px 3px),linear-gradient(160deg,#4a3826,#2e2014)}
+.wrap{height:100vh;padding:22px 28px;display:grid;grid-template-columns:300px 1fr 1fr;grid-template-rows:auto 1fr auto;gap:18px}
+/* felt panels with stitching */
+.panel{position:relative;border-radius:14px;
+background:#1f6b4a;
+background-image:radial-gradient(circle,rgba(255,255,255,.04) 1px,transparent 1px);background-size:3px 3px;
+box-shadow:inset 0 2px 6px rgba(255,255,255,.12),inset 0 -10px 20px rgba(0,0,0,.4),0 8px 18px rgba(0,0,0,.5);
+border:1px solid rgba(0,0,0,.4);padding:20px 22px}
+.panel::before{content:"";position:absolute;inset:8px;border:2px dashed rgba(255,255,255,.35);border-radius:9px;pointer-events:none}
+.inner{position:relative;z-index:1;color:#f3ecd9}
+.top{grid-column:1/-1;display:flex;align-items:center;gap:16px;border-radius:14px;padding:12px 20px;
+background:linear-gradient(180deg,#6a4a2c,#3e2a17);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 6px 14px rgba(0,0,0,.5);border:1px solid #2a1c0e}
+.wm{font-size:24px;font-weight:800;letter-spacing:3px;color:#f3d9a0;text-shadow:0 1px 0 #2a1c0e,0 2px 3px rgba(0,0,0,.5)}
+.st{font-size:12px;color:#d8c49a}
+.r{margin-left:auto;font-size:12px;color:#cbb98e}
+.greet{font-size:28px;font-weight:700;color:#fff7e6;text-shadow:0 1px 2px rgba(0,0,0,.5);line-height:1.1}
+.greet span{color:#f3d9a0}
+.net{margin-top:16px;border-radius:12px;padding:18px;
+background:linear-gradient(180deg,#fbf3df,#e3d6b8);color:#3a2c1e;box-shadow:inset 0 1px 0 #fff,0 4px 10px rgba(0,0,0,.4)}
+.net .l{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#7a6a4a}
+.net .v{font-size:44px;font-weight:800;letter-spacing:-1px;color:#1f6b4a;text-shadow:0 1px 0 #fff}
+.net .d{font-size:13px;color:#7a6a4a;margin-top:2px}
+.src{display:flex;justify-content:space-between;font-size:13px;padding:9px 0;border-bottom:1px dashed rgba(255,255,255,.25);color:#e8dcc4}.src:last-child{border:0}.src b{color:#fff7e6}
+.h{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:#f3d9a0;margin-bottom:16px;text-shadow:0 1px 1px rgba(0,0,0,.5)}
+.btn{display:block;border-radius:11px;padding:13px 16px;margin-bottom:13px;text-shadow:0 1px 0 rgba(0,0,0,.3);
+box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 -3px 6px rgba(0,0,0,.3),0 3px 6px rgba(0,0,0,.4);color:#fff}
+.b-crit{background:linear-gradient(180deg,#e06a52,#a83a28)}
+.b-high{background:linear-gradient(180deg,#e0b35a,#a87a28);color:#3a2c0e;text-shadow:0 1px 0 rgba(255,255,255,.3)}
+.bt{font-size:14px;font-weight:700}.bs{font-size:11px;opacity:.85;margin-top:2px}
+.tag{float:right;font-size:10px;font-weight:800;letter-spacing:1px;opacity:.9}
+.j{margin-bottom:16px}
+.j-h{display:flex;justify-content:space-between;font-size:14px;color:#f3ecd9;margin-bottom:8px}
+.j-h span{color:#cbb98e;font-size:12px}
+.track{height:16px;border-radius:9px;background:#143d2c;box-shadow:inset 0 2px 5px rgba(0,0,0,.6)}
+.track i{display:block;height:100%;border-radius:9px;background:linear-gradient(180deg,#7ce0a0,#2f9a5e);box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+.sys{display:flex;gap:12px;margin-top:6px}
+.sys .s{flex:1;border-radius:11px;padding:13px;text-align:center;background:linear-gradient(180deg,#fbf3df,#e3d6b8);color:#3a2c1e;box-shadow:inset 0 1px 0 #fff,0 3px 6px rgba(0,0,0,.4)}
+.sys .v{font-size:22px;font-weight:800;color:#1f6b4a}.sys .k{font-size:10px;color:#7a6a4a;text-transform:uppercase}
+.foot{grid-column:1/-1;display:flex;align-items:center;gap:14px;border-radius:30px;padding:14px 22px;
+background:linear-gradient(180deg,#fbf3df,#d8c8a4);box-shadow:inset 0 1px 0 #fff,0 6px 14px rgba(0,0,0,.5);border:1px solid #b8a474}
+.foot input{flex:1;background:0;border:0;outline:0;color:#3a2c1e;font-size:15px}.foot input::placeholder{color:#9a8a64}
+.kk{font-size:12px;color:#5a4a2c;background:linear-gradient(180deg,#fff,#e3d6b8);border-radius:8px;padding:5px 11px;box-shadow:inset 0 1px 0 #fff,0 1px 3px rgba(0,0,0,.3)}
+.mic{width:38px;height:38px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#b0b0b0 60%,#777);box-shadow:0 2px 5px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center}
+</style></head><body>
+<div class="wrap">
+<div class="top"><div class="wm">JARVIS</div><div class="st">● Online · Opus · 20:34 · Tue Jun 09</div><div class="r">Say "Hey Jarvis"</div></div>
+
+<div class="panel"><div class="inner">
+<div class="greet">Good evening,<br><span>Shay.</span></div>
+<div class="net"><div class="l">Net this month</div><div class="v">$3,840</div><div class="d">ROI 4.2× · ▲18% · AI cost $58 / $80</div></div>
+<div style="margin-top:16px">
+<div class="src"><span>Stripe subs</span><b>$1,240</b></div>
+<div class="src"><span>Gumroad</span><b>$890</b></div>
+<div class="src"><span>Newsletter</span><b>$400</b></div>
+<div class="src"><span>Lemon Squeezy</span><b>$310</b></div>
+</div>
+</div></div>
+
+<div class="panel"><div class="inner">
+<div class="h">3 things need you</div>
+<div class="btn b-crit"><span class="tag">CRITICAL</span><div class="bt">Send invoice → 14 customers</div><div class="bs">$1,240 · EA via Resend</div></div>
+<div class="btn b-high"><span class="tag">HIGH</span><div class="bt">Publish SaaS starter → Gumroad</div><div class="bs">$39</div></div>
+<div class="btn b-high"><span class="tag">HIGH</span><div class="bt">Deploy micro-API → Cloudflare</div><div class="bs">Edge worker</div></div>
+</div></div>
+
+<div class="panel"><div class="inner">
+<div class="h">Jobs running</div>
+<div class="j"><div class="j-h">habit-tracker app <span>Code · 72%</span></div><div class="track"><i style="width:72%"></i></div></div>
+<div class="j"><div class="j-h">research note-taking niche <span>Scout · 40%</span></div><div class="track"><i style="width:40%"></i></div></div>
+<div class="j"><div class="j-h">newsletter #14 <span>queued</span></div><div class="track"><i style="width:6%"></i></div></div>
+<div class="h">System</div>
+<div class="sys"><div class="s"><div class="v">51</div><div class="k">agents</div></div><div class="s"><div class="v">9/26</div><div class="k">conn</div></div><div class="s"><div class="v">7</div><div class="k">live</div></div></div>
+</div></div>
+
+<div class="foot"><div class="mic">🎙</div><input placeholder="Ask Jarvis, or type a /command…"><span class="kk">⌘K</span></div>
+</div>
+</body></html>

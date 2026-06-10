@@ -1,0 +1,67 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T261</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,-apple-system,sans-serif}
+body{height:100vh;overflow:hidden;color:#e0ecd8;background:radial-gradient(1100px 900px at 50% 100%,#0d1a12,#050a07 78%)}
+.top{display:flex;align-items:center;gap:14px;padding:22px 40px;position:relative;z-index:5}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#7fe06f}
+.st{font-size:12px;color:#4a7a4a}.r{margin-left:auto;font-size:13px;color:#6a9a64}
+.stage{position:absolute;inset:0;z-index:1}
+.panel{position:fixed;top:104px;left:40px;z-index:6;max-width:280px}
+.panel h1{font-size:26px;font-weight:600}.panel h1 b{color:#9fe88f}
+.panel p{color:#6a9a64;font-size:13px;margin-top:6px;line-height:1.6}
+.panel .stat{margin-top:16px;display:flex;gap:20px}
+.panel .stat div .v{font-size:24px;font-weight:800}.panel .stat div .l{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#5f8a5a}
+.leaf{position:fixed;z-index:6;font-size:11px;color:#cfe8b0;background:rgba(16,30,18,.5);border:1px solid rgba(127,224,111,.25);border-radius:8px;padding:4px 10px;backdrop-filter:blur(6px)}
+.bar{position:fixed;bottom:26px;right:40px;width:380px;display:flex;align-items:center;gap:12px;background:rgba(8,16,10,.8);border:1px solid rgba(127,224,111,.24);border-radius:14px;padding:11px 15px;z-index:7;backdrop-filter:blur(8px)}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e0ecd8;font-size:14px}.bar input::placeholder{color:#4a7a4a}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · GROWTH</div><div class="st">● Online · Opus · 20:34</div><div class="r">workflows branching · wins blooming</div></div>
+<svg class="stage" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+<defs>
+<linearGradient id="trunk" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#3a2a18"/><stop offset="100%" stop-color="#5a4228"/></linearGradient>
+<radialGradient id="leaf" cx="40%" cy="35%" r="65%"><stop offset="0" stop-color="#aef58f"/><stop offset="100%" stop-color="#3a8a2f"/></radialGradient>
+<radialGradient id="bloom" cx="45%" cy="40%" r="60%"><stop offset="0" stop-color="#fff0a0"/><stop offset="100%" stop-color="#e0b040" stop-opacity="0"/></radialGradient>
+<radialGradient id="ground" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="rgba(127,224,111,.18)"/><stop offset="100%" stop-color="rgba(127,224,111,0)"/></radialGradient>
+</defs>
+<ellipse cx="720" cy="850" rx="480" ry="60" fill="url(#ground)"/>
+<!-- trunk + branches -->
+<g fill="none" stroke="url(#trunk)" stroke-linecap="round">
+<path d="M720,880 C710,720 700,640 720,560" stroke-width="34"/>
+<path d="M720,620 C660,560 580,540 500,470" stroke-width="20"/>
+<path d="M720,580 C790,520 880,520 950,450" stroke-width="20"/>
+<path d="M720,560 C720,470 700,420 660,360" stroke-width="18"/>
+<path d="M720,560 C740,470 790,430 850,380" stroke-width="16"/>
+<path d="M500,470 C440,420 420,380 370,340" stroke-width="11"/>
+<path d="M950,450 C1010,400 1040,360 1080,320" stroke-width="11"/>
+<path d="M660,360 C620,310 560,300 510,270" stroke-width="9"/>
+<path d="M850,380 C910,330 960,330 1010,290" stroke-width="9"/>
+</g>
+<!-- leaf clusters (wins) -->
+<g>
+<circle cx="360" cy="330" r="46" fill="url(#leaf)" opacity=".92"/>
+<circle cx="430" cy="280" r="34" fill="url(#leaf)" opacity=".88"/>
+<circle cx="510" cy="260" r="40" fill="url(#leaf)" opacity=".92"/>
+<circle cx="660" cy="350" r="38" fill="url(#leaf)" opacity=".9"/>
+<circle cx="600" cy="250" r="30" fill="url(#leaf)" opacity=".85"/>
+<circle cx="1080" cy="310" r="44" fill="url(#leaf)" opacity=".92"/>
+<circle cx="1010" cy="280" r="34" fill="url(#leaf)" opacity=".88"/>
+<circle cx="940" cy="340" r="30" fill="url(#leaf)" opacity=".85"/>
+<circle cx="850" cy="370" r="36" fill="url(#leaf)" opacity=".9"/>
+</g>
+<!-- glowing blossoms = top wins -->
+<g>
+<circle cx="510" cy="255" r="40" fill="url(#bloom)"/><circle cx="510" cy="255" r="6" fill="#fff4c0"/>
+<circle cx="1080" cy="305" r="38" fill="url(#bloom)"/><circle cx="1080" cy="305" r="6" fill="#fff4c0"/>
+<circle cx="660" cy="350" r="30" fill="url(#bloom)" opacity=".7"/><circle cx="660" cy="350" r="5" fill="#fff4c0"/>
+</g>
+<!-- falling/floating spores -->
+<g fill="#aef58f"><circle cx="600" cy="450" r="2" opacity=".5"/><circle cx="800" cy="500" r="1.6" opacity=".4"/><circle cx="450" cy="540" r="1.8" opacity=".45"/><circle cx="980" cy="520" r="1.6" opacity=".4"/></g>
+</svg>
+<div class="panel"><h1>Your work is <b>growing</b>, Shay.</h1><p>Branches are workflows; bright blossoms are this week's wins. The tree's been busy.</p>
+<div class="stat"><div><div class="v" style="color:#9fe88f">$3,840</div><div class="l">Net · ▲18%</div></div><div><div class="v">9</div><div class="l">Live workflows</div></div></div>
+</div>
+<div class="leaf" style="top:218px;left:540px">Win · REST guide 61% traffic</div>
+<div class="leaf" style="top:268px;left:1130px">Win · Micro-API shipped</div>
+<div class="leaf" style="top:380px;left:610px">SaaS starter ready · $39</div>
+<div class="leaf" style="top:300px;left:280px">Newsletter #14 queued</div>
+<div class="bar"><span style="color:#7fe06f">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#4a7a4a;font-size:12px">⌘K</span></div>
+</body></html>

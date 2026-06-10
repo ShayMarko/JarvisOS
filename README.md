@@ -16,37 +16,51 @@ Full specification: `Jarvis_AI_OS_Full_Specification_HE.pdf` + architecture diag
 The current, living capability map. (The chronological **Build history — Phases 1–11** is preserved further
 down; everything below it still holds, and the list here is what the system has grown into on top of it.)
 Local-first, voice/phone/Discord-first, **agentic — not hard-coded** (every capability is a tool the Brain
-*chooses*). **312 backend tests green + a full `@SpringBootTest` boot** prove the wiring end-to-end.
+*chooses*). **320 backend tests + 24 client tests green + a full `@SpringBootTest` boot** prove the wiring.
 
 **Brain & agents**
-- **49 agents** loaded from editable markdown (`backend/src/main/resources/agents/<slug>.md`) — general +
+- **51 agents** loaded from editable markdown (`backend/src/main/resources/agents/<slug>.md`) — general +
   specialists (file, research, system, knowledge, data, code, devops, trading, notion, meeting, author &
-  book-critic) + a `revenue` family (product-builder, app-factory, micro-api, seo-site, POD, video, growth,
-  opportunity-scout, analyst, coordinator). `AgentSelector` routes by md-declared keywords/priority.
+  book-critic, **executive-assistant**) + a `revenue` family (product-builder, app-factory, micro-api,
+  seo-site, POD, video, growth, scout, analyst, coordinator, **newsletter**, finance). `AgentSelector`
+  routes by md-declared keywords/priority — an agent is one self-describing file, no recompile.
 - **Pluggable model adapters** behind one `LanguageModel`: Mock (offline), **Anthropic** (full tool-use),
   **Ollama** (local default, e.g. `qwen2.5-coder`), OpenAI — fronted by `ProviderSwitchingLanguageModel`
   (per-call provider, transient-fallback to local Ollama, surfaces auth errors honestly).
-- **~65 tools** (the capability bridge) + a tool-calling agent runtime with DAG planning, streaming (SSE),
-  Reflexion retry, and a verify-before-claim honesty critic.
+- **Self-learning router** — promotes a history-proven cheaper model per agent *only* when it won't drop
+  quality (learns from the real `agent_run` record) — plus **cost-aware planning** ("this job ≈ $X").
+- **~66 tools** + a tool-calling runtime with DAG planning, streaming (SSE), Reflexion retry, a
+  verify-before-claim honesty critic, and a per-agent confidence/abstention guard.
+- **Skill/playbook formation** — a proven multi-step plan is remembered and replayed for a near-identical
+  repeat request.
+
+**Background work** — long jobs (build an app, deep research, a newsletter) run **detached** on a bounded
+worker pool via `run_in_background` / `/jobs`, notify on Discord/bell when done, and are cancellable.
 
 **Knowledge, memory & continuity**
 - Transparent **Memory Manager** + agentic auto-memory (`memory_write`), nightly self-reflection + dedup.
 - **Knowledge Base / RAG** with neural Ollama embeddings + auto-indexing second-brain sweep; `kb_search`.
 - **Conversation continuity** (per-session history into the Brain) + **episodic timeline** memory.
 
-**Connectors (21)** — credentials only from the encrypted **Secrets Vault**; HIGH/CRITICAL actions are
-**approval-gated** (the bell). GitHub, Slack, Gmail (full client), Google Calendar/Drive, Notion, Stripe,
-Gumroad, Netlify, Cloudflare, Plausible, Ayrshare, Resend, Printful, Shopify, Etsy, market-data, RSS, maps,
-MongoDB, MySQL. OAuth auto-refresh (Google/Etsy). MCP client with 8 curated servers (default off).
+**Connectors (26)** — credentials only from the encrypted **Secrets Vault**; HIGH/CRITICAL actions are
+**approval-gated** (the bell). GitHub, Slack, Gmail (full client), Google Calendar/Drive, Notion, Stripe
+(incl. recurring subscription links), Gumroad, **Lemon Squeezy**, Netlify, Cloudflare, Plausible, Ayrshare,
+Resend, Printful, Shopify, Etsy, **Twilio (SMS/WhatsApp)**, **Reddit**, **Cal.com**, **YouTube**, market-data,
+RSS, maps, MongoDB, MySQL. OAuth auto-refresh (Google/Etsy). MCP client with **13 curated servers**
+(default off) incl. macOS-native **Apple** (Messages/Notes/Calendar/Reminders), Notion, Stripe, GDrive.
 
-**Voice & remote (headless-first)**
+**Voice & remote (headless / phone-first)**
 - Server-side voice round-trip: **Whisper STT** + **TTS** with a provider switch — FREE macOS `say` (default,
   e.g. Jamie/Ava Premium) or neural OpenAI; live voice switch via `POST /api/settings/voice`.
 - **Discord** 2-way control + approvals + voice-notes; **Telegram** bridge; scheduled morning briefing.
+- **Client is an installable PWA** — add-to-home-screen + offline app shell + a service worker ready for
+  web-push (the HUD: floating windows, Cmd-K palette, "Today"/money dashboards, live run viewer).
 
 **Automation & autonomy**
 - **Workflows** (durable, per-step retries, approval-gated pauses) + real cron + NL routines.
 - **Coordinator** (autonomous "CEO" loop, default OFF), proactive initiative pushes, watchdog/self-healing.
+- **SEO performance loop** + **Newsletter loop** — default-OFF scheduled lanes that read real data and steer
+  the relevant agent to compound winners / ship recurring issues.
 
 **Safety & governance**
 - PermissionGuard + modes, `RiskClassifier`, **Approval Center**, Sandbox (Docker `--network none`),
@@ -55,12 +69,11 @@ MongoDB, MySQL. OAuth auto-refresh (Google/Etsy). MCP client with 8 curated serv
 - Observability: per-run traces, model router, cost/token dashboard, an eval/LLM-judge harness.
 
 **Revenue lanes (RevenueOS)** — end-to-end build→package→list→track: paid-boilerplate generator, App Factory,
-RapidAPI micro-API, SEO/affiliate sites, KDP ebooks (author⇄critic), print-on-demand, faceless video; ROI
-dashboard + product portfolio.
+RapidAPI micro-API, SEO/affiliate sites, KDP ebooks (author⇄critic), print-on-demand, faceless video,
+recurring newsletter + micro-SaaS (Stripe subscription links); ROI dashboard + product portfolio.
 
-**Self-development (in progress, OFF by default)** — see `SELF-DEV-SETUP.md`. A gated "self-PR author":
-external immovable guard → isolated git worktree → green-gated change loop. Phases 0–3 built; never deploys
-to the running instance.
+*(A gated "self-development" capability was prototyped and then removed as too risky for now; the design is
+parked and can be revived deliberately later.)*
 
 ---
 
@@ -275,12 +288,17 @@ Errors return the `ApiError` envelope and an `X-Trace-Id` header.
 
 ## Roadmap & in progress
 
-Phases 1–11 and the large post-11 build (see **What Jarvis can do today**) are complete. Active / near-term:
+Phases 1–11, the post-11 build, and the "win-it-all" expansion (background jobs, self-learning router,
+playbooks, 5 new connectors, the new agents, the SEO/Newsletter lanes, the PWA — see **What Jarvis can do
+today**) are complete. Active / near-term:
 
-- **Self-development** (`SELF-DEV-SETUP.md`): Phases 0–3 built (immovable guard → isolated worktree →
-  green-gated change loop). Next: **Phase 4** push-only to a feature branch via a scoped token + approval
-  bell (never merge to master), **Phase 5** control surface + the Anthropic-only change-author agent.
 - **Switch the brain to Anthropic/Opus** (`SWITCH-TO-CLAUDE.md`): real model IDs + the $80/mo cap + a
   pre/post eval baseline; validate each connector live (one key at a time); rotate the Discord token.
-- **Parked ideas** (revisit on a capable model / when needed): trace-learning model router, more MCP servers,
-  per-claim LLM honesty critic, hybrid RRF retrieval. See the project feature backlog.
+  *The self-learning router only gets signal once a 2nd provider has run history, so this unlocks it.*
+- **Deferred, do at the Opus switch** (need a key/browser to validate): **OpenRouter** provider (one key →
+  many models), **web-push delivery** (VAPID + a `/api/notifications/subscribe` endpoint — the client/SW
+  side is already built), Cloudflare **R2/S3** object hosting.
+- **Parked ideas** (revisit on a capable model / when needed): per-claim LLM honesty critic, hybrid RRF
+  retrieval, more MCP servers, a server-host (Fly/Render) connector. See the project feature backlog.
+- *Self-development was prototyped then removed as too risky; the design is parked for a deliberate future
+  revival.*

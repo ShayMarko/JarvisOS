@@ -1,0 +1,45 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T175</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#f3f6fb;background:radial-gradient(1400px 1000px at 50% 110%,#1a1530,#06060e 60%),radial-gradient(900px 700px at 20% 0%,#0e1f33,transparent 70%)}
+.space{height:100vh;position:relative}
+.glass{position:absolute;border-radius:26px;backdrop-filter:blur(30px);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);box-shadow:0 30px 80px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.18);padding:24px 28px}
+.k{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5)}
+/* depth via scale + blur layering */
+.p1{left:50%;top:46%;transform:translate(-50%,-50%) scale(1.06);width:440px;z-index:5;background:rgba(255,255,255,.09)}
+.p1 .wm{font-size:13px;font-weight:800;letter-spacing:4px;color:#9fd6ff}
+.p1 .greet{font-size:34px;font-weight:800;margin:10px 0 4px}.p1 .greet b{color:#9fd6ff}
+.p1 .sub{font-size:14px;color:rgba(255,255,255,.6)}
+.p1 .row{display:flex;gap:14px;margin-top:20px}
+.chip{flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:14px}
+.chip .v{font-size:24px;font-weight:800;margin-top:4px}.up{color:#7df0bb}
+.p2{left:6%;top:14%;width:300px;z-index:3;transform:scale(.96);opacity:.96}
+.need{display:flex;align-items:center;gap:10px;font-size:13px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+.need:last-child{border:0}.cd{width:8px;height:8px;border-radius:50%}
+.crit{background:#ff8a8a;box-shadow:0 0 8px #ff8a8a}.high{background:#f2c14e;box-shadow:0 0 8px #f2c14e}
+.p3{right:5%;top:20%;width:290px;z-index:2;transform:scale(.9);filter:blur(.4px);opacity:.9}
+.job{font-size:13px;margin:14px 0}.job .lab{display:flex;justify-content:space-between;color:rgba(255,255,255,.75)}
+.prog{height:6px;background:rgba(255,255,255,.12);border-radius:4px;overflow:hidden;margin-top:6px}.prog i{display:block;height:100%;background:linear-gradient(90deg,#9fd6ff,#b89cff)}
+.p4{left:16%;bottom:9%;width:280px;z-index:2;transform:scale(.88);opacity:.85}
+.p4 .v{font-size:30px;font-weight:800;margin-top:6px}
+.p5{right:11%;bottom:13%;width:250px;z-index:1;transform:scale(.82);filter:blur(.6px);opacity:.78}
+.bar{position:absolute;left:50%;bottom:4%;transform:translateX(-50%);width:480px;z-index:8;display:flex;align-items:center;gap:12px;border-radius:30px;backdrop-filter:blur(30px);background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);padding:13px 20px;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.bar input{flex:1;background:0;border:0;outline:0;color:#f3f6fb;font-size:14px}.bar input::placeholder{color:rgba(255,255,255,.5)}
+</style></head><body>
+<div class="space">
+<div class="glass p2"><div class="k">Needs you · 3</div>
+<div class="need"><span class="cd crit"></span>Invoice → 14 customers · $1,240</div>
+<div class="need"><span class="cd high"></span>Publish SaaS starter · $39</div>
+<div class="need"><span class="cd high"></span>Deploy micro-API · Cloudflare</div>
+</div>
+<div class="glass p3"><div class="k">Jobs running</div>
+<div class="job"><div class="lab"><span>habit-tracker app</span><span>72%</span></div><div class="prog"><i style="width:72%"></i></div></div>
+<div class="job"><div class="lab"><span>research niche</span><span>40%</span></div><div class="prog"><i style="width:40%"></i></div></div>
+</div>
+<div class="glass p4"><div class="k">ROI · month</div><div class="v">4.2×</div><div class="k" style="margin-top:6px">AI cost $58 / $80</div></div>
+<div class="glass p5"><div class="k">System</div><div style="font-size:13px;margin-top:8px;color:rgba(255,255,255,.7);line-height:1.7">51 agents<br>26 connectors · 9 live<br>7 products live</div></div>
+<div class="glass p1"><div class="wm">JARVIS</div><div class="greet">Good evening, <b>Shay.</b></div><div class="sub">● Online · Opus · 20:34 · Tue Jun 09</div>
+<div class="row"><div class="chip"><div class="k">Net · month</div><div class="v">$3,840</div><div class="up">▲ 18%</div></div><div class="chip"><div class="k">Sources</div><div class="v">4</div><div class="k" style="margin-top:2px">Stripe · Gumroad · LS · NL</div></div></div>
+</div>
+<div class="bar"><span style="color:#9fd6ff">🎙</span><input placeholder="Ask Jarvis, or type a /command… · say “Hey Jarvis”"></div>
+</div>
+</body></html>

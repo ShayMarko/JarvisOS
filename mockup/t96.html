@@ -1,0 +1,62 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T96</title><style>
+*{margin:0;box-sizing:border-box;font-family:ui-monospace,'SF Mono',Menlo,monospace}
+body{height:100vh;overflow:hidden;background:#0c0f14;color:#d6e0ea}
+.top{display:flex;align-items:center;gap:14px;padding:18px 30px;border-bottom:1px solid #1a2230}
+.wm{font-family:system-ui,sans-serif;font-size:17px;font-weight:800;letter-spacing:3px;color:#5fd0c0}
+.sub{font-size:12px;color:#5f7488}.r{margin-left:auto;font-size:12px;color:#5f7488}
+.legend{display:flex;gap:18px;padding:10px 30px;font-size:11.5px;color:#8a98a8}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.graph{display:flex;height:calc(100vh - 130px);padding:6px 30px 20px}
+.gutter{width:90px;flex:none;position:relative}
+.gutter svg{position:absolute;inset:0;width:100%;height:100%}
+.commits{flex:1;display:flex;flex-direction:column}
+.commit{flex:1;display:flex;align-items:center;gap:14px;border-bottom:1px solid #141c28;padding:0 4px}
+.hash{font-size:12px;color:#6b7d92;width:62px}
+.branch{font-size:10px;font-family:system-ui,sans-serif;font-weight:700;padding:2px 8px;border-radius:10px}
+.b-main{background:rgba(95,208,192,.15);color:#5fd0c0}.b-money{background:rgba(70,224,160,.15);color:#46e0a0}
+.b-jobs{background:rgba(124,142,255,.15);color:#8a98ff}.b-news{background:rgba(255,180,84,.15);color:#ffb454}
+.msg{font-size:13.5px;color:#d6e0ea}.msg .crit{color:#ff8c8c;font-weight:700}
+.meta{margin-left:auto;font-size:11px;color:#5f7488;text-align:right}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS</div><div class="sub">⎇ commit graph · autonomous work log</div><div class="r">● Online · Opus · 20:34 · Tue Jun 09</div></div>
+<div class="legend"><span><i style="background:#5fd0c0"></i>main</span><span><i style="background:#46e0a0"></i>money-loop</span><span><i style="background:#8a98ff"></i>jobs</span><span><i style="background:#ffb454"></i>newsletter</span></div>
+<div class="graph">
+<div class="gutter">
+<svg viewBox="0 0 90 720" preserveAspectRatio="none">
+<!-- lanes: main x=18, money x=42, jobs x=66, news x=66 alt -->
+<g fill="none" stroke-width="3">
+<path d="M18,40 L18,680" stroke="#5fd0c0"/>
+<path d="M18,120 C18,150 42,150 42,180 L42,600 C42,630 18,630 18,660" stroke="#46e0a0"/>
+<path d="M18,200 C18,230 66,230 66,260 L66,440 C66,470 18,470 18,500" stroke="#8a98ff"/>
+<path d="M42,340 C42,365 66,365 66,360" stroke="#ffb454"/>
+</g>
+<g>
+<circle cx="18" cy="40" r="7" fill="#0c0f14" stroke="#5fd0c0" stroke-width="3"/>
+<circle cx="18" cy="120" r="6" fill="#5fd0c0"/>
+<circle cx="42" cy="180" r="6" fill="#46e0a0"/>
+<circle cx="18" cy="200" r="6" fill="#5fd0c0"/>
+<circle cx="66" cy="260" r="6" fill="#8a98ff"/>
+<circle cx="42" cy="340" r="6" fill="#46e0a0"/>
+<circle cx="66" cy="360" r="6" fill="#ffb454"/>
+<circle cx="66" cy="440" r="6" fill="#8a98ff"/>
+<circle cx="18" cy="500" r="6" fill="#5fd0c0"/>
+<circle cx="42" cy="600" r="6" fill="#46e0a0"/>
+<circle cx="18" cy="660" r="6" fill="#5fd0c0"/>
+</g>
+</svg>
+</div>
+<div class="commits">
+<div class="commit"><span class="hash">a1f04782</span><span class="branch b-main">HEAD → main</span><span class="msg crit">⚑ Awaiting you: send invoice → 14 customers ($1,240)</span><span class="meta">EA · just now</span></div>
+<div class="commit"><span class="hash">9d8c16a2</span><span class="branch b-main">main</span><span class="msg">Net this month $3,840 · ROI 4.2× ▲18%</span><span class="meta">Finance · 20:30</span></div>
+<div class="commit"><span class="hash">c16f57e1</span><span class="branch b-money">money-loop</span><span class="msg">Publish SaaS starter → Gumroad $39 (ready)</span><span class="meta">Product · 19:58</span></div>
+<div class="commit"><span class="hash">57d9b8e4</span><span class="branch b-main">main</span><span class="msg">Deploy micro-API → Cloudflare · green-gate cleared</span><span class="meta">DevOps · 19:40</span></div>
+<div class="commit"><span class="hash">1c4a3f09</span><span class="branch b-jobs">jobs</span><span class="msg">build: habit-tracker app — 72%</span><span class="meta">Code · 18:22</span></div>
+<div class="commit"><span class="hash">e2b1d770</span><span class="branch b-money">money-loop</span><span class="msg">merge: Lemon Squeezy MoR actuals $310</span><span class="meta">Finance · 17:05</span></div>
+<div class="commit"><span class="hash">f3c6aa18</span><span class="branch b-news">newsletter</span><span class="msg">queue newsletter #14 · 400 net last issue</span><span class="meta">Newsletter · 16:30</span></div>
+<div class="commit"><span class="hash">1c7e0b55</span><span class="branch b-jobs">jobs</span><span class="msg">research: note-taking niche — 40%</span><span class="meta">Scout · 15:12</span></div>
+<div class="commit"><span class="hash">b04d2e91</span><span class="branch b-main">main</span><span class="msg">Double down: "REST API + auth" drove 61% traffic</span><span class="meta">Analyst · 14:00</span></div>
+<div class="commit"><span class="hash">7a55c3d0</span><span class="branch b-money">money-loop</span><span class="msg">Stripe subs $1,240 · 14 active</span><span class="meta">Finance · 11:40</span></div>
+<div class="commit"><span class="hash">00ca4e83</span><span class="branch b-main">main</span><span class="msg">nightly self-reflection · 51 agents · 9 connectors live</span><span class="meta">Brain · 03:00</span></div>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,54 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T101</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;color:#e8eef2;background:radial-gradient(1000px 800px at 50% 45%,#13202a,#070b0f)}
+.top{display:flex;align-items:center;gap:14px;padding:22px 40px}
+.wm{font-size:17px;font-weight:800;letter-spacing:3px;color:#5fd0c0}
+.sub{font-size:12px;color:#5f7488}.r{margin-left:auto;font-size:12px;color:#5f7488}
+.stage{height:calc(100vh - 70px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px}
+.dialwrap{position:relative;width:440px;height:440px}
+.dialwrap svg{position:absolute;inset:0}
+.center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.label{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#5f8a82}
+.val{font-size:84px;font-weight:800;letter-spacing:-3px;color:#46e0a0;line-height:1;margin:4px 0}
+.unit{font-size:16px;color:#9aa6b2}
+.delta{font-size:15px;color:#46e0a0;font-weight:700;margin-top:10px}
+.modes{display:flex;gap:10px}
+.mode{font-size:13px;padding:7px 18px;border-radius:20px;border:1px solid #1e3038;color:#7f9aa0;background:rgba(20,32,40,.5)}
+.mode.on{background:#46e0a0;color:#06281e;border-color:#46e0a0;font-weight:700}
+.foot{display:flex;gap:40px;font-size:13px;color:#9aa6b2}
+.foot b{color:#fff;font-weight:700}
+.tick{font-size:11px;color:#5f8a82}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS</div><div class="sub">money climate · holding steady</div><div class="r">● Online · Opus · 20:34 · Tue Jun 09</div></div>
+<div class="stage">
+<div class="dialwrap">
+<svg viewBox="0 0 440 440">
+<defs>
+<linearGradient id="ring" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#46e0a0"/><stop offset="1" stop-color="#5fd0c0"/></linearGradient>
+<filter id="glow"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<!-- outer subtle ring -->
+<circle cx="220" cy="220" r="200" fill="none" stroke="#142028" stroke-width="2"/>
+<!-- tick marks -->
+<g stroke="#1f3640" stroke-width="2">
+<!-- decorative ticks via small lines around -->
+</g>
+<!-- track -->
+<circle cx="220" cy="220" r="175" fill="none" stroke="#142028" stroke-width="26"/>
+<!-- fill arc: ROI 4.2x mapped ~84% of dial, gap at bottom -->
+<circle cx="220" cy="220" r="175" fill="none" stroke="url(#ring)" stroke-width="26" stroke-linecap="round"
+stroke-dasharray="1099" stroke-dashoffset="320" transform="rotate(135 220 220)" filter="url(#glow)"/>
+<!-- inner glass disc -->
+<circle cx="220" cy="220" r="138" fill="rgba(10,18,24,.7)" stroke="#1a2a32" stroke-width="1"/>
+</svg>
+<div class="center">
+<div class="label">Return on investment</div>
+<div class="val">4.2×</div>
+<div class="unit">net $3,840 this month</div>
+<div class="delta">▲ 18% · target 3.5× met</div>
+</div>
+</div>
+<div class="modes"><span class="mode on">ROI</span><span class="mode">Net $</span><span class="mode">AI cost 72%</span><span class="mode">Eco</span></div>
+<div class="foot"><span>AI cost <b>$58 / $80</b></span><span>Stripe <b>$1,240</b></span><span>Gumroad <b>$890</b></span><span>Newsletter <b>$400</b></span><span class="tick">7 products live · 9 connectors</span></div>
+</div>
+</body></html>

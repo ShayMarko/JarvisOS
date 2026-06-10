@@ -1,0 +1,57 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T248</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Arial Black','Helvetica Neue',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#dfe6ee;background:radial-gradient(circle at 50% 30%,#2a3340 0%,#0c0f14 70%)}
+.chrome{height:100vh;display:grid;grid-template-rows:auto 1fr auto;padding:30px 44px;position:relative;overflow:hidden}
+.blob{position:absolute;border-radius:50%;background:linear-gradient(135deg,#fff 0%,#9aa8b8 18%,#3a4856 42%,#cfd8e2 60%,#5a6878 80%,#e8eef4 100%);filter:blur(.5px);box-shadow:0 20px 60px rgba(0,0,0,.5),inset 0 4px 12px rgba(255,255,255,.6)}
+.b1{width:260px;height:260px;top:-50px;right:80px;border-radius:60% 40% 55% 45%}
+.b2{width:130px;height:130px;bottom:60px;left:40px;border-radius:48% 52% 60% 40%}
+.top{display:flex;align-items:center;gap:14px;position:relative;z-index:2}
+.wm{font-size:24px;font-weight:900;letter-spacing:4px;
+background:linear-gradient(180deg,#fff 0%,#aebcc8 38%,#46525e 52%,#cfd8e2 70%,#7a8896 100%);
+-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 1px 1px rgba(0,0,0,.6))}
+.status{font-size:11px;letter-spacing:2px;color:#8a98a6;margin-left:auto;font-weight:bold}
+.hero{position:relative;z-index:2;align-self:center}
+.greet{font-size:80px;font-weight:900;letter-spacing:-2px;line-height:.92;
+background:linear-gradient(180deg,#ffffff 0%,#c8d4de 30%,#3a4654 50%,#dfe8f0 64%,#8896a4 100%);
+-webkit-background-clip:text;background-clip:text;color:transparent;
+filter:drop-shadow(0 3px 4px rgba(0,0,0,.55))}
+.net{font-size:18px;font-weight:800;color:#9fb0c0;margin-top:14px;letter-spacing:1px}
+.net b{background:linear-gradient(180deg,#fff,#8aa0b8);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cards{display:flex;gap:14px;margin-top:30px}
+.card{flex:1;border-radius:18px;padding:16px 18px;
+background:linear-gradient(160deg,rgba(220,232,244,.18),rgba(40,52,64,.4));
+border:1px solid rgba(200,216,232,.35);box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 8px 22px rgba(0,0,0,.35);backdrop-filter:blur(8px)}
+.ct{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#aebcca;font-weight:900;margin-bottom:10px}
+.li{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid rgba(180,200,220,.12);color:#c8d4de;font-weight:bold}
+.li .v{background:linear-gradient(180deg,#fff,#9aacbc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.crit .v{background:linear-gradient(180deg,#ffd0d0,#ff7a8a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.foot{position:relative;z-index:2;margin-top:24px;display:flex;align-items:center;gap:14px;border-radius:40px;padding:14px 24px;
+background:linear-gradient(180deg,rgba(220,232,244,.2),rgba(30,40,50,.5));border:1px solid rgba(200,216,232,.4);box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+.foot input{flex:1;background:0;border:0;outline:0;color:#eef4fa;font-size:15px;font-weight:bold}
+.foot input::placeholder{color:#8a98a6}
+</style></head><body><div class="chrome">
+<div class="blob b1"></div><div class="blob b2"></div>
+<div class="top"><div class="wm">JARVIS</div><div class="status">● ONLINE · OPUS · 20:34 · TUE JUN 09</div></div>
+<div class="hero">
+  <div class="greet">Good evening,<br>Shay.</div>
+  <div class="net">Net this month <b>$3,840</b> · ROI <b>4.2×</b> · ▲18% · AI <b>$58 / $80</b></div>
+  <div class="cards">
+    <div class="card"><div class="ct">Needs You</div>
+      <div class="li crit"><span>Invoice → 14</span><span class="v">$1,240</span></div>
+      <div class="li"><span>Publish starter</span><span class="v">$39</span></div>
+      <div class="li" style="border:0"><span>Deploy micro-API</span><span class="v">CF</span></div>
+    </div>
+    <div class="card"><div class="ct">Running</div>
+      <div class="li"><span>habit-tracker</span><span class="v">72%</span></div>
+      <div class="li"><span>research niche</span><span class="v">40%</span></div>
+      <div class="li" style="border:0"><span>newsletter #14</span><span class="v">queued</span></div>
+    </div>
+    <div class="card"><div class="ct">System</div>
+      <div class="li"><span>Agents</span><span class="v">51</span></div>
+      <div class="li"><span>Connectors</span><span class="v">26 · 9</span></div>
+      <div class="li" style="border:0"><span>Products live</span><span class="v">7</span></div>
+    </div>
+  </div>
+</div>
+<div class="foot"><span>🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#8a98a6">⌘K</span></div>
+</div></body></html>

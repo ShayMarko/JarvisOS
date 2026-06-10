@@ -1,0 +1,54 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T239</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Arial Black','Helvetica Neue',Impact,system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#f2ece0;background:#d8341f}
+.stage{height:100vh;display:grid;grid-template-columns:1.3fr 1fr;position:relative;overflow:hidden}
+.stage::before{content:"";position:absolute;top:-30%;left:-10%;width:120%;height:160%;background:repeating-linear-gradient(-38deg,transparent 0 90px,rgba(0,0,0,.07) 90px 180px);pointer-events:none}
+.left{background:#111;padding:38px 44px;position:relative;clip-path:polygon(0 0,100% 0,90% 100%,0 100%);z-index:2}
+.wm{font-size:18px;font-weight:900;letter-spacing:6px;color:#d8341f;text-transform:uppercase}
+.status{font-size:11px;letter-spacing:3px;color:#888;margin-top:6px;font-weight:bold}
+.greet{font-size:64px;font-weight:900;line-height:.9;text-transform:uppercase;margin-top:38px;transform:skewX(-6deg)}
+.greet b{color:#d8341f;display:block}
+.slab{background:#d8341f;color:#111;display:inline-block;padding:6px 14px;margin-top:18px;font-size:20px;font-weight:900;letter-spacing:1px;transform:skewX(-6deg)}
+.metrics{margin-top:34px;display:flex;flex-direction:column;gap:0}
+.m{display:flex;align-items:baseline;gap:14px;border-top:4px solid #d8341f;padding:10px 0}
+.m .big{font-size:38px;font-weight:900}.m .lbl{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#999;font-weight:bold}
+.right{background:#d8341f;padding:38px 40px 38px 60px;position:relative;z-index:2;display:flex;flex-direction:column}
+.diag{position:absolute;top:0;left:-2px;width:8px;height:100%;background:#111;transform:skewX(-6deg)}
+.block{margin-bottom:22px}
+.bt{font-size:13px;font-weight:900;letter-spacing:4px;text-transform:uppercase;color:#111;border-bottom:4px solid #111;padding-bottom:5px;margin-bottom:8px;display:inline-block}
+.row{display:flex;justify-content:space-between;font-size:14px;font-weight:bold;padding:5px 0;color:#fff;border-bottom:1px solid rgba(0,0,0,.25)}
+.row b{color:#111}
+.bar{height:14px;background:rgba(0,0,0,.3);margin-top:5px}
+.bar i{display:block;height:100%;background:#111}
+.foot{margin-top:auto;display:flex;align-items:center;gap:12px;border-top:4px solid #111;padding-top:14px}
+.foot input{flex:1;background:0;border:0;outline:0;color:#111;font-weight:900;font-size:15px;text-transform:uppercase}
+.foot input::placeholder{color:rgba(0,0,0,.55)}
+.foot span{font-weight:900;color:#111}
+</style></head><body><div class="stage">
+<div class="left">
+  <div class="wm">★ JARVIS</div><div class="status">● ONLINE · OPUS · 20:34 · TUE JUN 09</div>
+  <div class="greet">Good<br>Evening,<b>Shay.</b></div>
+  <div class="slab">NET $3,840 · ROI 4.2× · ▲18%</div>
+  <div class="metrics">
+    <div class="m"><div class="big">51</div><div class="lbl">Agents at work</div></div>
+    <div class="m"><div class="big">26·9</div><div class="lbl">Connectors · live</div></div>
+    <div class="m"><div class="big">7</div><div class="lbl">Products shipped</div></div>
+  </div>
+</div>
+<div class="right"><div class="diag"></div>
+  <div class="block"><div class="bt">Needs You</div>
+    <div class="row"><span>INVOICE → 14</span><b>$1,240</b></div>
+    <div class="row"><span>PUBLISH STARTER</span><b>$39</b></div>
+    <div class="row"><span>DEPLOY MICRO-API</span><b>CF</b></div>
+  </div>
+  <div class="block"><div class="bt">Jobs Running</div>
+    <div class="row"><span>HABIT-TRACKER</span><b>72%</b></div><div class="bar"><i style="width:72%"></i></div>
+    <div class="row" style="margin-top:8px"><span>RESEARCH NICHE</span><b>40%</b></div><div class="bar"><i style="width:40%"></i></div>
+    <div class="row" style="margin-top:8px"><span>NEWSLETTER #14</span><b>QUEUED</b></div>
+  </div>
+  <div class="block"><div class="bt">AI Budget</div>
+    <div class="row"><span>SPEND</span><b>$58 / $80</b></div><div class="bar"><i style="width:72%"></i></div>
+  </div>
+  <div class="foot"><span>🎙</span><input placeholder="Ask Jarvis, or /command…"><span>⌘K</span></div>
+</div>
+</div></body></html>

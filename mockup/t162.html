@@ -1,0 +1,76 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T162</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,-apple-system,sans-serif}
+body{height:100vh;overflow:hidden;color:#e9ecff;background:radial-gradient(1100px 800px at 50% 30%,#1a1f3a,#0a0c18)}
+.top{position:absolute;top:26px;left:40px;right:40px;display:flex;justify-content:space-between;align-items:baseline;z-index:5}
+.wm{font-size:15px;font-weight:800;letter-spacing:5px;color:#8fa3ff}
+.st{font-size:11px;letter-spacing:1px;color:#7480a8}
+.greet{position:absolute;top:60px;left:40px;font-size:22px;font-weight:300;z-index:5}.greet b{font-weight:700;color:#8fa3ff}
+.stage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.iso{transform:rotateX(55deg) rotateZ(-45deg);transform-style:preserve-3d;width:760px;height:760px;position:relative}
+.floor{position:absolute;inset:0;
+  background:linear-gradient(135deg,#232a4d,#1a2040);
+  background-image:linear-gradient(rgba(143,163,255,.12) 2px,transparent 2px),linear-gradient(90deg,rgba(143,163,255,.12) 2px,transparent 2px);
+  background-size:95px 95px;border:2px solid rgba(143,163,255,.25);box-shadow:0 60px 120px rgba(0,0,0,.6)}
+.room{position:absolute;border:2px solid rgba(143,163,255,.4);border-radius:4px}
+.r1{top:50px;left:50px;width:300px;height:300px;background:rgba(255,93,143,.1)}
+.r2{top:50px;left:400px;width:300px;height:300px;background:rgba(95,224,255,.1)}
+.r3{top:400px;left:50px;width:300px;height:300px;background:rgba(124,224,160,.1)}
+.r4{top:400px;left:400px;width:300px;height:300px;background:rgba(255,205,90,.1)}
+.desk{position:absolute;width:80px;height:48px;background:linear-gradient(#3a4475,#2a3158);border:2px solid rgba(143,163,255,.5);border-radius:5px;
+  box-shadow:0 16px 0 #1a2040}
+.agent{position:absolute;width:26px;height:26px;border-radius:50%;border:3px solid #fff;box-shadow:0 8px 14px rgba(0,0,0,.5)}
+.label{position:absolute;transform:rotateZ(45deg) rotateX(-55deg);font-size:13px;font-weight:700;text-align:center;width:160px;pointer-events:none}
+.label .sub{display:block;font-size:10px;font-weight:500;color:#aeb6e0;margin-top:2px}
+.bubble{position:absolute;transform:rotateZ(45deg) rotateX(-55deg);background:#fff;color:#1a2040;font-size:11px;font-weight:600;
+  padding:5px 9px;border-radius:10px;white-space:nowrap;box-shadow:0 8px 18px rgba(0,0,0,.4)}
+.bubble::after{content:"";position:absolute;bottom:-5px;left:14px;border:5px solid transparent;border-top-color:#fff;border-bottom:0}
+.hud{position:absolute;z-index:6;background:rgba(16,20,40,.82);border:1px solid rgba(143,163,255,.3);border-radius:16px;padding:16px 18px;backdrop-filter:blur(10px)}
+.hud .k{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#7480a8;margin-bottom:8px}
+.hudL{top:96px;left:40px;width:230px}
+.hudR{top:96px;right:40px;width:240px}
+.li{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid rgba(143,163,255,.1)}
+.li:last-child{border:0}.li .amt{font-weight:700;color:#7cffb0}.li .crit{color:#ff7da3;font-weight:700}
+.big{font-size:34px;font-weight:800;letter-spacing:-1px}.biglbl{font-size:10px;letter-spacing:2px;color:#7480a8;text-transform:uppercase}
+.bar{position:fixed;z-index:7;bottom:28px;left:50%;transform:translateX(-50%);width:560px;display:flex;align-items:center;gap:12px;
+  background:rgba(16,20,40,.88);border:1px solid rgba(143,163,255,.35);border-radius:14px;padding:12px 16px;backdrop-filter:blur(12px)}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e9ecff;font-size:14px}.bar input::placeholder{color:#7480a8}
+.bar .km{font-size:12px;color:#7480a8}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · HQ</div><div class="st">● Online · Opus · 20:34 · Tue Jun 09</div></div>
+<div class="greet">Good evening, <b>Shay.</b></div>
+<div class="stage"><div class="iso"><div class="floor">
+<!-- Room 1: Needs You / EA -->
+<div class="room r1"></div>
+<div class="desk" style="top:120px;left:130px"><div class="agent" style="background:#ff5d8f;top:-30px;left:26px"></div></div>
+<div class="bubble" style="top:74px;left:96px">Invoice → 14 · $1,240 ⚠</div>
+<div class="label" style="top:300px;left:120px">EA Office<span class="sub">3 need you</span></div>
+<!-- Room 2: Code -->
+<div class="room r2"></div>
+<div class="desk" style="top:120px;left:480px"><div class="agent" style="background:#5fe0ff;top:-30px;left:26px"></div></div>
+<div class="bubble" style="top:74px;left:452px">habit-tracker 72% 🔨</div>
+<div class="label" style="top:300px;left:470px">Code Bay<span class="sub">building app</span></div>
+<!-- Room 3: Scout -->
+<div class="room r3"></div>
+<div class="desk" style="top:470px;left:130px"><div class="agent" style="background:#7ce0a0;top:-30px;left:26px"></div></div>
+<div class="bubble" style="top:424px;left:104px">research niche 40% 🔍</div>
+<div class="label" style="top:650px;left:120px">Scout Lab<span class="sub">researching</span></div>
+<!-- Room 4: Money / Finance -->
+<div class="room r4"></div>
+<div class="desk" style="top:470px;left:480px"><div class="agent" style="background:#ffcd5a;top:-30px;left:26px"></div></div>
+<div class="bubble" style="top:424px;left:466px">$3,840 net ▲18% 💰</div>
+<div class="label" style="top:650px;left:470px">Finance Wing<span class="sub">ROI 4.2×</span></div>
+</div></div></div>
+<div class="hud hudL">
+<div class="k">Needs you · 3</div>
+<div class="li"><span><span class="crit">!!</span> Invoice → 14</span><span class="amt">$1,240</span></div>
+<div class="li"><span>Publish SaaS starter</span><span class="amt">$39</span></div>
+<div class="li"><span>Deploy micro-API</span><span style="color:#7480a8">queued</span></div>
+</div>
+<div class="hud hudR">
+<div class="biglbl">Net this month</div><div class="big">$3,840 <span style="font-size:14px;color:#7cffb0">▲18%</span></div>
+<div class="li" style="margin-top:6px"><span>Stripe</span><span class="amt">$1,240</span></div>
+<div class="li"><span>Gumroad · Lemon · News</span><span class="amt">$1,600</span></div>
+<div class="li"><span>51 agents · 9 live · 7 prod</span></div>
+</div>
+<div class="bar">🎙<input placeholder="Ask Jarvis, or type a /command…"><span class="km">⌘K</span></div>
+</body></html>

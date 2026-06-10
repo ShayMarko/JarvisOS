@@ -1,0 +1,46 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T108</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,-apple-system,sans-serif}
+body{height:100vh;overflow:hidden;color:#e8edf4;background:#0b0d12}
+.app{height:100vh;display:flex;flex-direction:column}
+.top{display:flex;align-items:center;gap:14px;padding:13px 22px;border-bottom:1px solid #181f29;background:#0e1118}
+.wm{font-size:16px;font-weight:800;letter-spacing:3px;color:#3fb8ff}
+.proj{font-size:13px;color:#8b96a5}.proj b{color:#dfe6f0}
+.r{margin-left:auto;display:flex;gap:8px}
+.btn{font-size:12px;color:#9aa6b5;border:1px solid #232c39;border-radius:7px;padding:6px 12px}
+.btn.exp{background:#3fb8ff;color:#04141f;border:0;font-weight:700}
+.mid{flex:1;display:flex;min-height:0}
+.preview{flex:1;display:flex;align-items:center;justify-content:center;background:#070910;border-right:1px solid #181f29;position:relative}
+.frame{width:62%;aspect-ratio:16/9;border-radius:10px;background:linear-gradient(140deg,#16344a,#0a1c2c);border:1px solid #233040;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.frame .pl{font-size:13px;color:#7fd0ff;letter-spacing:2px}.frame h2{font-size:30px;font-weight:800}
+.tc{position:absolute;top:14px;left:18px;font-size:11px;letter-spacing:1.5px;color:#5f6b7a;text-transform:uppercase}
+.tc2{position:absolute;bottom:14px;left:18px;font-size:13px;color:#8b96a5;font-variant-numeric:tabular-nums}
+.insp{width:230px;padding:16px;background:#0e1118}
+.insp .k{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#5f6b7a;margin:14px 0 7px}
+.row{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;color:#aeb8c5}
+.row b{color:#e8edf4}
+.tl{height:230px;background:#0e1118;border-top:1px solid #181f29;display:flex;flex-direction:column}
+.ruler{height:24px;border-bottom:1px solid #181f29;position:relative;margin-left:120px}
+.ruler span{position:absolute;top:5px;font-size:10px;color:#5f6b7a;font-variant-numeric:tabular-nums}
+.play{position:absolute;left:42%;top:0;bottom:-206px;width:2px;background:#ff5b6e;z-index:5;box-shadow:0 0 8px #ff5b6e}
+.play::before{content:"";position:absolute;top:-1px;left:-5px;border:6px solid transparent;border-top-color:#ff5b6e}
+.track{display:flex;align-items:center;height:48px;border-bottom:1px solid #131922}
+.lab{width:120px;flex-shrink:0;padding:0 14px;font-size:12px;color:#9aa6b5;display:flex;align-items:center;gap:8px}
+.dot{width:7px;height:7px;border-radius:50%}
+.lane{flex:1;position:relative;height:100%;padding:7px 0}
+.clip{position:absolute;top:7px;bottom:7px;border-radius:6px;font-size:11px;color:#04141f;font-weight:600;padding:0 9px;display:flex;align-items:center;overflow:hidden;white-space:nowrap}
+</style></head><body><div class="app">
+<div class="top"><div class="wm">JARVIS</div><div class="proj">Project · <b>Launch — habit-tracker app</b></div><div class="r"><div class="btn">Preview</div><div class="btn">Render</div><div class="btn exp">Export ↑</div></div></div>
+<div class="mid">
+<div class="preview"><div class="tc">Preview · 00:00:14</div>
+<div class="frame"><div class="pl">▶ NOW RENDERING</div><h2>habit-tracker</h2><div style="font-size:13px;color:#9aa6b5">Code agent · 72% complete</div></div>
+<div class="tc2">⏱ 00:14 / 00:34 &nbsp;·&nbsp; 1440×900 &nbsp;·&nbsp; ● Opus</div></div>
+<div class="insp"><div class="k">Selected clip</div><div class="row"><span>Name</span><b>Deploy API</b></div><div class="row"><span>Lane</span><b>EA</b></div><div class="row"><span>Duration</span><b>00:06</b></div><div class="row"><span>Status</span><b style="color:#ffb347">HIGH</b></div>
+<div class="k">Output</div><div class="row"><span>Net · month</span><b>$3,840</b></div><div class="row"><span>ROI</span><b style="color:#46e0a0">4.2×</b></div><div class="row"><span>Cost</span><b>$58 / $80</b></div></div>
+</div>
+<div class="tl">
+<div class="ruler"><span style="left:0">00:00</span><span style="left:18%">00:06</span><span style="left:36%">00:12</span><span style="left:54%">00:18</span><span style="left:72%">00:24</span><span style="left:90%">00:30</span><div class="play"></div></div>
+<div class="track"><div class="lab"><span class="dot" style="background:#3fb8ff"></span>Code</div><div class="lane"><div class="clip" style="left:2%;width:46%;background:#3fb8ff">habit-tracker app · 72%</div><div class="clip" style="left:50%;width:22%;background:#2a6fa0;color:#cfe8ff">test suite</div></div></div>
+<div class="track"><div class="lab"><span class="dot" style="background:#8b7bff"></span>Scout</div><div class="lane"><div class="clip" style="left:8%;width:34%;background:#8b7bff;color:#0c0820">research niche · 40%</div></div></div>
+<div class="track"><div class="lab"><span class="dot" style="background:#46e0a0"></span>EA</div><div class="lane"><div class="clip" style="left:2%;width:18%;background:#46e0a0">invoice → 14</div><div class="clip" style="left:42%;width:14%;background:#2f9e72;color:#d6ffe9">deploy API</div></div></div>
+<div class="track"><div class="lab"><span class="dot" style="background:#ffb347"></span>Newsletter</div><div class="lane"><div class="clip" style="left:60%;width:30%;background:#ffb347">newsletter #14 · queued</div></div></div>
+</div></div></body></html>

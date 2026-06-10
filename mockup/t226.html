@@ -1,0 +1,63 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T226</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf6;background:#070b10;display:grid;grid-template-columns:64px 1fr 300px}
+.rail{background:#0b1118;border-right:1px solid #18222c;display:flex;flex-direction:column;align-items:center;padding:18px 0;gap:6px}
+.logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#5fd0c0,#3a9c8c);display:flex;align-items:center;justify-content:center;font-weight:900;color:#03110d;font-size:15px;margin-bottom:14px}
+.ic{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:17px;color:#5f7a82}
+.ic.on{background:rgba(95,208,192,.14);color:#5fd0c0;box-shadow:inset 0 0 0 1px rgba(95,208,192,.3)}
+.rail .sp{margin-top:auto}
+.center{display:flex;flex-direction:column;overflow:hidden}
+.chead{display:flex;align-items:center;gap:14px;padding:22px 32px 12px}
+.chead h1{font-size:24px;font-weight:800}.chead h1 b{color:#5fd0c0}.chead .st{font-size:12px;color:#5f7a82}.chead .r{margin-left:auto;font-size:12px;color:#5f7a82}
+.cwrap{flex:1;overflow:hidden;padding:8px 32px 0}
+.hero{background:linear-gradient(160deg,#0e1820,#0a1117);border:1px solid #18222c;border-radius:16px;padding:22px 24px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-40px;top:-40px;width:220px;height:220px;background:radial-gradient(circle,rgba(95,208,192,.16),transparent 70%)}
+.k{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#5fd0c0;font-weight:700}
+.big{font-size:46px;font-weight:800;letter-spacing:-1px;margin-top:6px}.big .up{font-size:15px;color:#46e0a0;font-weight:700;margin-left:8px}
+.spark{height:70px;margin-top:14px}
+.kpis{display:flex;gap:14px;margin-top:16px}
+.kp{flex:1;background:#0c141b;border:1px solid #18222c;border-radius:13px;padding:13px 15px}
+.kp .l{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#5f7a82}.kp .v{font-size:22px;font-weight:800;margin-top:4px}
+.sect{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#5f7a82;margin:20px 0 8px}
+.li{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border:1px solid #18222c;border-radius:11px;margin-bottom:8px;background:#0c141b;font-size:14px}
+.li .amt{font-weight:800;font-variant-numeric:tabular-nums}
+.inspect{background:#0a0f15;border-left:1px solid #18222c;padding:22px 20px;overflow:hidden}
+.inspect h3{font-size:13px;font-weight:800;letter-spacing:.4px}
+.inspect .sub{font-size:11px;color:#5f7a82;margin-top:2px}
+.prop{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #141c24;font-size:12px}
+.prop .pk{color:#5f7a82}.prop .pv{font-weight:600}
+.cta{margin-top:16px;text-align:center;padding:11px;border-radius:11px;font-size:13px;font-weight:700;background:linear-gradient(120deg,#46e0a0,#5fd0c0);color:#03110d}
+.note{font-size:11px;color:#5f7a82;line-height:1.6;margin-top:14px;padding:12px;border:1px dashed #1e2a34;border-radius:11px}
+.bar{position:fixed;bottom:18px;left:96px;right:332px;display:flex;align-items:center;gap:12px;background:rgba(12,20,27,.9);border:1px solid #18222c;border-radius:13px;padding:11px 16px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e6edf6;font-size:14px}.bar input::placeholder{color:#5f7a82}
+</style></head><body>
+<div class="rail"><div class="logo">J</div>
+<div class="ic on">◧</div><div class="ic">⌘</div><div class="ic">◷</div><div class="ic">⚡</div><div class="ic">◎</div><div class="ic">▤</div>
+<div class="ic sp">⚙</div><div class="ic">◐</div>
+</div>
+<div class="center">
+<div class="chead"><h1>Good evening, <b>Shay.</b></h1><span class="st">● Opus</span><span class="r">Net this month · ROI 4.2×</span></div>
+<div class="cwrap">
+<div class="hero"><div class="k">Net · this month</div><div class="big">$3,840<span class="up">▲ 18%</span></div>
+<svg class="spark" viewBox="0 0 600 70" preserveAspectRatio="none" style="width:100%">
+<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#46e0a0" stop-opacity=".4"/><stop offset="1" stop-color="#46e0a0" stop-opacity="0"/></linearGradient></defs>
+<path d="M0,55 L80,48 L160,52 L240,38 L320,42 L400,26 L480,30 L560,14 L600,8 L600,70 L0,70Z" fill="url(#g)"/>
+<path d="M0,55 L80,48 L160,52 L240,38 L320,42 L400,26 L480,30 L560,14 L600,8" fill="none" stroke="#46e0a0" stroke-width="2.5"/></svg>
+<div class="kpis"><div class="kp"><div class="l">ROI</div><div class="v">4.2×</div></div><div class="kp"><div class="l">AI cost</div><div class="v">$58<span style="font-size:12px;color:#5f7a82">/$80</span></div></div><div class="kp"><div class="l">Products</div><div class="v">7 live</div></div></div></div>
+<div class="sect">Revenue sources</div>
+<div class="li"><span>Stripe subscriptions</span><span class="amt">$1,240</span></div>
+<div class="li"><span>Gumroad</span><span class="amt">$890</span></div>
+<div class="li"><span>Newsletter</span><span class="amt">$400</span></div>
+</div></div>
+<div class="inspect"><h3>Stripe subscriptions</h3><div class="sub">selected source · live connector</div>
+<div class="prop"><span class="pk">Amount</span><span class="pv">$1,240</span></div>
+<div class="prop"><span class="pk">Customers</span><span class="pv">14 active</span></div>
+<div class="prop"><span class="pk">MRR trend</span><span class="pv" style="color:#46e0a0">▲ 12%</span></div>
+<div class="prop"><span class="pk">Next invoice</span><span class="pv">Jun 14</span></div>
+<div class="prop"><span class="pk">Managed by</span><span class="pv">EA · Resend</span></div>
+<div class="prop"><span class="pk">Status</span><span class="pv" style="color:#46e0a0">● Online</span></div>
+<div class="cta">Send invoice → 14 ↵</div>
+<div class="note">EA has drafted the invoice to all 14 customers. Approving bills the month, est. $1,240.</div>
+</div>
+<div class="bar"><span style="color:#5fd0c0">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#5f7a82;font-size:12px">⌘K</span></div>
+</body></html>

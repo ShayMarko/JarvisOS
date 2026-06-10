@@ -1,0 +1,52 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T278</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;background:#0a0c10;display:flex;align-items:center;justify-content:center}
+.wall{position:absolute;inset:0;background:radial-gradient(80% 60% at 50% 10%,#1a2440,#0a0c10 70%)}
+.stack{position:relative;width:420px;height:820px}
+.bar{position:absolute;top:-2px;left:0;right:0;text-align:center;color:#8fa6c2;font-size:13px;letter-spacing:2px;z-index:30}
+.pass{position:absolute;left:0;right:0;border-radius:22px;padding:20px 22px;box-shadow:0 -4px 20px rgba(0,0,0,.4),0 14px 40px rgba(0,0,0,.5);color:#fff}
+/* stacked behind, peeking */
+.p1{top:46px;background:linear-gradient(135deg,#2a2f3a,#1c2029);height:90px}
+.p2{top:112px;background:linear-gradient(135deg,#3a2a5a,#241a3e);height:90px}
+.p3{top:178px;background:linear-gradient(135deg,#1f4a6e,#15334e);height:90px}
+.peek{display:flex;align-items:center;gap:12px}
+.peek .lg{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;font-size:17px}
+.peek .nm{font-size:13px;font-weight:700}.peek .sm{font-size:11px;opacity:.7;margin-top:1px}
+.peek .amt{margin-left:auto;font-weight:800;font-size:16px}
+/* top open pass */
+.open{top:244px;height:540px;background:linear-gradient(150deg,#1f9e6e,#0e6b48);border-radius:22px;padding:24px 26px;display:flex;flex-direction:column}
+.open .hd{display:flex;align-items:center;gap:12px}
+.open .lg{width:42px;height:42px;border-radius:11px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:21px}
+.open .nm{font-size:16px;font-weight:800}.open .sm{font-size:12px;opacity:.85}
+.open .wm{margin-left:auto;font-size:12px;letter-spacing:2px;font-weight:800;opacity:.85}
+.amount{margin-top:24px}
+.amount .l{font-size:12px;letter-spacing:2px;text-transform:uppercase;opacity:.8}
+.amount .v{font-size:58px;font-weight:800;letter-spacing:-2px;margin-top:4px}
+.rows{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:16px 12px}
+.rows .l{font-size:11px;letter-spacing:1px;text-transform:uppercase;opacity:.75}.rows .v{font-size:16px;font-weight:700;margin-top:2px}
+.qr{margin-top:auto;align-self:center;width:150px;height:150px;background:#fff;border-radius:14px;padding:12px}
+.qr svg{width:100%;height:100%}
+.note{text-align:center;font-size:12px;opacity:.85;margin-top:14px}
+.add{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:13px;color:#7fb4ff;z-index:30}
+</style></head><body>
+<div class="wall"></div>
+<div class="stack">
+<div class="bar">JARVIS WALLET · ● Online · Tue Jun 09</div>
+<div class="pass p1"><div class="peek"><span class="lg">🎫</span><div><div class="nm">Newsletter #14 · Pass</div><div class="sm">queued · send 19:00</div></div><span class="amt">$400</span></div></div>
+<div class="pass p2"><div class="peek"><span class="lg">🪪</span><div><div class="nm">Jarvis Membership</div><div class="sm">51 agents · 26 connectors</div></div><span class="amt">PRO</span></div></div>
+<div class="pass p3"><div class="peek"><span class="lg">💳</span><div><div class="nm">Gumroad payout</div><div class="sm">cleared today</div></div><span class="amt">$890</span></div></div>
+<div class="pass open">
+<div class="hd"><span class="lg">🧾</span><div><div class="nm">Invoice · 14 customers</div><div class="sm">EA via Resend · awaiting approval</div></div><span class="wm">JARVIS</span></div>
+<div class="amount"><div class="l">Amount due</div><div class="v">$1,240</div></div>
+<div class="rows">
+<div><div class="l">Source</div><div class="v">Stripe subs</div></div>
+<div><div class="l">Status</div><div class="v">CRITICAL</div></div>
+<div><div class="l">Net this month</div><div class="v">$3,840 ▲18%</div></div>
+<div><div class="l">ROI</div><div class="v">4.2×</div></div>
+</div>
+<div class="qr"><svg viewBox="0 0 100 100"><rect width="100" height="100" fill="#0e6b48"/><g fill="#fff"><rect x="6" y="6" width="22" height="22"/><rect x="72" y="6" width="22" height="22"/><rect x="6" y="72" width="22" height="22"/><rect x="36" y="6" width="8" height="8"/><rect x="52" y="14" width="8" height="8"/><rect x="36" y="36" width="8" height="8"/><rect x="52" y="36" width="16" height="8"/><rect x="72" y="44" width="8" height="16"/><rect x="36" y="52" width="8" height="16"/><rect x="52" y="60" width="8" height="8"/><rect x="68" y="72" width="8" height="8"/><rect x="84" y="84" width="8" height="8"/><rect x="44" y="72" width="8" height="16"/></g></svg></div>
+<div class="note">Tap to approve &amp; bill the month · or “Hey Jarvis, send it”</div>
+</div>
+<div class="add">＋ Add to Wallet · 3 more passes</div>
+</div>
+</body></html>

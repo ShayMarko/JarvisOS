@@ -1,0 +1,59 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T203</title><style>
+*{margin:0;box-sizing:border-box;font-family:ui-monospace,'SF Mono',monospace}
+body{height:100vh;overflow:hidden;background:#05070e;color:#bcd4ff;display:flex;flex-direction:column}
+.bar{display:flex;align-items:center;gap:18px;padding:14px 26px;border-bottom:1px solid #142036;background:linear-gradient(180deg,#0b1322,#070b14)}
+.wm{font-size:16px;font-weight:800;letter-spacing:4px;color:#7fb4ff;text-shadow:0 0 10px rgba(127,180,255,.5)}
+.warn{margin-left:auto;display:flex;gap:10px}
+.wl{font-size:10px;padding:5px 11px;border-radius:5px;letter-spacing:1px;font-weight:700}
+.amber{background:#3a2c0e;color:#ffce6a;box-shadow:0 0 12px rgba(255,206,106,.3)}
+.red{background:#3a1418;color:#ff7a7a;box-shadow:0 0 14px rgba(255,122,122,.4)}
+.grn{background:#0e2e22;color:#46e0a0}
+.body{flex:1;display:grid;grid-template-columns:280px 1fr 280px;gap:0}
+.cluster{padding:22px;display:flex;flex-direction:column;gap:16px}
+.lc{border-right:1px solid #142036}.rc{border-left:1px solid #142036}
+.inst{border:1px solid #1a2a44;border-radius:12px;padding:14px;background:radial-gradient(circle at 50% 0,#0e1830,#080d18)}
+.it{font-size:9px;letter-spacing:2px;color:#5a78aa}
+.iv{font-size:26px;font-weight:800;color:#7fb4ff;margin-top:4px;text-shadow:0 0 10px rgba(127,180,255,.4)}
+.iv.g{color:#46e0a0;text-shadow:0 0 10px rgba(70,224,160,.4)}.iv.a{color:#ffce6a}.iv.r{color:#ff7a7a}
+.bargraph{height:6px;border-radius:3px;background:#142036;margin-top:8px;overflow:hidden}.bargraph i{display:block;height:100%;border-radius:3px}
+.view{position:relative;margin:22px;border-radius:16px;overflow:hidden;border:2px solid #1a2a44;background:radial-gradient(800px 600px at 50% 120%,#0c1f3a,#05080f)}
+.starfield{position:absolute;inset:0}
+.star{position:absolute;background:#bcd4ff;border-radius:50%;opacity:.7}
+.hud{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;padding:22px}
+.hud .top{display:flex;justify-content:space-between;font-size:11px;color:#5a78aa;letter-spacing:2px}
+.recticle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:160px;height:160px}
+.greeting{text-align:center}.greeting h1{font-size:22px;color:#7fb4ff;font-weight:800;letter-spacing:1px;text-shadow:0 0 14px rgba(127,180,255,.5)}
+.greeting p{font-size:12px;color:#5a78aa;margin-top:5px;letter-spacing:1px}
+.navrow{display:flex;justify-content:space-between;font-size:11px;color:#5a78aa;letter-spacing:1px}
+</style></head><body>
+<div class="bar"><div class="wm">JARVIS · BRIDGE</div><span style="font-size:11px;color:#5a78aa;letter-spacing:1px">● ONLINE · OPUS · 20:34 TUE JUN 09</span>
+<div class="warn"><span class="wl red">⚠ INVOICE 14</span><span class="wl amber">⚠ PUBLISH SAAS</span><span class="wl amber">⚠ DEPLOY API</span><span class="wl grn">SYS NOMINAL</span></div></div>
+<div class="body">
+<div class="cluster lc">
+<div class="inst"><div class="it">NET THRUST · MONTH</div><div class="iv g">$3,840</div><div class="bargraph"><i style="width:78%;background:#46e0a0"></i></div></div>
+<div class="inst"><div class="it">ROI · WARP</div><div class="iv">4.2×</div><div class="bargraph"><i style="width:84%;background:#7fb4ff"></i></div></div>
+<div class="inst"><div class="it">FUEL · AI BUDGET</div><div class="iv a">$58/$80</div><div class="bargraph"><i style="width:73%;background:#ffce6a"></i></div></div>
+<div class="inst"><div class="it">CREW · AGENTS</div><div class="iv">51</div><div class="bargraph"><i style="width:90%;background:#7fb4ff"></i></div></div>
+</div>
+<div class="view">
+<div class="starfield">
+<div class="star" style="top:12%;left:18%;width:2px;height:2px"></div><div class="star" style="top:24%;left:62%;width:3px;height:3px"></div>
+<div class="star" style="top:40%;left:30%;width:2px;height:2px"></div><div class="star" style="top:60%;left:78%;width:2px;height:2px"></div>
+<div class="star" style="top:72%;left:24%;width:3px;height:3px"></div><div class="star" style="top:30%;left:88%;width:2px;height:2px"></div>
+<div class="star" style="top:80%;left:54%;width:2px;height:2px"></div><div class="star" style="top:18%;left:44%;width:2px;height:2px"></div>
+</div>
+<svg class="recticle" viewBox="0 0 160 160"><circle cx="80" cy="80" r="60" fill="none" stroke="rgba(127,180,255,.3)" stroke-width="1"/><circle cx="80" cy="80" r="30" fill="none" stroke="rgba(127,180,255,.4)" stroke-width="1"/><line x1="80" y1="10" x2="80" y2="40" stroke="rgba(127,180,255,.4)"/><line x1="80" y1="120" x2="80" y2="150" stroke="rgba(127,180,255,.4)"/><line x1="10" y1="80" x2="40" y2="80" stroke="rgba(127,180,255,.4)"/><line x1="120" y1="80" x2="150" y2="80" stroke="rgba(127,180,255,.4)"/></svg>
+<div class="hud">
+<div class="top"><span>HEADING 048° · 2 JOBS UNDERWAY</span><span>RANGE: NEXT MILESTONE</span></div>
+<div class="greeting"><h1>Good evening, Shay.</h1><p>habit-tracker 72% · note-niche 40% · newsletter #14 queued</p></div>
+<div class="navrow"><span>STRIPE $1,240 · GUMROAD $890</span><span>7 PRODUCTS LIVE · 9 CONNECTORS</span></div>
+</div>
+</div>
+<div class="cluster rc">
+<div class="inst"><div class="it">SHIELDS · PRIVACY GUARD</div><div class="iv g">98%</div><div class="bargraph"><i style="width:98%;background:#46e0a0"></i></div></div>
+<div class="inst"><div class="it">JOB 1 · CODE AGENT</div><div class="iv">72%</div><div class="bargraph"><i style="width:72%;background:#7fb4ff"></i></div></div>
+<div class="inst"><div class="it">JOB 2 · SCOUT</div><div class="iv">40%</div><div class="bargraph"><i style="width:40%;background:#7fb4ff"></i></div></div>
+<div class="inst"><div class="it">HULL · WATCHDOG</div><div class="iv r">⚠ 3</div><div class="bargraph"><i style="width:30%;background:#ff7a7a"></i></div></div>
+</div>
+</div>
+</body></html>

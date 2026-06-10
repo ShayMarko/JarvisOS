@@ -1,0 +1,80 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T153</title><style>
+*{margin:0;box-sizing:border-box}
+body{height:100vh;overflow:hidden;background:#0a0a0a;color:#e8e2d4;font-family:'Helvetica Neue',system-ui,sans-serif}
+.serif{font-family:Georgia,'Times New Roman',serif}
+.gold{color:#c9a253}
+.wrap{height:100vh;padding:34px 48px;display:grid;grid-template-columns:1.4fr 1fr 1fr;grid-template-rows:auto auto 1fr auto;gap:0 40px}
+.top{grid-column:1/-1;display:flex;align-items:center;gap:20px;padding-bottom:20px;border-bottom:1px solid #2a2620}
+.wm{font-size:24px;font-weight:400;letter-spacing:8px;color:#e8e2d4}
+.wm b{color:#c9a253;font-weight:400}
+.st{font-size:12px;letter-spacing:2px;color:#7a7568;text-transform:uppercase}
+.r{margin-left:auto;font-size:12px;letter-spacing:2px;color:#8a8576;text-transform:uppercase}
+.hero{grid-column:1/-1;padding:42px 0 30px;display:flex;align-items:flex-end;justify-content:space-between;border-bottom:1px solid #1c1916}
+.greet{font-size:62px;font-weight:400;letter-spacing:-1px;line-height:1}
+.greet .gold{font-style:italic}
+.netbox{text-align:right}
+.netbox .l{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#7a7568}
+.netbox .v{font-size:54px;font-weight:300;letter-spacing:-2px;color:#c9a253}
+.netbox .d{font-size:13px;letter-spacing:1px;color:#9a9486}
+.col{padding:32px 0 0;border-right:1px solid #1c1916}
+.c1{padding-right:40px}.c2{padding:32px 40px 0}.c3{padding-left:40px;border-right:0}
+.h{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#c9a253;margin-bottom:22px}
+.h span{color:#5a564c;float:right;letter-spacing:1px}
+.item{padding:14px 0;border-bottom:1px solid #1c1916}
+.it-t{font-size:16px;color:#e8e2d4}
+.it-s{font-size:12px;color:#7a7568;margin-top:4px;letter-spacing:.5px}
+.tag{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#c9a253;margin-bottom:6px;display:block}
+.tag.c{color:#cf6a5e}
+.src{display:flex;justify-content:space-between;align-items:baseline;padding:13px 0;border-bottom:1px solid #1c1916;font-size:14px;color:#b8b2a4}
+.src b{font-weight:400;color:#e8e2d4;font-size:18px}
+.j{padding:14px 0;border-bottom:1px solid #1c1916}
+.j-h{display:flex;justify-content:space-between;font-size:15px;color:#e8e2d4;margin-bottom:10px}
+.j-h span{color:#7a7568;font-size:12px;letter-spacing:1px}
+.track{height:2px;background:#2a2620;position:relative}
+.track i{display:block;height:100%;background:linear-gradient(90deg,#9a7a33,#c9a253)}
+.track i::after{content:"";position:absolute;top:-3px;width:8px;height:8px;border-radius:50%;background:#c9a253;box-shadow:0 0 8px #c9a253;transform:translateX(-4px)}
+.sys{margin-top:24px;display:flex;justify-content:space-between}
+.sys .v{font-size:30px;font-weight:300;color:#c9a253}.sys .k{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#7a7568;margin-top:4px}
+.foot{grid-column:1/-1;display:flex;align-items:center;gap:18px;padding-top:22px;border-top:1px solid #2a2620;margin-top:14px}
+.foot input{flex:1;background:0;border:0;outline:0;color:#e8e2d4;font-size:16px;letter-spacing:.5px;font-family:Georgia,serif;font-style:italic}.foot input::placeholder{color:#5a564c}
+.kk{font-size:11px;letter-spacing:2px;color:#7a7568;border:1px solid #2a2620;padding:6px 12px}
+</style></head><body>
+<div class="wrap">
+<div class="top"><div class="wm serif"><b>J</b>ARVIS</div><div class="st">● Online · Opus</div><div class="r">20:34 · Tue Jun 09 · Concierge</div></div>
+
+<div class="hero">
+<div class="greet serif">Good evening,<br><span class="gold">Shay.</span></div>
+<div class="netbox"><div class="l">Net this month</div><div class="v serif">$3,840</div><div class="d">ROI 4.2× · ▲18% · AI cost $58 / $80</div></div>
+</div>
+
+<div class="col c1">
+<div class="h">Requires your attention <span>03</span></div>
+<div class="item"><span class="tag c">Critical</span><div class="it-t serif">Send invoice — 14 customers</div><div class="it-s">$1,240 · Executive Assistant via Resend</div></div>
+<div class="item"><span class="tag">High</span><div class="it-t serif">Publish SaaS starter — Gumroad</div><div class="it-s">$39 price point</div></div>
+<div class="item"><span class="tag">High</span><div class="it-t serif">Deploy micro-API — Cloudflare</div><div class="it-s">Edge worker, single step</div></div>
+<div style="margin-top:18px;font-size:13px;color:#9a9486;font-style:italic" class="serif gold">"Double down: REST API + auth guide drove 61% of traffic."</div>
+</div>
+
+<div class="col c2">
+<div class="h">Revenue ledger</div>
+<div class="src"><span>Stripe subscriptions</span><b class="serif">$1,240</b></div>
+<div class="src"><span>Gumroad</span><b class="serif">$890</b></div>
+<div class="src"><span>Newsletter</span><b class="serif">$400</b></div>
+<div class="src"><span>Lemon Squeezy</span><b class="serif">$310</b></div>
+<div class="sys">
+<div><div class="v serif">51</div><div class="k">Agents</div></div>
+<div><div class="v serif">9/26</div><div class="k">Connectors</div></div>
+<div><div class="v serif">7</div><div class="k">Products</div></div>
+</div>
+</div>
+
+<div class="col c3">
+<div class="h">In progress</div>
+<div class="j"><div class="j-h serif">Habit-tracker app <span>Code · 72%</span></div><div class="track"><i style="width:72%"></i></div></div>
+<div class="j"><div class="j-h serif">Research · note-taking niche <span>Scout · 40%</span></div><div class="track"><i style="width:40%"></i></div></div>
+<div class="j"><div class="j-h serif">Newsletter №14 <span>Queued</span></div><div class="track"><i style="width:5%"></i></div></div>
+</div>
+
+<div class="foot"><span class="gold">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span class="kk">⌘K</span></div>
+</div>
+</body></html>

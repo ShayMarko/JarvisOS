@@ -1,0 +1,71 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T172</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf6;background:#05070a}
+.tablet{height:100vh;display:flex;flex-direction:column}
+.status{display:flex;align-items:center;gap:14px;padding:8px 22px;font-size:12px;color:#7e8b99;background:#0a0e14}
+.status .t{font-weight:700;color:#cdd6e0}.status .r{margin-left:auto;display:flex;gap:14px;align-items:center}
+.split{flex:1;display:flex;overflow:hidden}
+/* LEFT APP — chat */
+.appA{width:42%;background:radial-gradient(600px 500px at 30% 0%,#0e1620,#070b11);display:flex;flex-direction:column}
+.appHdr{display:flex;align-items:center;gap:10px;padding:16px 22px;border-bottom:1px solid #19232a}
+.dot{width:9px;height:9px;border-radius:50%;background:#46e0a0;box-shadow:0 0 8px #46e0a0}
+.appHdr .wm{font-size:14px;font-weight:800;letter-spacing:2px;color:#5fd0c0}
+.chat{flex:1;padding:20px 22px;overflow:hidden;display:flex;flex-direction:column;gap:14px}
+.msg{max-width:84%;font-size:14px;line-height:1.5;padding:12px 15px;border-radius:14px}
+.me{align-self:flex-end;background:#1a3340;color:#dff;border-bottom-right-radius:4px}
+.ja{align-self:flex-start;background:#0e1419;border:1px solid #19232a;border-bottom-left-radius:4px}
+.ja b{color:#5fd0c0}
+.bar{margin:0 22px 18px;display:flex;align-items:center;gap:10px;background:#0e1419;border:1px solid #19232a;border-radius:12px;padding:10px 13px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e6edf6;font-size:13px}.bar input::placeholder{color:#5f8278}
+.divider{width:8px;background:#0a0e14;display:flex;align-items:center;justify-content:center}
+.divider::after{content:"";width:4px;height:46px;background:#2a3540;border-radius:3px}
+/* RIGHT APP — dashboard */
+.appB{flex:1;background:radial-gradient(700px 500px at 70% 0%,#0d1118,#06080c);padding:22px 26px;overflow:hidden}
+.appB h2{font-size:18px;font-weight:800}.appB .sub{font-size:12px;color:#5f8278;margin-bottom:18px}
+.kpis{display:flex;gap:14px;margin-bottom:16px}
+.k{flex:1;background:#0e1419;border:1px solid #19232a;border-radius:13px;padding:13px 15px}
+.kl{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:#5f8278}.kv{font-size:24px;font-weight:800;margin-top:4px}.up{color:#46e0a0;font-size:12px}
+.panel{background:#0e1419;border:1px solid #19232a;border-radius:14px;padding:16px 18px;margin-bottom:14px}
+.panel .pk{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:#5f8278;margin-bottom:10px}
+.li{display:flex;align-items:center;gap:10px;font-size:13px;padding:7px 0;border-bottom:1px solid #141c22}
+.li:last-child{border:0}.li .n{margin-left:auto;color:#8a98a4;font-variant-numeric:tabular-nums}
+.prog{flex:1;height:5px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;max-width:120px}.prog i{display:block;height:100%;background:#5fd0c0}
+</style></head><body>
+<div class="tablet">
+<div class="status"><span class="t">JARVIS OS</span><span>20:34</span><div class="r"><span>● Online · Opus</span><span>Tue Jun 09</span><span>􀙇 􀊪 100%</span></div></div>
+<div class="split">
+<div class="appA">
+<div class="appHdr"><span class="dot"></span><span class="wm">JARVIS · CHAT</span></div>
+<div class="chat">
+<div class="msg ja">Good evening, <b>Shay.</b> 3 things need you and 2 jobs are running. Want the rundown?</div>
+<div class="msg me">How's the money looking this month?</div>
+<div class="msg ja">Net <b>$3,840</b> (▲18%), ROI <b>4.2×</b>. Stripe $1,240 · Gumroad $890 · Lemon Sq $310 · Newsletter $400. AI cost $58 of $80.</div>
+<div class="msg me">Show me on the dashboard →</div>
+<div class="msg ja">Pinned it on the right. The invoice to 14 customers is your highest-value action.</div>
+</div>
+<div class="bar"><span style="color:#5fd0c0">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#5f8278;font-size:11px">⌘K</span></div>
+</div>
+<div class="divider"></div>
+<div class="appB">
+<h2>Today · Dashboard</h2><div class="sub">Net this month · ROI 4.2× · ▲18%</div>
+<div class="kpis">
+<div class="k"><div class="kl">Net · month</div><div class="kv">$3,840</div><div class="up">▲ 18%</div></div>
+<div class="k"><div class="kl">ROI</div><div class="kv">4.2×</div><div class="up">▲ 0.4</div></div>
+<div class="k"><div class="kl">AI cost</div><div class="kv">$58</div><div class="kl">/ $80 budget</div></div>
+</div>
+<div class="panel"><div class="pk">Needs you · 3</div>
+<div class="li"><span style="color:#ff7a7a">●</span>Send invoice → 14 customers<span class="n">$1,240</span></div>
+<div class="li"><span style="color:#f2c14e">●</span>Publish SaaS starter → Gumroad<span class="n">$39</span></div>
+<div class="li"><span style="color:#f2c14e">●</span>Deploy micro-API → Cloudflare<span class="n">—</span></div>
+</div>
+<div class="panel"><div class="pk">Jobs running · 2</div>
+<div class="li">habit-tracker app<div class="prog"><i style="width:72%"></i></div><span class="n">72%</span></div>
+<div class="li">research note-taking niche<div class="prog"><i style="width:40%"></i></div><span class="n">40%</span></div>
+</div>
+<div class="panel"><div class="pk">System</div>
+<div class="li">51 agents · 26 connectors (9 live) · 7 products live<span class="n">●</span></div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

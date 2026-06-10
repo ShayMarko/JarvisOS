@@ -1,0 +1,68 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T87</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf6;background:#0a0d12}
+.top{display:flex;align-items:center;gap:14px;padding:20px 36px}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#46e0a0}.st{font-size:12px;color:#5f8278}.r{margin-left:auto;font-size:13px;color:#8a98a4}
+.cap{padding:0 36px 6px}.cap h1{font-size:22px;font-weight:600}.cap h1 b{color:#46e0a0}.cap p{color:#6f8a86;font-size:13px;margin-top:3px}
+.chart{margin:6px 36px 0;background:#0e1318;border:1px solid #19232a;border-radius:16px;padding:18px 12px 8px;height:calc(100vh - 182px)}
+.cl{display:flex;justify-content:space-between;padding:0 12px 8px;font-size:11px;letter-spacing:1.3px;text-transform:uppercase;color:#5f8278}
+.legend span{margin-left:16px;color:#9aa6ac}.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px}
+.bar{position:fixed;bottom:20px;left:36px;right:36px;display:flex;align-items:center;gap:12px;background:#0e1318;border:1px solid #19232a;border-radius:13px;padding:11px 15px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e6edf6;font-size:14px}.bar input::placeholder{color:#5f8278}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · WATERFALL</div><div class="st">● Online · Opus</div><div class="r">Net this month $3,840 · ROI 4.2×</div></div>
+<div class="cap"><h1>Gross to net, step by step, <b>Shay</b>.</h1><p>how $2,840 gross becomes $3,840 net — every gain & deduction</p></div>
+<div class="chart">
+<div class="cl"><span>Revenue build-up · this month</span><span class="legend"><span><i style="background:#46e0a0"></i>gain</span><span><i style="background:#ff7a7a"></i>cost</span><span><i style="background:#5fd0c0"></i>total</span></span></div>
+<svg viewBox="0 0 1200 360" style="width:100%;height:calc(100% - 28px)" preserveAspectRatio="none">
+<!-- y grid: $0 at y=320, $4400 at y=20; scale: 300px / 4400 = .0682 px per $ -->
+<g stroke="rgba(120,180,170,.08)"><line x1="60" y1="20" x2="1200" y2="20"/><line x1="60" y1="95" x2="1200" y2="95"/><line x1="60" y1="170" x2="1200" y2="170"/><line x1="60" y1="245" x2="1200" y2="245"/><line x1="60" y1="320" x2="1200" y2="320"/></g>
+<g fill="#5f8278" font-size="10" font-family="monospace"><text x="14" y="24">$4.4k</text><text x="14" y="99">$3.3k</text><text x="14" y="174">$2.2k</text><text x="14" y="249">$1.1k</text><text x="30" y="324">$0</text></g>
+<!-- bars. base y=320. step width ~120, gap. connector lines dashed -->
+<!-- Stripe 1240 -> top y=320-1240*.0682=235.4 -->
+<rect x="80" y="235" width="110" height="85" rx="3" fill="#46e0a0"/>
+<line x1="190" y1="235" x2="210" y2="235" stroke="#3a5c52" stroke-dasharray="3 3"/>
+<!-- Gumroad 890 stacked from 235 -> 235-890*.0682=174.3 -->
+<rect x="210" y="174" width="110" height="61" rx="3" fill="#46e0a0"/>
+<line x1="320" y1="174" x2="340" y2="174" stroke="#3a5c52" stroke-dasharray="3 3"/>
+<!-- Newsletter 400 -> 174-27.3=146.7 -->
+<rect x="340" y="147" width="110" height="27" rx="3" fill="#3fc890"/>
+<line x1="450" y1="147" x2="470" y2="147" stroke="#3a5c52" stroke-dasharray="3 3"/>
+<!-- Lemon 310 -> 147-21.1=126 -->
+<rect x="470" y="126" width="110" height="21" rx="3" fill="#3fc890"/>
+<line x1="580" y1="126" x2="600" y2="126" stroke="#3a5c52" stroke-dasharray="3 3"/>
+<!-- Gross subtotal 2840 -> 320-2840*.0682=126.2 (full height) -->
+<rect x="600" y="126" width="110" height="194" rx="3" fill="#5fd0c0"/>
+<line x1="710" y1="126" x2="730" y2="126" stroke="#3a5c52" stroke-dasharray="3 3"/>
+<!-- AI cost -58 small drop -> down to 126+4=130 -->
+<rect x="730" y="126" width="110" height="6" rx="2" fill="#ff7a7a"/>
+<line x1="840" y1="130" x2="860" y2="130" stroke="#3a5c52" stroke-dasharray="3 3"/>
+<!-- Hosting/fees -102 -> down to 130+7=137 -->
+<rect x="860" y="130" width="110" height="9" rx="2" fill="#ff7a7a"/>
+<line x1="970" y1="139" x2="990" y2="139" stroke="#3a5c52" stroke-dasharray="3 3"/>
+<!-- but net is 3840 which is HIGHER than gross 2840? net higher: add carryover gain +1100 -> up from 139 to 139-75=64... show as gain -->
+<rect x="990" y="64" width="110" height="75" rx="3" fill="#46e0a0"/>
+<line x1="1100" y1="64" x2="1120" y2="64" stroke="#3a5c52" stroke-dasharray="3 3"/>
+<!-- NET total -->
+<rect x="1120" y="64" width="70" height="256" rx="3" fill="#7cf0c8"/>
+<!-- value labels -->
+<g font-size="11" font-weight="700" text-anchor="middle">
+<text x="135" y="228" fill="#cfeee2">+1,240</text>
+<text x="265" y="167" fill="#cfeee2">+890</text>
+<text x="395" y="140" fill="#cfeee2">+400</text>
+<text x="525" y="119" fill="#cfeee2">+310</text>
+<text x="655" y="119" fill="#0a1a16">2,840</text>
+<text x="785" y="122" fill="#ffb0b0">−58</text>
+<text x="915" y="124" fill="#ffb0b0">−102</text>
+<text x="1045" y="57" fill="#cfeee2">+1,160</text>
+<text x="1155" y="57" fill="#0a1a16">3,840</text>
+</g>
+<!-- x labels -->
+<g font-size="9.5" fill="#7e9aa0" text-anchor="middle">
+<text x="135" y="338">Stripe</text><text x="265" y="338">Gumroad</text><text x="395" y="338">Newsletter</text><text x="525" y="338">Lemon</text>
+<text x="655" y="338" font-weight="700" fill="#5fd0c0">GROSS</text><text x="785" y="350">AI cost</text><text x="915" y="338">host+fees</text><text x="1045" y="338">carryover</text><text x="1155" y="338" font-weight="700" fill="#7cf0c8">NET</text>
+</g>
+</svg>
+</div>
+<div class="bar"><span style="color:#46e0a0">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#5f8278;font-size:12px">⌘K</span></div>
+</body></html>

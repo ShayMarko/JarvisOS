@@ -1,0 +1,39 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T3</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e7eef9;background:linear-gradient(160deg,#0a0d16,#0e1322)}
+.app{display:grid;grid-template-columns:248px 1fr 300px;height:100vh}
+.side{border-right:1px solid rgba(140,160,210,.1);padding:18px 14px;display:flex;flex-direction:column;gap:6px;background:rgba(12,16,28,.5)}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:14px}.bd{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#5ad1ff,#9b8cff);display:grid;place-items:center;color:#06121f;font-weight:800}.brand b{letter-spacing:2px}
+.new{font-size:13px;font-weight:600;color:#0a0d16;background:linear-gradient(135deg,#5ad1ff,#9b8cff);border-radius:11px;padding:10px;text-align:center;margin-bottom:8px}
+.tl{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:#5d6b88;margin:12px 4px 4px}
+.thr{font-size:13px;color:#aebbd6;padding:9px 10px;border-radius:10px}.thr.on{background:rgba(90,209,255,.1);color:#dff;border:1px solid rgba(90,209,255,.2)}
+.main{display:flex;flex-direction:column}
+.cv{flex:1;overflow:hidden;padding:26px 36px;display:flex;flex-direction:column;gap:18px}
+.msg{max-width:74%}.me{align-self:flex-end;background:linear-gradient(135deg,#2b6fc7,#5ad1ff);color:#03101e;padding:12px 16px;border-radius:16px 16px 4px 16px;font-size:14px}
+.ja{align-self:flex-start;display:flex;gap:12px}.av{width:30px;height:30px;border-radius:50%;background:radial-gradient(circle,#9fe9ff,#2b6fc7);flex:none;margin-top:3px}
+.bub{background:rgba(22,30,50,.7);border:1px solid rgba(140,160,210,.12);padding:13px 16px;border-radius:16px 16px 16px 4px;font-size:14px;line-height:1.6;color:#dde8f6}
+.trace{margin-top:10px;font-size:12px;color:#7f8fb0;background:rgba(10,16,30,.6);border:1px solid rgba(140,160,210,.1);border-radius:10px;padding:9px 12px}
+.trace b{color:#5ad1ff}
+.dock{padding:16px 36px 22px}.box{display:flex;align-items:center;gap:12px;background:rgba(20,28,48,.7);border:1px solid rgba(140,160,210,.2);border-radius:15px;padding:12px 15px}
+.box input{flex:1;background:0;border:0;outline:0;color:#e7eef9;font-size:15px}.box input::placeholder{color:#5d6b88}.snd{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#5ad1ff,#9b8cff);display:grid;place-items:center;color:#06121f}
+.ctx{border-left:1px solid rgba(140,160,210,.1);padding:18px 16px;background:rgba(12,16,28,.4)}
+.cc{background:rgba(22,30,50,.6);border:1px solid rgba(140,160,210,.12);border-radius:14px;padding:13px;margin-bottom:12px}
+.cl{font-size:10px;letter-spacing:1.3px;text-transform:uppercase;color:#5d6b88;margin-bottom:8px}
+.cc .big{font-size:22px;font-weight:800}
+</style></head><body><div class="app">
+<div class="side"><div class="brand"><div class="bd">J</div><b>JARVIS</b></div><div class="new">+ New conversation</div>
+<div class="tl">Today</div><div class="thr on">Build me a habit tracker</div><div class="thr">Revenue this month?</div><div class="thr">Draft the newsletter</div>
+<div class="tl">Yesterday</div><div class="thr">Research note-taking apps</div><div class="thr">Fix the CI on jarvis-api</div><div class="thr">Triage my inbox</div>
+<div style="margin-top:auto;font-size:12px;color:#5d6b88">● Ollama · Opus</div></div>
+<div class="main"><div class="cv">
+<div class="msg me">what needs me today?</div>
+<div class="msg ja"><div class="av"></div><div><div class="bub">3 things, Shay: a <b>critical</b> invoice email to 14 customers (drafted), publishing the SaaS starter to Gumroad, and a micro-API deploy that just passed its green-gate. Want me to walk through them?
+<div class="trace"><b>trace</b> · EA → gmail.search · approvals.pending(3) · 0.8s · $0.004</div></div></div></div>
+<div class="msg me">how's the money?</div>
+<div class="msg ja"><div class="av"></div><div class="bub">$3,840 net this month (▲18%), ROI 4.2×. Stripe + Gumroad up, AI cost $58 of your $80 cap.</div></div>
+</div><div class="dock"><div class="box"><input placeholder="Message Jarvis…  ·  say “Hey Jarvis”"><div style="color:#5d6b88;font-size:12px">⌘K</div><div class="snd">➤</div></div></div></div>
+<div class="ctx"><div class="cl" style="margin-bottom:12px">Context</div>
+<div class="cc"><div class="cl">Money</div><div class="big">$3,840</div><div style="font-size:12px;color:#43e0a0;margin-top:4px">▲ 18% · ROI 4.2×</div></div>
+<div class="cc"><div class="cl">Needs you</div><div style="font-size:13px;color:#cdd9ee;line-height:1.8">● Invoice → 14<br>● Publish starter<br>● Deploy API</div></div>
+<div class="cc"><div class="cl">Jobs</div><div style="font-size:13px;color:#cdd9ee">habit-tracker · 72%<br>research niche · 40%</div></div></div>
+</div></body></html>

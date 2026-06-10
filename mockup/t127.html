@@ -1,0 +1,59 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T127</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e8edf4;background:radial-gradient(900px 700px at 50% 0%,#101a30,#0a0c11 60%);display:flex;flex-direction:column}
+.top{display:flex;align-items:center;gap:14px;padding:20px 40px}
+.wm{font-size:17px;font-weight:800;letter-spacing:3px;color:#7c9cff}.st{font-size:12px;color:#5b6678}.r{margin-left:auto;font-size:12px;color:#5b6678}
+.wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px}
+.steps{display:flex;align-items:center;gap:0;width:680px}
+.step{display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;flex:0 0 auto}
+.dot{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;border:2px solid #2a3445;color:#6b7888;background:#0e1219}
+.step.done .dot{background:#46e0a0;border-color:#46e0a0;color:#06140f}
+.step.on .dot{background:#7c9cff;border-color:#7c9cff;color:#0a1020;box-shadow:0 0 0 6px rgba(124,156,255,.18)}
+.lbl{font-size:12px;color:#6b7888}.step.on .lbl{color:#cdd6e2;font-weight:600}.step.done .lbl{color:#9aa6b4}
+.line{flex:1;height:2px;background:#2a3445;margin:0 -4px 22px}.line.done{background:#46e0a0}
+.panel{width:560px;background:#11151d;border:1px solid #1d2531;border-radius:20px;padding:30px 32px}
+.pk{font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:#7c9cff}
+.pt{font-size:24px;font-weight:800;margin:6px 0 4px;letter-spacing:-.5px}
+.psub{color:#8a96a8;font-size:13px;margin-bottom:22px}
+.field{margin-bottom:18px}
+.fl{font-size:11px;letter-spacing:.5px;color:#8a96a8;display:block;margin-bottom:7px}
+.fi{width:100%;background:#0c1017;border:1px solid #232c39;border-radius:11px;padding:13px 15px;color:#e8edf4;font-size:14px}
+.opts{display:flex;gap:10px}
+.opt{flex:1;border:1px solid #232c39;border-radius:12px;padding:14px;text-align:center;font-size:13px;color:#9aa6b4}
+.opt.on{border-color:#7c9cff;background:rgba(124,156,255,.1);color:#fff}
+.opt .em{font-size:18px;display:block;margin-bottom:6px}
+.actions{display:flex;align-items:center;margin-top:26px}
+.back{font-size:13px;color:#8a96a8;border:1px solid #2a3445;padding:11px 22px;border-radius:11px}
+.next{margin-left:auto;background:linear-gradient(90deg,#7c9cff,#46e0a0);color:#0a1020;font-weight:700;padding:12px 28px;border-radius:11px;font-size:14px}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS</div><div class="st">● Online · Opus · 20:34 · Tue Jun 09</div><div class="r">New money lane · setup</div></div>
+<div class="wrap">
+  <div class="steps">
+    <div class="step done"><div class="dot">✓</div><div class="lbl">Source</div></div>
+    <div class="line done"></div>
+    <div class="step on"><div class="dot">2</div><div class="lbl">Product</div></div>
+    <div class="line"></div>
+    <div class="step"><div class="dot">3</div><div class="lbl">Pricing</div></div>
+    <div class="line"></div>
+    <div class="step"><div class="dot">4</div><div class="lbl">Launch</div></div>
+  </div>
+  <div class="panel">
+    <div class="pk">Step 2 of 4</div>
+    <div class="pt">Choose what to publish</div>
+    <div class="psub">Jarvis found a ready-to-ship asset in your portfolio.</div>
+    <div class="field">
+      <label class="fl">Product name</label>
+      <input class="fi" value="SaaS Starter Kit — REST API + auth">
+    </div>
+    <div class="field">
+      <label class="fl">Sell through</label>
+      <div class="opts">
+        <div class="opt on"><span class="em">🛒</span>Gumroad</div>
+        <div class="opt"><span class="em">🍋</span>Lemon Sq</div>
+        <div class="opt"><span class="em">💳</span>Stripe</div>
+      </div>
+    </div>
+    <div class="actions"><div class="back">Back</div><div class="next">Continue → pricing</div></div>
+  </div>
+</div>
+</body></html>

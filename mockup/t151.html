@@ -1,0 +1,77 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T151</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Segoe UI Variable','Segoe UI',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#f0f2f5;
+background:
+radial-gradient(900px 600px at 12% -5%,#3a4a8f55,transparent),
+radial-gradient(800px 700px at 100% 0%,#7a3a8f55,transparent),
+radial-gradient(700px 600px at 60% 110%,#2a6a8f55,transparent),
+#16181d}
+.wrap{height:100vh;padding:24px 30px;display:grid;grid-template-columns:280px 1fr 1fr;grid-template-rows:auto 1fr auto;gap:18px}
+.ac{position:relative;background:rgba(40,44,54,.55);border:1px solid rgba(255,255,255,.10);border-radius:12px;backdrop-filter:blur(40px) saturate(160%);-webkit-backdrop-filter:blur(40px) saturate(160%);box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.ac::before{content:"";position:absolute;inset:0;border-radius:12px;padding:1px;background:linear-gradient(135deg,rgba(255,255,255,.28),transparent 40%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.top{grid-column:1/-1;display:flex;align-items:center;gap:16px;padding:12px 20px}
+.wm{font-size:20px;font-weight:600;letter-spacing:1px}
+.dot{width:8px;height:8px;border-radius:50%;background:#3fd6a0;box-shadow:0 0 8px #3fd6a0}
+.st{font-size:13px;color:#aab2c0}
+.r{margin-left:auto;font-size:13px;color:#8a93a3}
+.pad{padding:20px 22px}
+.greet{font-size:28px;font-weight:600;line-height:1.15}
+.greet span{color:#8fb6ff}
+.netcard{margin-top:16px;background:linear-gradient(135deg,rgba(100,140,255,.25),rgba(140,100,255,.12));border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:18px}
+.netcard .l{font-size:12px;color:#aab2c0}
+.netcard .v{font-size:42px;font-weight:600;letter-spacing:-1px;line-height:1.1}
+.netcard .d{font-size:13px;color:#9fe6c4;margin-top:4px}
+.src{display:flex;justify-content:space-between;font-size:13px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.06);color:#c4cbd6}.src:last-child{border:0}.src b{color:#fff}
+.h{font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:#8a93a3;margin-bottom:14px}
+.item{position:relative;display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:12px 14px;margin-bottom:11px;overflow:hidden}
+.item::after{content:"";position:absolute;inset:0;background:radial-gradient(160px 80px at 80% 0%,rgba(255,255,255,.10),transparent);pointer-events:none}
+.ico{width:34px;height:34px;border-radius:8px;flex:none;display:flex;align-items:center;justify-content:center;font-size:15px}
+.it-t{font-size:14px;font-weight:600}.it-s{font-size:12px;color:#9aa3b2;margin-top:2px}
+.tag{margin-left:auto;font-size:11px;font-weight:600;padding:3px 11px;border-radius:12px}
+.j{margin-bottom:16px}
+.j-h{display:flex;justify-content:space-between;font-size:14px;margin-bottom:7px}
+.j-h span{color:#8a93a3;font-size:12px}
+.track{height:6px;border-radius:4px;background:rgba(255,255,255,.10);overflow:hidden}
+.track i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#5a8fff,#8a6fff)}
+.sys{display:flex;gap:12px;margin-top:4px}
+.sys .s{flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:13px;text-align:center}
+.sys .v{font-size:24px;font-weight:600;color:#8fb6ff}.sys .k{font-size:11px;color:#8a93a3;margin-top:3px}
+.foot{grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:14px 22px}
+.foot input{flex:1;background:0;border:0;outline:0;color:#f0f2f5;font-size:15px}.foot input::placeholder{color:#7a8393}
+.kk{font-size:12px;color:#aab2c0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:4px 10px}
+</style></head><body>
+<div class="wrap">
+<div class="ac top"><div class="dot"></div><div class="wm">JARVIS</div><div class="st">Online · Opus · 20:34 · Tue Jun 09</div><div class="r">Say "Hey Jarvis"</div></div>
+
+<div class="ac pad">
+<div class="greet">Good evening,<br><span>Shay.</span></div>
+<div class="netcard"><div class="l">Net this month</div><div class="v">$3,840</div><div class="d">ROI 4.2× · ▲18% · AI cost $58 / $80</div></div>
+<div style="margin-top:18px">
+<div class="src"><span>Stripe subs</span><b>$1,240</b></div>
+<div class="src"><span>Gumroad</span><b>$890</b></div>
+<div class="src"><span>Newsletter</span><b>$400</b></div>
+<div class="src"><span>Lemon Squeezy</span><b>$310</b></div>
+</div>
+</div>
+
+<div class="ac pad">
+<div class="h">3 things need you</div>
+<div class="item"><div class="ico" style="background:rgba(255,90,90,.2);color:#ff8a8a">!</div><div><div class="it-t">Send invoice → 14 customers</div><div class="it-s">$1,240 · EA via Resend</div></div><span class="tag" style="background:rgba(255,90,90,.2);color:#ff8a8a">Critical</span></div>
+<div class="item"><div class="ico" style="background:rgba(255,180,80,.2);color:#ffc56a">▲</div><div><div class="it-t">Publish SaaS starter → Gumroad</div><div class="it-s">$39</div></div><span class="tag" style="background:rgba(255,180,80,.2);color:#ffc56a">High</span></div>
+<div class="item"><div class="ico" style="background:rgba(255,180,80,.2);color:#ffc56a">☁</div><div><div class="it-t">Deploy micro-API → Cloudflare</div><div class="it-s">Edge worker</div></div><span class="tag" style="background:rgba(255,180,80,.2);color:#ffc56a">High</span></div>
+<div class="h" style="margin-top:18px">Suggested</div>
+<div class="item" style="margin:0"><div class="ico" style="background:rgba(90,200,150,.2);color:#7ce0b0">✦</div><div class="it-t" style="font-weight:400;font-size:13px">Double down: "REST API + auth" guide drove 61% of traffic</div></div>
+</div>
+
+<div class="ac pad">
+<div class="h">Jobs running</div>
+<div class="j"><div class="j-h">habit-tracker app <span>Code · 72%</span></div><div class="track"><i style="width:72%"></i></div></div>
+<div class="j"><div class="j-h">research note-taking niche <span>Scout · 40%</span></div><div class="track"><i style="width:40%"></i></div></div>
+<div class="j"><div class="j-h">newsletter #14 <span>queued</span></div><div class="track"><i style="width:6%"></i></div></div>
+<div class="h">System</div>
+<div class="sys"><div class="s"><div class="v">51</div><div class="k">agents</div></div><div class="s"><div class="v">9/26</div><div class="k">connectors</div></div><div class="s"><div class="v">7</div><div class="k">products</div></div></div>
+</div>
+
+<div class="ac foot"><span style="color:#8fb6ff">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span class="kk">⌘K</span></div>
+</div>
+</body></html>

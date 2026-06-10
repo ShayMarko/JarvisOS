@@ -1,0 +1,52 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T266</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,-apple-system,sans-serif}
+body{height:100vh;overflow:hidden;color:#f0e6f5;background:radial-gradient(1200px 900px at 50% 45%,#1a1024,#0a0612 80%)}
+.brick{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0 1px,transparent 1px 46px),repeating-linear-gradient(90deg,rgba(255,255,255,.012) 0 1px,transparent 1px 92px);z-index:0}
+.neon{position:absolute;inset:0;z-index:1}
+.bar{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);width:480px;display:flex;align-items:center;gap:12px;background:rgba(20,10,30,.6);border:1.5px solid rgba(255,90,200,.4);border-radius:14px;padding:12px 16px;z-index:7;box-shadow:0 0 18px rgba(255,90,200,.25),inset 0 0 14px rgba(255,90,200,.1)}
+.bar input{flex:1;background:0;border:0;outline:0;color:#f0e6f5;font-size:14px}.bar input::placeholder{color:#9a6a8a}
+.cite{position:fixed;top:24px;right:44px;z-index:6;font-size:12px;color:#7fffd0;letter-spacing:1px;text-shadow:0 0 10px rgba(127,255,208,.6)}
+</style></head><body>
+<div class="brick"></div>
+<svg class="neon" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid meet">
+<defs>
+<filter id="gp" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="gc" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="gg" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+<filter id="gy" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<!-- JARVIS wordmark in neon tube (pink) -->
+<g filter="url(#gp)" fill="none" stroke="#ff5ac8" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+<text x="80" y="160" font-family="system-ui,sans-serif" font-size="110" font-weight="800" letter-spacing="12" fill="none" stroke="#ff5ac8" stroke-width="3">JARVIS</text>
+</g>
+<!-- frame border tube (cyan) -->
+<rect x="48" y="48" width="1344" height="804" rx="30" fill="none" stroke="#3fe0ff" stroke-width="3" filter="url(#gc)" opacity=".85"/>
+<!-- greeting (cyan tube) -->
+<text x="84" y="270" font-family="system-ui,sans-serif" font-size="40" font-weight="300" fill="none" stroke="#3fe0ff" stroke-width="2" filter="url(#gc)">Good evening, <tspan stroke="#ff5ac8" font-weight="700">Shay.</tspan></text>
+<!-- big number (green) -->
+<text x="80" y="500" font-family="system-ui,sans-serif" font-size="170" font-weight="800" fill="none" stroke="#7fffb0" stroke-width="4" filter="url(#gg)" letter-spacing="-4">$3,840</text>
+<text x="86" y="555" font-family="system-ui,sans-serif" font-size="26" font-weight="400" fill="none" stroke="#7fffb0" stroke-width="1.6" filter="url(#gg)" letter-spacing="3" opacity=".85">NET · THIS MONTH · ROI 4.2× · ▲18%</text>
+<!-- divider tube -->
+<line x1="80" y1="600" x2="1360" y2="600" stroke="#a05aff" stroke-width="2.5" filter="url(#gy)" opacity=".7" stroke-dasharray="2 14" stroke-linecap="round"/>
+<!-- three stat blocks bottom (yellow + cyan boxes) -->
+<g filter="url(#gy)" fill="none" stroke="#ffd24a" stroke-width="2.5">
+<rect x="80" y="640" width="380" height="120" rx="16"/>
+</g>
+<text x="104" y="682" font-family="system-ui,sans-serif" font-size="18" fill="none" stroke="#ffd24a" stroke-width="1.4" filter="url(#gy)" letter-spacing="2">NEEDS YOU · 3</text>
+<text x="104" y="724" font-family="system-ui,sans-serif" font-size="26" font-weight="700" fill="none" stroke="#ffd24a" stroke-width="2" filter="url(#gy)">Invoice → 14 · $1,240</text>
+<g filter="url(#gc)" fill="none" stroke="#3fe0ff" stroke-width="2.5">
+<rect x="500" y="640" width="380" height="120" rx="16"/>
+</g>
+<text x="524" y="682" font-family="system-ui,sans-serif" font-size="18" fill="none" stroke="#3fe0ff" stroke-width="1.4" filter="url(#gc)" letter-spacing="2">RUNNING · 2</text>
+<text x="524" y="724" font-family="system-ui,sans-serif" font-size="26" font-weight="700" fill="none" stroke="#3fe0ff" stroke-width="2" filter="url(#gc)">habit-tracker · 72%</text>
+<g filter="url(#gp)" fill="none" stroke="#ff5ac8" stroke-width="2.5">
+<rect x="920" y="640" width="380" height="120" rx="16"/>
+</g>
+<text x="944" y="682" font-family="system-ui,sans-serif" font-size="18" fill="none" stroke="#ff5ac8" stroke-width="1.4" filter="url(#gp)" letter-spacing="2">SYSTEM</text>
+<text x="944" y="724" font-family="system-ui,sans-serif" font-size="26" font-weight="700" fill="none" stroke="#ff5ac8" stroke-width="2" filter="url(#gp)">51 agents · 9 live</text>
+<!-- little flicker accent dot -->
+<circle cx="1330" cy="120" r="7" fill="#7fffb0" filter="url(#gg)"/>
+</svg>
+<div class="cite">● ONLINE · OPUS · 20:34</div>
+<div class="bar"><span style="color:#ff5ac8;text-shadow:0 0 8px #ff5ac8">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#9a6a8a;font-size:12px">⌘K</span></div>
+</body></html>

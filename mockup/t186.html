@@ -1,0 +1,56 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T186</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf6;background:radial-gradient(1000px 700px at 20% 30%,#0c1320,#070a10)}
+.top{display:flex;align-items:center;gap:14px;padding:22px 40px}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#7cc4ff}.st{font-size:12px;color:#5f7488}.r{margin-left:auto;font-size:13px;color:#8a98a4}
+.hd{padding:0 40px}.hd h1{font-size:22px;font-weight:600}.hd h1 b{color:#7cc4ff}.hd p{font-size:13px;color:#5f7488;margin-top:4px}
+.plot{margin:8px 40px 0;height:calc(100vh - 220px)}
+.bar{position:fixed;bottom:22px;left:40px;right:40px;display:flex;align-items:center;gap:12px;background:rgba(12,19,32,.9);border:1px solid #1a2636;border-radius:13px;padding:11px 15px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e6edf6;font-size:14px}.bar input::placeholder{color:#5f7488}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · DENDROGRAM</div><div class="st">● ONLINE · OPUS · 20:34</div><div class="r">51 agents · clustered by function</div></div>
+<div class="hd"><h1>Good evening, <b>Shay.</b></h1><p>how your agent roster clusters — hierarchical bracket tree</p></div>
+<div class="plot">
+<svg viewBox="0 0 1180 560" style="width:100%;height:100%">
+<g fill="none" stroke="#2c4258" stroke-width="2" stroke-linecap="round">
+<!-- root -->
+<path d="M70,280 H160"/>
+<!-- root splits to 4 category trunks -->
+<path d="M160,90 V470"/>
+<path d="M160,90 H260"/><path d="M160,200 H260"/><path d="M160,360 H260"/><path d="M160,470 H260"/>
+<!-- Cat A: Money (y90) -> 3 leaves -->
+<path d="M260,50 V130"/><path d="M260,50 H700"/><path d="M260,90 H700"/><path d="M260,130 H700"/>
+<!-- Cat B: Build (y200) -> 3 leaves -->
+<path d="M260,165 V245"/><path d="M260,165 H700"/><path d="M260,205 H700"/><path d="M260,245 H700"/>
+<!-- Cat C: Research (y360) -> 3 leaves -->
+<path d="M260,320 V400"/><path d="M260,320 H700"/><path d="M260,360 H700"/><path d="M260,400 H700"/>
+<!-- Cat D: Comms (y470) -> 3 leaves -->
+<path d="M260,440 V510"/><path d="M260,440 H700"/><path d="M260,475 H700"/><path d="M260,510 H700"/>
+</g>
+<!-- distance ruler -->
+<g stroke="rgba(124,196,255,.10)"><line x1="160" y1="20" x2="160" y2="540"/><line x1="260" y1="20" x2="260" y2="540"/><line x1="700" y1="20" x2="700" y2="540"/></g>
+<g fill="#3f5870" font-size="10"><text x="120" y="555">root</text><text x="225" y="555">cluster</text><text x="675" y="555">leaf</text></g>
+<!-- root node -->
+<circle cx="70" cy="280" r="6" fill="#0a121c" stroke="#7cc4ff" stroke-width="2"/>
+<text x="56" y="284" fill="#9fc8e6" font-size="12" text-anchor="end">JARVIS</text>
+<!-- category labels -->
+<g font-size="13" font-weight="700">
+<text x="170" y="44" fill="#46e0a0">Money</text>
+<text x="170" y="160" fill="#7cc4ff">Build</text>
+<text x="170" y="316" fill="#b48cff">Research</text>
+<text x="170" y="436" fill="#ffce6b">Comms</text></g>
+<!-- leaves -->
+<g font-size="12" fill="#cdd8e2">
+<g fill="#aef7d6"><circle cx="700" cy="50" r="3"/><circle cx="700" cy="90" r="3"/><circle cx="700" cy="130" r="3"/></g>
+<text x="712" y="54">Finance · Bookkeeping</text><text x="712" y="94">Product Builder · Stripe</text><text x="712" y="134">SEO Site · POD trend</text>
+<g fill="#bfe0ff"><circle cx="700" cy="165" r="3"/><circle cx="700" cy="205" r="3"/><circle cx="700" cy="245" r="3"/></g>
+<text x="712" y="169">Code · Dev-workflow</text><text x="712" y="209">App Factory · Micro-API</text><text x="712" y="249">Author · Book Critic</text>
+<g fill="#d8c8ff"><circle cx="700" cy="320" r="3"/><circle cx="700" cy="360" r="3"/><circle cx="700" cy="400" r="3"/></g>
+<text x="712" y="324">Scout · Opportunity</text><text x="712" y="364">Analyst · Trading research</text><text x="712" y="404">Competitive-intel</text>
+<g fill="#ffe7b0"><circle cx="700" cy="440" r="3"/><circle cx="700" cy="475" r="3"/><circle cx="700" cy="510" r="3"/></g>
+<text x="712" y="444">Executive-Assistant</text><text x="712" y="479">Newsletter · CRM</text><text x="712" y="514">Discord · Telegram relay</text>
+</g>
+</svg>
+</div>
+<div class="bar"><span style="color:#7cc4ff">🎙</span><input placeholder="Ask Jarvis to explain a cluster…"><span style="color:#5f7488;font-size:12px">⌘K</span></div>
+</body></html>

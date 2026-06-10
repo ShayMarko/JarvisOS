@@ -1,0 +1,85 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T130</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{color:#e8edf4;background:#0a0c11}
+.nav{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:30px;padding:18px 56px;background:rgba(10,12,17,.8);backdrop-filter:blur(16px);border-bottom:1px solid #161d27}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#7c9cff}
+.nav a{font-size:13px;color:#9aa6b4;text-decoration:none}
+.nav .cta{margin-left:auto;background:linear-gradient(90deg,#7c9cff,#46e0a0);color:#0a1020;font-weight:700;padding:9px 20px;border-radius:10px;font-size:13px}
+.hero{text-align:center;padding:96px 24px 80px;background:radial-gradient(900px 600px at 50% -10%,#16264a,transparent)}
+.tag{display:inline-block;font-size:12px;letter-spacing:1px;color:#7c9cff;border:1px solid #2a3a5e;border-radius:20px;padding:6px 16px;margin-bottom:26px}
+.h1{font-size:64px;font-weight:800;letter-spacing:-2.5px;line-height:1.05}.h1 b{color:#7c9cff}
+.sub{font-size:18px;color:#8a96a8;max-width:620px;margin:22px auto 0;line-height:1.55}
+.btns{display:flex;gap:14px;justify-content:center;margin-top:34px}
+.b1{background:linear-gradient(90deg,#7c9cff,#46e0a0);color:#0a1020;font-weight:800;padding:14px 30px;border-radius:12px;font-size:15px}
+.b2{border:1px solid #2a3445;color:#cdd6e2;padding:14px 28px;border-radius:12px;font-size:15px}
+.stats{display:flex;gap:50px;justify-content:center;margin-top:64px}
+.stat .v{font-size:36px;font-weight:800;letter-spacing:-1px}.stat .v b{color:#46e0a0}.stat .l{font-size:12px;color:#6b7888;letter-spacing:1px;text-transform:uppercase;margin-top:4px}
+.section{padding:80px 56px;max-width:1180px;margin:0 auto}
+.row{display:flex;align-items:center;gap:64px;margin-bottom:72px}
+.row.rev{flex-direction:row-reverse}
+.col{flex:1}
+.k{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#7c9cff;font-weight:700}
+.h2{font-size:34px;font-weight:800;letter-spacing:-1px;margin:12px 0 14px}
+.p{font-size:16px;color:#8a96a8;line-height:1.6}
+.feat{display:flex;gap:10px;align-items:center;font-size:14px;color:#cdd6e2;margin-top:12px}.feat .c{color:#46e0a0}
+.shot{flex:1;height:300px;border-radius:20px;border:1px solid #1d2531;background:#11151d;padding:24px;position:relative;overflow:hidden}
+.shot.money{background:radial-gradient(500px 300px at 20% 0%,rgba(70,224,160,.16),transparent),#11151d}
+.shot.agent{background:radial-gradient(500px 300px at 80% 0%,rgba(124,156,255,.16),transparent),#11151d}
+.net{font-size:48px;font-weight:800;letter-spacing:-2px}.nsub{color:#46e0a0;font-weight:600;margin-top:2px}
+.mini{display:flex;justify-content:space-between;font-size:13px;color:#9aa6b4;padding:8px 0;border-bottom:1px solid #1a212c}
+.spark{position:absolute;left:0;right:0;bottom:0;height:90px}
+.agents-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:18px}
+.chip{background:#0c1017;border:1px solid #232c39;border-radius:9px;padding:9px;font-size:11px;color:#9aa6b4;text-align:center}
+.footer{text-align:center;padding:60px 24px;border-top:1px solid #161d27;color:#5b6678;font-size:13px}
+</style></head><body>
+<div class="nav"><div class="wm">JARVIS</div><a href="#">Product</a><a href="#">Agents</a><a href="#">Money lanes</a><a href="#">Pricing</a><span class="cta">Get started</span></div>
+<div class="hero">
+  <div class="tag">● Online · Local-first AI OS</div>
+  <div class="h1">The AI that runs<br>your <b>whole operation.</b></div>
+  <div class="sub">51 agents and 26 connectors that earn, build, and publish in the background — so you wake up to a finished to-do list and a bigger bank balance.</div>
+  <div class="btns"><span class="b1">Start free</span><span class="b2">Watch the demo</span></div>
+  <div class="stats">
+    <div class="stat"><div class="v"><b>$3,840</b></div><div class="l">Net · this month</div></div>
+    <div class="stat"><div class="v">4.2×</div><div class="l">ROI</div></div>
+    <div class="stat"><div class="v">7</div><div class="l">Products live</div></div>
+    <div class="stat"><div class="v">51</div><div class="l">Agents</div></div>
+  </div>
+</div>
+<div class="section">
+  <div class="row">
+    <div class="col">
+      <div class="k">Money loop</div>
+      <div class="h2">Watch revenue compound itself.</div>
+      <div class="p">Jarvis spins up products, prices them, and ships to Stripe, Gumroad and Lemon Squeezy — then doubles down on what converts.</div>
+      <div class="feat"><span class="c">✓</span> Stripe subs $1,240 · Gumroad $890 · Newsletter $400</div>
+      <div class="feat"><span class="c">✓</span> AI cost only $58 of your $80 budget</div>
+    </div>
+    <div class="shot money">
+      <div class="net">$3,840</div><div class="nsub">▲18% net this month</div>
+      <div class="mini" style="margin-top:18px"><span>Stripe subs</span><span>$1,240</span></div>
+      <div class="mini"><span>Gumroad</span><span>$890</span></div>
+      <div class="mini"><span>Newsletter</span><span>$400</span></div>
+      <svg class="spark" viewBox="0 0 500 90" preserveAspectRatio="none"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#46e0a0" stop-opacity=".3"/><stop offset="1" stop-color="#46e0a0" stop-opacity="0"/></linearGradient></defs><path d="M0,70 L80,60 L160,64 L240,40 L320,48 L400,22 L500,10 L500,90 L0,90 Z" fill="url(#g)"/><path d="M0,70 L80,60 L160,64 L240,40 L320,48 L400,22 L500,10" fill="none" stroke="#46e0a0" stroke-width="2.5"/></svg>
+    </div>
+  </div>
+  <div class="row rev">
+    <div class="col">
+      <div class="k">Agent roster</div>
+      <div class="h2">A team of 51, on call 24/7.</div>
+      <div class="p">From an Executive Assistant that invoices 14 customers to a Scout researching your next niche — each agent picks the cheapest model that gets the job done.</div>
+      <div class="feat"><span class="c">✓</span> Self-learning, cost-aware planner</div>
+      <div class="feat"><span class="c">✓</span> Background jobs that notify you when done</div>
+    </div>
+    <div class="shot agent">
+      <div class="k" style="color:#7c9cff">Now running</div>
+      <div class="mini" style="margin-top:14px"><span>habit-tracker app · Code</span><span style="color:#46e0a0">72%</span></div>
+      <div class="mini"><span>research niche · Scout</span><span style="color:#b18cff">40%</span></div>
+      <div class="agents-grid">
+        <div class="chip">EA</div><div class="chip">Finance</div><div class="chip">Scout</div><div class="chip">Code</div>
+        <div class="chip">Newsletter</div><div class="chip">CRM</div><div class="chip">Intel</div><div class="chip">+44</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="footer">JARVIS — your local-first AI operating system · Opus · 26 connectors, 9 live</div>
+</body></html>

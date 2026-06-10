@@ -1,0 +1,47 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T126</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e8edf4;background:#0a0c11}
+/* dimmed app behind */
+.app{position:absolute;inset:0;filter:blur(3px) brightness(.5);padding:26px 36px}
+.aw{font-size:17px;font-weight:800;letter-spacing:3px;color:#7c9cff}
+.ag{font-size:40px;font-weight:800;margin-top:60px;letter-spacing:-1px}
+.arow{display:flex;gap:14px;margin-top:30px}.acard{flex:1;height:120px;background:#11151d;border:1px solid #1d2531;border-radius:16px}
+.scrim{position:absolute;inset:0;background:rgba(6,8,13,.55)}
+.palette{position:absolute;top:18%;left:50%;transform:translateX(-50%);width:620px;background:rgba(17,21,29,.96);border:1px solid #2a3445;border-radius:18px;box-shadow:0 40px 120px rgba(0,0,0,.7);overflow:hidden}
+.pin{display:flex;align-items:center;gap:14px;padding:18px 22px;border-bottom:1px solid #1d2531}
+.pin .q{font-size:19px;color:#cdd6e2}.pin .cur{color:#5b6678}
+.pin .esc{margin-left:auto;font-size:11px;color:#5b6678;border:1px solid #2a3445;border-radius:6px;padding:3px 8px}
+.grp{padding:10px 0}
+.gh{font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:#5b6678;padding:8px 22px 6px}
+.res{display:flex;align-items:center;gap:14px;padding:11px 22px;font-size:14px}
+.res.sel{background:rgba(124,156,255,.14)}
+.res .ic{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;background:#1a2230;color:#7c9cff}
+.res .t{font-weight:600}.res .s{font-size:11px;color:#6b7888}
+.res .amt{margin-left:auto;font-size:12px;color:#46e0a0;font-weight:700}
+.res .kbd{margin-left:auto;font-size:11px;color:#5b6678;border:1px solid #2a3445;border-radius:6px;padding:2px 7px;font-family:ui-monospace,monospace}
+.foot{display:flex;align-items:center;gap:18px;padding:10px 22px;border-top:1px solid #1d2531;font-size:11px;color:#5b6678}
+.foot b{color:#9aa6b4}
+</style></head><body>
+<div class="app">
+  <div class="aw">JARVIS</div>
+  <div class="ag">Good evening, Shay.</div>
+  <div class="arow"><div class="acard"></div><div class="acard"></div><div class="acard"></div></div>
+</div>
+<div class="scrim"></div>
+<div class="palette">
+  <div class="pin"><span style="color:#7c9cff;font-size:18px">⌘</span><span class="q">send inv<span class="cur">▏</span></span><span class="esc">esc</span></div>
+  <div class="grp">
+    <div class="gh">Actions · needs you</div>
+    <div class="res sel"><div class="ic" style="background:rgba(255,90,110,.15);color:#ff7a8c">!</div><div><div class="t">Send invoice → 14 customers</div><div class="s">EA via Resend · CRITICAL</div></div><span class="amt">$1,240</span></div>
+    <div class="res"><div class="ic">↑</div><div><div class="t">Publish SaaS starter → Gumroad</div><div class="s">ready to ship</div></div><span class="amt">$39</span></div>
+    <div class="res"><div class="ic">⚡</div><div><div class="t">Deploy micro-API → Cloudflare</div><div class="s">green-gate passed</div></div></div>
+  </div>
+  <div class="grp">
+    <div class="gh">Navigate</div>
+    <div class="res"><div class="ic">$</div><div class="t">Open Money dashboard</div><span class="kbd">G M</span></div>
+    <div class="res"><div class="ic">▤</div><div class="t">Open running Jobs <span style="color:#6b7888;font-weight:400">· 2 active</span></div><span class="kbd">G J</span></div>
+    <div class="res"><div class="ic">🎙</div><div class="t">Start voice · "Hey Jarvis"</div><span class="kbd">⌘L</span></div>
+  </div>
+  <div class="foot"><span><b>↑↓</b> navigate</span><span><b>↵</b> run</span><span><b>⌘K</b> commands</span><span style="margin-left:auto">● Opus · 20:34</span></div>
+</div>
+</body></html>

@@ -1,0 +1,64 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T209</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;background:#06090f;color:#cfe0f0;display:flex}
+.map{flex:1;position:relative;margin:0;background:radial-gradient(900px 700px at 45% 45%,#0c1626,#06090f);overflow:hidden}
+.region{position:absolute;inset:40px;border:1px solid #1c2a40;border-radius:14px;overflow:hidden;background:repeating-linear-gradient(0deg,transparent 0 39px,rgba(40,70,110,.18) 39px 40px),repeating-linear-gradient(90deg,transparent 0 39px,rgba(40,70,110,.18) 39px 40px)}
+.coast{position:absolute;stroke:rgba(90,140,200,.4);fill:rgba(30,60,100,.12);stroke-width:1.5}
+.blob{position:absolute;border-radius:50%;filter:blur(2px);mix-blend-mode:screen}
+.b-green{background:radial-gradient(circle,rgba(70,224,140,.85),rgba(70,224,140,0) 70%)}
+.b-yellow{background:radial-gradient(circle,rgba(255,220,80,.85),rgba(255,220,80,0) 70%)}
+.b-red{background:radial-gradient(circle,rgba(255,90,70,.9),rgba(255,90,70,0) 70%)}
+.b-violet{background:radial-gradient(circle,rgba(200,120,255,.85),rgba(200,120,255,0) 70%)}
+.sweep{position:absolute;top:50%;left:48%;width:46%;height:2px;transform-origin:left center;background:linear-gradient(90deg,rgba(120,200,255,.6),transparent);transform:rotate(-32deg)}
+.sweep::after{content:"";position:absolute;left:0;top:-160px;width:0;height:0;border-left:300px solid rgba(120,200,255,.06);border-top:160px solid transparent;border-bottom:160px solid transparent;transform:rotate(0deg)}
+.lbl{position:absolute;font-size:11px;color:#dfeaf6;text-shadow:0 1px 3px #000;letter-spacing:.5px;z-index:3}
+.lbl .v{font-weight:800}
+.osd{position:absolute;top:18px;left:24px;z-index:4}
+.wm{font-size:17px;font-weight:800;letter-spacing:3px;color:#7fc4ff;text-shadow:0 0 10px rgba(127,196,255,.5)}
+.st{font-size:11px;color:#5a78aa;margin-top:4px;letter-spacing:1px}
+.scan{position:absolute;top:18px;right:24px;font-size:11px;color:#5a78aa;text-align:right;letter-spacing:1px;z-index:4}
+.side{width:280px;background:#080c14;border-left:1px solid #14202c;padding:26px 24px;display:flex;flex-direction:column}
+h2{font-size:11px;letter-spacing:2px;color:#5a78aa;margin:0 0 12px;text-transform:uppercase}
+.scale{display:flex;flex-direction:column;gap:0;border-radius:8px;overflow:hidden;border:1px solid #14202c;margin-bottom:8px}
+.sc{display:flex;align-items:center;gap:10px;padding:8px 12px;font-size:12px}
+.sw{width:22px;height:12px;border-radius:3px}
+.row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid #121826;font-size:12px}
+.dot{width:9px;height:9px;border-radius:50%}.rn{color:#bcc8de}.rv{margin-left:auto;font-weight:700}
+.foot{margin-top:auto;font-size:11px;color:#5a78aa;line-height:2;border-top:1px solid #14202c;padding-top:14px}.foot b{color:#7fc4ff}
+</style></head><body>
+<div class="map">
+<div class="osd"><div class="wm">JARVIS · DOPPLER</div><div class="st">● ONLINE · OPUS · activity over your business</div></div>
+<div class="scan">SWEEP 360° · BASE REFLECTIVITY<br>20:34 TUE 09 JUN · RANGE 250mi</div>
+<div class="region">
+<svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 600 480" preserveAspectRatio="none"><path class="coast" d="M40,120 C120,90 180,150 260,130 C340,110 400,170 480,150 C540,135 560,200 560,260 C560,340 500,380 420,370 C340,360 300,420 220,410 C140,400 80,360 60,290 C45,235 30,165 40,120 Z"/></svg>
+<div class="blob b-green" style="width:240px;height:200px;top:34%;left:18%"></div>
+<div class="blob b-yellow" style="width:150px;height:130px;top:40%;left:26%"></div>
+<div class="blob b-violet" style="width:90px;height:80px;top:18%;left:58%"></div>
+<div class="blob b-yellow" style="width:120px;height:110px;top:20%;left:55%"></div>
+<div class="blob b-red" style="width:70px;height:64px;top:60%;left:50%"></div>
+<div class="blob b-yellow" style="width:130px;height:110px;top:56%;left:46%"></div>
+<div class="blob b-green" style="width:160px;height:130px;top:62%;left:62%"></div>
+<div class="sweep"></div>
+<div class="lbl" style="top:38%;left:22%">STRIPE cell · <span class="v">$1,240</span></div>
+<div class="lbl" style="top:17%;left:56%">NEWSLETTER squall · <span class="v">+31%</span></div>
+<div class="lbl" style="top:58%;left:48%">⚠ INVOICE supercell · <span class="v">14 cust</span></div>
+<div class="lbl" style="top:64%;left:64%">GUMROAD band · <span class="v">$890</span></div>
+</div>
+</div>
+<div class="side">
+<h2>Reflectivity · intensity</h2>
+<div class="scale">
+<div class="sc" style="background:rgba(70,224,140,.12)"><span class="sw" style="background:#46e08c"></span>Light · steady revenue</div>
+<div class="sc" style="background:rgba(255,220,80,.10)"><span class="sw" style="background:#ffdc50"></span>Moderate · growing</div>
+<div class="sc" style="background:rgba(255,90,70,.10)"><span class="sw" style="background:#ff5a46"></span>Severe · needs you</div>
+<div class="sc" style="background:rgba(200,120,255,.10)"><span class="sw" style="background:#c878ff"></span>Extreme · spike</div>
+</div>
+<h2 style="margin-top:22px">Active cells</h2>
+<div class="row"><span class="dot" style="background:#ff5a46"></span><span class="rn">Invoice → 14 cust</span><span class="rv" style="color:#ff5a46">$1,240</span></div>
+<div class="row"><span class="dot" style="background:#ffdc50"></span><span class="rn">Publish SaaS → Gumroad</span><span class="rv" style="color:#ffdc50">$39</span></div>
+<div class="row"><span class="dot" style="background:#ffdc50"></span><span class="rn">Deploy micro-API</span><span class="rv" style="color:#ffdc50">HIGH</span></div>
+<div class="row"><span class="dot" style="background:#46e08c"></span><span class="rn">habit-tracker job</span><span class="rv" style="color:#46e08c">72%</span></div>
+<div class="row"><span class="dot" style="background:#c878ff"></span><span class="rn">newsletter #14</span><span class="rv" style="color:#c878ff">+31%</span></div>
+<div class="foot">Net this month <b>$3,840 ▲18%</b><br>ROI <b>4.2×</b> · AI cost <b>$58/$80</b><br>7 products live · 9 connectors</div>
+</div>
+</body></html>

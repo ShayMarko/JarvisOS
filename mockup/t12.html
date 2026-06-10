@@ -1,0 +1,32 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T12</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#dffaef;background:linear-gradient(160deg,#04130d,#061a12)}
+.top{display:flex;justify-content:space-between;align-items:center;padding:22px 40px}
+.wm{font-size:19px;font-weight:800;letter-spacing:3px;color:#3ee6a8}
+.st{font-size:12px;letter-spacing:2px;color:#4f9c7c}
+.h{padding:6px 40px 14px}.h1{font-size:26px;font-weight:700}.h1 b{color:#3ee6a8}.sub{color:#6fae90;font-size:13px;margin-top:3px}
+.spine{position:relative;height:calc(100vh - 230px);margin:0 40px;overflow:hidden}
+.line{position:absolute;left:140px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,transparent,rgba(62,230,168,.5),rgba(62,230,168,.5),transparent)}
+.ev{position:relative;display:flex;align-items:flex-start;gap:20px;margin-bottom:20px}
+.time{width:120px;text-align:right;font-size:12px;color:#5f9c7c;padding-top:3px;font-variant-numeric:tabular-nums}
+.dot{position:absolute;left:134px;top:6px;width:14px;height:14px;border-radius:50%;background:#04130d;border:2px solid #3ee6a8;box-shadow:0 0 12px rgba(62,230,168,.6)}
+.dot.warn{border-color:#ffce5a;box-shadow:0 0 12px rgba(255,206,90,.6)}.dot.now{background:#3ee6a8}
+.body{margin-left:60px;background:rgba(10,30,22,.6);border:1px solid rgba(62,230,168,.18);border-radius:14px;padding:12px 16px;flex:1}
+.evt{font-size:14px;font-weight:600;color:#e8fff5}.evd{font-size:12.5px;color:#7fb89e;margin-top:3px}
+.tag{font-size:10px;font-weight:700;color:#04130d;background:#3ee6a8;border-radius:6px;padding:2px 7px;margin-left:8px}
+.tag.w{background:#ffce5a}
+.dock{margin:14px 40px 0;display:flex;align-items:center;gap:12px;background:rgba(10,30,22,.7);border:1px solid rgba(62,230,168,.3);border-radius:14px;padding:11px 15px}
+.dock input{flex:1;background:0;border:0;outline:0;color:#dffaef;font-size:14px}.dock input::placeholder{color:#4f9c7c}
+.snd{width:36px;height:36px;border-radius:10px;background:#3ee6a8;display:grid;place-items:center;color:#04130d}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS</div><div class="st">● ONLINE · OPUS · A DAY IN THE LIFE</div></div>
+<div class="h"><div class="h1">Good evening, <b>Shay</b>.</div><div class="sub">Here's everything I did today — newest first. 3 things still need you.</div></div>
+<div class="spine"><div class="line"></div>
+<div class="ev"><div class="time">now · 20:34</div><div class="dot now"></div><div class="body"><div class="evt">3 approvals waiting<span class="tag w">needs you</span></div><div class="evd">Invoice → 14 · publish SaaS starter · deploy micro-API</div></div></div>
+<div class="ev"><div class="time">19:10</div><div class="dot"></div><div class="body"><div class="evt">Newsletter issue #14 drafted</div><div class="evd">Newsletter Studio · saved to Newsletters/ · awaiting send</div></div></div>
+<div class="ev"><div class="time">17:42</div><div class="dot warn"></div><div class="body"><div class="evt">Build job: habit-tracker app<span class="tag">72%</span></div><div class="evd">Code agent · running in background</div></div></div>
+<div class="ev"><div class="time">15:08</div><div class="dot"></div><div class="body"><div class="evt">$240 sale on Gumroad → ROI now 4.2×</div><div class="evd">Finance logged it · net this month $3,840</div></div></div>
+<div class="ev"><div class="time">09:00</div><div class="dot"></div><div class="body"><div class="evt">Morning briefing sent to Discord</div><div class="evd">Coordinator · 2 opportunities flagged by Scout</div></div></div>
+</div>
+<div class="dock"><span style="color:#3ee6a8">🎙</span><input placeholder="Ask Jarvis, or type a /command… · say “Hey Jarvis”"><div class="snd">➤</div></div>
+</body></html>

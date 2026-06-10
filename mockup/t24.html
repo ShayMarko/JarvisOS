@@ -1,0 +1,36 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T24</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e7ecf4;background:#0a0c11}
+.top{display:flex;align-items:center;gap:14px;padding:18px 28px;border-bottom:1px solid #1a1f29}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#7aa0ff}.st{font-size:12px;color:#6b7688}.r{margin-left:auto;font-size:13px;color:#9aa6bc}.r b{color:#e7ecf4}
+.wrap{display:grid;grid-template-columns:1fr 300px;height:calc(100vh - 130px)}
+.agenda{overflow:hidden;padding:14px 0 14px 28px}
+.slot{display:grid;grid-template-columns:64px 1fr;gap:14px;min-height:62px;border-top:1px solid #161b24}
+.hr{font-size:12px;color:#5d6personally;color:#5d687c;padding-top:10px;font-variant-numeric:tabular-nums}
+.ev{margin:8px 24px 8px 0;border-radius:11px;padding:10px 14px;font-size:13px;border-left:3px solid}
+.ev .t{font-weight:600}.ev .d{color:#9aa6bc;font-size:12px;margin-top:2px}
+.blue{background:rgba(90,140,255,.12);border-color:#5a8cff}.green{background:rgba(70,220,160,.1);border-color:#46dca0}.amber{background:rgba(255,200,90,.1);border-color:#ffc85a}.violet{background:rgba(155,140,255,.12);border-color:#9b8cff}
+.now{position:relative}.now::before{content:"now";position:absolute;left:-2px;top:-8px;font-size:9px;color:#ff6b81;background:#0a0c11;padding:0 4px}
+.side{border-left:1px solid #1a1f29;padding:18px 16px;background:#0c0f15}
+.sl{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:#5d687c;margin:4px 0 10px}
+.task{display:flex;align-items:center;gap:10px;font-size:13px;padding:8px 0;border-bottom:1px solid #161b24}
+.ck{width:16px;height:16px;border-radius:5px;border:1.5px solid #3a4458}.ck.on{background:#46dca0;border-color:#46dca0}
+.dock{display:flex;align-items:center;gap:12px;background:#0c0f15;border-top:1px solid #1a1f29;padding:12px 28px}
+.dock input{flex:1;background:0;border:0;outline:0;color:#e7ecf4;font-size:14px}.dock input::placeholder{color:#5d687c}
+.snd{width:34px;height:34px;border-radius:9px;background:#7aa0ff;display:grid;place-items:center;color:#0a0c11}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS</div><div class="st">● Opus · your day</div><div class="r">Tue Jun 09 · <b>3 need you</b> · net $3,840</div></div>
+<div class="wrap"><div class="agenda">
+<div class="slot"><div class="hr">09:00</div><div><div class="ev green"><div class="t">Morning briefing sent</div><div class="d">Coordinator → Discord · done</div></div></div></div>
+<div class="slot"><div class="hr">11:00</div><div><div class="ev blue"><div class="t">Standup · product</div><div class="d">30 min</div></div></div></div>
+<div class="slot"><div class="hr">14:00</div><div><div class="ev violet"><div class="t">Focus block (free)</div><div class="d">90 min · Jarvis suggests: build the API</div></div></div></div>
+<div class="slot now"><div class="hr">20:34</div><div><div class="ev amber"><div class="t">3 approvals waiting</div><div class="d">invoice · publish · deploy</div></div></div></div>
+</div>
+<div class="side"><div class="sl">Needs you · 3</div>
+<div class="task"><span class="ck"></span>Approve invoice → 14</div><div class="task"><span class="ck"></span>Publish SaaS starter</div><div class="task"><span class="ck"></span>Deploy micro-API</div>
+<div class="sl" style="margin-top:18px">Today done</div>
+<div class="task"><span class="ck on"></span>Newsletter #14 drafted</div><div class="task"><span class="ck on"></span>$240 sale logged</div>
+<div class="sl" style="margin-top:18px">Money</div><div style="font-size:24px;font-weight:800">$3,840 <span style="font-size:13px;color:#46dca0">▲18%</span></div></div>
+</div>
+<div class="dock"><span style="color:#7aa0ff">🎙</span><input placeholder="Ask Jarvis, or schedule something… · say “Hey Jarvis”"><div class="snd">➤</div></div>
+</body></html>

@@ -1,0 +1,62 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T246</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Helvetica Neue',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e8e2d8;background:#070608}
+.scene{height:100vh;display:grid;grid-template-columns:auto 1fr auto;gap:0;position:relative;background:radial-gradient(circle at 50% 120%,#1a0608 0%,#070608 55%)}
+.scene::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,40,60,.04) 0 2px,transparent 2px 5px);pointer-events:none}
+.kana{writing-mode:vertical-rl;text-orientation:upright;font-size:30px;letter-spacing:10px;padding:34px 20px;color:#ff2d44;font-weight:bold;display:flex;align-items:center;text-shadow:0 0 14px rgba(255,45,68,.6)}
+.kana.cy{color:#2de0ff;text-shadow:0 0 14px rgba(45,224,255,.6)}
+.center{padding:30px 20px;display:flex;flex-direction:column;position:relative;z-index:2}
+.top{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid rgba(255,45,68,.3);padding-bottom:12px}
+.wm{font-size:24px;font-weight:900;letter-spacing:7px;color:#fff}
+.wm span{color:#ff2d44}
+.status{font-size:11px;letter-spacing:3px;color:#7a8488;margin-left:auto}
+.torii{position:relative;text-align:center;margin:22px 0 6px}
+.torii svg{filter:drop-shadow(0 0 16px rgba(255,45,68,.5))}
+.greet{position:absolute;top:50%;left:50%;transform:translate(-50%,-40%);font-size:46px;font-weight:900;letter-spacing:1px;text-shadow:0 0 20px rgba(0,0,0,.8)}
+.greet b{color:#ff2d44}
+.netbar{text-align:center;font-size:13px;letter-spacing:2px;color:#2de0ff;margin-top:8px;font-weight:600}
+.netbar b{color:#fff}
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:24px}
+.panel{border:1px solid rgba(255,45,68,.35);background:linear-gradient(180deg,rgba(255,45,68,.06),rgba(0,0,0,.3));padding:14px 16px;clip-path:polygon(0 0,100% 0,100% 88%,94% 100%,0 100%)}
+.panel.cy{border-color:rgba(45,224,255,.35);background:linear-gradient(180deg,rgba(45,224,255,.06),rgba(0,0,0,.3))}
+.pt{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#ff2d44;font-weight:800;margin-bottom:10px}
+.panel.cy .pt{color:#2de0ff}
+.li{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06);color:#cdc6ba}
+.li .v{color:#ff8a3d;font-weight:700;font-variant-numeric:tabular-nums}
+.crit .v{color:#ff2d44}
+.foot{margin-top:auto;display:flex;align-items:center;gap:14px;border-top:1px solid rgba(45,224,255,.3);padding-top:14px}
+.foot input{flex:1;background:0;border:0;outline:0;color:#e8e2d8;font-size:15px}
+.foot input::placeholder{color:#5a6468}
+</style></head><body><div class="scene">
+<div class="kana">侍 道</div>
+<div class="center">
+  <div class="top"><div class="wm">JAR<span>VIS</span></div><div class="status">● ONLINE · OPUS · 20:34 · 火 JUN 09</div></div>
+  <div class="torii">
+    <svg width="420" height="150" viewBox="0 0 420 150"><g fill="none" stroke="#ff2d44" stroke-width="6">
+      <path d="M20,40 H400" stroke-width="10"/><path d="M40,58 H380"/>
+      <line x1="80" y1="40" x2="80" y2="150"/><line x1="340" y1="40" x2="340" y2="150"/>
+    </g></svg>
+    <div class="greet">Good evening,<br><b>Shay.</b></div>
+  </div>
+  <div class="netbar">壱 NET <b>$3,840</b> · ROI <b>4.2×</b> · ▲18% · AI <b>$58 / $80</b> 弐</div>
+  <div class="grid">
+    <div class="panel"><div class="pt">要 · Needs You</div>
+      <div class="li crit"><span>Invoice → 14</span><span class="v">$1,240</span></div>
+      <div class="li"><span>Publish starter</span><span class="v">$39</span></div>
+      <div class="li"><span>Deploy API</span><span class="v">CF</span></div>
+    </div>
+    <div class="panel cy"><div class="pt">動 · Running</div>
+      <div class="li"><span>habit-tracker</span><span class="v">72%</span></div>
+      <div class="li"><span>research niche</span><span class="v">40%</span></div>
+      <div class="li"><span>newsletter #14</span><span class="v">queued</span></div>
+    </div>
+    <div class="panel"><div class="pt">系 · System</div>
+      <div class="li"><span>Agents</span><span class="v">51</span></div>
+      <div class="li"><span>Connectors</span><span class="v">26·9</span></div>
+      <div class="li"><span>Products</span><span class="v">7</span></div>
+    </div>
+  </div>
+  <div class="foot"><span style="color:#ff2d44">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#2de0ff">⌘K</span></div>
+</div>
+<div class="kana cy">電 脳</div>
+</div></body></html>

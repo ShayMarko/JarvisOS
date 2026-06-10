@@ -1,0 +1,29 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T54</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#f0ead8;background:#0a0a0c}
+.top{display:flex;align-items:center;gap:14px;padding:18px 30px;border-bottom:2px solid #1c1c22}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#ffd23f}.st{font-size:12px;color:#8a8674;letter-spacing:1px}.r{margin-left:auto;font-size:13px;color:#8a8674;font-variant-numeric:tabular-nums}
+.board{padding:14px 30px}
+.hrow{display:grid;grid-template-columns:90px 1fr 130px 110px;gap:14px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#6a6856;padding:8px 0;border-bottom:1px solid #1c1c22}
+.frow{display:grid;grid-template-columns:90px 1fr 130px 110px;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid #16161a}
+.flap{font-family:'Courier New',monospace;font-weight:800;letter-spacing:2px;background:#161518;border-radius:4px;padding:8px 10px;display:inline-block;color:#f0ead8;box-shadow:inset 0 -1px 0 #000,inset 0 1px 0 #2a2a30}
+.time{color:#ffd23f}
+.stat{font-weight:700;font-size:13px}
+.s-board{color:#ff8c5a}.s-run{color:#5fd0ff}.s-done{color:#46e0a0}
+.label{font-size:14px;font-weight:600}.sub{font-size:12px;color:#8a8674}
+.bar{position:fixed;bottom:22px;left:30px;right:30px;display:flex;align-items:center;gap:12px;border:1px solid #26261c;border-radius:12px;padding:11px 15px;background:#111014}
+.bar input{flex:1;background:0;border:0;outline:0;color:#f0ead8;font-size:14px}.bar input::placeholder{color:#6a6856}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS</div><div class="st">● DEPARTURES · OPUS</div><div class="r">20:34 · TUE JUN 09 · net $3,840</div></div>
+<div class="board">
+<div class="hrow"><span>Time</span><span>What</span><span>Owner</span><span>Status</span></div>
+<div class="frow"><span class="flap time">NOW</span><span class="label">Invoice → 14 customers <span class="sub">· critical</span></span><span class="flap">EA</span><span class="stat s-board">⬗ BOARDING</span></div>
+<div class="frow"><span class="flap time">NOW</span><span class="label">Publish SaaS starter</span><span class="flap">PRODUCT</span><span class="stat s-board">⬗ BOARDING</span></div>
+<div class="frow"><span class="flap time">NOW</span><span class="label">Deploy micro-API</span><span class="flap">MICROAPI</span><span class="stat s-board">⬗ BOARDING</span></div>
+<div class="frow"><span class="flap time">LIVE</span><span class="label">Build habit-tracker app · 72%</span><span class="flap">CODE</span><span class="stat s-run">↗ IN FLIGHT</span></div>
+<div class="frow"><span class="flap time">LIVE</span><span class="label">Research note-taking niche · 40%</span><span class="flap">SCOUT</span><span class="stat s-run">↗ IN FLIGHT</span></div>
+<div class="frow"><span class="flap time">19:10</span><span class="label">Newsletter #14 drafted</span><span class="flap">NEWS</span><span class="stat s-done">✓ LANDED</span></div>
+<div class="frow"><span class="flap time">15:08</span><span class="label">+$240 sale · Gumroad</span><span class="flap">FINANCE</span><span class="stat s-done">✓ LANDED</span></div>
+</div>
+<div class="bar"><span style="color:#ffd23f">🎙</span><input placeholder="Ask Jarvis, or /command · say “Hey Jarvis”"><span style="color:#6a6856;font-size:12px">⌘K</span></div>
+</body></html>

@@ -1,0 +1,54 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T187</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e8eef6;background:#070a10}
+.top{display:flex;align-items:center;gap:14px;padding:22px 40px}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#5fd0c0}.st{font-size:12px;color:#5f8278}.r{margin-left:auto;font-size:13px;color:#8a98a4}
+.wrap{display:grid;grid-template-columns:1fr 300px;gap:28px;height:calc(100vh - 200px);padding:6px 40px 0}
+.hd{padding:0 40px}.hd h1{font-size:22px;font-weight:600}.hd h1 b{color:#5fd0c0}.hd p{font-size:13px;color:#5f8278;margin-top:4px}
+.side{display:flex;flex-direction:column;justify-content:center;gap:8px;border-left:1px solid #16242a;padding-left:26px}
+.side .k{font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:#5f8278}
+.row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #111c20}
+.row .nm{flex:1;font-size:13px}.row .vv{font-size:14px;font-weight:700}
+.bar{position:fixed;bottom:22px;left:40px;right:40px;display:flex;align-items:center;gap:12px;background:rgba(11,17,21,.9);border:1px solid #16242a;border-radius:13px;padding:11px 15px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e8eef6;font-size:14px}.bar input::placeholder{color:#5f8278}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · VORONOI</div><div class="st">● ONLINE · OPUS · 20:34</div><div class="r">AI spend by model · $58 / $80</div></div>
+<div class="hd"><h1>Good evening, <b>Shay.</b></h1><p>cost territory — each cell sized by tokens spent this month</p></div>
+<div class="wrap">
+<svg viewBox="0 0 720 540" style="width:100%;height:100%">
+<defs>
+<linearGradient id="va" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#46e0a0" stop-opacity=".5"/><stop offset="1" stop-color="#1f9e6e" stop-opacity=".18"/></linearGradient>
+<linearGradient id="vb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5fd0c0" stop-opacity=".42"/><stop offset="1" stop-color="#2c8a80" stop-opacity=".14"/></linearGradient>
+<linearGradient id="vc" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7cc4ff" stop-opacity=".38"/><stop offset="1" stop-color="#3b6fa0" stop-opacity=".12"/></linearGradient>
+<linearGradient id="vd" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b48cff" stop-opacity=".34"/><stop offset="1" stop-color="#6a4fb0" stop-opacity=".12"/></linearGradient>
+<linearGradient id="ve" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffce6b" stop-opacity=".3"/><stop offset="1" stop-color="#b08a30" stop-opacity=".1"/></linearGradient>
+</defs>
+<rect x="2" y="2" width="716" height="536" rx="14" fill="#0b1418" stroke="#16242a"/>
+<!-- big Opus cell -->
+<polygon points="4,4 360,4 430,160 320,330 60,360 4,300" fill="url(#va)" stroke="#46e0a0" stroke-width="1.6"/>
+<polygon points="360,4 716,4 716,210 540,250 430,160" fill="url(#vb)" stroke="#5fd0c0" stroke-width="1.4"/>
+<polygon points="430,160 540,250 716,210 716,420 470,400 320,330" fill="url(#vc)" stroke="#7cc4ff" stroke-width="1.4"/>
+<polygon points="60,360 320,330 470,400 430,536 90,536 4,470 4,300" fill="url(#vd)" stroke="#b48cff" stroke-width="1.4"/>
+<polygon points="470,400 716,420 716,536 430,536" fill="url(#ve)" stroke="#ffce6b" stroke-width="1.4"/>
+<!-- site dots -->
+<g fill="#0b1418" stroke-width="2"><circle cx="190" cy="180" r="4" stroke="#46e0a0"/><circle cx="540" cy="120" r="4" stroke="#5fd0c0"/><circle cx="540" cy="300" r="4" stroke="#7cc4ff"/><circle cx="220" cy="430" r="4" stroke="#b48cff"/><circle cx="560" cy="475" r="4" stroke="#ffce6b"/></g>
+<g font-size="13" fill="#dff" text-anchor="middle">
+<text x="190" y="174" font-weight="700">Opus</text><text x="190" y="194" font-size="11" fill="#9fdcc0">$31</text>
+<text x="540" y="114" font-weight="700">Sonnet</text><text x="540" y="134" font-size="11" fill="#aee0d8">$12</text>
+<text x="540" y="294" font-weight="700">Haiku</text><text x="540" y="314" font-size="11" fill="#bfe0ff">$8</text>
+<text x="220" y="424" font-weight="700">Ollama</text><text x="220" y="444" font-size="11" fill="#d8c8ff">local · $0</text>
+<text x="560" y="469" font-weight="700">Embed</text><text x="560" y="489" font-size="11" fill="#ffe7b0">$7</text>
+</g>
+</svg>
+<div class="side">
+<div class="k">Spend · by model</div>
+<div class="row"><span class="nm" style="color:#46e0a0">● Opus</span><span class="vv">$31</span></div>
+<div class="row"><span class="nm" style="color:#5fd0c0">● Sonnet</span><span class="vv">$12</span></div>
+<div class="row"><span class="nm" style="color:#7cc4ff">● Haiku</span><span class="vv">$8</span></div>
+<div class="row"><span class="nm" style="color:#ffce6b">● Embeddings</span><span class="vv">$7</span></div>
+<div class="row"><span class="nm" style="color:#b48cff">● Ollama (local)</span><span class="vv">$0</span></div>
+<div style="margin-top:16px;font-size:28px;font-weight:800;letter-spacing:-1px">$58 <span style="font-size:12px;color:#5f8278;font-weight:500">/ $80 budget</span></div>
+</div>
+</div>
+<div class="bar"><span style="color:#5fd0c0">🎙</span><input placeholder="Ask Jarvis to cap a model's spend…"><span style="color:#5f8278;font-size:12px">⌘K</span></div>
+</body></html>

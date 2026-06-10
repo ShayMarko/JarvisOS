@@ -1,0 +1,81 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T147</title><style>
+*{margin:0;box-sizing:border-box;font-family:ui-monospace,'SF Mono','Menlo',monospace}
+body{height:100vh;overflow:hidden;background:#0a2540;color:#bfe3ff}
+.sheet{position:relative;height:100vh;padding:30px 40px;background:#0c2c4d;
+background-image:linear-gradient(rgba(120,200,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(120,200,255,.08) 1px,transparent 1px),linear-gradient(rgba(120,200,255,.16) 1px,transparent 1px),linear-gradient(90deg,rgba(120,200,255,.16) 1px,transparent 1px);
+background-size:20px 20px,20px 20px,100px 100px,100px 100px}
+.frame{position:absolute;inset:18px;border:2px solid #3d8fd6;pointer-events:none}
+.frame::before{content:"";position:absolute;inset:6px;border:1px solid #2a6aa8}
+.tb{position:absolute;right:18px;bottom:18px;width:330px;border:2px solid #3d8fd6;background:#0a2540;font-size:11px}
+.tb .tr{display:flex;border-bottom:1px solid #2a6aa8}.tb .tr:last-child{border:0}
+.tb .tc{padding:5px 10px;border-right:1px solid #2a6aa8;color:#8fc4f0}
+.tb .tc:last-child{border:0}.tb .tc.k{width:120px;color:#5d9ad6}
+.head{display:flex;align-items:flex-end;gap:18px;border-bottom:1px solid #3d8fd6;padding-bottom:14px;position:relative;z-index:2}
+.wm{font-size:30px;font-weight:700;letter-spacing:5px;color:#7fd0ff}
+.sub{font-size:11px;letter-spacing:2px;color:#5d9ad6}
+.r{margin-left:auto;font-size:11px;letter-spacing:1.5px;color:#5d9ad6;text-align:right;line-height:1.6}
+.body{position:relative;z-index:2;display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:0;margin-top:22px}
+.sec{padding:0 26px;border-right:1px dashed #2a6aa8}
+.sec:first-child{padding-left:0}.sec:last-child{border:0;padding-right:0}
+.h{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#7fd0ff;margin-bottom:18px}
+.dim{position:relative;margin:30px 0 22px;border-top:1px solid #3d8fd6}
+.dim::before,.dim::after{content:"";position:absolute;top:-4px;width:1px;height:9px;background:#3d8fd6}
+.dim::before{left:0}.dim::after{right:0}
+.dimval{position:absolute;top:-22px;left:50%;transform:translateX(-50%);background:#0c2c4d;padding:0 8px;font-size:22px;font-weight:700;color:#fff}
+.dimcap{position:absolute;top:6px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:2px;color:#5d9ad6}
+.greet{font-size:30px;font-weight:700;color:#fff;letter-spacing:1px;line-height:1.05}
+.greet span{color:#7fd0ff}
+.annot{font-size:11px;color:#7fb8e6;letter-spacing:.5px;margin-top:8px}
+.row{display:flex;align-items:flex-start;gap:10px;font-size:13px;padding:11px 0;border-bottom:1px dashed #1f4f7c;color:#cfe6ff}
+.callout{font-size:9px;color:#5d9ad6;letter-spacing:1px}
+.tag{margin-left:auto;font-size:9px;font-weight:700;letter-spacing:1px;padding:2px 6px;border:1px solid currentColor}
+.crit{color:#ff8a7a}.high{color:#7fd0ff}
+.src{display:flex;justify-content:space-between;font-size:12px;padding:8px 0;border-bottom:1px dashed #1f4f7c}.src b{color:#fff}
+.jl{display:flex;justify-content:space-between;font-size:12px;margin:12px 0 6px;color:#cfe6ff}.jl span{color:#5d9ad6}
+.gauge{height:12px;border:1px solid #3d8fd6;position:relative}
+.gauge i{display:block;height:100%;background:repeating-linear-gradient(90deg,#3d8fd6 0 2px,transparent 2px 6px)}
+.foot{position:absolute;left:40px;bottom:40px;width:420px;z-index:3;display:flex;align-items:center;gap:12px;border:2px solid #3d8fd6;background:#0a2540;padding:12px 16px}
+.foot input{flex:1;background:0;border:0;outline:0;color:#fff;font-size:13px}.foot input::placeholder{color:#5d9ad6}
+.kk{font-size:11px;color:#7fd0ff;border:1px solid #3d8fd6;padding:3px 7px}
+</style></head><body>
+<div class="sheet">
+<div class="frame"></div>
+<div class="head"><div class="wm">JARVIS</div><div class="sub">DWG-001 · AI-OS · REV 3.0</div><div class="r">● ONLINE · OPUS · 20:34<br>TUE JUN 09 · "HEY JARVIS"</div></div>
+<div class="body">
+<div class="sec">
+<div class="h">A — Overview</div>
+<div class="greet">Good evening,<br><span>Shay.</span></div>
+<div class="annot">↳ daily standup · net revenue elevation</div>
+<div class="dim"><div class="dimval">$3,840</div><div class="dimcap">NET / MONTH · ROI 4.2× · ▲18%</div></div>
+<div class="src">Stripe subs<b>$1,240</b></div>
+<div class="src">Gumroad<b>$890</b></div>
+<div class="src">Newsletter<b>$400</b></div>
+<div class="src">Lemon Squeezy<b>$310</b></div>
+<div class="annot" style="margin-top:14px">⌬ AI cost $58 / $80 budget</div>
+</div>
+<div class="sec">
+<div class="h">B — Needs you</div>
+<div class="row"><div><div>Send invoice → 14 cust</div><div class="callout">⌐ $1,240 · EA via Resend</div></div><span class="tag crit">CRIT</span></div>
+<div class="row"><div><div>Publish SaaS → Gumroad</div><div class="callout">⌐ $39 price point</div></div><span class="tag high">HIGH</span></div>
+<div class="row"><div><div>Deploy micro-API → CF</div><div class="callout">⌐ edge worker</div></div><span class="tag high">HIGH</span></div>
+<div class="annot" style="margin-top:18px">※ proactive: double down — "REST API + auth" guide → 61% of traffic</div>
+</div>
+<div class="sec">
+<div class="h">C — Jobs / system</div>
+<div class="jl">habit-tracker app <span>72%</span></div><div class="gauge"><i style="width:72%"></i></div>
+<div class="jl">research niche <span>40%</span></div><div class="gauge"><i style="width:40%"></i></div>
+<div class="jl">newsletter #14 <span>QUEUED</span></div>
+<div class="dim" style="margin-top:36px"><div class="dimval">51</div><div class="dimcap">AGENTS DEPLOYED</div></div>
+<div class="src">Connectors<b>9 / 26 live</b></div>
+<div class="src">Products<b>7 live</b></div>
+</div>
+</div>
+<div class="tb">
+<div class="tr"><div class="tc k">TITLE</div><div class="tc">JARVIS — TODAY</div></div>
+<div class="tr"><div class="tc k">SCALE</div><div class="tc">1:1 · LOCAL-FIRST</div></div>
+<div class="tr"><div class="tc k">DRAWN BY</div><div class="tc">EA AGENT</div></div>
+<div class="tr"><div class="tc k">DATE</div><div class="tc">09 JUN 2026</div></div>
+</div>
+<div class="foot"><span style="color:#7fd0ff">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span class="kk">⌘K</span></div>
+</div>
+</body></html>

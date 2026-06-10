@@ -1,0 +1,35 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T71</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e7edf6;background:#0a0d13}
+.top{display:flex;align-items:center;gap:14px;padding:18px 32px}.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#5fc0c0}.st{font-size:12px;color:#5f8286}.r{margin-left:auto;font-size:13px;color:#8a98a0}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;padding:6px 32px 14px}
+.wd{text-align:center;padding:12px 0;border-radius:12px;background:#0e1419;border:1px solid #18222a}
+.wd.today{background:linear-gradient(160deg,rgba(95,192,192,.2),#0e1419);border-color:rgba(95,192,192,.5)}
+.wd .d{font-size:11px;color:#6f8a8e}.wd .n{font-size:20px;font-weight:700;margin-top:3px}.wd .dots{margin-top:5px}.wd .dots i{display:inline-block;width:5px;height:5px;border-radius:50%;background:#5fc0c0;margin:0 1px}
+.agenda{padding:0 32px;overflow:hidden;height:calc(100vh - 250px)}
+.slot{display:grid;grid-template-columns:60px 1fr;gap:14px;border-top:1px solid #141c22;padding:11px 0}
+.hr{font-size:12px;color:#5f8286;padding-top:2px}
+.ev{border-radius:10px;padding:9px 13px;font-size:13px;border-left:3px solid}
+.b{background:rgba(95,160,224,.12);border-color:#5fa0e0}.v{background:rgba(155,140,255,.12);border-color:#9b8cff}.a{background:rgba(255,200,90,.12);border-color:#ffc85a}.g{background:rgba(70,224,160,.1);border-color:#46e0a0}
+.ev b{font-weight:600}.ev .s{color:#9aa6ac;font-size:12px}
+.bar{position:fixed;bottom:18px;left:32px;right:32px;display:flex;align-items:center;gap:12px;background:#0e1419;border:1px solid #18222a;border-radius:13px;padding:11px 15px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e7edf6;font-size:14px}.bar input::placeholder{color:#5f8286}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · WEEK</div><div class="st">● Opus</div><div class="r">Good evening, Shay · 3 need you today</div></div>
+<div class="week">
+<div class="wd"><div class="d">MON</div><div class="n">8</div><div class="dots"><i></i></div></div>
+<div class="wd today"><div class="d">TUE</div><div class="n">9</div><div class="dots"><i></i><i></i><i></i></div></div>
+<div class="wd"><div class="d">WED</div><div class="n">10</div><div class="dots"><i></i></div></div>
+<div class="wd"><div class="d">THU</div><div class="n">11</div></div>
+<div class="wd"><div class="d">FRI</div><div class="n">12</div><div class="dots"><i></i><i></i></div></div>
+<div class="wd"><div class="d">SAT</div><div class="n">13</div></div>
+<div class="wd"><div class="d">SUN</div><div class="n">14</div></div>
+</div>
+<div class="agenda">
+<div class="slot"><div class="hr">09:00</div><div class="ev g"><b>Morning briefing sent</b> <span class="s">· Coordinator → Discord</span></div></div>
+<div class="slot"><div class="hr">11:00</div><div class="ev b"><b>Standup · product</b> <span class="s">· 30 min</span></div></div>
+<div class="slot"><div class="hr">14:00</div><div class="ev v"><b>Focus block (free)</b> <span class="s">· Jarvis suggests: build the API</span></div></div>
+<div class="slot"><div class="hr">now</div><div class="ev a"><b>3 approvals waiting</b> <span class="s">· invoice · publish · deploy</span></div></div>
+</div>
+<div class="bar"><span style="color:#5fc0c0">🎙</span><input placeholder="Ask Jarvis, or schedule something… · say “Hey Jarvis”"><span style="color:#5f8286;font-size:12px">⌘K</span></div>
+</body></html>

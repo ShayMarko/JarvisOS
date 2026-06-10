@@ -1,0 +1,63 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T275</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;background:#0a0c10;color:#e6edf6;display:flex;align-items:center;justify-content:center;gap:18px;padding:30px}
+.mon{width:678px;height:840px;background:#000;border-radius:8px;padding:12px;box-shadow:0 30px 70px rgba(0,0,0,.6);position:relative}
+.mon::after{content:"";position:absolute;left:50%;bottom:-46px;transform:translateX(-50%);width:120px;height:46px;background:linear-gradient(#222,#111);border-radius:0 0 10px 10px}
+.scr{width:100%;height:100%;border-radius:3px;overflow:hidden;background:#0b0f15;position:relative}
+.tb{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid #18222c;font-size:12px;color:#7f93a8}
+.tb .wm{font-weight:800;letter-spacing:3px;color:#5fd0c0}
+.tb .r{margin-left:auto}
+/* LEFT: dashboard */
+.kpis{display:flex;gap:10px;padding:14px 16px}
+.k{flex:1;background:#0e1620;border:1px solid #1a2733;border-radius:12px;padding:12px}
+.k .l{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#5f7a8e}.k .v{font-size:22px;font-weight:800;margin-top:4px}.up{color:#46e0a0}
+.ch{margin:6px 16px 0;background:#0e1620;border:1px solid #1a2733;border-radius:14px;padding:14px 10px 6px}
+.ch .l{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#5f7a8e;padding:0 8px}
+.lists{display:flex;gap:10px;padding:14px 16px}
+.lists>div{flex:1;background:#0e1620;border:1px solid #1a2733;border-radius:12px;padding:12px}
+.lists .l{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#5f7a8e;margin-bottom:8px}
+.li{font-size:12px;padding:6px 0;border-bottom:1px solid #16202a;display:flex;gap:8px}
+.rk{font-size:8px;font-weight:800;color:#ff7a8c}
+/* RIGHT: console */
+.console{position:absolute;inset:42px 0 0;display:flex;flex-direction:column;font-family:ui-monospace,'SF Mono',monospace}
+.cwrap{flex:1;padding:16px 18px;font-size:12.5px;line-height:1.7;color:#aab8c4;overflow:hidden}
+.cwrap .pr{color:#5fd0c0}.cwrap .ok{color:#46e0a0}.cwrap .wn{color:#ffb454}.cwrap .dim{color:#5f7a8e}.cwrap .cmd{color:#e6edf6}
+.cin{margin:0 16px 16px;display:flex;align-items:center;gap:10px;background:#0e1620;border:1px solid #1a2733;border-radius:10px;padding:11px 14px;font-family:ui-monospace,monospace;font-size:13px;color:#5fd0c0}
+.cin input{flex:1;background:0;border:0;outline:0;color:#e6edf6;font-family:ui-monospace,monospace;font-size:13px}
+.tabs{display:flex;gap:0;padding:0 12px;border-bottom:1px solid #18222c}
+.tabs span{font-size:11px;padding:9px 14px;color:#5f7a8e;border-bottom:2px solid transparent}
+.tabs span.on{color:#e6edf6;border-color:#5fd0c0}
+</style></head><body>
+<div class="mon"><div class="scr">
+<div class="tb"><span class="wm">JARVIS</span><span>Dashboard</span><span class="r">● Online · Opus · 20:34 · Tue Jun 09</span></div>
+<div class="kpis"><div class="k"><div class="l">Net month</div><div class="v">$3,840</div><div class="up" style="font-size:11px">▲18%</div></div><div class="k"><div class="l">ROI</div><div class="v">4.2×</div></div><div class="k"><div class="l">AI cost</div><div class="v">$58</div><div style="font-size:11px;color:#7f93a8">/$80</div></div></div>
+<div class="ch"><div class="l">Revenue · sources</div>
+<svg viewBox="0 0 600 150" style="width:100%;height:150px"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#46e0a0" stop-opacity=".35"/><stop offset="1" stop-color="#46e0a0" stop-opacity="0"/></linearGradient></defs>
+<path d="M0,120 L100,100 L200,108 L300,76 L400,84 L500,48 L600,30 L600,150 L0,150Z" fill="url(#g)"/><path d="M0,120 L100,100 L200,108 L300,76 L400,84 L500,48 L600,30" fill="none" stroke="#46e0a0" stroke-width="2.5"/></svg></div>
+<div class="lists">
+<div><div class="l">Needs you</div><div class="li"><span class="rk">CRIT</span>Invoice → 14</div><div class="li">Publish starter</div><div class="li">Deploy API</div></div>
+<div><div class="l">Running</div><div class="li">habit · 72%</div><div class="li">research · 40%</div><div class="li">news #14 · queued</div></div>
+</div>
+</div></div>
+<div class="mon"><div class="scr">
+<div class="tb"><span class="wm">JARVIS</span><span>Console</span><span class="r">~/jarvis · zsh</span></div>
+<div class="console">
+<div class="tabs"><span class="on">jarvis ▸ shell</span><span>logs</span><span>agents</span></div>
+<div class="cwrap">
+<div><span class="pr">jarvis ❯</span> <span class="cmd">status --money</span></div>
+<div class="dim">› aggregating revenue across connectors…</div>
+<div><span class="ok">✓</span> Stripe subs <span class="dim">$1,240</span> · Gumroad <span class="dim">$890</span></div>
+<div><span class="ok">✓</span> Lemon Squeezy <span class="dim">$310</span> · Newsletter <span class="dim">$400</span></div>
+<div><span class="ok">✓</span> net <span class="ok">$3,840</span> · ROI <span class="ok">4.2×</span> · ▲18%</div>
+<div style="height:8px"></div>
+<div><span class="pr">jarvis ❯</span> <span class="cmd">jobs</span></div>
+<div><span class="wn">●</span> code/habit-tracker <span class="dim">72%</span> · scout/research-niche <span class="dim">40%</span></div>
+<div class="dim">› newsletter #14 queued · est. send 19:00</div>
+<div style="height:8px"></div>
+<div><span class="pr">jarvis ❯</span> <span class="cmd">approve invoice --batch</span></div>
+<div><span class="wn">⚠</span> 14 customers · $1,240 via Resend — confirm? <span class="dim">[y/N]</span></div>
+</div>
+<div class="cin"><span>❯</span><input placeholder="type a /command…"></div>
+</div>
+</div></div>
+</body></html>

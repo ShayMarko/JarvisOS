@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JARVIS · Neural Map</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+    background: radial-gradient(1100px 800px at 50% 45%, #0a1424, #05070d 75%);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #dce8fb;
+  }
+  .stage {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  svg.brain {
+    width: 96%;
+    height: 96%;
+  }
+  .wordmark {
+    position: absolute;
+    top: 24px;
+    left: 32px;
+    z-index: 10;
+    user-select: none;
+  }
+  .wordmark .name {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 4px;
+    color: #eaf2ff;
+  }
+  .wordmark .status {
+    margin-top: 4px;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: #5d6f8d;
+  }
+  .wordmark .status .dot {
+    color: #4be38a;
+  }
+  .caption {
+    position: absolute;
+    bottom: 22px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    color: #5d6f8d;
+    z-index: 10;
+    user-select: none;
+  }
+  .hub-label { font-weight: 700; font-size: 12px; fill: #dce8fb; }
+  .hub-sub { font-size: 9px; fill: #7f93b5; }
+  .hub-sub.crit { fill: #ff9cb0; }
+  .hub-g { cursor: pointer; }
+  .hub-g:hover .hub-core { filter: url(#glowStrong); }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="wordmark">
+    <div class="name">JARVIS</div>
+    <div class="status"><span class="dot">●</span> ONLINE · OPUS · 20:34</div>
+  </div>
+
+  <svg class="brain" viewBox="0 0 1000 680" preserveAspectRatio="xMidYMid meet" id="svg">
+    <defs>
+      <clipPath id="brainclip">
+        <path id="brainpath" d="
+          M 500 80
+          C 430 60, 360 64, 300 92
+          C 240 120, 198 150, 168 196
+          C 140 238, 122 276, 120 322
+          C 118 372, 130 420, 158 462
+          C 186 504, 224 540, 274 566
+          C 330 596, 408 612, 500 612
+          L 500 80 Z
+          M 500 80
+          C 570 60, 640 64, 700 92
+          C 760 120, 802 150, 832 196
+          C 860 238, 878 276, 880 322
+          C 882 372, 870 420, 842 462
+          C 814 504, 776 540, 726 566
+          C 670 596, 592 612, 500 612
+          L 500 80 Z
+        " fill-rule="nonzero"/>
+      </clipPath>
+
+      <radialGradient id="hubGrad" cx="35%" cy="30%" r="75%">
+        <stop offset="0%" stop-color="#ffffff"/>
+        <stop offset="40%" stop-color="#7cc0ff"/>
+        <stop offset="100%" stop-color="#1d63b4"/>
+      </radialGradient>
+
+      <radialGradient id="hubGradCrit" cx="35%" cy="30%" r="75%">
+        <stop offset="0%" stop-color="#ffffff"/>
+        <stop offset="40%" stop-color="#ff9cb0"/>
+        <stop offset="100%" stop-color="#b41d3a"/>
+      </radialGradient>
+
+      <filter id="glow" x="-120%" y="-120%" width="340%" height="340%">
+        <feGaussianBlur stdDeviation="3.2" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="glowStrong" x="-150%" y="-150%" width="400%" height="400%">
+        <feGaussianBlur stdDeviation="6" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+      <filter id="edgeGlow" x="-30%" y="-30%" width="160%" height="160%">
+        <feGaussianBlur stdDeviation="2.4"/>
+      </filter>
+    </defs>
+
+    <!-- Dense neural tissue clipped to brain shape -->
+    <g clip-path="url(#brainclip)">
+      <g id="synapses"></g>
+      <g id="nodes"></g>
+      <g id="pulses"></g>
+    </g>
+
+    <!-- Silhouette edge + fissure + gyri folds (outside clip) -->
+    <g id="outline"></g>
+
+    <!-- Hub neurons -->
+    <g id="hubs"></g>
+  </svg>
+
+  <div class="caption">NEURAL MAP · tap a neuron to open · 51 agents · 26 connectors</div>
+</div>
+
+<script>
+(function(){
+  const SVGNS = "http://www.w3.org/2000/svg";
+  const svg = document.getElementById("svg");
+  const brainPathD = document.getElementById("brainpath").getAttribute("d");
+
+  // ---- seeded RNG (mulberry32) ----
+  function mulberry32(a){
+    return function(){
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      let t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  const rand = mulberry32(20251234);
+
+  function el(name, attrs){
+    const e = document.createElementNS(SVGNS, name);
+    for(const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+
+  // ---- generate dense point cloud across bounding box ----
+  // brain bbox roughly x:[120,880], y:[60,612]
+  const X0 = 120, X1 = 880, Y0 = 60, Y1 = 612;
+  const N = 330;
+  const nodes = [];
+  for(let i=0;i<N;i++){
+    const x = X0 + rand()*(X1-X0);
+    const y = Y0 + rand()*(Y1-Y0);
+    nodes.push({x, y});
+  }
+
+  // nearest neighbors -> curved synapses
+  const synG = document.getElementById("synapses");
+  const edges = [];
+  for(let i=0;i<N;i++){
+    const a = nodes[i];
+    const dists = [];
+    for(let j=0;j<N;j++){
+      if(i===j) continue;
+      const b = nodes[j];
+      const d = (a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y);
+      dists.push({j, d});
+    }
+    dists.sort((p,q)=>p.d-q.d);
+    const k = 2 + (rand()<0.5?1:0); // 2-3 neighbors
+    for(let n=0;n<k;n++){
+      const j = dists[n].j;
+      const key = i<j ? i+"_"+j : j+"_"+i;
+      edges.push({i, j, key});
+    }
+  }
+  // dedupe
+  const seen = new Set();
+  const uniqueEdges = [];
+  for(const e of edges){
+    if(seen.has(e.key)) continue;
+    seen.add(e.key);
+    uniqueEdges.push(e);
+  }
+
+  for(const e of uniqueEdges){
+    const a = nodes[e.i], b = nodes[e.j];
+    const mx = (a.x+b.x)/2 + (rand()-0.5)*22;
+    const my = (a.y+b.y)/2 + (rand()-0.5)*22;
+    const op = (0.15 + rand()*0.25).toFixed(2);
+    const w = (0.6 + rand()*0.8).toFixed(2);
+    const p = el("path", {
+      d: `M ${a.x.toFixed(1)} ${a.y.toFixed(1)} Q ${mx.toFixed(1)} ${my.toFixed(1)} ${b.x.toFixed(1)} ${b.y.toFixed(1)}`,
+      stroke: "#2a6fb0",
+      "stroke-width": w,
+      fill: "none",
+      opacity: op
+    });
+    synG.appendChild(p);
+  }
+
+  // nodes as dots
+  const nodeG = document.getElementById("nodes");
+  for(const a of nodes){
+    const r = (1.2 + rand()*1.8).toFixed(1);
+    const op = (0.45 + rand()*0.5).toFixed(2);
+    nodeG.appendChild(el("circle", {
+      cx: a.x.toFixed(1), cy: a.y.toFixed(1), r: r,
+      fill: "#5aa0e0", opacity: op
+    }));
+  }
+
+  // signal pulses on random synapses
+  const pulseG = document.getElementById("pulses");
+  for(let i=0;i<22;i++){
+    const e = uniqueEdges[Math.floor(rand()*uniqueEdges.length)];
+    const a = nodes[e.i], b = nodes[e.j];
+    const t = 0.25 + rand()*0.5;
+    const px = a.x + (b.x-a.x)*t;
+    const py = a.y + (b.y-a.y)*t;
+    pulseG.appendChild(el("circle", {
+      cx: px.toFixed(1), cy: py.toFixed(1), r: (1.6+rand()*1.4).toFixed(1),
+      fill: "#aee9ff", opacity: (0.7+rand()*0.3).toFixed(2),
+      filter: "url(#glow)"
+    }));
+  }
+
+  // ---- outline: silhouette edge, fissure, gyri folds ----
+  const outG = document.getElementById("outline");
+  outG.appendChild(el("path", {
+    d: brainPathD, fill: "none",
+    stroke: "#1f4a78", "stroke-width": 2,
+    opacity: 0.55, filter: "url(#edgeGlow)"
+  }));
+  outG.appendChild(el("path", {
+    d: brainPathD, fill: "none",
+    stroke: "#2c69a0", "stroke-width": 1.4, opacity: 0.7
+  }));
+  // central fissure
+  outG.appendChild(el("path", {
+    d: "M 500 86 C 494 200, 506 360, 500 606",
+    fill: "none", stroke: "#173a60", "stroke-width": 2, opacity: 0.7
+  }));
+
+  // wavy gyri arcs over each hemisphere
+  function gyri(cx, dir){
+    for(let r=0;r<7;r++){
+      const yy = 130 + r*64 + (rand()-0.5)*16;
+      const amp = 18 + rand()*10;
+      const span = 230 + rand()*40;
+      const x0 = cx - dir*span/2;
+      const x1 = cx + dir*span/2;
+      const c1x = cx - dir*span*0.18, c1y = yy - amp;
+      const c2x = cx + dir*span*0.18, c2y = yy + amp;
+      outG.appendChild(el("path", {
+        d: `M ${x0.toFixed(0)} ${yy.toFixed(0)} C ${c1x.toFixed(0)} ${c1y.toFixed(0)}, ${c2x.toFixed(0)} ${c2y.toFixed(0)}, ${x1.toFixed(0)} ${yy.toFixed(0)}`,
+        fill: "none", stroke: "#1d4673", "stroke-width": 1.1, opacity: 0.35
+      }));
+    }
+  }
+  gyri(310, 1);
+  gyri(690, 1);
+
+  // ---- HUB NEURONS embedded in hemispheres ----
+  const hubs = [
+    {x:300, y:170, label:"Today",      sub:"proactive"},
+    {x:235, y:300, label:"Chat",       sub:"new"},
+    {x:300, y:430, label:"Voice",      sub:"ready"},
+    {x:400, y:530, label:"Memory",     sub:"semantic"},
+    {x:430, y:250, label:"Knowledge",  sub:"KB"},
+    {x:380, y:380, label:"Timeline",   sub:"today"},
+    {x:700, y:170, label:"Money",      sub:"$3,840"},
+    {x:765, y:300, label:"Agents",     sub:"51"},
+    {x:700, y:430, label:"Connectors", sub:"9 live"},
+    {x:620, y:250, label:"Jobs",       sub:"2 running"},
+    {x:600, y:530, label:"Approvals",  sub:"3 need you", crit:true},
+    {x:640, y:380, label:"Settings",   sub:"system"}
+  ];
+
+  const hubG = document.getElementById("hubs");
+
+  function nearestNodes(hx, hy, count){
+    const arr = nodes.map((a,idx)=>({idx, d:(a.x-hx)*(a.x-hx)+(a.y-hy)*(a.y-hy)}));
+    arr.sort((p,q)=>p.d-q.d);
+    return arr.slice(0,count).map(o=>nodes[o.idx]);
+  }
+
+  for(const h of hubs){
+    const g = el("g", {class:"hub-g"});
+
+    // spokes into tissue (4-5)
+    const spokeCount = 4 + (rand()<0.5?1:0);
+    const nn = nearestNodes(h.x, h.y, spokeCount+3);
+    for(let s=0;s<spokeCount && s<nn.length;s++){
+      const t = nn[s];
+      g.appendChild(el("line", {
+        x1:h.x, y1:h.y, x2:t.x.toFixed(1), y2:t.y.toFixed(1),
+        stroke:"#4f93d8", "stroke-width":1.1, opacity:0.55
+      }));
+    }
+
+    // faint outer ring
+    g.appendChild(el("circle", {
+      cx:h.x, cy:h.y, r:18, fill:"none",
+      stroke: h.crit ? "#ff5d73" : "#3d7bbf",
+      "stroke-width": h.crit ? 1.6 : 1.1,
+      opacity: h.crit ? 0.7 : 0.4
+    }));
+
+    // glowing core
+    g.appendChild(el("circle", {
+      class:"hub-core",
+      cx:h.x, cy:h.y, r:11,
+      fill: h.crit ? "url(#hubGradCrit)" : "url(#hubGrad)",
+      stroke: h.crit ? "#ff5d73" : "#9fd0ff",
+      "stroke-width": h.crit ? 1.4 : 0.8,
+      filter:"url(#glow)"
+    }));
+
+    // labels (offset; flip side for right hemisphere so text stays inward-ish)
+    const right = h.x > 500;
+    const lx = h.x + (right ? 22 : -22);
+    const anchor = right ? "start" : "end";
+    const lbl = el("text", {x:lx, y:h.y-1, "text-anchor":anchor, class:"hub-label"});
+    lbl.textContent = h.label;
+    g.appendChild(lbl);
+    const sub = el("text", {x:lx, y:h.y+12, "text-anchor":anchor, class:"hub-sub" + (h.crit?" crit":"")});
+    sub.textContent = h.sub;
+    g.appendChild(sub);
+
+    hubG.appendChild(g);
+  }
+})();
+</script>
+</body>
+</html>

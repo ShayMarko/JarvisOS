@@ -1,0 +1,49 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T213</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Helvetica Neue','Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;background:#0b0b0c;display:flex;align-items:center;justify-content:center;color:#1a2a3a}
+.pass{width:1080px;height:740px;border-radius:14px;position:relative;overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,.6);
+ background:linear-gradient(135deg,#eaf1f6,#dbe6ef 60%,#cfe0ec)}
+.guill{position:absolute;inset:0;pointer-events:none;opacity:.6;background:
+ repeating-radial-gradient(circle at 26% 50%,transparent 0 7px,rgba(40,90,140,.06) 7px 8px,transparent 8px 16px),
+ repeating-linear-gradient(60deg,rgba(40,90,140,.04) 0 1px,transparent 1px 12px)}
+.head{position:relative;display:flex;justify-content:space-between;align-items:center;padding:26px 40px;border-bottom:2px solid rgba(40,90,140,.25)}
+.type{font-size:13px;letter-spacing:4px;text-transform:uppercase;color:#2c6394;font-weight:700}
+.type b{font-size:22px;display:block;letter-spacing:6px;color:#16385a}
+.iss{text-align:right;font-size:11px;letter-spacing:2px;color:#3a6b96;line-height:1.7}
+.body{position:relative;display:grid;grid-template-columns:260px 1fr;gap:34px;padding:34px 40px}
+.photo{width:240px;height:300px;border-radius:8px;background:linear-gradient(160deg,#9fbcd4,#c4d6e6);border:2px solid #fff;box-shadow:0 4px 16px rgba(20,50,80,.25);display:flex;align-items:flex-end;justify-content:center;position:relative;overflow:hidden}
+.photo svg{position:absolute;bottom:0;width:200px}
+.photo .tag{position:absolute;top:8px;left:8px;font-size:9px;letter-spacing:2px;color:#16385a;background:rgba(255,255,255,.7);padding:2px 7px;border-radius:4px;font-weight:700}
+.ghost{position:absolute;right:-30px;bottom:0;opacity:.3}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:18px 34px;align-content:start}
+.f .l{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#5a86ab;font-weight:700}
+.f .v{font-size:19px;font-weight:700;color:#16385a;margin-top:3px}
+.f .v.sm{font-size:14px}
+.full{grid-column:1/-1}
+.crest{position:absolute;top:30px;right:40px;font-size:30px;color:rgba(44,99,148,.3)}
+.mrz{position:absolute;bottom:0;left:0;right:0;background:#f4f7fa;border-top:2px solid rgba(40,90,140,.3);padding:20px 40px;font-family:ui-monospace,'SF Mono',monospace;font-size:21px;letter-spacing:2.5px;color:#16385a;line-height:1.55;font-weight:600}
+.chip{position:absolute;right:300px;top:330px;width:56px;height:42px;border-radius:6px;background:linear-gradient(135deg,#d9b65a,#b08d3a);box-shadow:inset 0 0 0 2px rgba(255,255,255,.3)}
+.chip::before{content:"";position:absolute;inset:8px;border:1px solid rgba(80,50,10,.4);border-radius:3px}
+</style></head><body><div class="pass">
+<div class="guill"></div>
+<div class="head"><div class="type">Passport<b>JARVIS</b></div><div class="iss">AI OS · Local-First Union<br>● Online · Opus · 20:34</div></div>
+<div class="crest">✦</div>
+<div class="body">
+<div class="photo"><span class="tag">SHAY M.</span>
+<svg viewBox="0 0 200 240"><circle cx="100" cy="86" r="46" fill="#6f97b8"/><path d="M30 240c0-52 32-86 70-86s70 34 70 86z" fill="#6f97b8"/></svg>
+</div>
+<div class="fields">
+<div class="f full"><div class="l">Surname / Given names</div><div class="v">MARKO, SHAY</div></div>
+<div class="f"><div class="l">Document No.</div><div class="v sm">JV2026P0609</div></div>
+<div class="f"><div class="l">Nationality</div><div class="v sm">AI-OS OPERATOR</div></div>
+<div class="f"><div class="l">Role / Authority</div><div class="v sm">OWNER · BUILDER</div></div>
+<div class="f"><div class="l">Agents / Connectors</div><div class="v sm">51 · 26 (9 live)</div></div>
+<div class="f"><div class="l">Date of issue</div><div class="v sm">09 JUN 2026</div></div>
+<div class="f"><div class="l">Date of expiry</div><div class="v sm">∞ PERPETUAL</div></div>
+<div class="f"><div class="l">Standing / Net</div><div class="v sm">$3,840 · ROI 4.2×</div></div>
+<div class="f"><div class="l">Wake phrase</div><div class="v sm">"HEY JARVIS"</div></div>
+</div>
+</div>
+<div class="chip"></div>
+<div class="mrz">P&lt;AIOSMARKO&lt;&lt;SHAY&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;<br>JV2026P06094AIOS260609M9999999OPUS&lt;&lt;&lt;&lt;&lt;&lt;04</div>
+</div></body></html>

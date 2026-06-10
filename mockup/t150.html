@@ -1,0 +1,70 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T150</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Roboto','Google Sans',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;background:#1c1b1f;color:#e6e1e9}
+.wrap{position:relative;height:100vh;padding:22px 28px;display:grid;grid-template-columns:300px 1fr 1fr;grid-template-rows:auto 1fr auto;gap:18px}
+.top{grid-column:1/-1;display:flex;align-items:center;gap:16px}
+.wm{font-size:22px;font-weight:500;letter-spacing:.5px;color:#d0bcff}
+.seg{display:flex;background:#211f26;border:1px solid #49454f;border-radius:24px;overflow:hidden}
+.seg button{background:0;border:0;color:#cac4d0;font:inherit;font-size:13px;padding:9px 18px;cursor:pointer}
+.seg button.on{background:#4a4458;color:#eaddff}
+.st{margin-left:auto;font-size:13px;color:#cac4d0}
+.surf{background:#211f26;border-radius:28px;padding:22px 24px}
+.surf2{background:#2b2930;border-radius:24px;padding:20px}
+.greet{font-size:30px;font-weight:400;color:#e6e1e9;line-height:1.15}
+.greet span{color:#d0bcff;font-weight:500}
+.netcard{margin-top:18px;background:#4a4458;border-radius:24px;padding:22px}
+.netcard .l{font-size:12px;color:#d0bcff;letter-spacing:.4px}
+.netcard .v{font-size:46px;font-weight:500;color:#eaddff;letter-spacing:-1px;line-height:1.1}
+.netcard .d{font-size:13px;color:#cdc2e8;margin-top:4px}
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
+.chip{font-size:13px;padding:7px 14px;border-radius:18px;border:1px solid #49454f;color:#cac4d0;background:#211f26}
+.chip b{color:#e6e1e9}
+.h{font-size:12px;letter-spacing:.6px;color:#cac4d0;text-transform:uppercase;margin-bottom:14px}
+.item{display:flex;align-items:center;gap:14px;background:#2b2930;border-radius:18px;padding:13px 16px;margin-bottom:12px}
+.ico{width:40px;height:40px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-size:18px}
+.it-t{font-size:14px;color:#e6e1e9;font-weight:500}.it-s{font-size:12px;color:#cac4d0;margin-top:2px}
+.tag{margin-left:auto;font-size:11px;font-weight:600;padding:4px 12px;border-radius:14px}
+.j{margin-bottom:18px}
+.j-h{display:flex;justify-content:space-between;font-size:14px;color:#e6e1e9;margin-bottom:8px}
+.j-h span{color:#cac4d0;font-size:12px}
+.track{height:8px;border-radius:6px;background:#48454d;overflow:hidden}
+.track i{display:block;height:100%;border-radius:6px;background:#d0bcff}
+.sys{display:flex;gap:12px;margin-top:6px}
+.sys .s{flex:1;background:#2b2930;border-radius:18px;padding:14px;text-align:center}
+.sys .v{font-size:24px;font-weight:500;color:#d0bcff}.sys .k{font-size:11px;color:#cac4d0;margin-top:3px}
+.foot{grid-column:1/-1;display:flex;align-items:center;gap:14px;background:#36343b;border-radius:28px;padding:14px 22px}
+.foot input{flex:1;background:0;border:0;outline:0;color:#e6e1e9;font-size:15px}.foot input::placeholder{color:#938f99}
+.fab{position:absolute;right:30px;bottom:96px;width:60px;height:60px;border-radius:18px;background:#d0bcff;color:#381e72;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 8px 18px rgba(0,0,0,.4);z-index:5}
+.kk{font-size:12px;color:#cac4d0;background:#211f26;border-radius:8px;padding:5px 10px}
+</style></head><body>
+<div class="wrap">
+<div class="top"><div class="wm">JARVIS</div><div class="seg"><button class="on">Today</button><button>Money</button><button>Jobs</button></div><div class="st">● Online · Opus · 20:34 · Tue Jun 09</div></div>
+
+<div class="surf">
+<div class="greet">Good evening,<br><span>Shay.</span></div>
+<div class="netcard"><div class="l">Net this month</div><div class="v">$3,840</div><div class="d">ROI 4.2× · ▲18% · AI cost $58 / $80</div></div>
+<div class="chips"><div class="chip">Stripe <b>$1,240</b></div><div class="chip">Gumroad <b>$890</b></div><div class="chip">Newsletter <b>$400</b></div><div class="chip">Lemon <b>$310</b></div></div>
+</div>
+
+<div class="surf">
+<div class="h">3 things need you</div>
+<div class="item"><div class="ico" style="background:#5d3b3f;color:#ffb4ab">!</div><div><div class="it-t">Send invoice → 14 customers</div><div class="it-s">$1,240 · EA via Resend</div></div><span class="tag" style="background:#5d3b3f;color:#ffb4ab">Critical</span></div>
+<div class="item"><div class="ico" style="background:#4a4458;color:#eaddff">▲</div><div><div class="it-t">Publish SaaS starter → Gumroad</div><div class="it-s">$39</div></div><span class="tag" style="background:#4a4458;color:#eaddff">High</span></div>
+<div class="item"><div class="ico" style="background:#4a4458;color:#eaddff">☁</div><div><div class="it-t">Deploy micro-API → Cloudflare</div><div class="it-s">Edge worker</div></div><span class="tag" style="background:#4a4458;color:#eaddff">High</span></div>
+<div class="h" style="margin-top:18px">Suggested</div>
+<div class="item" style="margin:0"><div class="ico" style="background:#2d4a3e;color:#7ce0b0">✦</div><div class="it-t" style="font-weight:400">Double down: "REST API + auth" guide drove 61% of traffic</div></div>
+</div>
+
+<div class="surf">
+<div class="h">Jobs running</div>
+<div class="j"><div class="j-h">habit-tracker app <span>Code · 72%</span></div><div class="track"><i style="width:72%"></i></div></div>
+<div class="j"><div class="j-h">research note-taking niche <span>Scout · 40%</span></div><div class="track"><i style="width:40%"></i></div></div>
+<div class="j"><div class="j-h">newsletter #14 <span>queued</span></div><div class="track"><i style="width:6%"></i></div></div>
+<div class="h">System</div>
+<div class="sys"><div class="s"><div class="v">51</div><div class="k">agents</div></div><div class="s"><div class="v">9/26</div><div class="k">connectors</div></div><div class="s"><div class="v">7</div><div class="k">products</div></div></div>
+</div>
+
+<div class="fab">🎙</div>
+<div class="foot"><span style="color:#d0bcff">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span class="kk">⌘K</span></div>
+</div>
+</body></html>

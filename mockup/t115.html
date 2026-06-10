@@ -1,0 +1,80 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T115</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,-apple-system,sans-serif}
+body{height:100vh;overflow:hidden;background:#04070a;color:#d6f0ff}
+.scene{position:fixed;inset:0;background:radial-gradient(circle at 50% 60%,#0a1c28,#03060a 70%)}
+.scene::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(63,184,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(63,184,255,.05) 1px,transparent 1px);background-size:46px 46px;mask:radial-gradient(circle at 50% 60%,#000,transparent 75%)}
+.vis{position:absolute;inset:0;border:1px solid rgba(63,184,255,.12)}
+/* corner brackets */
+.brk{position:absolute;width:38px;height:38px;border:2px solid #3fb8ff;opacity:.6}
+.tl{top:22px;left:22px;border-right:0;border-bottom:0}.tr{top:22px;right:22px;border-left:0;border-bottom:0}
+.bl{bottom:22px;left:22px;border-right:0;border-top:0}.br{bottom:22px;right:22px;border-left:0;border-top:0}
+.wm{position:absolute;top:30px;left:50%;transform:translateX(-50%);font-size:13px;font-weight:800;letter-spacing:5px;color:#7fd4ff;text-shadow:0 0 12px rgba(63,184,255,.6)}
+.status{position:absolute;top:30px;left:74px;font-size:11px;letter-spacing:1px;color:#5a8aa6}
+.budget{position:absolute;top:30px;right:74px;font-size:11px;letter-spacing:1px;color:#5a8aa6;text-align:right}
+/* health bars bottom-left */
+.vitals{position:absolute;bottom:42px;left:42px;width:280px}
+.vit{margin-bottom:9px}
+.vit .lab{display:flex;justify-content:space-between;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px}
+.vbar{height:13px;border-radius:3px;background:rgba(10,28,40,.8);border:1px solid rgba(63,184,255,.3);overflow:hidden;position:relative;clip-path:polygon(6px 0,100% 0,100% 100%,0 100%,0 6px)}
+.vbar i{display:block;height:100%}
+.hp i{background:linear-gradient(90deg,#ff5b6e,#ff9f43)}
+.mp i{background:linear-gradient(90deg,#3fb8ff,#7fd4ff)}
+.xp i{background:linear-gradient(90deg,#46e0a0,#a8ffd0)}
+.vit .lab b{font-variant-numeric:tabular-nums}
+/* minimap bottom-right */
+.map{position:absolute;bottom:42px;right:42px;width:200px;height:200px;border-radius:50%;border:2px solid rgba(63,184,255,.4);background:radial-gradient(circle,#08222e,#040d14);overflow:hidden}
+.map::before{content:"";position:absolute;inset:0;background:conic-gradient(from 0deg,rgba(63,184,255,.25),transparent 35%)}
+.map .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(63,184,255,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(63,184,255,.12) 1px,transparent 1px);background-size:25px 25px}
+.blip{position:absolute;width:8px;height:8px;border-radius:50%;box-shadow:0 0 8px currentColor}
+.maplabel{position:absolute;top:8px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:1.5px;color:#5a8aa6}
+.ctr{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:70px;height:70px}
+.ctr::before,.ctr::after{content:"";position:absolute;background:rgba(127,212,255,.7)}
+.ctr::before{left:50%;top:0;bottom:0;width:1px;transform:translateX(-50%)}
+.ctr::after{top:50%;left:0;right:0;height:1px;transform:translateY(-50%)}
+.recC{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:32px;height:32px;border:1px solid rgba(127,212,255,.8);border-radius:50%}
+.foc{position:absolute;top:calc(50% - 70px);left:50%;transform:translateX(-50%);text-align:center}
+.foc .l{font-size:10px;letter-spacing:2px;color:#5a8aa6}.foc .v{font-size:15px;font-weight:700;color:#7fd4ff;margin-top:2px}
+/* objectives top-right */
+.obj{position:absolute;top:84px;right:42px;width:300px}
+.obj .h{font-size:10px;letter-spacing:2px;color:#5a8aa6;text-transform:uppercase;border-bottom:1px solid rgba(63,184,255,.25);padding-bottom:6px;margin-bottom:9px}
+.oitem{display:flex;align-items:center;gap:9px;font-size:13px;padding:5px 0}
+.oitem .m{width:12px;text-align:center;color:#3fb8ff}
+.oitem.crit .m{color:#ff5b6e}.oitem .amt{margin-left:auto;color:#46e0a0;font-size:12px;font-variant-numeric:tabular-nums}
+/* combo top-left */
+.combo{position:absolute;top:84px;left:42px}
+.combo .x{font-size:42px;font-weight:800;color:#ffb347;text-shadow:0 0 18px rgba(255,179,71,.6);line-height:1}
+.combo .l{font-size:11px;letter-spacing:2px;color:#5a8aa6}
+</style></head><body>
+<div class="scene"></div>
+<div class="vis"></div>
+<div class="brk tl"></div><div class="brk tr"></div><div class="brk bl"></div><div class="brk br"></div>
+<div class="wm">JARVIS</div><div class="status">● ONLINE · OPUS · 51 AGENTS</div><div class="budget">AI COST $58 / $80<br>20:34 · TUE JUN 09</div>
+
+<div class="combo"><div class="x">4.2×</div><div class="l">ROI MULTIPLIER ▲18%</div></div>
+
+<div class="obj"><div class="h">⚑ Objectives — needs you</div>
+<div class="oitem crit"><span class="m">◆</span>Send invoice → 14 customers<span class="amt">$1,240</span></div>
+<div class="oitem"><span class="m">◇</span>Publish SaaS starter → Gumroad<span class="amt">$39</span></div>
+<div class="oitem"><span class="m">◇</span>Deploy micro-API → Cloudflare<span class="amt">HIGH</span></div>
+<div class="h" style="margin-top:14px">⟳ Side quests — running</div>
+<div class="oitem"><span class="m">▸</span>habit-tracker app<span class="amt">72%</span></div>
+<div class="oitem"><span class="m">▸</span>research niche · Scout<span class="amt">40%</span></div>
+</div>
+
+<div class="foc"><div class="l">▼ TARGET ACQUIRED</div><div class="v">Net this month · $3,840</div></div>
+<div class="ctr"></div><div class="recC"></div>
+
+<div class="vitals">
+<div class="vit hp"><div class="lab"><span>SYSTEM HP</span><b>96 / 100</b></div><div class="vbar"><i style="width:96%"></i></div></div>
+<div class="vit mp"><div class="lab"><span>TOKEN MANA</span><b>$22 left</b></div><div class="vbar"><i style="width:73%"></i></div></div>
+<div class="vit xp"><div class="lab"><span>XP · 7 PRODUCTS LIVE</span><b>LVL 7</b></div><div class="vbar"><i style="width:62%"></i></div></div>
+</div>
+
+<div class="map"><div class="grid"></div><div class="maplabel">SECTOR · 26 CONNECTORS</div>
+<span class="blip" style="top:40%;left:38%;color:#46e0a0;background:#46e0a0"></span>
+<span class="blip" style="top:55%;left:60%;color:#3fb8ff;background:#3fb8ff"></span>
+<span class="blip" style="top:30%;left:62%;color:#ffb347;background:#ffb347"></span>
+<span class="blip" style="top:65%;left:42%;color:#ff5b6e;background:#ff5b6e"></span>
+<span class="blip" style="top:50%;left:50%;color:#7fd4ff;background:#7fd4ff;width:10px;height:10px"></span>
+</div>
+</body></html>

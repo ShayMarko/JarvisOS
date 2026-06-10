@@ -1,0 +1,47 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T189</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf6;background:#070a11}
+.top{display:flex;align-items:center;gap:14px;padding:22px 40px}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#7cc4ff}.st{font-size:12px;color:#5f7488}.r{margin-left:auto;font-size:13px;color:#8a98a4}
+.hd{padding:0 40px}.hd h1{font-size:22px;font-weight:600}.hd h1 b{color:#7cc4ff}.hd p{font-size:13px;color:#5f7488;margin-top:4px}
+.plot{margin:10px 40px 0;background:#0c111a;border:1px solid #18222e;border-radius:16px;padding:18px 30px;height:calc(100vh - 250px)}
+.cl{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#5f7488;margin-bottom:6px}
+.bar{position:fixed;bottom:22px;left:40px;right:40px;display:flex;align-items:center;gap:12px;background:rgba(12,17,26,.9);border:1px solid #18222e;border-radius:13px;padding:11px 15px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e6edf6;font-size:14px}.bar input::placeholder{color:#5f7488}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · RANK FLOW</div><div class="st">● ONLINE · OPUS · 20:34</div><div class="r">Product rank · weekly bump chart</div></div>
+<div class="hd"><h1>Good evening, <b>Shay.</b></h1><p>which product leads each week — lines cross as ranks change</p></div>
+<div class="plot">
+<div class="cl">rank 1 (top) → 6 · weeks 32–37</div>
+<svg viewBox="0 0 1080 430" style="width:100%;height:calc(100% - 22px)">
+<g fill="#5f7488" font-size="11" text-anchor="middle"><text x="120" y="420">W32</text><text x="300" y="420">W33</text><text x="480" y="420">W34</text><text x="660" y="420">W35</text><text x="840" y="420">W36</text><text x="1000" y="420">W37</text></g>
+<g fill="#3f5870" font-size="10" text-anchor="end"><text x="60" y="44">#1</text><text x="60" y="114">#2</text><text x="60" y="184">#3</text><text x="60" y="254">#4</text><text x="60" y="324">#5</text><text x="60" y="384">#6</text></g>
+<!-- x: 120,300,480,660,840,1000 ; rank rows y: 40,110,180,250,320,380 -->
+<g fill="none" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+<!-- REST API guide: 3->2->1->1->1->1 (rises to top) -->
+<polyline points="120,180 300,110 480,40 660,40 840,40 1000,40" stroke="#46e0a0"/>
+<!-- SaaS starter: 1->1->2->3->2->2 -->
+<polyline points="120,40 300,40 480,110 660,180 840,110 1000,110" stroke="#7cc4ff"/>
+<!-- Habit tracker: 4->3->3->2->3->3 -->
+<polyline points="120,250 300,180 480,180 660,110 840,180 1000,180" stroke="#b48cff"/>
+<!-- Newsletter: 2->4->4->4->4->4 -->
+<polyline points="120,110 300,250 480,250 660,250 840,250 1000,250" stroke="#ffce6b"/>
+<!-- Micro-API: 5->5->5->5->5->5 -->
+<polyline points="120,320 300,320 480,320 660,320 840,320 1000,320" stroke="#5fd0c0" opacity=".7"/>
+<!-- POD store: 6->6->6->6->6->6 -->
+<polyline points="120,380 300,380 480,380 660,380 840,380 1000,380" stroke="#ff8c8c" opacity=".6"/>
+</g>
+<!-- nodes -->
+<g fill="#0c111a" stroke-width="2.5">
+<circle cx="1000" cy="40" r="6" stroke="#46e0a0"/><circle cx="1000" cy="110" r="6" stroke="#7cc4ff"/><circle cx="1000" cy="180" r="6" stroke="#b48cff"/><circle cx="1000" cy="250" r="6" stroke="#ffce6b"/></g>
+<g font-size="12" font-weight="600">
+<text x="1018" y="44" fill="#46e0a0">REST API guide</text>
+<text x="1018" y="114" fill="#7cc4ff">SaaS starter</text>
+<text x="1018" y="184" fill="#b48cff">Habit tracker</text>
+<text x="1018" y="254" fill="#ffce6b">Newsletter</text>
+<text x="1018" y="324" fill="#5fd0c0">Micro-API</text>
+<text x="1018" y="384" fill="#ff8c8c">POD store</text></g>
+</svg>
+</div>
+<div class="bar"><span style="color:#7cc4ff">🎙</span><input placeholder="Ask Jarvis what overtook the leader…"><span style="color:#5f7488;font-size:12px">⌘K</span></div>
+</body></html>

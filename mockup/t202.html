@@ -1,0 +1,62 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T202</title><style>
+*{margin:0;box-sizing:border-box;font-family:ui-monospace,'SF Mono',monospace}
+body{height:100vh;overflow:hidden;background:#02110b;color:#54e08e;display:grid;grid-template-columns:260px 1fr 260px}
+.col{padding:26px 22px;display:flex;flex-direction:column}
+.left{border-right:1px solid #0a2e1d}.right{border-left:1px solid #0a2e1d}
+.wm{font-size:16px;font-weight:800;letter-spacing:3px;text-shadow:0 0 10px rgba(84,224,142,.5)}
+.st{font-size:10px;color:#2a8a64;margin-top:5px;letter-spacing:1px}
+h2{font-size:10px;letter-spacing:2px;color:#2a8a64;margin:22px 0 8px}
+.gaugebox{margin-top:6px;border:1px solid #0d3322;border-radius:10px;padding:16px;text-align:center;background:radial-gradient(circle,#06231a,#02110b)}
+.gv{font-size:38px;font-weight:800;text-shadow:0 0 12px rgba(84,224,142,.5)}
+.gl{font-size:10px;color:#2a8a64;letter-spacing:2px}
+.arc{margin:8px auto 0;display:block}
+.center{display:flex;flex-direction:column;position:relative;background:radial-gradient(700px 500px at 50% 0,#06281d,#02110b)}
+.waterfall{flex:1;position:relative;overflow:hidden;margin:18px}
+.wfline{position:absolute;left:0;right:0;height:1px}
+.contact{position:absolute;height:8px;border-radius:4px;background:linear-gradient(90deg,transparent,#54e08e,transparent);box-shadow:0 0 10px rgba(84,224,142,.6)}
+.clbl{position:absolute;font-size:10px;color:#9af0c8;letter-spacing:1px}
+.title{padding:18px 24px 0;display:flex;justify-content:space-between;font-size:11px;color:#2a8a64;letter-spacing:2px}
+.con{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #0a2618;font-size:11px}
+.cn{color:#bdf0d8}.cb{margin-left:auto;color:#54e08e}
+.dotc{width:8px;height:8px;border-radius:50%;background:#54e08e;box-shadow:0 0 8px #54e08e}
+.heading{margin-top:auto;border-top:1px solid #0d3322;padding-top:14px;font-size:10px;color:#2a8a64;line-height:2}.heading b{color:#54e08e}
+</style></head><body>
+<div class="col left">
+<div class="wm">JARVIS·SONAR</div><div class="st">● ONLINE · OPUS · 20:34</div>
+<h2>DEPTH</h2>
+<div class="gaugebox"><svg class="arc" width="120" height="70" viewBox="0 0 120 70"><path d="M10,65 A50,50 0 0 1 110,65" fill="none" stroke="#0d3322" stroke-width="8"/><path d="M10,65 A50,50 0 0 1 86,28" fill="none" stroke="#54e08e" stroke-width="8" stroke-linecap="round"/></svg><div class="gv">72%</div><div class="gl">JOB DEPTH · habit-tracker</div></div>
+<h2>HEADING</h2>
+<div class="gaugebox"><svg class="arc" width="120" height="70" viewBox="0 0 120 70"><path d="M10,65 A50,50 0 0 1 110,65" fill="none" stroke="#0d3322" stroke-width="8"/><path d="M10,65 A50,50 0 0 1 60,15" fill="none" stroke="#54e08e" stroke-width="8" stroke-linecap="round"/></svg><div class="gv">4.2×</div><div class="gl">ROI BEARING</div></div>
+<div class="heading">PINGS ACTIVE <b>2</b><br>QUEUE <b>newsletter #14</b></div>
+</div>
+<div class="center">
+<div class="title"><span>SONAR WATERFALL · CONTACTS</span><span>GAIN 0.8 · 51 AGENTS</span></div>
+<div class="waterfall" id="wf">
+<div class="wfline" style="top:14%;background:rgba(84,224,142,.07)"></div>
+<div class="wfline" style="top:28%;background:rgba(84,224,142,.10)"></div>
+<div class="wfline" style="top:42%;background:rgba(84,224,142,.07)"></div>
+<div class="wfline" style="top:56%;background:rgba(84,224,142,.10)"></div>
+<div class="wfline" style="top:70%;background:rgba(84,224,142,.07)"></div>
+<div class="wfline" style="top:84%;background:rgba(84,224,142,.10)"></div>
+<div class="contact" style="top:18%;left:30%;width:120px"></div><div class="clbl" style="top:12%;left:30%">CODE · habit-tracker 72%</div>
+<div class="contact" style="top:36%;left:55%;width:90px"></div><div class="clbl" style="top:30%;left:55%">SCOUT · note-niche 40%</div>
+<div class="contact" style="top:52%;left:18%;width:70px;background:linear-gradient(90deg,transparent,#ffce6a,transparent);box-shadow:0 0 10px rgba(255,206,106,.6)"></div><div class="clbl" style="top:46%;left:18%;color:#ffe2a0">EA · publish SaaS $39</div>
+<div class="contact" style="top:66%;left:48%;width:60px;background:linear-gradient(90deg,transparent,#ff7a7a,transparent);box-shadow:0 0 10px rgba(255,122,122,.6)"></div><div class="clbl" style="top:60%;left:48%;color:#ffb3b3">INVOICE 14 cust $1,240</div>
+<div class="contact" style="top:80%;left:62%;width:80px"></div><div class="clbl" style="top:74%;left:62%">NEWSLETTER #14 queued</div>
+</div>
+</div>
+<div class="col right">
+<h2>CONTACT LOG</h2>
+<div class="con"><span class="dotc" style="background:#ff7a7a;box-shadow:0 0 8px #ff7a7a"></span><span class="cn">Invoice 14 cust</span><span class="cb">$1,240</span></div>
+<div class="con"><span class="dotc" style="background:#ffce6a;box-shadow:0 0 8px #ffce6a"></span><span class="cn">Publish SaaS</span><span class="cb">$39</span></div>
+<div class="con"><span class="dotc"></span><span class="cn">habit-tracker</span><span class="cb">72%</span></div>
+<div class="con"><span class="dotc"></span><span class="cn">note-niche</span><span class="cb">40%</span></div>
+<div class="con"><span class="dotc"></span><span class="cn">newsletter #14</span><span class="cb">QUE</span></div>
+<h2>MONEY SOUNDING</h2>
+<div class="con"><span class="cn">Net month</span><span class="cb">$3,840 ▲18%</span></div>
+<div class="con"><span class="cn">Stripe</span><span class="cb">$1,240</span></div>
+<div class="con"><span class="cn">Gumroad</span><span class="cb">$890</span></div>
+<div class="con"><span class="cn">Newsletter</span><span class="cb">$400</span></div>
+<div class="heading">AI COST <b>$58 / $80</b><br>CONNECTORS <b>9 LIVE</b> / 26<br>PRODUCTS <b>7 LIVE</b></div>
+</div>
+</body></html>

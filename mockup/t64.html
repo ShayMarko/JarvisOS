@@ -1,0 +1,28 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T64</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#dbeaff;background:radial-gradient(900px 700px at 50% 32%,#0c1c3a,#04060e);display:flex;flex-direction:column}
+.top{display:flex;justify-content:space-between;padding:22px 36px}.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#6cb6ff}.st{font-size:12px;color:#5a7aa0}
+.stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
+.orb{width:220px;height:220px;border-radius:50%;background:radial-gradient(circle at 50% 38%,#eafaff,#6cb6ff 45%,#1d5fae);box-shadow:0 0 100px rgba(108,182,255,.6),inset 0 0 40px rgba(255,255,255,.5);position:relative}
+.ring{position:absolute;border:1px solid rgba(108,182,255,.25);border-radius:50%}.r1{inset:-40px}.r2{inset:-80px;border-style:dashed}
+.greet{font-size:24px;font-weight:300}.greet b{color:#6cb6ff;font-weight:600}
+.hint{font-size:13px;color:#5a7aa0;letter-spacing:2px;text-transform:uppercase}
+.ribbon{display:flex;align-items:stretch;border-top:1px solid rgba(108,182,255,.18);background:rgba(8,18,38,.6);backdrop-filter:blur(10px)}
+.cell{flex:1;text-align:center;padding:16px;border-right:1px solid rgba(108,182,255,.1)}
+.cell .l{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#5a7aa0}.cell .v{font-size:22px;font-weight:800;margin-top:4px}.cell .v.w{color:#ffce5a}.cell .v.g{color:#46e0a0}
+.bar{display:flex;align-items:center;gap:12px;padding:14px 36px}
+.cmd{flex:1;display:flex;align-items:center;gap:12px;background:rgba(12,24,46,.7);border:1px solid rgba(108,182,255,.25);border-radius:14px;padding:11px 16px}
+.cmd input{flex:1;background:0;border:0;outline:0;color:#dbeaff;font-size:15px}.cmd input::placeholder{color:#5a7aa0}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS</div><div class="st">● ONLINE · OPUS · 20:34</div></div>
+<div class="stage"><div class="orb"><div class="ring r1"></div><div class="ring r2"></div></div>
+<div class="greet">Good evening, <b>Shay</b>.</div><div class="hint">standing by · ROI 4.2×</div></div>
+<div class="ribbon">
+<div class="cell"><div class="l">Needs you</div><div class="v w">3</div></div>
+<div class="cell"><div class="l">Net · month</div><div class="v g">$3,840</div></div>
+<div class="cell"><div class="l">Jobs</div><div class="v">2</div></div>
+<div class="cell"><div class="l">Agents</div><div class="v">51</div></div>
+<div class="cell" style="border-right:0"><div class="l">Connectors</div><div class="v">26</div></div>
+</div>
+<div class="bar"><div class="cmd"><span style="color:#6cb6ff">🎙</span><input placeholder="Ask Jarvis, or type a /command… · say “Hey Jarvis”"><span style="color:#5a7aa0;font-size:12px">⌘K</span></div></div>
+</body></html>

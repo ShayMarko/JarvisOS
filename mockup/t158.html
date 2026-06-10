@@ -1,0 +1,68 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T158</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,-apple-system,sans-serif}
+body{height:100vh;overflow:hidden;color:#f4f6ff;
+  background:#07060e;
+  background-image:radial-gradient(1200px 800px at 20% -10%,rgba(120,60,255,.25),transparent),
+    radial-gradient(1000px 700px at 100% 110%,rgba(0,200,255,.2),transparent)}
+.wrap{height:100vh;display:grid;grid-template-columns:1.05fr 1fr;gap:30px;padding:42px 52px}
+.holo{background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.03));
+  border:1px solid rgba(255,255,255,.18);border-radius:26px;backdrop-filter:blur(14px);position:relative;overflow:hidden}
+.holo::before{content:"";position:absolute;inset:0;border-radius:26px;padding:1px;
+  background:linear-gradient(135deg,#ff5fd2,#7d5cff,#33e1ff,#5cff9d,#ffd23c,#ff5fd2);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.6}
+.holo::after{content:"";position:absolute;top:-40%;left:-30%;width:80%;height:180%;transform:rotate(20deg);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);filter:blur(6px)}
+.card{padding:38px 40px;display:flex;flex-direction:column;height:100%;position:relative;z-index:1}
+.iri{background:linear-gradient(110deg,#ff5fd2,#7d5cff 35%,#33e1ff 65%,#5cff9d);-webkit-background-clip:text;background-clip:text;color:transparent}
+.wm{font-size:15px;font-weight:800;letter-spacing:5px}
+.st{font-size:11px;letter-spacing:1px;color:rgba(244,246,255,.6);margin-top:6px}
+.greet{font-size:30px;font-weight:300;margin-top:auto}.greet b{font-weight:700}
+.big{font-size:84px;font-weight:800;letter-spacing:-3px;line-height:1;margin:14px 0 4px}
+.biglbl{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:rgba(244,246,255,.7)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:26px}
+.chip{font-size:11px;padding:7px 13px;border-radius:999px;border:1px solid rgba(255,255,255,.2);
+  background:linear-gradient(120deg,rgba(255,95,210,.18),rgba(51,225,255,.18));backdrop-filter:blur(6px)}
+.idline{font-size:10px;letter-spacing:3px;color:rgba(244,246,255,.45);margin-top:24px;font-family:ui-monospace,monospace}
+.col{display:flex;flex-direction:column;gap:18px}
+.panel{background:linear-gradient(140deg,rgba(255,255,255,.1),rgba(255,255,255,.02));
+  border:1px solid rgba(255,255,255,.14);border-radius:20px;padding:18px 20px;backdrop-filter:blur(12px)}
+.k{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(244,246,255,.55);margin-bottom:12px}
+.li{display:flex;justify-content:space-between;align-items:center;font-size:14px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+.li:last-child{border:0}
+.tag{font-size:9px;font-weight:800;padding:3px 7px;border-radius:6px;letter-spacing:.5px}
+.crit{background:linear-gradient(120deg,#ff5fd2,#ff8a5c);color:#1a0014}
+.hi{background:linear-gradient(120deg,#33e1ff,#7d5cff);color:#04121a}
+.amt{font-weight:700}
+.prog{height:7px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:8px}
+.pf{height:100%;background:linear-gradient(90deg,#ff5fd2,#7d5cff,#33e1ff)}
+.muted{font-size:12px;color:rgba(244,246,255,.6)}
+.bar{margin-top:auto;display:flex;align-items:center;gap:12px;border-radius:16px;padding:13px 16px;
+  background:linear-gradient(140deg,rgba(255,255,255,.12),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(12px)}
+.bar input{flex:1;background:0;border:0;outline:0;color:#f4f6ff;font-size:14px}.bar input::placeholder{color:rgba(244,246,255,.45)}
+</style></head><body><div class="wrap">
+<div class="holo"><div class="card">
+<div class="wm iri">JARVIS</div>
+<div class="st">● Online · Opus · 20:34 · Tue Jun 09</div>
+<div class="greet">Good evening,<br><b>Shay.</b></div>
+<div class="big iri">$3,840</div>
+<div class="biglbl">Net this month · ROI 4.2× · ▲18%</div>
+<div class="chips"><span class="chip">51 agents</span><span class="chip">26 connectors · 9 live</span><span class="chip">7 products live</span><span class="chip">AI $58 / $80</span></div>
+<div class="idline">JARVIS-OS · CRED 0xA1F2 · HOLO-VERIFIED ✦</div>
+</div></div>
+<div class="col">
+<div class="panel"><div class="k">Needs you · 3</div>
+<div class="li"><span><span class="tag crit">CRIT</span> &nbsp;Send invoice → 14 customers</span><span class="amt iri">$1,240</span></div>
+<div class="li"><span><span class="tag hi">HIGH</span> &nbsp;Publish SaaS starter → Gumroad</span><span class="amt">$39</span></div>
+<div class="li"><span><span class="tag hi">HIGH</span> &nbsp;Deploy micro-API → Cloudflare</span><span class="muted">queued</span></div>
+</div>
+<div class="panel"><div class="k">Jobs running · 2</div>
+<div><div class="li" style="border:0;padding-bottom:0"><span>habit-tracker app · Code</span><span class="amt">72%</span></div><div class="prog"><div class="pf" style="width:72%"></div></div></div>
+<div style="margin-top:14px"><div class="li" style="border:0;padding-bottom:0"><span>research note-taking · Scout</span><span class="amt">40%</span></div><div class="prog"><div class="pf" style="width:40%"></div></div></div>
+<div class="muted" style="margin-top:12px">newsletter #14 · queued</div>
+</div>
+<div class="panel"><div class="k">Proactive</div>
+<div style="font-size:14px;line-height:1.5">Double down: the <b>“REST API + auth”</b> guide drove <span class="iri" style="font-weight:700">61%</span> of traffic. Write two follow-ups?</div>
+</div>
+<div class="bar"><span class="iri">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span class="muted">⌘K</span></div>
+</div>
+</div></body></html>

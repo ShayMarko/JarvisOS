@@ -1,0 +1,51 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T258</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,-apple-system,sans-serif}
+body{height:100vh;overflow:hidden;color:#dde8e4;background:linear-gradient(180deg,#0a0f12 0%,#0c1518 60%,#0e1c1e 100%)}
+.top{display:flex;align-items:center;gap:14px;padding:22px 40px;position:relative;z-index:5}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#5fd0a0}
+.st{font-size:12px;color:#4a7a64}.r{margin-left:auto;font-size:13px;color:#6a9a84}
+.cap{padding:0 40px;position:relative;z-index:5}
+.cap h1{font-size:24px;font-weight:600}.cap h1 b{color:#7fe6b0}
+.cap p{color:#5f9a80;font-size:13px;margin-top:3px}
+.terrain{position:absolute;inset:0;z-index:1}
+.peak{position:fixed;z-index:6;text-align:center}
+.peak .v{font-size:22px;font-weight:800;text-shadow:0 0 16px rgba(0,0,0,.6)}
+.peak .l{font-size:11px;letter-spacing:.8px;color:#8fbfa8;margin-top:1px}
+.peak .pin{width:2px;height:24px;background:linear-gradient(180deg,#7fe6b0,transparent);margin:4px auto 0}
+.bar{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);width:520px;display:flex;align-items:center;gap:12px;background:rgba(10,20,18,.8);border:1px solid rgba(95,208,160,.24);border-radius:14px;padding:11px 15px;z-index:7;backdrop-filter:blur(8px)}
+.bar input{flex:1;background:0;border:0;outline:0;color:#dde8e4;font-size:14px}.bar input::placeholder{color:#4a7a64}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · RELIEF</div><div class="st">● Online · Opus · 20:34</div><div class="r">revenue terrain · last 30 days</div></div>
+<div class="cap"><h1>The <b>landscape</b> of your month, Shay.</h1><p>Ridges are revenue lanes — the higher the peak, the bigger the earner.</p></div>
+<svg class="terrain" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+<defs>
+<linearGradient id="m1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a6e54"/><stop offset="100%" stop-color="#0c1c16"/></linearGradient>
+<linearGradient id="m2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f5642"/><stop offset="100%" stop-color="#0a1812"/></linearGradient>
+<linearGradient id="m3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16463a"/><stop offset="100%" stop-color="#081410"/></linearGradient>
+<linearGradient id="m4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f3830"/><stop offset="100%" stop-color="#06100c"/></linearGradient>
+<linearGradient id="glow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(127,230,176,.5)"/><stop offset="100%" stop-color="rgba(127,230,176,0)"/></linearGradient>
+</defs>
+<!-- back ridge (tallest = biggest earner) -->
+<path d="M0,560 L160,520 L320,300 L480,470 L660,200 L820,440 L1000,360 L1180,500 L1300,330 L1440,490 L1440,900 L0,900 Z" fill="url(#m1)"/>
+<!-- ridge crest glow -->
+<path d="M0,560 L160,520 L320,300 L480,470 L660,200 L820,440 L1000,360 L1180,500 L1300,330 L1440,490" fill="none" stroke="url(#glow)" stroke-width="3" opacity=".8"/>
+<!-- contour lines on back ridge -->
+<g fill="none" stroke="rgba(127,230,176,.12)" stroke-width="1">
+<path d="M0,620 L160,585 L320,400 L480,545 L660,330 L820,520 L1000,455 L1180,575 L1300,440 L1440,565"/>
+<path d="M0,690 L160,660 L320,510 L480,630 L660,470 L820,610 L1000,560 L1180,660 L1300,560 L1440,650"/>
+</g>
+<!-- mid ridge -->
+<path d="M0,700 L220,650 L420,520 L620,640 L820,500 L1040,600 L1240,490 L1440,600 L1440,900 L0,900 Z" fill="url(#m2)"/>
+<path d="M0,700 L220,650 L420,520 L620,640 L820,500 L1040,600 L1240,490 L1440,600" fill="none" stroke="rgba(95,208,160,.25)" stroke-width="2"/>
+<!-- front ridge -->
+<path d="M0,800 L260,760 L500,690 L760,770 L1000,680 L1240,760 L1440,710 L1440,900 L0,900 Z" fill="url(#m3)"/>
+<path d="M0,860 L300,830 L600,800 L900,840 L1200,810 L1440,830 L1440,900 L0,900 Z" fill="url(#m4)"/>
+<!-- haze layers -->
+<rect x="0" y="430" width="1440" height="90" fill="rgba(95,208,160,.04)"/>
+</svg>
+<div class="peak" style="top:148px;left:625px"><div class="v" style="color:#7fe6b0">$1,240</div><div class="l">Stripe subs</div><div class="pin"></div></div>
+<div class="peak" style="top:250px;left:280px"><div class="v">$890</div><div class="l">Gumroad</div><div class="pin"></div></div>
+<div class="peak" style="top:282px;left:1265px"><div class="v">$400</div><div class="l">Newsletter</div><div class="pin"></div></div>
+<div class="peak" style="top:310px;left:965px"><div class="v">$310</div><div class="l">Lemon Sq</div><div class="pin"></div></div>
+<div class="bar"><span style="color:#5fd0a0">🎙</span><input placeholder="Ask Jarvis about the terrain…"><span style="color:#4a7a64;font-size:12px">⌘K</span></div>
+</body></html>

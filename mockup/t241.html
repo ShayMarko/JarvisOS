@@ -1,0 +1,48 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T241</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Arial Black','Helvetica Neue',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#000;background:#fff}
+.op{height:100vh;display:grid;grid-template-columns:1fr 1.1fr;position:relative}
+.field{position:relative;overflow:hidden;background:#fff}
+.field::before{content:"";position:absolute;inset:-20%;background:repeating-radial-gradient(circle at 30% 50%,#000 0 14px,#fff 14px 28px);transform:scaleY(1)}
+.lefttext{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:space-between;padding:34px}
+.wmbox{background:#000;color:#fff;display:inline-block;padding:8px 16px;font-size:18px;font-weight:900;letter-spacing:6px;align-self:flex-start}
+.greet{background:#fff;color:#000;padding:14px 18px;font-size:50px;font-weight:900;line-height:.92;text-transform:uppercase;box-shadow:0 0 0 6px #000;align-self:flex-start}
+.greet b{display:block}
+.netbox{background:#000;color:#fff;padding:10px 16px;font-size:13px;font-weight:bold;letter-spacing:2px;align-self:flex-start}
+.right{position:relative;overflow:hidden}
+.right::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,#000 0 16px,#fff 16px 32px);transform:perspective(600px) rotateY(0deg)}
+.panel{position:relative;z-index:2;height:100%;padding:34px;display:flex;flex-direction:column;gap:14px}
+.card{background:#fff;border:5px solid #000;padding:14px 16px}
+.card.inv{background:#000;color:#fff}
+.ct{font-size:12px;font-weight:900;letter-spacing:3px;text-transform:uppercase;margin-bottom:8px;border-bottom:4px solid currentColor;padding-bottom:5px}
+.row{display:flex;justify-content:space-between;font-size:14px;font-weight:bold;padding:4px 0}
+.crit{background:#000;color:#fff;padding:3px 6px}
+.bar{height:16px;background:repeating-linear-gradient(90deg,#000 0 4px,#fff 4px 8px);border:2px solid #000;margin-top:4px}
+.foot{margin-top:auto;background:#000;color:#fff;display:flex;align-items:center;gap:12px;padding:12px 16px}
+.foot input{flex:1;background:0;border:0;outline:0;color:#fff;font-weight:900;font-size:14px;text-transform:uppercase}
+.foot input::placeholder{color:#aaa}
+.status{font-size:11px;font-weight:bold;letter-spacing:2px}
+</style></head><body><div class="op">
+<div class="field"><div class="lefttext">
+  <div><div class="wmbox">JARVIS</div></div>
+  <div class="greet">Good<br>Evening,<b>Shay.</b></div>
+  <div class="netbox">● ONLINE · OPUS · 20:34 · NET $3,840 · ROI 4.2× · ▲18%</div>
+</div></div>
+<div class="right"><div class="panel">
+  <div class="card inv"><div class="ct">Needs You</div>
+    <div class="row"><span class="crit">CRITICAL · Invoice → 14</span><span>$1,240</span></div>
+    <div class="row"><span>Publish SaaS starter</span><span>$39</span></div>
+    <div class="row"><span>Deploy micro-API</span><span>CF</span></div>
+  </div>
+  <div class="card"><div class="ct">Jobs Running</div>
+    <div class="row"><span>habit-tracker app</span><span>72%</span></div><div class="bar" style="width:72%"></div>
+    <div class="row" style="margin-top:8px"><span>research niche</span><span>40%</span></div><div class="bar" style="width:40%"></div>
+    <div class="row" style="margin-top:8px"><span>newsletter #14</span><span>QUEUED</span></div>
+  </div>
+  <div class="card"><div class="ct">System</div>
+    <div class="row"><span>51 agents</span><span>26 conn · 9 live</span></div>
+    <div class="row"><span>7 products live</span><span>AI $58/$80</span></div>
+  </div>
+  <div class="foot"><span>🎙</span><input placeholder="Ask Jarvis, or /command…"><span>⌘K</span></div>
+</div></div>
+</div></body></html>

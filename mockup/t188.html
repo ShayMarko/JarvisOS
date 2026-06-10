@@ -1,0 +1,49 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T188</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf6;background:#080b11}
+.top{display:flex;align-items:center;gap:14px;padding:22px 40px}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#46e0a0}.st{font-size:12px;color:#5f8278}.r{margin-left:auto;font-size:13px;color:#8a98a4}
+.hd{padding:0 40px}.hd h1{font-size:22px;font-weight:600}.hd h1 b{color:#46e0a0}.hd p{font-size:13px;color:#5f8278;margin-top:4px}
+.plot{margin:10px 40px 0;background:#0c1118;border:1px solid #16202a;border-radius:16px;padding:24px 40px;height:calc(100vh - 250px)}
+.cl{display:flex;justify-content:space-between;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#5f8278;margin-bottom:8px}
+.bar{position:fixed;bottom:22px;left:40px;right:40px;display:flex;align-items:center;gap:12px;background:rgba(12,17,24,.9);border:1px solid #16202a;border-radius:13px;padding:11px 15px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e6edf6;font-size:14px}.bar input::placeholder{color:#5f8278}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · SLOPE</div><div class="st">● ONLINE · OPUS · 20:34</div><div class="r">May → June · per metric</div></div>
+<div class="hd"><h1>Good evening, <b>Shay.</b></h1><p>every metric's before/after — slope up is good (except cost)</p></div>
+<div class="plot">
+<div class="cl"><span>May</span><span>June</span></div>
+<svg viewBox="0 0 1080 440" style="width:100%;height:calc(100% - 22px)">
+<line x1="260" y1="10" x2="260" y2="430" stroke="#1c2832" stroke-width="2"/>
+<line x1="820" y1="10" x2="820" y2="430" stroke="#1c2832" stroke-width="2"/>
+<g stroke-width="2.5" stroke-linecap="round">
+<!-- Net revenue: up -->
+<line x1="260" y1="110" x2="820" y2="40" stroke="#46e0a0"/>
+<!-- ROI: up -->
+<line x1="260" y1="180" x2="820" y2="120" stroke="#46e0a0"/>
+<!-- Visitors: up -->
+<line x1="260" y1="260" x2="820" y2="200" stroke="#7cc4ff"/>
+<!-- Products live: up -->
+<line x1="260" y1="330" x2="820" y2="290" stroke="#7cc4ff"/>
+<!-- AI cost: up (bad) -->
+<line x1="260" y1="390" x2="820" y2="360" stroke="#ff8c8c"/>
+</g>
+<g fill="#0c1118"><circle cx="260" cy="110" r="5" stroke="#46e0a0" stroke-width="2"/><circle cx="820" cy="40" r="5" stroke="#46e0a0" stroke-width="2"/>
+<circle cx="260" cy="180" r="5" stroke="#46e0a0" stroke-width="2"/><circle cx="820" cy="120" r="5" stroke="#46e0a0" stroke-width="2"/>
+<circle cx="260" cy="260" r="5" stroke="#7cc4ff" stroke-width="2"/><circle cx="820" cy="200" r="5" stroke="#7cc4ff" stroke-width="2"/>
+<circle cx="260" cy="330" r="5" stroke="#7cc4ff" stroke-width="2"/><circle cx="820" cy="290" r="5" stroke="#7cc4ff" stroke-width="2"/>
+<circle cx="260" cy="390" r="5" stroke="#ff8c8c" stroke-width="2"/><circle cx="820" cy="360" r="5" stroke="#ff8c8c" stroke-width="2"/></g>
+<!-- left labels -->
+<g fill="#8a98a4" font-size="13" text-anchor="end">
+<text x="240" y="114">Net $3,250</text><text x="240" y="184">ROI 3.6×</text><text x="240" y="264">Visitors 9.5k</text><text x="240" y="334">Products 5</text><text x="240" y="394">AI cost $44</text></g>
+<!-- right labels -->
+<g font-size="13" text-anchor="start">
+<text x="840" y="44" fill="#cfe" font-weight="700">Net $3,840 <tspan fill="#46e0a0" font-size="11">▲18%</tspan></text>
+<text x="840" y="124" fill="#cfe" font-weight="700">ROI 4.2× <tspan fill="#46e0a0" font-size="11">▲0.6</tspan></text>
+<text x="840" y="204" fill="#cfe" font-weight="700">Visitors 12.4k <tspan fill="#7cc4ff" font-size="11">▲31%</tspan></text>
+<text x="840" y="294" fill="#cfe" font-weight="700">Products 7 <tspan fill="#7cc4ff" font-size="11">+2</tspan></text>
+<text x="840" y="364" fill="#cfe" font-weight="700">AI cost $58 <tspan fill="#ff8c8c" font-size="11">▲32%</tspan></text></g>
+</svg>
+</div>
+<div class="bar"><span style="color:#46e0a0">🎙</span><input placeholder="Ask Jarvis why cost rose…"><span style="color:#5f8278;font-size:12px">⌘K</span></div>
+</body></html>

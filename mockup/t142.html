@@ -1,0 +1,44 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T142</title><style>
+*{margin:0;box-sizing:border-box;font-family:ui-monospace,'SF Mono','Menlo',monospace}
+body{height:100vh;overflow:hidden;background:#020802;color:#33ff66}
+.screen{position:relative;height:100vh;padding:30px 46px;background:radial-gradient(ellipse at center,#062606 0%,#010701 75%,#000 100%);overflow:hidden}
+.screen::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(rgba(0,0,0,0) 0 2px,rgba(0,0,0,.28) 2px 4px);pointer-events:none;z-index:5}
+.screen::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 180px rgba(0,0,0,.9);border-radius:38px/26px;pointer-events:none;z-index:6}
+.crt{filter:drop-shadow(0 0 3px #2bff5a);position:relative;z-index:2;text-shadow:0 0 6px rgba(51,255,102,.7)}
+.line{white-space:pre;line-height:1.55;font-size:14.5px}
+.dim{color:#1f9c3c;text-shadow:0 0 4px rgba(51,255,102,.4)}
+.amber{color:#ffcc44;text-shadow:0 0 6px rgba(255,204,68,.6)}
+.bright{color:#9bffb0;text-shadow:0 0 8px rgba(155,255,176,.8)}
+.cur{display:inline-block;width:10px;height:17px;background:#33ff66;box-shadow:0 0 8px #33ff66;vertical-align:-3px;animation:bl 1s steps(2) infinite}
+@keyframes bl{50%{opacity:0}}
+.hr{border:0;border-top:1px dashed #1f9c3c;margin:10px 0;opacity:.6}
+</style></head><body>
+<div class="screen"><div class="crt">
+<div class="line bright">  ╔══════════════════════════════════════════════════════════════════════════╗</div>
+<div class="line bright">  ║   J A R V I S   ·   LOCAL AI OS   v3        ● ONLINE  OPUS  20:34  TUE 09  ║</div>
+<div class="line bright">  ╚══════════════════════════════════════════════════════════════════════════╝</div>
+<hr class="hr">
+<div class="line">  jarvis&gt; <span class="amber">good evening, shay.</span>  <span class="dim"># wake phrase: "hey jarvis"</span></div>
+<div class="line dim">  &nbsp;</div>
+<div class="line">  <span class="dim">[ MONEY ]</span></div>
+<div class="line">    NET THIS MONTH ....... <span class="bright">$3,840</span>   ROI <span class="bright">4.2x</span>   <span class="amber">▲18%</span>   AI COST <span class="amber">$58/$80</span></div>
+<div class="line dim">    stripe $1,240   gumroad $890   newsletter $400   lemon-squeezy $310</div>
+<div class="line">    [<span class="bright">██████████████████████████</span><span class="dim">░░░░░░░░░░░</span>] 72% of ai budget</div>
+<hr class="hr">
+<div class="line">  <span class="dim">[ 3 THINGS NEED YOU ]</span></div>
+<div class="line">    <span class="amber">!! CRIT</span>  send invoice → 14 customers ......... <span class="bright">$1,240</span> <span class="dim">(EA · Resend)</span></div>
+<div class="line">    <span class="bright">!  HIGH</span>  publish SaaS starter → gumroad ...... <span class="bright">$39</span></div>
+<div class="line">    <span class="bright">!  HIGH</span>  deploy micro-API → cloudflare ....... <span class="dim">edge worker</span></div>
+<hr class="hr">
+<div class="line">  <span class="dim">[ JOBS RUNNING ]</span></div>
+<div class="line">    habit-tracker app   <span class="dim">code</span>  [<span class="bright">██████████████████</span><span class="dim">███████</span>] <span class="bright">72%</span></div>
+<div class="line">    research niche      <span class="dim">scout</span> [<span class="bright">██████████</span><span class="dim">███████████████</span>] <span class="bright">40%</span></div>
+<div class="line">    newsletter #14      <span class="dim">[ queued ]</span></div>
+<hr class="hr">
+<div class="line">  <span class="dim">[ SYSTEM ]</span>  agents <span class="bright">51</span>   connectors <span class="bright">26</span> <span class="dim">(9 live)</span>   products <span class="bright">7</span> live</div>
+<div class="line dim">  &nbsp;</div>
+<div class="line">  <span class="dim">// proactive:</span> <span class="amber">double down — "REST API + auth" guide drove 61% of traffic</span></div>
+<hr class="hr">
+<div class="line">  jarvis&gt; ask jarvis, or type a /command…_<span class="cur"></span></div>
+</div></div>
+</body></html>

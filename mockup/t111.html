@@ -1,0 +1,57 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T111</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,-apple-system,sans-serif}
+body{height:100vh;overflow:hidden;background:#0a0d14;color:#e7edf5;display:flex;align-items:center;justify-content:center}
+.bg{position:fixed;inset:0;background:radial-gradient(circle at 20% 20%,#13233a,transparent 50%),radial-gradient(circle at 80% 80%,#1a1330,transparent 50%)}
+.ticket{position:relative;display:flex;width:1180px;height:430px;border-radius:18px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.main{flex:1;background:linear-gradient(135deg,#101826,#0c1119);padding:30px 38px;display:flex;flex-direction:column}
+.hd{display:flex;align-items:center;justify-content:space-between}
+.wm{font-size:20px;font-weight:800;letter-spacing:4px;color:#3fb8ff}
+.cls{font-size:12px;letter-spacing:2px;color:#7a8696;border:1px solid #2a3645;border-radius:20px;padding:5px 13px}
+.route{display:flex;align-items:center;gap:26px;margin:30px 0 8px}
+.ap{text-align:center}.ap .code{font-size:52px;font-weight:800;letter-spacing:1px}.ap .nm{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#7a8696;margin-top:2px}
+.arc{flex:1;position:relative;height:40px}
+.arc svg{width:100%;height:100%}
+.plane{position:absolute;left:50%;top:0;transform:translateX(-50%);font-size:18px;color:#3fb8ff}
+.fields{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:22px;border-top:1px solid #1c2632;padding-top:18px}
+.f .l{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#6b7686}.f .v{font-size:19px;font-weight:700;margin-top:4px}
+.gate{margin-top:auto;display:flex;align-items:center;gap:14px;background:#0e1a14;border:1px solid #1e3a2a;border-radius:12px;padding:14px 18px}
+.gate .ic{width:38px;height:38px;border-radius:50%;background:#46e0a0;color:#04150d;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.gate .gl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#5e9e7e}.gate .gv{font-size:16px;font-weight:700;margin-top:2px}
+.gate .amt{margin-left:auto;text-align:right}.gate .amt b{font-size:20px;color:#46e0a0}.gate .amt small{display:block;font-size:10px;color:#5e9e7e}
+.perf{width:0;border-left:2px dashed #2a3645;position:relative}
+.perf::before,.perf::after{content:"";position:absolute;left:-15px;width:30px;height:30px;border-radius:50%;background:#0a0d14}
+.perf::before{top:-15px}.perf::after{bottom:-15px}
+.stub{width:300px;background:linear-gradient(135deg,#16223a,#0e1626);padding:28px 26px;display:flex;flex-direction:column}
+.stub .wm{font-size:14px;color:#7fcfff}
+.stub .sf{margin-top:18px}.stub .sf .l{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#6b7686}.stub .sf .v{font-size:16px;font-weight:700;margin-top:3px}
+.bars{margin-top:auto;display:flex;gap:2px;height:54px;align-items:stretch}
+.bars i{flex:1;background:#cfe0f2}
+.bnum{font-family:ui-monospace,monospace;font-size:12px;letter-spacing:3px;color:#9fb2c6;text-align:center;margin-top:8px}
+</style></head><body><div class="bg"></div>
+<div class="ticket">
+<div class="main">
+<div class="hd"><div class="wm">JARVIS</div><div class="cls">BOARDING PASS · CLASS OPUS</div></div>
+<div class="route">
+<div class="ap"><div class="code">NOW</div><div class="nm">20:34 · Tue Jun 09</div></div>
+<div class="arc"><svg viewBox="0 0 400 40" preserveAspectRatio="none"><path d="M0,30 Q200,0 400,30" fill="none" stroke="#2a3645" stroke-width="2" stroke-dasharray="4 5"/></svg><span class="plane">✈</span></div>
+<div class="ap"><div class="code">EOD</div><div class="nm">Net $3,840 · ROI 4.2×</div></div>
+</div>
+<div class="fields">
+<div class="f"><div class="l">Passenger</div><div class="v">SHAY</div></div>
+<div class="f"><div class="l">Itinerary</div><div class="v">3 stops</div></div>
+<div class="f"><div class="l">Crew</div><div class="v">51 agents</div></div>
+<div class="f"><div class="l">Budget</div><div class="v">$58/$80</div></div>
+</div>
+<div class="gate"><div class="ic">▶</div><div><div class="gl">Gate · next action</div><div class="gv">Send invoice → 14 customers</div></div><div class="amt"><b>$1,240</b><small>CRITICAL · EA via Resend</small></div></div>
+</div>
+<div class="perf"></div>
+<div class="stub">
+<div class="wm">JARVIS · STUB</div>
+<div class="sf"><div class="l">Seat</div><div class="v">7-PROD-A</div></div>
+<div class="sf"><div class="l">Connecting</div><div class="v">Publish → Gumroad $39</div></div>
+<div class="sf"><div class="l">Then</div><div class="v">Deploy → Cloudflare</div></div>
+<div class="sf"><div class="l">Cargo</div><div class="v">newsletter #14</div></div>
+<div class="bars"><i></i><i style="flex:.4"></i><i style="flex:2"></i><i style="flex:.5"></i><i></i><i style="flex:1.6"></i><i style="flex:.4"></i><i style="flex:1.2"></i><i style="flex:.5"></i><i style="flex:2"></i><i style="flex:.4"></i><i></i><i style="flex:1.4"></i><i style="flex:.5"></i><i style="flex:1.8"></i><i style="flex:.4"></i><i style="flex:1"></i><i style="flex:.5"></i><i style="flex:1.6"></i><i style="flex:.4"></i></div>
+<div class="bnum">JARVIS·0609·SHAY·OPUS</div>
+</div>
+</div></body></html>

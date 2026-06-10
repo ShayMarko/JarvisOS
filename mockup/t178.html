@@ -1,0 +1,43 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T178</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf6;background:radial-gradient(1300px 900px at 50% -10%,#1b2436,#0a0e16 65%)}
+.mc{height:100vh;display:flex;flex-direction:column;padding:26px 34px 22px}
+.top{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+.wm{font-size:16px;font-weight:800;letter-spacing:3px;color:#7cc0ff}
+.spaces{display:flex;gap:10px;margin:0 auto}
+.sp{font-size:12px;color:#7e93ad;padding:5px 14px;border-radius:20px;border:1px solid #243246}
+.sp.on{background:rgba(124,192,255,.16);color:#cfe6ff;border-color:#3a5d80}
+.st{font-size:12px;color:#7e93ad}
+.grid{flex:1;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr);gap:22px;padding-top:8px}
+.win{background:#0e1622;border:1px solid #1d2c3e;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 16px 40px rgba(0,0,0,.4);transform:scale(.97);transition:.2s}
+.bar{display:flex;align-items:center;gap:6px;padding:9px 12px;background:#121d2c;border-bottom:1px solid #1d2c3e}
+.lights{display:flex;gap:6px}.lights i{width:10px;height:10px;border-radius:50%}.r{background:#ff5f57}.y{background:#febc2e}.g{background:#28c840}
+.bar .ttl{font-size:11px;font-weight:600;color:#9fb4cc;margin-left:6px}
+.win .content{flex:1;padding:14px 15px;overflow:hidden}
+.k{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#5e7088;margin-bottom:8px}
+.big{font-size:32px;font-weight:800;letter-spacing:-1px}.up{color:#46e0a0}
+.li{display:flex;gap:8px;font-size:12px;padding:6px 0;border-bottom:1px solid #16202e;color:#bcccdd}
+.li:last-child{border:0}.li .n{margin-left:auto;color:#7e93ad}
+.cd{color:#ff7a7a}.cy{color:#f2c14e}
+.bars{display:flex;align-items:flex-end;gap:6px;height:78px;margin-top:6px}
+.bars div{flex:1;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#7cc0ff,rgba(124,192,255,.2))}
+.prog{height:5px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;margin-top:5px}.prog i{display:block;height:100%;background:#7cc0ff}
+.focus{transform:scale(1);border-color:#7cc0ff;box-shadow:0 0 0 4px rgba(124,192,255,.14),0 20px 50px rgba(0,0,0,.5)}
+.msg{font-size:12px;padding:8px 11px;border-radius:11px;margin-bottom:8px;line-height:1.45}
+.ja{background:#16222f;border:1px solid #1d2c3e}.me{background:#1a3340;color:#dff;margin-left:auto;max-width:80%}
+.chips{display:flex;gap:6px;flex-wrap:wrap}.chip{font-size:11px;padding:4px 10px;border-radius:14px;background:rgba(124,192,255,.1);border:1px solid #243a52;color:#9fc4e6}
+</style></head><body>
+<div class="mc">
+<div class="top"><div class="wm">JARVIS</div><div class="spaces"><span class="sp on">Today</span><span class="sp">Money</span><span class="sp">Build</span></div><div class="st">● Online · Opus · 20:34 · Tue Jun 09 — Mission Control</div></div>
+<div class="grid">
+<div class="win"><div class="bar"><div class="lights"><i class="r"></i><i class="y"></i><i class="g"></i></div><span class="ttl">Money</span></div><div class="content"><div class="k">Net · month</div><div class="big">$3,840 <span class="up" style="font-size:15px">▲18%</span></div><div class="bars"><div style="height:50%"></div><div style="height:62%"></div><div style="height:48%"></div><div style="height:74%"></div><div style="height:88%"></div><div style="height:100%"></div></div></div></div>
+<div class="win"><div class="bar"><div class="lights"><i class="r"></i><i class="y"></i><i class="g"></i></div><span class="ttl">Revenue sources</span></div><div class="content"><div class="li">Stripe subs<span class="n">$1,240</span></div><div class="li">Gumroad<span class="n">$890</span></div><div class="li">Lemon Squeezy<span class="n">$310</span></div><div class="li">Newsletter<span class="n">$400</span></div></div></div>
+<div class="win focus"><div class="bar"><div class="lights"><i class="r"></i><i class="y"></i><i class="g"></i></div><span class="ttl">Needs you · 3</span></div><div class="content"><div class="li"><span class="cd">●</span>Invoice → 14 customers<span class="n">$1,240</span></div><div class="li"><span class="cy">●</span>Publish SaaS starter<span class="n">$39</span></div><div class="li"><span class="cy">●</span>Deploy micro-API<span class="n">CF</span></div></div></div>
+<div class="win"><div class="bar"><div class="lights"><i class="r"></i><i class="y"></i><i class="g"></i></div><span class="ttl">ROI</span></div><div class="content"><div class="k">Return · AI cost</div><div class="big up">4.2×</div><div class="li" style="margin-top:8px">AI cost<span class="n">$58 / $80</span></div></div></div>
+<div class="win"><div class="bar"><div class="lights"><i class="r"></i><i class="y"></i><i class="g"></i></div><span class="ttl">habit-tracker · Code</span></div><div class="content"><div class="k">Building · 72%</div><div class="prog"><i style="width:72%"></i></div><div class="li" style="margin-top:12px">scaffold ✓<span class="n">done</span></div><div class="li">auth + db<span class="n">now</span></div></div></div>
+<div class="win"><div class="bar"><div class="lights"><i class="r"></i><i class="y"></i><i class="g"></i></div><span class="ttl">research niche · Scout</span></div><div class="content"><div class="k">Researching · 40%</div><div class="prog"><i style="width:40%"></i></div><div class="li" style="margin-top:12px">note-taking niche<span class="n">scan</span></div><div class="li">newsletter #14<span class="n">queued</span></div></div></div>
+<div class="win"><div class="bar"><div class="lights"><i class="r"></i><i class="y"></i><i class="g"></i></div><span class="ttl">Agents</span></div><div class="content"><div class="k">System</div><div class="big">51</div><div class="li" style="margin-top:8px">connectors<span class="n">26 · 9 live</span></div><div class="li">products live<span class="n">7</span></div></div></div>
+<div class="win"><div class="bar"><div class="lights"><i class="r"></i><i class="y"></i><i class="g"></i></div><span class="ttl">Chat</span></div><div class="content"><div class="msg ja">Good evening, Shay. 3 things need you.</div><div class="msg me">Show the money</div><div class="chips"><span class="chip">/money</span><span class="chip">/jobs</span><span class="chip">Hey Jarvis</span></div></div></div>
+</div>
+</div>
+</body></html>

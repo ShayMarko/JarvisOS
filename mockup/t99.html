@@ -1,0 +1,84 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T99</title><style>
+*{margin:0;box-sizing:border-box;font-family:ui-monospace,'SF Mono',Menlo,monospace}
+body{height:100vh;overflow:hidden;background:#000;color:#ffb000;font-size:11.5px}
+.bar{display:flex;align-items:center;gap:0;background:#0a0a00;border-bottom:1px solid #332600;padding:0}
+.bar .cmd{background:#ffb000;color:#000;font-weight:800;padding:4px 10px;letter-spacing:1px}
+.bar span{padding:4px 12px;border-right:1px solid #221a00;color:#cc8e00}
+.bar .grn{color:#00d860}.bar .r{margin-left:auto;color:#665400}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr);gap:2px;height:calc(100vh - 28px);padding:2px;background:#221a00}
+.w{background:#040400;border:1px solid #332600;padding:6px 8px;overflow:hidden;display:flex;flex-direction:column}
+.wh{color:#00d860;font-weight:700;letter-spacing:.5px;border-bottom:1px solid #221a00;padding-bottom:3px;margin-bottom:4px;display:flex;justify-content:space-between}
+.wh .pg{color:#665400}
+.row{display:flex;justify-content:space-between;padding:1.5px 0;line-height:1.45}
+.row .lbl{color:#cc8e00}.up{color:#00d860}.dn{color:#ff3b3b}.amb{color:#ffb000}.wht{color:#e8e8d8}
+.big{font-size:26px;font-weight:800;color:#00d860;line-height:1}
+.tick{display:flex;gap:14px;overflow:hidden;white-space:nowrap}
+.tick b{color:#e8e8d8}
+table{width:100%;border-collapse:collapse}td{padding:1px 0;color:#cc8e00}td.n{text-align:right;font-variant-numeric:tabular-nums}
+.spark{height:34px;display:flex;align-items:flex-end;gap:2px;margin-top:4px}
+.spark i{flex:1;background:#006e33}.spark i.h{background:#00d860}
+.gauge{margin-top:6px}.gtrack{height:9px;background:#1a1400;border:1px solid #332600}.gfill{height:100%;background:linear-gradient(90deg,#00d860,#ffb000)}
+.dense td{font-size:11px}
+</style></head><body>
+<div class="bar"><span class="cmd">JARVIS</span><span>GO <span class="grn">●ONLINE</span></span><span>OPUS</span><span>20:34:11</span><span>TUE 09 JUN</span><span class="grn">51 AGENTS</span><span>26 CONN <span class="grn">9 LIVE</span></span><span class="r">7 PRODUCTS LIVE · HEY JARVIS</span></div>
+<div class="grid">
+<div class="w" style="grid-column:1/3">
+<div class="wh"><span>JARVIS &lt;EQUITY&gt; — REVENUE MONITOR</span><span class="pg">1/4</span></div>
+<div class="tick"><span><b>NET</b> <span class="up">3,840 ▲18%</span></span><span><b>ROI</b> <span class="up">4.2x</span></span><span><b>AICOST</b> <span class="amb">58/80</span></span><span><b>SUBS</b> <span class="wht">14</span></span></div>
+<table class="dense"><tr><td>STRIPE SUBS</td><td class="n wht">1,240</td><td class="n up">▲22%</td><td>14 ACT</td></tr>
+<tr><td>GUMROAD</td><td class="n wht">890</td><td class="n up">▲9%</td><td>LIVE</td></tr>
+<tr><td>LEMON SQ</td><td class="n wht">310</td><td class="n dn">▼3%</td><td>MoR</td></tr>
+<tr><td>NEWSLETTER</td><td class="n wht">400</td><td class="n up">▲41%</td><td>#14 Q</td></tr>
+<tr><td class="amb">GROSS</td><td class="n amb">2,840</td><td class="n up">▲18%</td><td></td></tr></table>
+<div class="spark"><i style="height:30%"></i><i style="height:38%"></i><i style="height:34%"></i><i style="height:50%"></i><i style="height:46%"></i><i style="height:62%"></i><i style="height:58%"></i><i style="height:74%"></i><i style="height:70%"></i><i style="height:88%"></i><i class="h" style="height:100%"></i></div>
+</div>
+<div class="w">
+<div class="wh"><span>NET·MTD</span><span class="pg">2/4</span></div>
+<div class="big">$3,840</div>
+<div class="row"><span class="lbl">ROI</span><span class="up">4.2x ▲0.4</span></div>
+<div class="row"><span class="lbl">MoM</span><span class="up">▲18%</span></div>
+<div class="row"><span class="lbl">TAX RSV</span><span class="dn">-1,075</span></div>
+<div class="row"><span class="lbl">KEEP</span><span class="wht">2,765</span></div>
+</div>
+<div class="w">
+<div class="wh"><span>AI COST</span><span class="pg">3/4</span></div>
+<div class="big amb" style="color:#ffb000">$58</div>
+<div class="row"><span class="lbl">BUDGET</span><span class="wht">/ $80</span></div>
+<div class="gauge"><div class="gtrack"><div class="gfill" style="width:72%"></div></div></div>
+<div class="row"><span class="lbl">UTIL</span><span class="amb">72%</span></div>
+<div class="row"><span class="lbl">ROUTE</span><span class="grn">CHEAP-OK</span></div>
+</div>
+<div class="w" style="grid-column:1/2;grid-row:2/4">
+<div class="wh"><span>NEEDS YOU</span><span class="pg">!3</span></div>
+<div class="row"><span class="dn">●CRIT</span></div><div style="color:#e8e8d8;line-height:1.3">INVOICE→14 CUST</div><div class="row"><span class="lbl">VAL</span><span class="up">1,240</span></div><div class="row"><span class="lbl">VIA</span><span class="amb">EA·RESEND</span></div>
+<div class="row" style="margin-top:6px"><span class="amb">!HIGH</span></div><div style="color:#e8e8d8">PUBLISH SAAS→GUMROAD 39</div>
+<div class="row" style="margin-top:6px"><span class="amb">!HIGH</span></div><div style="color:#e8e8d8">DEPLOY API→CLOUDFLARE</div>
+<div class="row" style="margin-top:auto;border-top:1px solid #221a00;padding-top:4px"><span class="lbl">ACTION</span><span class="grn">APPROVE</span></div>
+</div>
+<div class="w" style="grid-column:2/4">
+<div class="wh"><span>JOBS RUNNING — REALTIME</span><span class="pg">LIVE</span></div>
+<div class="row"><span class="lbl">HABIT-TRACKER APP</span><span class="up">72%</span></div><div class="gauge"><div class="gtrack"><div class="gfill" style="width:72%"></div></div></div>
+<div class="row" style="margin-top:5px"><span class="lbl">RESEARCH NOTE-TAKING NICHE</span><span class="amb">40%</span></div><div class="gauge"><div class="gtrack"><div class="gfill" style="width:40%"></div></div></div>
+<div class="row" style="margin-top:5px"><span class="lbl">NEWSLETTER #14</span><span class="amb">QUEUED</span></div>
+<div class="row" style="margin-top:auto"><span class="lbl">AGENTS</span><span class="wht">CODE · SCOUT · NEWS</span></div>
+</div>
+<div class="w">
+<div class="wh"><span>SOURCES</span><span class="pg">PIE</span></div>
+<svg viewBox="0 0 100 100" style="width:88px;height:88px;margin:4px auto">
+<circle r="50" cx="50" cy="50" fill="#040400"/>
+<path d="M50,50 L50,0 A50,50 0 0,1 97.5,34.5 Z" fill="#00d860"/>
+<path d="M50,50 L97.5,34.5 A50,50 0 0,1 79,93 Z" fill="#00a84d"/>
+<path d="M50,50 L79,93 A50,50 0 0,1 38,97.5 Z" fill="#ffb000"/>
+<path d="M50,50 L38,97.5 A50,50 0 0,1 50,0 Z" fill="#cc8e00"/>
+<circle r="24" cx="50" cy="50" fill="#040400"/></svg>
+<div class="row"><span class="lbl">■STRIPE</span><span class="wht">44%</span></div><div class="row"><span class="lbl">■GUMROAD</span><span class="wht">31%</span></div>
+</div>
+<div class="w">
+<div class="wh"><span>SUGGEST</span><span class="pg">AI</span></div>
+<div style="color:#00d860;line-height:1.35">▸ DOUBLE DOWN</div>
+<div style="color:#e8e8d8;line-height:1.35">"REST API + AUTH" GUIDE DROVE <span class="up">61%</span> OF TRAFFIC</div>
+<div class="row" style="margin-top:6px"><span class="lbl">PLAN</span><span class="amb">2 GUIDES + AB</span></div>
+<div class="row"><span class="lbl">CONF</span><span class="grn">HIGH</span></div>
+</div>
+</div>
+</body></html>

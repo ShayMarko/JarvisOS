@@ -1,0 +1,54 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T277</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;background:#1a1c22;display:flex;align-items:flex-start;justify-content:center}
+/* phone top */
+.phone{width:430px;height:900px;margin-top:0;background:linear-gradient(#0b1018,#0e1626);position:relative;border-radius:0 0 54px 54px;overflow:hidden;box-shadow:0 0 0 14px #050608,0 0 0 16px #23262d}
+.wall{position:absolute;inset:0;background:
+ radial-gradient(80% 50% at 50% 0%,rgba(90,160,255,.22),transparent 60%),
+ radial-gradient(70% 40% at 50% 100%,rgba(123,92,255,.16),transparent 60%)}
+/* status row */
+.status{position:absolute;top:16px;left:30px;right:30px;display:flex;justify-content:space-between;font-size:15px;font-weight:600;color:#dfe9f6;z-index:5}
+/* dynamic island — expanded pill */
+.island{position:absolute;top:14px;left:50%;transform:translateX(-50%);width:330px;background:#000;border-radius:34px;padding:16px 18px;box-shadow:0 16px 40px rgba(0,0,0,.6);z-index:10;border:1px solid rgba(120,160,220,.12)}
+.irow{display:flex;align-items:center;gap:12px}
+.icon{width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,#4da3ff,#7b5cff);display:flex;align-items:center;justify-content:center;font-size:21px;flex:none;box-shadow:0 0 18px rgba(77,163,255,.5)}
+.imeta{flex:1;min-width:0}
+.imeta .t{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#7fb0e8}
+.imeta .h{font-size:15px;font-weight:700;color:#fff;margin-top:1px}
+.imeta .s{font-size:12px;color:#8fa6c2;margin-top:1px}
+.pct{font-size:22px;font-weight:800;color:#5fdca6;font-variant-numeric:tabular-nums}
+.track{height:6px;border-radius:4px;background:rgba(255,255,255,.1);margin:14px 0 12px;overflow:hidden}
+.track i{display:block;height:100%;width:72%;border-radius:4px;background:linear-gradient(90deg,#4da3ff,#7b5cff)}
+.ctrls{display:flex;gap:10px}
+.ctrls .b{flex:1;text-align:center;font-size:13px;font-weight:700;padding:11px 0;border-radius:13px}
+.ctrls .pause{background:rgba(255,255,255,.1);color:#dfe9f6}
+.ctrls .steer{background:rgba(255,255,255,.1);color:#dfe9f6}
+.ctrls .view{background:#4da3ff;color:#06101f}
+/* lower context */
+.below{position:absolute;top:300px;left:24px;right:24px;text-align:center;color:#cfe0f6}
+.below .g{font-size:22px;font-weight:300}.below .g b{font-weight:700}
+.below .net{font-size:50px;font-weight:200;letter-spacing:-2px;margin-top:8px}.below .net b{color:#5fdca6;font-size:22px;font-weight:700}
+.below .sub{font-size:13px;color:#8fa6c2;margin-top:4px}
+.chips{position:absolute;bottom:90px;left:24px;right:24px;display:flex;flex-direction:column;gap:10px}
+.chip{display:flex;align-items:center;gap:12px;background:rgba(14,22,36,.7);backdrop-filter:blur(14px);border:1px solid rgba(140,180,255,.16);border-radius:18px;padding:13px 16px;font-size:14px;color:#dfe9f6}
+.chip .d{width:9px;height:9px;border-radius:50%;flex:none}.chip small{margin-left:auto;color:#8fa6c2;font-size:12px}
+.bar{position:absolute;bottom:20px;left:24px;right:24px;display:flex;align-items:center;gap:10px;background:rgba(14,22,36,.8);border:1px solid rgba(140,180,255,.18);border-radius:22px;padding:12px 16px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#dfe9f6;font-size:14px}.bar input::placeholder{color:#7e93b2}
+.grab{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:130px;height:5px;border-radius:3px;background:rgba(255,255,255,.4)}
+</style></head><body>
+<div class="phone"><div class="wall"></div>
+<div class="status"><span>20:34</span><span>JARVIS &nbsp;·&nbsp; ●●● &nbsp; ▮▮▮</span></div>
+<div class="island">
+<div class="irow"><div class="icon">⚡</div><div class="imeta"><div class="t">Live job · Code agent</div><div class="h">Building habit-tracker</div><div class="s">step 7/10 · wiring streaks UI</div></div><div class="pct">72%</div></div>
+<div class="track"><i></i></div>
+<div class="ctrls"><div class="b pause">Pause</div><div class="b steer">Steer</div><div class="b view">View run</div></div>
+</div>
+<div class="below"><div class="g">Good evening, <b>Shay.</b></div><div class="net">$3,840 <b>▲18%</b></div><div class="sub">net · month · ROI 4.2× · AI cost $58/$80</div></div>
+<div class="chips">
+<div class="chip"><span class="d" style="background:#ff5d73"></span>Send invoice → 14 customers<small>$1,240</small></div>
+<div class="chip"><span class="d" style="background:#a08cf0"></span>research niche · Scout<small>40%</small></div>
+</div>
+<div class="bar"><span style="color:#4da3ff">🎙</span><input placeholder="Ask Jarvis… “Hey Jarvis”"><span style="color:#7e93b2">⌘K</span></div>
+<div class="grab"></div>
+</div>
+</body></html>

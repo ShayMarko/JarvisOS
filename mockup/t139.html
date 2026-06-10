@@ -1,0 +1,67 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T139</title><style>
+*{margin:0;box-sizing:border-box;font-family:ui-monospace,'SF Mono','Menlo',monospace}
+body{height:100vh;overflow:hidden;background:#e8e6df;color:#000}
+.wrap{height:100vh;display:grid;grid-template-columns:340px 1fr;grid-template-rows:auto 1fr auto}
+.head{grid-column:1/-1;border-bottom:6px solid #000;display:flex;align-items:flex-end;justify-content:space-between;padding:18px 26px;background:#fff}
+.wm{font-size:54px;font-weight:800;letter-spacing:-2px;line-height:.85}
+.status{text-align:right;font-size:13px;font-weight:700;text-transform:uppercase;line-height:1.4}
+.left{border-right:6px solid #000;padding:24px;background:#fff;overflow:hidden}
+.right{padding:24px 26px;overflow:hidden}
+.lbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2px;border-bottom:3px solid #000;padding-bottom:6px;margin-bottom:14px}
+.greet{font-size:34px;font-weight:800;letter-spacing:-1px;line-height:.95;margin-bottom:22px}
+.greet u{text-decoration:none;background:#000;color:#fff;padding:0 6px}
+.money{border:4px solid #000;padding:18px;margin-bottom:18px;background:#ffe600}
+.money .big{font-size:46px;font-weight:800;letter-spacing:-2px;line-height:1}
+.money .sub{font-size:13px;font-weight:700;text-transform:uppercase;margin-top:6px}
+.rows{border:4px solid #000;background:#fff}
+.rows .r{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-bottom:3px solid #000;font-size:13px;font-weight:700}
+.rows .r:last-child{border-bottom:0}
+.tag{font-size:10px;font-weight:800;padding:2px 7px;border:3px solid #000;text-transform:uppercase}
+.crit{background:#000;color:#fff}
+.task{border:4px solid #000;margin-bottom:14px;background:#fff}
+.task .t{display:flex;justify-content:space-between;padding:12px 14px;font-size:15px;font-weight:800;text-transform:uppercase;border-bottom:3px solid #000}
+.task .meta{padding:8px 14px;font-size:11px;font-weight:700}
+.jobs{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.job{border:4px solid #000;background:#fff;padding:14px}
+.job .n{font-size:14px;font-weight:800;text-transform:uppercase}
+.job .a{font-size:11px;font-weight:700;margin:6px 0 10px}
+.pbar{height:20px;border:3px solid #000;background:#fff}
+.pfill{height:100%;background:repeating-linear-gradient(45deg,#000 0 6px,transparent 6px 12px)}
+.sys{display:flex;gap:0;border:4px solid #000;background:#fff}
+.sys .c{flex:1;padding:14px;border-right:3px solid #000;text-align:center}
+.sys .c:last-child{border-right:0}
+.sys .v{font-size:30px;font-weight:800}.sys .k{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px}
+.foot{grid-column:1/-1;border-top:6px solid #000;display:flex;align-items:center;gap:14px;padding:16px 26px;background:#fff}
+.foot input{flex:1;background:0;border:0;outline:0;font-size:15px;font-weight:700}
+.foot .k{font-size:12px;font-weight:800;border:3px solid #000;padding:3px 8px}
+</style></head><body>
+<div class="wrap">
+<div class="head"><div class="wm">JARVIS</div><div class="status">● ONLINE · OPUS<br>20:34 · TUE JUN 09<br>"HEY JARVIS"</div></div>
+<div class="left">
+<div class="greet">GOOD<br>EVENING,<br><u>SHAY.</u></div>
+<div class="money"><div class="big">$3,840</div><div class="sub">NET / MONTH · ROI 4.2× · ▲18%</div></div>
+<div class="lbl">REVENUE SOURCES</div>
+<div class="rows">
+<div class="r"><span>STRIPE SUBS</span><span>$1,240</span></div>
+<div class="r"><span>GUMROAD</span><span>$890</span></div>
+<div class="r"><span>NEWSLETTER</span><span>$400</span></div>
+<div class="r"><span>LEMON SQUEEZY</span><span>$310</span></div>
+<div class="r"><span>AI COST</span><span>$58 / $80</span></div>
+</div>
+</div>
+<div class="right">
+<div class="lbl">3 THINGS NEED YOU</div>
+<div class="task"><div class="t"><span>SEND INVOICE → 14 CUSTOMERS</span><span class="tag crit">CRIT</span></div><div class="meta">$1,240 · EA AGENT VIA RESEND</div></div>
+<div class="task"><div class="t"><span>PUBLISH SAAS STARTER → GUMROAD</span><span class="tag">HIGH</span></div><div class="meta">$39 PRICE POINT</div></div>
+<div class="task"><div class="t"><span>DEPLOY MICRO-API → CLOUDFLARE</span><span class="tag">HIGH</span></div><div class="meta">EDGE WORKER · 1 STEP</div></div>
+<div class="lbl">JOBS RUNNING</div>
+<div class="jobs">
+<div class="job"><div class="n">HABIT-TRACKER APP</div><div class="a">CODE AGENT · 72%</div><div class="pbar"><div class="pfill" style="width:72%"></div></div></div>
+<div class="job"><div class="n">RESEARCH NICHE</div><div class="a">SCOUT · 40%</div><div class="pbar"><div class="pfill" style="width:40%"></div></div></div>
+</div>
+<div class="lbl">SYSTEM</div>
+<div class="sys"><div class="c"><div class="v">51</div><div class="k">AGENTS</div></div><div class="c"><div class="v">26</div><div class="k">CONNECTORS · 9 LIVE</div></div><div class="c"><div class="v">7</div><div class="k">PRODUCTS LIVE</div></div></div>
+</div>
+<div class="foot"><span style="font-weight:800">🎙</span><input placeholder="ASK JARVIS, OR TYPE A /COMMAND…"><span class="k">⌘K</span></div>
+</div>
+</body></html>

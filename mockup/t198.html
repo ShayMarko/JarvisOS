@@ -1,0 +1,40 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T198</title><style>
+*{margin:0;box-sizing:border-box;font-family:ui-monospace,'SF Mono',monospace}
+body{height:100vh;overflow:hidden;background:#0a0a0a;display:flex;align-items:center;justify-content:center}
+.atm{width:1120px;height:760px;background:linear-gradient(180deg,#1c2230,#0e131c);border:6px solid #2a3242;border-radius:14px;box-shadow:0 0 0 14px #14181f,0 30px 80px rgba(0,0,0,.7);display:grid;grid-template-columns:90px 1fr 90px;align-items:stretch}
+.btnsL,.btnsR{display:flex;flex-direction:column;justify-content:space-around;padding:54px 0}
+.pb{width:62px;height:46px;background:linear-gradient(180deg,#cfd6e0,#8a94a4);border-radius:5px;box-shadow:inset 0 -3px 0 #6a7384,0 2px 3px #000}
+.btnsL .pb{margin-left:-8px}.btnsR .pb{margin-left:36px}
+.screen{margin:30px 8px;background:radial-gradient(700px 500px at 50% 30%,#06241c,#03130d);border:3px solid #04130d;border-radius:8px;display:flex;flex-direction:column;padding:34px 30px;color:#46e0a0;text-shadow:0 0 8px rgba(70,224,160,.5);position:relative;overflow:hidden}
+.scan{position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(70,224,160,.05) 0 2px,transparent 2px 5px);pointer-events:none}
+.head{display:flex;justify-content:space-between;font-size:13px;color:#2f9c78;letter-spacing:2px}
+.wm{font-size:30px;font-weight:800;letter-spacing:5px;margin-top:18px}
+.welcome{font-size:16px;color:#6ad6aa;margin-top:6px}
+.bal{margin-top:26px;border:1px dashed #1f6b50;border-radius:8px;padding:16px 20px;display:flex;justify-content:space-between;align-items:center}
+.bal small{font-size:12px;color:#2f9c78;letter-spacing:1px}.bal .v{font-size:34px;font-weight:800}
+.prompt{margin-top:30px;font-size:20px;letter-spacing:2px;text-align:center;color:#bdf0d8}
+.opts{margin-top:auto;display:flex;flex-direction:column;gap:12px}
+.opL{display:flex;justify-content:space-between;font-size:16px;letter-spacing:1px}
+.opR{display:flex;justify-content:space-between;font-size:16px;letter-spacing:1px;text-align:right}
+.opR span:first-child{color:#46e0a0}.arr{color:#2f9c78}
+.foot{margin-top:18px;font-size:11px;color:#2f9c78;letter-spacing:2px;text-align:center}
+.tray{grid-column:2;height:0}
+</style></head><body>
+<div class="atm">
+<div class="btnsL"><div class="pb"></div><div class="pb"></div><div class="pb"></div><div class="pb"></div></div>
+<div class="screen"><div class="scan"></div>
+<div class="head"><span>JARVIS BANK TERMINAL</span><span>20:34 · TUE 09 JUN</span></div>
+<div class="wm">JARVIS</div><div class="welcome">Good evening, Shay. · ● Online · Opus</div>
+<div class="bal"><small>AVAILABLE · NET THIS MONTH</small><span class="v">$3,840 ▲18%</span></div>
+<div class="prompt">SELECT AN ACTION</div>
+<div class="opts">
+<div class="opL"><span>⟵ &nbsp; SEND INVOICE → 14 CUSTOMERS</span><span class="arr">$1,240</span></div>
+<div class="opR"><span>$39 &nbsp; PUBLISH SAAS STARTER → GUMROAD &nbsp; ⟶</span></div>
+<div class="opL"><span>⟵ &nbsp; DEPLOY MICRO-API → CLOUDFLARE</span><span class="arr">HIGH</span></div>
+<div class="opR"><span>QUEUE NEWSLETTER #14 &nbsp; ⟶</span></div>
+</div>
+<div class="foot">AI COST $58 / $80 BUDGET · 51 AGENTS · 9 LIVE CONNECTORS · ENTER TO CONFIRM</div>
+</div>
+<div class="btnsR"><div class="pb"></div><div class="pb"></div><div class="pb"></div><div class="pb"></div></div>
+</div>
+</body></html>

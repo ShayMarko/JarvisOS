@@ -1,0 +1,44 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T8</title><style>
+*{margin:0;box-sizing:border-box;font-family:'IBM Plex Mono','SF Mono',ui-monospace,monospace}
+body{height:100vh;overflow:hidden;color:#cfe0e8;background:radial-gradient(1200px 800px at 50% 50%,#0a1622,#040a10)}
+.grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(90,200,230,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(90,200,230,.06) 1px,transparent 1px);background-size:40px 40px}
+.wrap{position:relative;height:100vh;padding:18px 26px;display:flex;flex-direction:column}
+.top{display:flex;justify-content:space-between;border:1px solid rgba(90,200,230,.25);border-radius:6px;padding:10px 16px;font-size:12px;letter-spacing:2px;color:#5fd6e8}
+.amber{color:#ffb648}
+.cols{flex:1;display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:16px;margin-top:16px}
+.panel{border:1px solid rgba(90,200,230,.22);border-radius:8px;padding:14px;position:relative;background:rgba(8,20,30,.5)}
+.pl{font-size:10px;letter-spacing:2px;color:#3f8ea0;border-bottom:1px solid rgba(90,200,230,.18);padding-bottom:8px;margin-bottom:12px}
+.gauge{display:grid;place-items:center;margin:8px 0}
+.dial{width:130px;height:130px;border-radius:50%;background:conic-gradient(#5fd6e8 0 76%,rgba(90,200,230,.12) 76% 100%);display:grid;place-items:center;position:relative}
+.dial::before{content:"";position:absolute;width:96px;height:96px;border-radius:50%;background:#061018}
+.dv{position:relative;font-size:24px;color:#5fd6e8}.dv small{display:block;font-size:9px;color:#3f8ea0;letter-spacing:2px;text-align:center}
+.stat{display:flex;justify-content:space-between;font-size:12px;color:#9fc0cc;padding:6px 0}.stat b{color:#cfe8ee}
+.amberrow b{color:#ffb648}
+.ln{height:1px;background:rgba(90,200,230,.14);margin:6px 0}
+.bar{height:8px;border:1px solid rgba(90,200,230,.3);border-radius:3px;margin-top:5px}.bar i{display:block;height:100%;background:#5fd6e8;box-shadow:0 0 8px #5fd6e8}
+.alert{font-size:12px;color:#cfe0e8;padding:7px 0;border-top:1px solid rgba(90,200,230,.12)}.alert:first-of-type{border:0}
+.tag{font-size:9px;padding:2px 6px;border-radius:4px;color:#ffb648;border:1px solid rgba(255,182,72,.4);margin-right:7px}.tag.r{color:#ff7a7a;border-color:rgba(255,122,122,.4)}
+.orb{width:80px;height:80px;border-radius:50%;margin:6px auto;background:radial-gradient(circle at 50% 38%,#bff0ff,#5fd6e8 45%,#1c5e72);box-shadow:0 0 40px rgba(95,214,232,.6)}
+.foot{border:1px solid rgba(90,200,230,.25);border-radius:6px;padding:11px 16px;margin-top:16px;font-size:13px;color:#7fb6c6}
+</style></head><body><div class="grid-bg"></div>
+<div class="wrap">
+<div class="top"><span>◎ J.A.R.V.I.S · MISSION CONTROL</span><span>● ONLINE · OPUS &nbsp; <span class="amber">3 ALERTS</span> &nbsp; 20:34:41 · TUE JUN 09</span></div>
+<div class="cols">
+<div class="panel"><div class="pl">SYSTEM TELEMETRY</div>
+<div class="gauge"><div class="dial"><div class="dv">12%<small>CPU</small></div></div></div>
+<div class="stat"><span>MEMORY</span><b>6.1 / 16 GB</b></div><div class="ln"></div>
+<div class="stat"><span>AGENTS</span><b>51</b></div><div class="stat"><span>CONNECTORS</span><b>9 / 26</b></div><div class="stat amberrow"><span>BUDGET</span><b>$58 / $80</b></div></div>
+<div class="panel"><div class="pl">CORE · STANDBY</div><div class="orb"></div>
+<div style="text-align:center;font-size:13px;color:#7fb6c6;letter-spacing:1px">GOOD EVENING, SHAY</div>
+<div class="ln"></div><div class="pl" style="border:0;margin:8px 0 6px">JOBS</div>
+<div style="font-size:12px;color:#9fc0cc">BUILD habit-tracker<div class="bar"><i style="width:72%"></i></div></div>
+<div style="font-size:12px;color:#9fc0cc;margin-top:8px">RESEARCH niche<div class="bar"><i style="width:40%"></i></div></div></div>
+<div class="panel"><div class="pl">ALERTS · NEEDS YOU</div>
+<div class="alert"><span class="tag r">CRIT</span>invoice → 14 customers</div>
+<div class="alert"><span class="tag">HIGH</span>publish saas-starter</div>
+<div class="alert"><span class="tag">HIGH</span>deploy micro-api</div>
+<div class="ln"></div><div class="pl" style="border:0;margin:8px 0 6px">MONEY</div>
+<div class="stat"><span>NET MONTH</span><b style="color:#5fd6e8">$3,840</b></div><div class="stat"><span>ROI</span><b style="color:#5fd6e8">4.2×</b></div></div>
+</div>
+<div class="foot">&gt; ask jarvis, or /command &nbsp;·&nbsp; say "hey jarvis" &nbsp;·&nbsp; ⌘K</div>
+</div></body></html>

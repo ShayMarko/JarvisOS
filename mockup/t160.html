@@ -1,0 +1,67 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T160</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,-apple-system,sans-serif}
+body{height:100vh;overflow:hidden;color:#f2eeff;background:radial-gradient(1200px 900px at 70% 20%,#1a1230,#0a0716)}
+svg{position:fixed;width:0;height:0}
+.wrap{height:100vh;display:grid;grid-template-columns:1.1fr 1fr;gap:36px;padding:46px 56px;align-content:center}
+.blob{filter:url(#goo);position:relative}
+.blob>.fill{position:absolute;inset:0}
+.greet-wrap{display:flex;flex-direction:column;justify-content:center;gap:26px}
+.greet{font-size:40px;font-weight:300;letter-spacing:-1px;line-height:1.1}.greet b{font-weight:700;
+  background:linear-gradient(120deg,#ff7ad9,#7c9bff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.wm{font-size:13px;font-weight:800;letter-spacing:6px;color:#b89bff}
+.st{font-size:11px;color:rgba(242,238,255,.55);letter-spacing:1px;margin-top:6px}
+.money{position:relative;padding:48px 46px;color:#1a0a2e}
+.money .blobbg{position:absolute;inset:0;background:linear-gradient(135deg,#ffd2f0,#c9b6ff);
+  border-radius:62% 38% 54% 46% / 56% 48% 52% 44%}
+.money .ct{position:relative}
+.money .big{font-size:66px;font-weight:800;letter-spacing:-2px;line-height:1}
+.money .l{font-size:13px;letter-spacing:1px;text-transform:uppercase;font-weight:600;opacity:.7;margin-top:4px}
+.money .src{display:flex;gap:7px;flex-wrap:wrap;margin-top:18px}
+.money .src span{font-size:11px;font-weight:700;background:rgba(26,10,46,.12);padding:5px 11px;border-radius:99px}
+.col{display:flex;flex-direction:column;gap:0}
+.pill{position:relative;padding:22px 26px;margin-bottom:-22px;color:#1a0a2e}
+.pbg{position:absolute;inset:0}
+.p1 .pbg{background:linear-gradient(135deg,#ffb3d9,#ff8ac4);border-radius:58% 42% 60% 40% / 52% 60% 40% 48%}
+.p2 .pbg{background:linear-gradient(135deg,#b7f7d8,#7ee7b8);border-radius:44% 56% 42% 58% / 58% 44% 56% 42%}
+.p3 .pbg{background:linear-gradient(135deg,#c6c2ff,#9b95ff);border-radius:52% 48% 56% 44% / 44% 56% 48% 52%}
+.pc{position:relative}
+.k{font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:700;opacity:.6}
+.li{display:flex;justify-content:space-between;font-size:14px;font-weight:600;padding:6px 0}
+.li small{font-weight:400;opacity:.7}
+.bar{position:fixed;bottom:34px;left:50%;transform:translateX(-50%);width:600px;display:flex;align-items:center;gap:12px;
+  background:linear-gradient(135deg,#ffd2f0,#c9b6ff);border-radius:99px;padding:14px 22px;color:#1a0a2e;box-shadow:0 16px 50px rgba(124,107,255,.3)}
+.bar input{flex:1;background:0;border:0;outline:0;color:#1a0a2e;font-size:14px;font-weight:500}.bar input::placeholder{color:rgba(26,10,46,.5)}
+.bar .km{font-size:12px;opacity:.6;font-weight:700}
+</style></head><body>
+<svg><filter id="goo"><feGaussianBlur in="SourceGraphic" stdDeviation="10" result="b"/><feColorMatrix in="b" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10"/></filter></svg>
+<div class="wrap">
+<div class="greet-wrap">
+<div><div class="wm">JARVIS</div><div class="st">● Online · Opus · 20:34 · Tue Jun 09</div></div>
+<div class="greet">Good evening, <b>Shay.</b><br>The money is flowing — here's where it went.</div>
+<div class="money"><div class="blobbg"></div><div class="ct">
+<div class="big">$3,840</div><div class="l">Net this month · ROI 4.2× · ▲18%</div>
+<div class="src"><span>Stripe $1,240</span><span>Gumroad $890</span><span>Lemon Sq $310</span><span>Newsletter $400</span><span>AI cost $58 / $80</span></div>
+</div></div>
+</div>
+<div class="col">
+<div class="pill p1"><div class="pbg"></div><div class="pc">
+<div class="k">Needs you · 3</div>
+<div class="li"><span>⚠ Send invoice → 14 customers</span><span>$1,240</span></div>
+<div class="li"><span>Publish SaaS starter → Gumroad</span><span>$39</span></div>
+<div class="li"><span>Deploy micro-API → Cloudflare</span><small>queued</small></div>
+</div></div>
+<div class="pill p2"><div class="pbg"></div><div class="pc" style="padding-top:14px">
+<div class="k">Jobs running · 2</div>
+<div class="li"><span>habit-tracker app <small>Code</small></span><span>72%</span></div>
+<div class="li"><span>research note-taking <small>Scout</small></span><span>40%</span></div>
+<div class="li"><span>newsletter #14</span><small>queued</small></div>
+</div></div>
+<div class="pill p3"><div class="pbg"></div><div class="pc" style="padding-top:14px">
+<div class="k">System</div>
+<div class="li"><span>51 agents · 7 products live</span></div>
+<div class="li"><span>26 connectors · 9 live</span></div>
+</div></div>
+</div>
+</div>
+<div class="bar">🎙<input placeholder="Ask Jarvis, or type a /command…"><span class="km">⌘K</span></div>
+</body></html>

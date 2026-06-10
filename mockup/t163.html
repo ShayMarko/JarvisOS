@@ -1,0 +1,79 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T163</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,-apple-system,sans-serif}
+body{height:100vh;overflow:hidden;color:#dce8e3;background:#06120e}
+.topo{position:fixed;inset:0}
+.wrap{position:relative;z-index:3;height:100vh;padding:38px 48px;display:flex;flex-direction:column}
+.top{display:flex;justify-content:space-between;align-items:baseline}
+.wm{font-size:15px;font-weight:800;letter-spacing:5px;color:#5fe0b0}
+.st{font-size:11px;letter-spacing:1px;color:#5f8a78}
+.greet{font-size:23px;font-weight:300;margin-top:12px}.greet b{font-weight:700;color:#5fe0b0}
+.marker{position:absolute;z-index:4}
+.pin{width:14px;height:14px;border-radius:50%;border:3px solid #06120e;box-shadow:0 0 0 2px currentColor,0 0 16px currentColor}
+.pin.crit{color:#ff6b81;background:#ff6b81}.pin.hi{color:#ffc857;background:#ffc857}
+.pin.run{color:#5fe0b0;background:#5fe0b0}.pin.sys{color:#5fb6e0;background:#5fb6e0}
+.card{position:absolute;top:-8px;left:24px;background:rgba(8,26,20,.85);border:1px solid rgba(95,224,176,.3);border-radius:12px;
+  padding:9px 13px;backdrop-filter:blur(8px);white-space:nowrap}
+.card .t{font-size:13px;font-weight:600}.card .d{font-size:11px;color:#7fb6a4;margin-top:2px}
+.card .amt{color:#5fe0b0;font-weight:700}
+.elev{position:absolute;z-index:4;background:rgba(8,26,20,.78);border:1px solid rgba(95,224,176,.28);border-radius:16px;
+  padding:18px 22px;backdrop-filter:blur(10px)}
+.elev.money{top:96px;right:48px;width:280px}
+.elev .k{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#5f8a78}
+.elev .big{font-size:42px;font-weight:800;letter-spacing:-1.5px;margin:4px 0}
+.elev .sub{font-size:12px;color:#7fb6a4}
+.legrow{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:1px solid rgba(95,224,176,.1)}
+.legend{position:absolute;z-index:4;bottom:90px;left:48px;font-size:11px;color:#7fb6a4;display:flex;gap:18px}
+.legend span{display:flex;align-items:center;gap:6px}
+.ld{width:9px;height:9px;border-radius:50%}
+.bar{margin-top:auto;position:relative;z-index:4;border:1px solid rgba(95,224,176,.3);border-radius:13px;padding:12px 16px;
+  display:flex;align-items:center;gap:12px;background:rgba(8,26,20,.7);backdrop-filter:blur(8px)}
+.bar input{flex:1;background:0;border:0;outline:0;color:#dce8e3;font-size:14px}.bar input::placeholder{color:#5f8a78}
+.bar .km{font-size:12px;color:#5f8a78}
+</style></head><body>
+<svg class="topo" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none" stroke="#0e3a2c" stroke-width="1.4">
+<g opacity=".9">
+<path d="M-50 200 Q300 120 600 220 T1200 180 T1500 260"/>
+<path d="M-50 260 Q300 190 600 290 T1200 250 T1500 330"/>
+<path d="M-50 330 Q320 270 620 360 T1220 330 T1500 410"/>
+<path d="M-50 410 Q340 360 640 440 T1240 420 T1500 500"/>
+<path d="M-50 500 Q360 460 660 540 T1260 520 T1500 600"/>
+<path d="M-50 600 Q380 560 680 640 T1280 620 T1500 700"/>
+<path d="M-50 700 Q400 670 700 740 T1300 720 T1500 800" stroke="#0a2e22"/>
+</g>
+<g stroke="#114a38" opacity=".7">
+<ellipse cx="420" cy="430" rx="180" ry="120"/>
+<ellipse cx="420" cy="430" rx="120" ry="78"/>
+<ellipse cx="420" cy="430" rx="64" ry="40"/>
+<ellipse cx="1040" cy="560" rx="200" ry="130"/>
+<ellipse cx="1040" cy="560" rx="130" ry="84"/>
+<ellipse cx="1040" cy="560" rx="66" ry="42"/>
+</g>
+</svg>
+<div class="wrap">
+<div class="top"><div class="wm">JARVIS · TERRAIN</div><div class="st">● Online · Opus · 20:34 · Tue Jun 09</div></div>
+<div class="greet">Good evening, <b>Shay.</b> The landscape tonight.</div>
+<div class="bar">🎙<input placeholder="Ask Jarvis, or type a /command…"><span class="km">⌘K</span></div>
+</div>
+<!-- markers -->
+<div class="marker" style="top:300px;left:300px"><div class="pin crit"></div><div class="card"><div class="t">Send invoice → 14 customers</div><div class="d"><span class="amt">$1,240</span> · CRITICAL · EA via Resend</div></div></div>
+<div class="marker" style="top:470px;left:200px"><div class="pin hi"></div><div class="card"><div class="t">Publish SaaS starter → Gumroad</div><div class="d"><span class="amt">$39</span> · HIGH</div></div></div>
+<div class="marker" style="top:620px;left:430px"><div class="pin hi"></div><div class="card"><div class="t">Deploy micro-API → Cloudflare</div><div class="d">HIGH · queued</div></div></div>
+<div class="marker" style="top:400px;left:760px"><div class="pin run"></div><div class="card"><div class="t">habit-tracker app</div><div class="d">Code agent · 72%</div></div></div>
+<div class="marker" style="top:540px;left:980px"><div class="pin run"></div><div class="card"><div class="t">research note-taking niche</div><div class="d">Scout · 40% · newsletter #14 queued</div></div></div>
+<div class="marker" style="top:680px;left:820px"><div class="pin sys"></div><div class="card"><div class="t">51 agents · 26 connectors</div><div class="d">9 live · 7 products live</div></div></div>
+<div class="elev money">
+<div class="k">Net this month</div><div class="big">$3,840</div><div class="sub">ROI 4.2× · ▲18% · AI $58 / $80</div>
+<div style="margin-top:12px">
+<div class="legrow"><span>Stripe subs</span><span class="amt" style="color:#5fe0b0;font-weight:700">$1,240</span></div>
+<div class="legrow"><span>Gumroad</span><span>$890</span></div>
+<div class="legrow"><span>Lemon Squeezy</span><span>$310</span></div>
+<div class="legrow"><span>Newsletter</span><span>$400</span></div>
+</div>
+</div>
+<div class="legend">
+<span><span class="ld" style="background:#ff6b81"></span>Critical</span>
+<span><span class="ld" style="background:#ffc857"></span>High</span>
+<span><span class="ld" style="background:#5fe0b0"></span>Running</span>
+<span><span class="ld" style="background:#5fb6e0"></span>System</span>
+</div>
+</body></html>

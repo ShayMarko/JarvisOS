@@ -1,0 +1,79 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T149</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;background:#e7e2d8;color:#3a352c}
+.wrap{height:100vh;padding:26px 34px;display:grid;grid-template-columns:1.3fr 1fr 1fr;grid-template-rows:auto 1fr auto;gap:20px}
+.top{grid-column:1/-1;display:flex;align-items:center;gap:18px}
+.wm{font-size:26px;font-weight:800;letter-spacing:4px;color:#b5563a;
+background:linear-gradient(135deg,#fff 0 50%,#efe9dd 50%);padding:8px 18px;box-shadow:0 6px 14px rgba(120,100,70,.18);clip-path:polygon(0 0,100% 0,100% 70%,90% 100%,0 100%)}
+.pill{font-size:12px;color:#7a7263;background:#fff;padding:8px 16px;box-shadow:0 4px 10px rgba(120,100,70,.15);clip-path:polygon(8% 0,100% 0,92% 100%,0 100%)}
+.r{margin-left:auto;font-size:13px;color:#9a9080}
+/* folded card: two facets via gradients + a fold line */
+.fold{position:relative;background:#f3eee3;box-shadow:0 14px 30px rgba(120,100,70,.22)}
+.fold .facet-l,.fold .facet-r{position:absolute;top:0;bottom:0}
+.hero{padding:0;overflow:hidden}
+.hero .inner{position:relative;padding:26px 28px;background:linear-gradient(105deg,#fff 0 48%,#e9e2d4 48% 100%)}
+.hero .inner::before{content:"";position:absolute;left:48%;top:0;bottom:0;width:1px;background:linear-gradient(#c9bfa9,rgba(201,191,169,0));box-shadow:1px 0 2px rgba(255,255,255,.7)}
+.greet{font-size:34px;font-weight:800;color:#3a352c;line-height:1.05}
+.greet span{color:#b5563a}
+.net{margin-top:20px}
+.net .v{font-size:50px;font-weight:800;color:#b5563a;letter-spacing:-2px}
+.net .d{font-size:13px;color:#7a7263;margin-top:4px}
+.src{display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-bottom:1px solid #d9d0bd;color:#6a6356}.src b{color:#3a352c}
+.col{padding:0;overflow:hidden}
+.col .inner{padding:22px 24px;background:linear-gradient(160deg,#faf6ec 0 40%,#e9e2d4 40% 100%);position:relative;min-height:100%}
+.col .inner::before{content:"";position:absolute;left:0;right:0;top:40%;height:1px;background:rgba(201,191,169,.9);box-shadow:0 1px 2px rgba(255,255,255,.7)}
+.h{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#9a9080;margin-bottom:16px}
+.task{background:#fff;padding:13px 15px;margin-bottom:12px;box-shadow:0 5px 12px rgba(120,100,70,.14);clip-path:polygon(0 0,100% 0,100% 82%,94% 100%,0 100%)}
+.task .t{font-size:14px;font-weight:700;color:#3a352c}.task .s{font-size:11px;color:#9a9080;margin-top:3px}
+.tag{display:inline-block;font-size:9px;font-weight:800;letter-spacing:1px;padding:3px 9px;margin-bottom:7px;color:#fff}
+.j{margin-bottom:18px}
+.j-h{display:flex;justify-content:space-between;font-size:14px;font-weight:700;color:#3a352c;margin-bottom:8px}
+.j-h span{color:#9a9080;font-size:12px}
+.track{height:14px;background:#ddd4c1;box-shadow:inset 0 2px 4px rgba(120,100,70,.18)}
+.track i{display:block;height:100%;background:linear-gradient(180deg,#cf7a5e,#b5563a)}
+.sys{display:flex;gap:12px;margin-top:8px}
+.sys .s{flex:1;background:#fff;padding:13px;text-align:center;box-shadow:0 5px 12px rgba(120,100,70,.14);clip-path:polygon(0 0,100% 0,100% 100%,8% 100%,0 88%)}
+.sys .v{font-size:24px;font-weight:800;color:#b5563a}.sys .k{font-size:10px;color:#9a9080;text-transform:uppercase}
+.foot{grid-column:1/-1;display:flex;align-items:center;gap:14px;background:linear-gradient(100deg,#fff 0 50%,#e9e2d4 50%);padding:15px 24px;box-shadow:0 -6px 18px rgba(120,100,70,.12);clip-path:polygon(0 0,100% 0,100% 100%,2% 100%,0 60%)}
+.foot input{flex:1;background:0;border:0;outline:0;color:#3a352c;font-size:15px}.foot input::placeholder{color:#9a9080}
+.kk{font-size:12px;color:#7a7263;background:#efe9dd;padding:5px 11px;box-shadow:inset 0 1px 3px rgba(120,100,70,.15)}
+</style></head><body>
+<div class="wrap">
+<div class="top"><div class="wm">JARVIS</div><div class="pill">● Online · Opus · 20:34 · Tue Jun 09</div><div class="r">Say "Hey Jarvis"</div></div>
+
+<div class="fold hero">
+<div class="inner">
+<div class="greet">Good evening,<br><span>Shay.</span></div>
+<div class="net"><div class="v">$3,840</div><div class="d">net / month · ROI 4.2× · ▲18% · AI cost $58 / $80</div></div>
+<div style="margin-top:20px">
+<div class="src"><span>Stripe subs</span><b>$1,240</b></div>
+<div class="src"><span>Gumroad</span><b>$890</b></div>
+<div class="src"><span>Newsletter</span><b>$400</b></div>
+<div class="src"><span>Lemon Squeezy</span><b>$310</b></div>
+</div>
+</div>
+</div>
+
+<div class="fold col">
+<div class="inner">
+<div class="h">3 things need you</div>
+<div class="task"><span class="tag" style="background:#b5563a">CRITICAL</span><div class="t">Send invoice → 14 customers</div><div class="s">$1,240 · EA via Resend</div></div>
+<div class="task"><span class="tag" style="background:#c79a3a">HIGH</span><div class="t">Publish SaaS starter → Gumroad</div><div class="s">$39</div></div>
+<div class="task"><span class="tag" style="background:#c79a3a">HIGH</span><div class="t">Deploy micro-API → Cloudflare</div><div class="s">Edge worker</div></div>
+</div>
+</div>
+
+<div class="fold col">
+<div class="inner">
+<div class="h">Jobs running</div>
+<div class="j"><div class="j-h">habit-tracker app <span>Code · 72%</span></div><div class="track"><i style="width:72%"></i></div></div>
+<div class="j"><div class="j-h">research niche <span>Scout · 40%</span></div><div class="track"><i style="width:40%"></i></div></div>
+<div class="j"><div class="j-h">newsletter #14 <span>queued</span></div><div class="track"><i style="width:6%"></i></div></div>
+<div class="h">System</div>
+<div class="sys"><div class="s"><div class="v">51</div><div class="k">agents</div></div><div class="s"><div class="v">9/26</div><div class="k">conn</div></div><div class="s"><div class="v">7</div><div class="k">live</div></div></div>
+</div>
+</div>
+
+<div class="foot"><span style="color:#b5563a">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span class="kk">⌘K</span></div>
+</div>
+</body></html>

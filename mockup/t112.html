@@ -1,0 +1,57 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T112</title><style>
+*{margin:0;box-sizing:border-box}
+body{height:100vh;overflow:hidden;background:#1a1c20;color:#e7edf5;font-family:ui-monospace,'SF Mono',Menlo,monospace;display:flex;align-items:center;justify-content:center}
+.bg{position:fixed;inset:0;background:repeating-linear-gradient(45deg,#1a1c20,#1a1c20 12px,#1e2025 12px,#1e2025 24px)}
+.receipt{position:relative;width:380px;height:96vh;background:#f6f3ec;color:#1c1a16;padding:22px 26px 0;box-shadow:0 20px 60px rgba(0,0,0,.55);font-size:12.5px;line-height:1.55;
+filter:contrast(1.02);
+--c:#1c1a16}
+.receipt::before,.receipt::after{content:"";position:absolute;left:0;right:0;height:12px;background-image:linear-gradient(135deg,#f6f3ec 50%,transparent 50%),linear-gradient(-135deg,#f6f3ec 50%,transparent 50%);background-size:14px 14px;background-repeat:repeat-x}
+.receipt::before{top:-11px;background-position:0 0}
+.receipt::after{bottom:-11px;transform:scaleY(-1)}
+.ctr{text-align:center}
+.logo{font-size:22px;font-weight:800;letter-spacing:6px;margin-top:4px}
+.sub{font-size:11px;letter-spacing:1px;color:#5a564c}
+.dash{border-top:1.5px dashed #b7b2a4;margin:11px 0}
+.dbl{border-top:1.5px solid #1c1a16;border-bottom:1.5px solid #1c1a16;height:4px;margin:11px 0}
+.row{display:flex;justify-content:space-between}
+.row .q{color:#5a564c}
+.item{margin:2px 0}
+.sec{font-size:11px;letter-spacing:2px;color:#5a564c;margin:4px 0}
+.tot{font-size:15px;font-weight:800}
+.big{font-size:20px;font-weight:800;text-align:center;letter-spacing:1px}
+.bc{display:flex;gap:2px;justify-content:center;height:42px;margin:12px 0 6px}
+.bc i{width:2px;background:#1c1a16}
+.foot{text-align:center;font-size:11px;color:#5a564c;padding-bottom:18px}
+.star{letter-spacing:3px}
+</style></head><body><div class="bg"></div>
+<div class="receipt">
+<div class="ctr"><div class="logo">JARVIS</div><div class="sub">DAILY OPERATIONS RECEIPT</div><div class="sub">Tue Jun 09 2026 · 20:34 · Opus</div></div>
+<div class="dash"></div>
+<div class="ctr sub">CASHIER: Shay &nbsp; TERM #001 &nbsp; LOCAL-OS</div>
+<div class="dbl"></div>
+<div class="sec">REVENUE COLLECTED</div>
+<div class="row item"><span>Stripe subscriptions x14</span><span>$1,240.00</span></div>
+<div class="row item"><span>Gumroad sales x41</span><span>$890.00</span></div>
+<div class="row item"><span>Lemon Squeezy</span><span>$310.00</span></div>
+<div class="row item"><span>Newsletter #14 sponsor</span><span>$400.00</span></div>
+<div class="dash"></div>
+<div class="sec">SERVICES RENDERED</div>
+<div class="row item"><span>habit-tracker build 72%</span><span class="q">Code</span></div>
+<div class="row item"><span>research note-niche 40%</span><span class="q">Scout</span></div>
+<div class="row item"><span>deploy micro-API</span><span class="q">EA</span></div>
+<div class="row item"><span>51 agents · 9 live conn.</span><span class="q">ok</span></div>
+<div class="dbl"></div>
+<div class="row"><span>SUBTOTAL</span><span>$2,840.00</span></div>
+<div class="row"><span>PENDING INVOICE</span><span>$1,000.00</span></div>
+<div class="row"><span class="q">AI COST</span><span class="q">-$58.00</span></div>
+<div class="row"><span class="q">BUDGET CAP</span><span class="q">$80.00</span></div>
+<div class="dash"></div>
+<div class="row tot"><span>NET · MONTH</span><span>$3,840.00</span></div>
+<div class="row"><span>ROI</span><span>4.2x &nbsp;▲18%</span></div>
+<div class="dbl"></div>
+<div class="big">★ THANK YOU, SHAY ★</div>
+<div class="ctr sub">7 PRODUCTS LIVE · 26 CONNECTORS</div>
+<div class="ctr star sub">★★★★☆ 4.2/5 SATISFACTION</div>
+<div class="bc"><i style="height:100%"></i><i style="height:70%"></i><i style="width:5px;height:100%"></i><i style="height:60%"></i><i style="height:100%"></i><i style="width:4px;height:80%"></i><i style="height:100%"></i><i style="height:55%"></i><i style="width:5px;height:100%"></i><i style="height:75%"></i><i style="height:100%"></i><i style="height:65%"></i><i style="width:4px;height:100%"></i><i style="height:90%"></i><i style="height:100%"></i><i style="height:60%"></i><i style="width:5px;height:100%"></i><i style="height:80%"></i></div>
+<div class="foot">JARVIS-0609-3840-OPUS<br>* keep this receipt for your records *</div>
+</div></body></html>

@@ -1,0 +1,62 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T243</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Futura','Avenir Next','Century Gothic',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#3a2614;background:#e8d9bf}
+.space{height:100vh;display:grid;grid-template-rows:auto 1fr auto;padding:28px 38px;background:linear-gradient(160deg,#f0e4cc 0%,#e3cda3 100%)}
+.top{display:flex;align-items:center;gap:16px}
+.logo{width:46px;height:46px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ff8a3d,#d2541a);box-shadow:inset 0 -4px 8px rgba(0,0,0,.25),0 4px 8px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900}
+.wm{font-size:26px;font-weight:800;letter-spacing:5px;color:#b8470f}
+.status{font-size:12px;letter-spacing:1px;color:#8a6a3a;margin-left:auto;font-weight:600}
+.hero{display:grid;grid-template-columns:1.5fr 1fr;gap:22px;margin-top:22px;align-content:start}
+.welcome{background:#f4ead5;border-radius:30px;padding:30px 34px;box-shadow:inset 0 2px 4px rgba(255,255,255,.7),0 6px 16px rgba(120,80,30,.18);border:2px solid #d8b87a}
+.greet{font-size:48px;font-weight:800;color:#b8470f;line-height:1.02}
+.greet b{color:#3a2614}
+.pill{display:inline-block;background:#d2541a;color:#fff;border-radius:20px;padding:7px 18px;font-size:14px;font-weight:700;margin-top:16px;letter-spacing:.5px}
+.streams{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.chip{background:#ead8b4;border:2px solid #c89c5a;border-radius:18px;padding:8px 14px;font-size:13px;font-weight:700;color:#6a4a1a}
+.chip b{color:#b8470f}
+.side{display:flex;flex-direction:column;gap:16px}
+.cap{background:#3a2614;color:#f0e4cc;border-radius:26px;padding:18px 22px;box-shadow:0 6px 16px rgba(60,38,20,.3)}
+.ct{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#f0a35a;font-weight:800;margin-bottom:10px}
+.li{display:flex;justify-content:space-between;font-size:13.5px;font-weight:600;padding:6px 0;border-bottom:1px solid rgba(240,228,204,.15)}
+.li .v{color:#f0a35a}
+.li.crit .v{color:#ff7a3d}
+.gauge{display:flex;gap:14px;margin-top:auto;padding-top:20px}
+.g{flex:1;text-align:center;background:#f4ead5;border:2px solid #d8b87a;border-radius:24px;padding:14px}
+.gv{font-size:30px;font-weight:800;color:#b8470f}.gl{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#8a6a3a;font-weight:700;margin-top:2px}
+.foot{margin-top:18px;display:flex;align-items:center;gap:14px;background:#3a2614;border-radius:26px;padding:14px 22px;color:#f0e4cc}
+.foot input{flex:1;background:0;border:0;outline:0;color:#f0e4cc;font-size:15px;font-weight:600}
+.foot input::placeholder{color:#b89870}
+</style></head><body><div class="space">
+<div class="top"><div class="logo">J</div><div class="wm">JARVIS</div><div class="status">● ONLINE · OPUS · 20:34 · TUE JUN 09</div></div>
+<div class="hero">
+  <div class="welcome">
+    <div class="greet">Good evening,<br><b>Shay.</b></div>
+    <div class="pill">Net $3,840 · ROI 4.2× · ▲18%</div>
+    <div class="streams">
+      <div class="chip">Stripe <b>$1,240</b></div>
+      <div class="chip">Gumroad <b>$890</b></div>
+      <div class="chip">Lemon Squeezy <b>$310</b></div>
+      <div class="chip">Newsletter <b>$400</b></div>
+    </div>
+    <div class="gauge">
+      <div class="g"><div class="gv">51</div><div class="gl">Agents</div></div>
+      <div class="g"><div class="gv">26·9</div><div class="gl">Conn · live</div></div>
+      <div class="g"><div class="gv">7</div><div class="gl">Products</div></div>
+      <div class="g"><div class="gv">$58</div><div class="gl">AI / $80</div></div>
+    </div>
+  </div>
+  <div class="side">
+    <div class="cap"><div class="ct">Needs You</div>
+      <div class="li crit"><span>Invoice → 14</span><span class="v">$1,240</span></div>
+      <div class="li"><span>Publish starter</span><span class="v">$39</span></div>
+      <div class="li" style="border:0"><span>Deploy micro-API</span><span class="v">CF</span></div>
+    </div>
+    <div class="cap"><div class="ct">Mission Control · Running</div>
+      <div class="li"><span>habit-tracker app</span><span class="v">72%</span></div>
+      <div class="li"><span>research niche</span><span class="v">40%</span></div>
+      <div class="li" style="border:0"><span>newsletter #14</span><span class="v">queued</span></div>
+    </div>
+  </div>
+</div>
+<div class="foot"><span style="color:#f0a35a">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#b89870">⌘K</span></div>
+</div></body></html>

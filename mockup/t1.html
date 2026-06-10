@@ -1,0 +1,53 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T1</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif;letter-spacing:.2px}
+:root{--cy:#46e6d6;--vi:#9b8cff;--g:linear-gradient(135deg,#46e6d6,#9b8cff)}
+body{height:100vh;overflow:hidden;color:#eaf1fb;background:radial-gradient(1100px 650px at 80% -10%,rgba(74,168,255,.16),transparent 60%),radial-gradient(900px 650px at 10% 110%,rgba(155,140,255,.16),transparent 60%),linear-gradient(160deg,#070a14,#0a0f1f)}
+.app{display:grid;grid-template-columns:74px 1fr;height:100vh}
+.rail{display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px 0;border-right:1px solid rgba(130,160,220,.12)}
+.lg{width:40px;height:40px;border-radius:13px;background:var(--g);display:grid;place-items:center;font-weight:800;color:#06121f;box-shadow:0 0 24px rgba(70,230,214,.45);margin-bottom:12px}
+.nv{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#8a9ac0;font-size:18px}
+.nv.on{color:var(--cy);background:rgba(70,230,214,.1);border:1px solid rgba(70,230,214,.3)}
+.main{padding:22px 30px;display:flex;flex-direction:column;overflow:hidden}
+.top{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+.wm{font-size:20px;font-weight:800;letter-spacing:3px;background:var(--g);-webkit-background-clip:text;color:transparent}
+.pill{font-size:12px;color:#8a9ac0;background:rgba(20,28,48,.55);border:1px solid rgba(130,160,220,.12);padding:7px 12px;border-radius:99px}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#43e0a0;box-shadow:0 0 9px #43e0a0;margin-right:6px}
+.sr{flex:1;max-width:380px;background:rgba(20,28,48,.55);border:1px solid rgba(130,160,220,.12);border-radius:12px;padding:10px 14px;color:#5d6b88;font-size:13px}
+.h1{font-size:26px;font-weight:700}.h1 b{background:var(--g);-webkit-background-clip:text;color:transparent}
+.sub{color:#8a9ac0;font-size:13px;margin:4px 0 18px}
+.grid{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:16px;flex:1}
+.c{background:rgba(20,28,48,.55);border:1px solid rgba(130,160,220,.12);border-radius:20px;padding:16px;backdrop-filter:blur(12px);position:relative;overflow:hidden}
+.c::before{content:"";position:absolute;inset:0 0 auto 0;height:1px;background:linear-gradient(90deg,transparent,rgba(130,180,255,.5),transparent)}
+.lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#5d6b88;font-weight:600;margin-bottom:12px}
+.row{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid rgba(130,160,220,.1);font-size:13px}.row:first-of-type{border:0}
+.rk{font-size:9px;font-weight:700;padding:3px 7px;border-radius:6px;color:#ffd166;background:rgba(255,209,102,.12);border:1px solid rgba(255,209,102,.3)}
+.btn{margin-left:auto;font-size:11px;font-weight:600;border-radius:9px;padding:7px 11px;border:0;background:var(--g);color:#06121f}
+.big{font-size:30px;font-weight:800}.big small{font-size:13px;color:#8a9ac0}
+.bar{height:6px;border-radius:6px;background:rgba(130,160,220,.14);margin-top:6px}.bar i{display:block;height:100%;border-radius:6px;background:var(--g)}
+.span2{grid-column:span 2}
+.cmd{margin-top:16px;display:flex;align-items:center;gap:12px;background:linear-gradient(180deg,rgba(26,36,60,.7),rgba(16,22,40,.7));border:1px solid rgba(130,160,220,.2);border-radius:16px;padding:11px 13px}
+.orb{width:38px;height:38px;border-radius:50%;background:radial-gradient(circle at 50% 38%,#bff7f0,#46e6d6 42%,#2b6fc7);box-shadow:0 0 22px rgba(70,230,214,.6)}
+.cmd input{flex:1;background:0;border:0;outline:0;color:#eaf1fb;font-size:14px}.cmd input::placeholder{color:#5d6b88}
+.snd{width:38px;height:38px;border-radius:11px;background:var(--g);display:grid;place-items:center;color:#06121f}
+</style></head><body><div class="app">
+<div class="rail"><div class="lg">J</div><div class="nv on">⌂</div><div class="nv">✦</div><div class="nv">⚇</div><div class="nv">◈</div><div class="nv">▤</div><div class="nv" style="margin-top:auto">⚙</div></div>
+<div class="main">
+<div class="top"><div class="wm">JARVIS</div><div class="pill"><span class="dot"></span>Online · Opus</div><div class="sr">⌕ Ask or search… &nbsp; ⌘K</div></div>
+<div class="h1">Good evening, <b>Shay</b>.</div><div class="sub">3 things need you · 2 jobs running · paid for itself 4.2× this month.</div>
+<div class="grid">
+<div class="c span2"><div class="lbl">Needs you</div>
+<div class="row"><span class="rk" style="color:#ff6b81;background:rgba(255,107,129,.12);border-color:rgba(255,107,129,.3)">CRIT</span>Send invoice email → 14 customers<button class="btn">Approve</button></div>
+<div class="row"><span class="rk">HIGH</span>Publish "SaaS starter" → Gumroad<button class="btn">Approve</button></div>
+<div class="row"><span class="rk">HIGH</span>Deploy micro-API → Cloudflare<button class="btn">Approve</button></div></div>
+<div class="c"><div class="lbl">Money · this month</div><div class="big">$3,840 <small>net</small></div>
+<svg viewBox="0 0 240 50" style="width:100%;height:46px;margin-top:8px"><path d="M0,40 L40,36 L80,38 L120,26 L160,28 L200,16 L240,6" fill="none" stroke="#46e6d6" stroke-width="2"/></svg>
+<div style="font-size:12px;color:#8a9ac0;margin-top:6px">ROI <b style="color:#43e0a0">4.2×</b> · cost $58/$80</div></div>
+<div class="c"><div class="lbl">Running jobs</div>
+<div style="font-size:13px">Build habit-tracker app · 72%<div class="bar"><i style="width:72%"></i></div></div>
+<div style="font-size:13px;margin-top:10px">Research note-taking niche · 40%<div class="bar"><i style="width:40%"></i></div></div></div>
+<div class="c span2"><div class="lbl">Jarvis suggests</div>
+<div style="font-size:13px;color:#c8d6ee;line-height:1.9">📈 Double down on the "REST API + auth" guide — 61% of traffic.<br>✉ 3 emails need a reply; drafts ready.<br>🗓 Tomorrow: 2 meetings, focus block free at 14:00.</div></div>
+<div class="c"><div class="lbl">System</div><div style="display:flex;justify-content:space-between;font-size:12px;color:#8a9ac0;line-height:2.2"><span>agents</span><b style="color:#46e6d6">51</b></div><div style="display:flex;justify-content:space-between;font-size:12px;color:#8a9ac0;line-height:2.2"><span>connectors</span><b>26</b></div><div style="display:flex;justify-content:space-between;font-size:12px;color:#8a9ac0;line-height:2.2"><span>products live</span><b style="color:#9b8cff">7</b></div></div>
+</div>
+<div class="cmd"><div class="orb"></div><input placeholder="Ask Jarvis, or type a /command…  ·  say “Hey Jarvis”"><div class="snd">➤</div></div>
+</div></div></body></html>

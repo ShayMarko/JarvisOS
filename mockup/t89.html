@@ -1,0 +1,45 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T89</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;color:#dfe7ec;background:#080b10}
+.top{display:flex;align-items:center;gap:14px;padding:18px 32px}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#5fd0c0}.st{font-size:12px;color:#5f8278}.r{margin-left:auto;font-size:13px;color:#8a98a4}
+.cap{padding:0 32px 8px}.cap h1{font-size:21px;font-weight:600}.cap h1 b{color:#5fd0c0}.cap p{color:#6f8a86;font-size:13px;margin-top:2px}
+.wall{margin:0 32px;display:grid;grid-template-columns:repeat(5,1fr);gap:10px;height:calc(100vh - 156px)}
+.cell{background:#0d1318;border:1px solid #18222a;border-radius:11px;padding:10px 12px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.cl{font-size:10px;letter-spacing:.6px;text-transform:uppercase;color:#6f8a86}
+.cv{display:flex;align-items:baseline;gap:7px;margin-top:2px}.cv b{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums}.cv s{text-decoration:none;font-size:11px}
+.up{color:#46e0a0}.dn{color:#ff7a7a}.fl{color:#8a98a4}
+.spark{height:34px;width:100%;margin-top:6px}
+.bar{position:fixed;bottom:18px;left:32px;right:32px;display:flex;align-items:center;gap:12px;background:#0d1318;border:1px solid #18222a;border-radius:13px;padding:10px 15px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#dfe7ec;font-size:14px}.bar input::placeholder{color:#5f8278}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · SPARKWALL</div><div class="st">● Online · Opus · 20:34 · Tue Jun 09</div><div class="r">20 live metrics · 30-day trend</div></div>
+<div class="cap"><h1>Everything at a glance, <b>Shay</b>.</h1><p>one sparkline per metric, agent & connector — last 30 days</p></div>
+<div class="wall">
+<!-- generate 20 cells; reuse a few path shapes -->
+<div class="cell"><div class="cl">Net / month</div><div class="cv"><b>$3,840</b><s class="up">▲18%</s></div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none"><polyline points="0,28 15,26 30,27 45,21 60,22 75,15 90,16 105,9 120,5" fill="none" stroke="#46e0a0" stroke-width="2"/></svg></div>
+<div class="cell"><div class="cl">ROI</div><div class="cv"><b>4.2×</b><s class="up">▲0.4</s></div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none"><polyline points="0,24 15,25 30,20 45,22 60,17 75,18 90,12 105,13 120,8" fill="none" stroke="#5fd0c0" stroke-width="2"/></svg></div>
+<div class="cell"><div class="cl">Visitors</div><div class="cv"><b>12.4k</b><s class="up">▲31%</s></div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none"><polyline points="0,30 15,24 30,26 45,18 60,20 75,12 90,14 105,8 120,4" fill="none" stroke="#46e0a0" stroke-width="2"/></svg></div>
+<div class="cell"><div class="cl">AI cost</div><div class="cv"><b>$58</b><s class="fl">/$80</s></div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none"><polyline points="0,20 15,22 30,18 45,24 60,19 75,23 90,17 105,21 120,16" fill="none" stroke="#ffc46b" stroke-width="2"/></svg></div>
+<div class="cell"><div class="cl">Stripe subs</div><div class="cv"><b>$1,240</b><s class="up">▲9%</s></div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none"><polyline points="0,26 15,24 30,25 45,20 60,21 75,16 90,17 105,12 120,10" fill="none" stroke="#46e0a0" stroke-width="2"/></svg></div>
+
+<div class="cell"><div class="cl">Gumroad</div><div class="cv"><b>$890</b><s class="up">▲14%</s></div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none"><polyline points="0,28 15,25 30,22 45,24 60,17 75,19 90,13 105,15 120,9" fill="none" stroke="#46e0a0" stroke-width="2"/></svg></div>
+<div class="cell"><div class="cl">Lemon Sq</div><div class="cv"><b>$310</b><s class="dn">▼3%</s></div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none"><polyline points="0,12 15,14 30,11 45,16 60,15 75,20 90,18 105,23 120,22" fill="none" stroke="#ff7a7a" stroke-width="2"/></svg></div>
+<div class="cell"><div class="cl">Newsletter</div><div class="cv"><b>$400</b><s class="up">▲6%</s></div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none"><polyline points="0,24 15,23 30,21 45,22 60,18 75,19 90,15 105,16 120,12" fill="none" stroke="#5fd0c0" stroke-width="2"/></svg></div>
+<div class="cell"><div class="cl">Subs count</div><div class="cv"><b>1.86k</b><s class="up">▲4%</s></div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none"><polyline points="0,26 15,25 30,24 45,22 60,21 75,19 90,18 105,16 120,14" fill="none" stroke="#5fd0c0" stroke-width="2"/></svg></div>
+<div class="cell"><div class="cl">Products live</div><div class="cv"><b>7</b><s class="fl">+2</s></div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none"><polyline points="0,28 15,28 30,24 45,24 60,20 75,20 90,16 105,12 120,10" fill="none" stroke="#7c9bff" stroke-width="2"/></svg></div>
+
+<div class="cell"><div class="cl">EA agent · jobs</div><div class="cv"><b>312</b><s class="up">▲</s></div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none"><polyline points="0,22 15,18 30,24 45,16 60,20 75,12 90,18 105,10 120,8" fill="none" stroke="#46e0a0" stroke-width="1.8"/></svg></div>
+<div class="cell"><div class="cl">Code · runs</div><div class="cv"><b>248</b><s class="fl">72%</s></div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none"><polyline points="0,18 15,22 30,14 45,20 60,12 75,18 90,10 105,16 120,9" fill="none" stroke="#5fd0c0" stroke-width="1.8"/></svg></div>
+<div class="cell"><div class="cl">Scout · finds</div><div class="cv"><b>190</b><s class="fl">40%</s></div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none"><polyline points="0,20 15,16 30,22 45,14 60,18 75,11 90,17 105,13 120,11" fill="none" stroke="#7c9bff" stroke-width="1.8"/></svg></div>
+<div class="cell"><div class="cl">Resend · sends</div><div class="cv"><b>1.2k</b><s class="up">▲22%</s></div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none"><polyline points="0,28 15,24 30,26 45,18 60,22 75,14 90,16 105,9 120,6" fill="none" stroke="#ffc46b" stroke-width="1.8"/></svg></div>
+<div class="cell"><div class="cl">Cloudflare · req</div><div class="cv"><b>48k</b><s class="up">▲12%</s></div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none"><polyline points="0,24 15,26 30,20 45,22 60,17 75,18 90,13 105,15 120,10" fill="none" stroke="#ffc46b" stroke-width="1.8"/></svg></div>
+
+<div class="cell"><div class="cl">Tokens / day</div><div class="cv"><b>1.4M</b><s class="dn">▼5%</s></div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none"><polyline points="0,10 15,14 30,12 45,18 60,16 75,21 90,19 105,24 120,22" fill="none" stroke="#ff7a7a" stroke-width="1.8"/></svg></div>
+<div class="cell"><div class="cl">Latency p95</div><div class="cv"><b>1.8s</b><s class="up">▼0.3</s></div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none"><polyline points="0,14 15,12 30,16 45,13 60,18 75,15 90,20 105,18 120,22" fill="none" stroke="#46e0a0" stroke-width="1.8"/></svg></div>
+<div class="cell"><div class="cl">Approvals</div><div class="cv"><b>3</b><s class="fl">pending</s></div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none"><polyline points="0,20 15,22 30,18 45,24 60,16 75,20 90,14 105,18 120,12" fill="none" stroke="#7c9bff" stroke-width="1.8"/></svg></div>
+<div class="cell"><div class="cl">Uptime</div><div class="cv"><b>99.9%</b><s class="up">●</s></div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none"><polyline points="0,8 15,8 30,9 45,8 60,8 75,10 90,8 105,8 120,8" fill="none" stroke="#46e0a0" stroke-width="1.8"/></svg></div>
+<div class="cell"><div class="cl">Connectors live</div><div class="cv"><b>9</b><s class="fl">/26</s></div><svg class="spark" viewBox="0 0 120 34" preserveAspectRatio="none"><polyline points="0,26 15,26 30,24 45,24 60,22 75,20 90,18 105,16 120,14" fill="none" stroke="#5fd0c0" stroke-width="1.8"/></svg></div>
+</div>
+<div class="bar"><span style="color:#5fd0c0">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#5f8278;font-size:12px">⌘K</span></div>
+</body></html>

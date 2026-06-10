@@ -1,0 +1,30 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T61</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6f0ff;background:radial-gradient(800px 800px at 50% 50%,#0c1830,#04060e)}
+.app{display:grid;grid-template-columns:1fr 320px;height:100vh}
+.left{display:grid;place-items:center;position:relative}
+.top{position:fixed;top:22px;left:34px}.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#5fb0ff}.st{font-size:12px;color:#5f7aa0;margin-top:2px}
+.rings{position:relative;width:340px;height:340px}
+.ring{position:absolute;border-radius:50%;background:conic-gradient(var(--c) var(--p),rgba(120,160,220,.1) 0)}
+.ring::after{content:"";position:absolute;inset:14px;border-radius:50%;background:#060a14}
+.r1{inset:0;--c:#5fe0a0;--p:84%}.r2{inset:46px;--c:#5fb0ff;--p:66%}.r3{inset:92px;--c:#c79bff;--p:45%}
+.center{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+.center .n{font-size:13px;color:#9fb8d6}.center .v{font-size:30px;font-weight:800}
+.side{border-left:1px solid rgba(95,176,255,.15);padding:30px 22px;background:rgba(8,16,32,.5);display:flex;flex-direction:column}
+.h1{font-size:22px;font-weight:600}.h1 b{color:#5fb0ff}.sub{color:#5f7aa0;font-size:13px;margin:4px 0 18px}
+.goal{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid rgba(95,176,255,.1)}
+.gd{width:11px;height:11px;border-radius:50%}.g1{background:#5fe0a0}.g2{background:#5fb0ff}.g3{background:#c79bff}
+.gt{font-size:14px}.gp{margin-left:auto;font-weight:700}
+.bar{margin-top:auto;display:flex;align-items:center;gap:12px;background:rgba(10,18,34,.8);border:1px solid rgba(95,176,255,.3);border-radius:14px;padding:11px 14px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e6f0ff;font-size:14px}.bar input::placeholder{color:#5f7aa0}
+</style></head><body><div class="app">
+<div class="left"><div class="top"><div class="wm">JARVIS · GOALS</div><div class="st">● online · opus</div></div>
+<div class="rings"><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div>
+<div class="center"><div><div class="v">84%</div><div class="n">north-star</div></div></div></div></div>
+<div class="side"><div class="h1">Good evening, <b>Shay</b>.</div><div class="sub">progress toward the month's goals</div>
+<div class="goal"><span class="gd g1"></span><div class="gt">Revenue → $4.5k</div><span class="gp" style="color:#5fe0a0">84%</span></div>
+<div class="goal"><span class="gd g2"></span><div class="gt">Ship 3 products</div><span class="gp" style="color:#5fb0ff">66%</span></div>
+<div class="goal"><span class="gd g3"></span><div class="gt">Grow list → 1k</div><span class="gp" style="color:#c79bff">45%</span></div>
+<div style="margin-top:18px;font-size:13px;color:#8fa8c8;line-height:1.7">Net <b style="color:#fff">$3,840</b> · ROI 4.2×<br>3 need you · 2 jobs running</div>
+<div class="bar"><span style="color:#5fb0ff">🎙</span><input placeholder="Ask Jarvis…"><span style="color:#5f7aa0;font-size:12px">⌘K</span></div>
+</div></div></body></html>

@@ -1,0 +1,64 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T179</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf6;background:radial-gradient(1200px 800px at 50% 0%,#0f1722,#070a10 70%)}
+.wrap{height:100vh;display:flex;flex-direction:column;padding:26px 40px}
+.top{display:flex;align-items:center;gap:14px}
+.wm{font-size:17px;font-weight:800;letter-spacing:3px;color:#5fd0c0}
+.st{font-size:12px;color:#5f8278}.r{margin-left:auto;font-size:13px;color:#8a98a4}
+.h1{font-size:24px;font-weight:800;margin:18px 0 2px}.h1 b{color:#5fd0c0}
+.sub{font-size:13px;color:#5f8278;margin-bottom:14px}
+/* detail card for scrubbed event */
+.detail{background:#0e1620;border:1px solid #1c2a36;border-radius:16px;padding:20px 24px;display:flex;gap:24px;align-items:center}
+.detail .badge{width:62px;height:62px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;background:rgba(70,224,160,.14);flex-shrink:0}
+.detail .when{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#5f8278}
+.detail .ttl{font-size:22px;font-weight:800;margin:3px 0}.detail .ttl b{color:#46e0a0}
+.detail .desc{font-size:14px;color:#9aa6ac}
+.detail .meta{margin-left:auto;text-align:right}
+.detail .meta .v{font-size:30px;font-weight:800;color:#46e0a0}
+.detail .meta .l{font-size:11px;color:#5f8278;letter-spacing:1px}
+/* timeline */
+.timeline{margin-top:auto;margin-bottom:18px;position:relative;padding:34px 0 10px}
+.axis{position:absolute;left:0;right:0;top:60px;height:3px;background:linear-gradient(90deg,#1c2a36,#2a4150,#1c2a36);border-radius:2px}
+.fill{position:absolute;left:0;top:60px;height:3px;width:62%;background:linear-gradient(90deg,#5fd0c0,#46e0a0);border-radius:2px;box-shadow:0 0 12px rgba(70,224,160,.4)}
+.events{position:relative;height:120px}
+.ev{position:absolute;top:60px;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:0}
+.ev .pt{width:13px;height:13px;border-radius:50%;background:#1c2a36;border:2px solid #3a5160;z-index:2}
+.ev.done .pt{background:#46e0a0;border-color:#46e0a0;box-shadow:0 0 8px #46e0a0}
+.ev.now .pt{width:20px;height:20px;background:#5fd0c0;border-color:#bff5ee;box-shadow:0 0 16px #5fd0c0}
+.ev .lbl{position:absolute;font-size:11px;white-space:nowrap;color:#8a98a4}
+.ev:nth-child(odd) .lbl{top:-30px}.ev:nth-child(even) .lbl{top:24px}
+.ev.now .lbl{color:#bff5ee;font-weight:700}
+.tk{position:absolute;font-size:10px;color:#46586a;top:84px;transform:translateX(-50%)}
+.scrub{position:absolute;top:42px;width:4px;height:36px;background:#bff5ee;border-radius:3px;box-shadow:0 0 14px rgba(191,245,238,.7);z-index:5}
+.scrub::before{content:"";position:absolute;top:-9px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid #bff5ee}
+.legend{display:flex;gap:18px;font-size:12px;color:#5f8278;margin-top:8px}
+.legend span::before{content:"●";margin-right:5px}
+.bar{display:flex;align-items:center;gap:12px;background:#0e1419;border:1px solid #19232a;border-radius:13px;padding:11px 15px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e6edf6;font-size:14px}.bar input::placeholder{color:#5f8278}
+</style></head><body>
+<div class="wrap">
+<div class="top"><div class="wm">JARVIS · TIMELINE</div><div class="st">● Opus</div><div class="r">Good evening, Shay · Tue Jun 09 · scrub to replay the day</div></div>
+<div class="h1">Today in <b>review</b></div><div class="sub">23 events · 2 jobs running · net $3,840 added this month</div>
+<div class="detail">
+<div class="badge">💸</div>
+<div><div class="when">14:08 · selected</div><div class="ttl">Stripe payout cleared · <b>$1,240</b></div><div class="desc">14 subscriptions renewed. Finance agent reconciled and set aside 28% for tax.</div></div>
+<div class="meta"><div class="v">+$1,240</div><div class="l">running net · $3,840</div></div>
+</div>
+<div class="timeline">
+<div class="axis"></div><div class="fill"></div>
+<div class="scrub" style="left:62%"></div>
+<div class="events">
+<div class="ev done" style="left:5%"><span class="pt"></span><span class="lbl">07:30 Briefing → Discord</span></div>
+<div class="ev done" style="left:20%"><span class="pt"></span><span class="lbl">09:15 Newsletter #13 sent</span></div>
+<div class="ev done" style="left:34%"><span class="pt"></span><span class="lbl">11:40 habit-tracker scaffolded</span></div>
+<div class="ev done" style="left:48%"><span class="pt"></span><span class="lbl">13:02 Gumroad sale $39</span></div>
+<div class="ev now" style="left:62%"><span class="pt"></span><span class="lbl">14:08 Stripe payout $1,240</span></div>
+<div class="ev" style="left:76%"><span class="pt"></span><span class="lbl">16:20 Scout · niche 40%</span></div>
+<div class="ev" style="left:90%"><span class="pt"></span><span class="lbl">20:34 3 need you</span></div>
+</div>
+<div class="tk" style="left:5%">07:00</div><div class="tk" style="left:34%">11:00</div><div class="tk" style="left:62%">14:00</div><div class="tk" style="left:90%">20:34</div>
+<div class="legend"><span style="color:#46e0a0">done</span><span style="color:#5fd0c0">now</span><span style="color:#3a5160">upcoming</span></div>
+</div>
+<div class="bar"><span style="color:#5fd0c0">🎙</span><input placeholder="Ask Jarvis about any moment… drag the scrubber"><span style="color:#5f8278;font-size:12px">⌘K</span></div>
+</div>
+</body></html>

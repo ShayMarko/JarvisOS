@@ -1,0 +1,39 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T280</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;background:#06080c}
+/* dim wallpaper */
+.wall{position:absolute;inset:0;background:
+ radial-gradient(60% 40% at 70% 90%,rgba(90,160,255,.16),transparent 60%),
+ radial-gradient(50% 40% at 20% 95%,rgba(123,92,255,.14),transparent 60%),#080b11}
+.clock{position:absolute;bottom:60px;left:0;right:0;text-align:center;color:#dfe9f6}
+.clock .t{font-size:96px;font-weight:200;letter-spacing:-3px;text-shadow:0 4px 30px rgba(0,0,0,.5)}
+.clock .d{font-size:18px;color:#9fb0c4;letter-spacing:1px}
+.clock .wm{font-size:12px;letter-spacing:4px;color:#7fb4ff;margin-bottom:6px;font-weight:700}
+/* cascade of banners top */
+.stack{position:absolute;top:22px;left:50%;transform:translateX(-50%);width:520px;display:flex;flex-direction:column;gap:12px}
+.note{display:flex;align-items:flex-start;gap:13px;background:rgba(22,28,40,.72);backdrop-filter:blur(26px);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:14px 16px;box-shadow:0 18px 40px rgba(0,0,0,.4);color:#eaf0f8}
+.note .ic{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:20px;flex:none}
+.bd{flex:1;min-width:0}
+.bd .row1{display:flex;align-items:center;gap:8px}
+.bd .app{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#9fb0c4;font-weight:700}
+.bd .tag{font-size:9px;font-weight:800;padding:2px 6px;border-radius:5px}
+.crit{background:rgba(255,90,110,.18);color:#ff8a9a}.high{background:rgba(255,180,84,.18);color:#ffc878}
+.bd .when{margin-left:auto;font-size:11px;color:#7e93b2}
+.bd h4{font-size:15px;font-weight:700;margin-top:3px}
+.bd p{font-size:13px;color:#a9bcd2;margin-top:2px}
+.bd .acts{display:flex;gap:8px;margin-top:10px}
+.bd .acts .b{font-size:12px;font-weight:700;padding:7px 14px;border-radius:10px;background:rgba(255,255,255,.1);color:#dfe9f6}
+.bd .acts .b.go{background:#4da3ff;color:#06101f}
+/* depth — slightly scaled/faded deeper ones */
+.note.s2{transform:scale(.97);opacity:.94}.note.s3{transform:scale(.94);opacity:.86}.note.s4{transform:scale(.91);opacity:.74}.note.s5{transform:scale(.88);opacity:.6}
+</style></head><body>
+<div class="wall"></div>
+<div class="stack">
+<div class="note"><div class="ic" style="background:linear-gradient(135deg,#ff5d73,#ff8a4a)">🧾</div><div class="bd"><div class="row1"><span class="app">JARVIS · EA</span><span class="tag crit">CRITICAL</span><span class="when">now</span></div><h4>Invoice ready → 14 customers</h4><p>Drafted via Resend · bills $1,240 this month. Approve to send.</p><div class="acts"><span class="b">View</span><span class="b go">Approve &amp; send</span></div></div></div>
+<div class="note s2"><div class="ic" style="background:linear-gradient(135deg,#4da3ff,#7b5cff)">⚡</div><div class="bd"><div class="row1"><span class="app">JARVIS · Code</span><span class="when">2m ago</span></div><h4>habit-tracker · 72%</h4><p>Green-gate passed · wiring streaks UI. Will notify on Discord when done.</p></div></div>
+<div class="note s3"><div class="ic" style="background:linear-gradient(135deg,#46e0a0,#1f9e6e)">💰</div><div class="bd"><div class="row1"><span class="app">JARVIS · Finance</span><span class="when">11m ago</span></div><h4>Net this month $3,840 ▲18%</h4><p>ROI 4.2× · Gumroad payout $890 cleared.</p></div></div>
+<div class="note s4"><div class="ic" style="background:linear-gradient(135deg,#ffb454,#e08a2a)">🚀</div><div class="bd"><div class="row1"><span class="app">JARVIS · Product</span><span class="tag high">HIGH</span><span class="when">18m ago</span></div><h4>Publish SaaS starter → Gumroad $39</h4><p>Packaged &amp; ready. One tap to go live.</p></div></div>
+<div class="note s5"><div class="ic" style="background:linear-gradient(135deg,#a78bff,#5a3edf)">🔎</div><div class="bd"><div class="row1"><span class="app">JARVIS · Scout</span><span class="when">26m ago</span></div><h4>research note-taking niche · 40%</h4><p>Double down: “REST API + auth” guide drove 61% of traffic.</p></div></div>
+</div>
+<div class="clock"><div class="wm">JARVIS · ● ONLINE · OPUS</div><div class="t">20:34</div><div class="d">Tuesday, June 09</div></div>
+</body></html>

@@ -1,0 +1,68 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T106</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;color:#e8eaf0;background:#0a0a0c}
+.app{height:100vh;display:grid;grid-template-columns:230px 1fr}
+.side{background:#101013;border-right:1px solid #1c1c22;display:flex;flex-direction:column;padding:18px 0}
+.wm{font-size:17px;font-weight:800;letter-spacing:3px;color:#46e0a0;padding:0 20px 16px}
+.nav{font-size:14px;color:#b6bac4;padding:9px 20px;display:flex;align-items:center;gap:11px}
+.nav.on{color:#fff;font-weight:600}.nav .i{font-size:15px;opacity:.85}
+.seclbl{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#62656e;padding:16px 20px 6px}
+.pl{font-size:13.5px;color:#9a9ea8;padding:6px 20px;display:flex;align-items:center;gap:10px}
+.pl .dot{width:8px;height:8px;border-radius:2px}
+.side .st{margin-top:auto;padding:0 20px;font-size:11px;color:#62656e}
+.main{display:flex;flex-direction:column;overflow:hidden;background:linear-gradient(180deg,#16161c,#0a0a0c 320px)}
+.mhead{display:flex;align-items:center;gap:14px;padding:18px 30px}
+.mhead h1{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#8a8e98}
+.mhead .r{margin-left:auto;font-size:12px;color:#62656e}
+.hero{padding:6px 30px 18px}.hero h2{font-size:30px;font-weight:800;letter-spacing:-.5px}
+.hero p{font-size:13px;color:#9a9ea8;margin-top:4px}
+.grid{padding:6px 30px;display:grid;grid-template-columns:repeat(5,1fr);gap:18px;overflow:hidden}
+.card{cursor:default}
+.cover{aspect-ratio:1;border-radius:12px;position:relative;display:flex;align-items:flex-end;padding:12px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.cover .play{position:absolute;bottom:10px;right:10px;width:38px;height:38px;border-radius:50%;background:#46e0a0;color:#06281e;display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 6px 16px rgba(70,224,160,.5)}
+.cover .glyph{font-size:34px;opacity:.9}
+.card .ti{font-size:14px;font-weight:700;margin-top:10px}
+.card .d{font-size:12px;color:#8a8e98;margin-top:2px;line-height:1.4}
+.c1{background:linear-gradient(150deg,#0e5c3e,#0a2e22)}
+.c2{background:linear-gradient(150deg,#7a2230,#3a1018)}
+.c3{background:linear-gradient(150deg,#2a3a8a,#141c44)}
+.c4{background:linear-gradient(150deg,#7a5210,#3a2808)}
+.c5{background:linear-gradient(150deg,#3a2a7a,#1c1444)}
+.c6{background:linear-gradient(150deg,#0d4a52,#082e34)}
+.c7{background:linear-gradient(150deg,#5a2a6a,#2c1434)}
+.c8{background:linear-gradient(150deg,#1f5a4a,#0a3024)}
+.c9{background:linear-gradient(150deg,#6a3a1a,#341c0c)}
+.c10{background:linear-gradient(150deg,#2a4a6a,#142434)}
+</style></head><body>
+<div class="app">
+<div class="side">
+<div class="wm">JARVIS</div>
+<div class="nav on"><span class="i">🏠</span>Home</div>
+<div class="nav"><span class="i">🔍</span>Search</div>
+<div class="nav"><span class="i">📚</span>Your Library</div>
+<div class="seclbl">Categories</div>
+<div class="pl"><span class="dot" style="background:#46e0a0"></span>Money</div>
+<div class="pl"><span class="dot" style="background:#8a98ff"></span>Builders</div>
+<div class="pl"><span class="dot" style="background:#ffb454"></span>Distribution</div>
+<div class="pl"><span class="dot" style="background:#ff6b81"></span>Needs you</div>
+<div class="pl"><span class="dot" style="background:#5fd0c0"></span>Comms</div>
+<div class="st">● Online · Opus<br>51 agents · 9 connectors live<br>Net $3,840 · ROI 4.2×</div>
+</div>
+<div class="main">
+<div class="mhead"><h1>Agent Library</h1><span class="r">20:34 · Tue Jun 09 · "Hey Jarvis"</span></div>
+<div class="hero"><h2>Good evening, Shay.</h2><p>Your playlists, by category · press play to dispatch an agent</p></div>
+<div class="grid">
+<div class="card"><div class="cover c2"><span class="glyph">⚡</span><span class="play">▶</span></div><div class="ti">Needs You</div><div class="d">3 tracks · invoice $1,240 · CRITICAL</div></div>
+<div class="card"><div class="cover c1"><span class="glyph">💰</span><span class="play">▶</span></div><div class="ti">Money</div><div class="d">Finance · EA · net $3,840</div></div>
+<div class="card"><div class="cover c3"><span class="glyph">🛠️</span><span class="play">▶</span></div><div class="ti">Builders</div><div class="d">Code · habit-tracker 72%</div></div>
+<div class="card"><div class="cover c4"><span class="glyph">📣</span><span class="play">▶</span></div><div class="ti">Distribution</div><div class="d">Newsletter #14 · SEO 61%</div></div>
+<div class="card"><div class="cover c5"><span class="glyph">🔍</span><span class="play">▶</span></div><div class="ti">Scouts</div><div class="d">note-taking niche 40%</div></div>
+<div class="card"><div class="cover c6"><span class="glyph">🔌</span><span class="play">▶</span></div><div class="ti">Connectors</div><div class="d">26 · 9 live</div></div>
+<div class="card"><div class="cover c7"><span class="glyph">📦</span><span class="play">▶</span></div><div class="ti">Products</div><div class="d">7 live · Gumroad $39</div></div>
+<div class="card"><div class="cover c8"><span class="glyph">🤖</span><span class="play">▶</span></div><div class="ti">Brain</div><div class="d">planner · learning router</div></div>
+<div class="card"><div class="cover c9"><span class="glyph">💬</span><span class="play">▶</span></div><div class="ti">Comms</div><div class="d">Discord · Telegram</div></div>
+<div class="card"><div class="cover c10"><span class="glyph">💡</span><span class="play">▶</span></div><div class="ti">Suggestions</div><div class="d">Double down: REST API guide</div></div>
+</div>
+</div>
+</div>
+</body></html>

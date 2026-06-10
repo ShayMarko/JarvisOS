@@ -1,0 +1,55 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T247</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,'Helvetica Neue',sans-serif}
+body{height:100vh;overflow:hidden;color:#f4f0ec;background:#16121e}
+.mesh{height:100vh;position:relative;padding:46px 56px;display:grid;grid-template-rows:auto 1fr auto;overflow:hidden;
+background:
+radial-gradient(60% 80% at 18% 12%,#ff6a9c 0%,transparent 55%),
+radial-gradient(55% 70% at 88% 22%,#6a8aff 0%,transparent 52%),
+radial-gradient(70% 80% at 70% 95%,#ffb86a 0%,transparent 55%),
+radial-gradient(60% 70% at 10% 90%,#8a6aff 0%,transparent 55%),
+#1a1426}
+.grain{position:absolute;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:overlay;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.top{display:flex;align-items:center;gap:14px;position:relative;z-index:2}
+.wm{font-size:18px;font-weight:700;letter-spacing:5px;color:rgba(255,255,255,.92)}
+.status{font-size:12px;color:rgba(255,255,255,.6);margin-left:auto;font-weight:500}
+.hero{position:relative;z-index:2;align-self:center;max-width:760px}
+.greet{font-size:72px;font-weight:300;letter-spacing:-2px;line-height:.98;color:rgba(255,255,255,.96)}
+.greet b{font-weight:700}
+.net{font-size:18px;font-weight:400;color:rgba(255,255,255,.82);margin-top:18px;letter-spacing:.3px}
+.net b{font-weight:700}
+.rows{display:flex;gap:42px;margin-top:34px}
+.col h4{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:10px;font-weight:600}
+.li{font-size:14px;color:rgba(255,255,255,.88);padding:5px 0;display:flex;gap:10px;align-items:baseline}
+.li .v{color:rgba(255,255,255,.6);font-variant-numeric:tabular-nums;margin-left:auto}
+.dot{width:6px;height:6px;border-radius:50%;background:#fff;opacity:.7}
+.crit .dot{background:#ff6a9c;opacity:1}
+.foot{position:relative;z-index:2;display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:15px 22px;backdrop-filter:blur(16px)}
+.foot input{flex:1;background:0;border:0;outline:0;color:#fff;font-size:15px;font-weight:400}
+.foot input::placeholder{color:rgba(255,255,255,.55)}
+</style></head><body><div class="mesh">
+<div class="grain"></div>
+<div class="top"><div class="wm">JARVIS</div><div class="status">● Online · Opus · 20:34 · Tue Jun 09</div></div>
+<div class="hero">
+  <div class="greet">Good evening,<br><b>Shay.</b></div>
+  <div class="net">Net this month <b>$3,840</b> · ROI <b>4.2×</b> · ▲18% · AI cost $58 / $80</div>
+  <div class="rows">
+    <div class="col"><h4>Needs you</h4>
+      <div class="li crit"><span class="dot"></span>Invoice → 14<span class="v">$1,240</span></div>
+      <div class="li"><span class="dot"></span>Publish starter<span class="v">$39</span></div>
+      <div class="li"><span class="dot"></span>Deploy micro-API<span class="v">CF</span></div>
+    </div>
+    <div class="col"><h4>Running</h4>
+      <div class="li"><span class="dot"></span>habit-tracker<span class="v">72%</span></div>
+      <div class="li"><span class="dot"></span>research niche<span class="v">40%</span></div>
+      <div class="li"><span class="dot"></span>newsletter #14<span class="v">queued</span></div>
+    </div>
+    <div class="col"><h4>System</h4>
+      <div class="li"><span class="dot"></span>Agents<span class="v">51</span></div>
+      <div class="li"><span class="dot"></span>Connectors<span class="v">26 · 9 live</span></div>
+      <div class="li"><span class="dot"></span>Products live<span class="v">7</span></div>
+    </div>
+  </div>
+</div>
+<div class="foot"><span>🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="opacity:.6">⌘K</span></div>
+</div></body></html>

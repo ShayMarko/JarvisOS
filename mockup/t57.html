@@ -1,0 +1,30 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T57</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e3ebf5;background:#0a0d14}
+.app{display:grid;grid-template-columns:56px 1fr;height:100vh}
+.rail{background:#0c1019;border-right:1px solid #19202e;display:flex;flex-direction:column;align-items:center;padding:14px 0}
+.lg{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#5fb8ff,#9b8cff);display:grid;place-items:center;color:#0a0d14;font-weight:800;margin-bottom:16px}
+.vtab{writing-mode:vertical-rl;transform:rotate(180deg);padding:16px 8px;font-size:12px;letter-spacing:1.5px;color:#6f7c92;border-radius:8px;margin:2px 0;cursor:pointer}
+.vtab.on{background:#13202f;color:#5fb8ff;box-shadow:inset 2px 0 0 #5fb8ff}
+.main{padding:30px 38px;overflow:hidden}
+.hd{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#5d6a82}
+.t{font-size:26px;font-weight:700;margin:6px 0 18px}.t b{color:#5fb8ff}
+.cards{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:16px}
+.c{background:#10151f;border:1px solid #1b2433;border-radius:16px;padding:17px}
+.cl{font-size:11px;letter-spacing:1.3px;text-transform:uppercase;color:#5d6a82;margin-bottom:10px}
+.row{display:flex;align-items:center;gap:10px;font-size:14px;padding:9px 0;border-top:1px solid #161f2b}.row:first-of-type{border:0}
+.rk{font-size:9px;font-weight:700;padding:2px 7px;border-radius:5px;color:#ff6b81;background:rgba(255,107,129,.12)}.rk.h{color:#ffc85a;background:rgba(255,200,90,.12)}
+.go{margin-left:auto;font-size:11px;font-weight:700;color:#0a0d14;background:linear-gradient(135deg,#5fb8ff,#9b8cff);border-radius:8px;padding:6px 11px}
+.big{font-size:28px;font-weight:800}.bar{height:6px;border-radius:6px;background:#1b2433;margin-top:7px}.bar i{display:block;height:100%;border-radius:6px;background:#5fb8ff}
+.dock{position:fixed;bottom:20px;left:74px;right:38px;display:flex;align-items:center;gap:12px;background:#10151f;border:1px solid #1b2433;border-radius:13px;padding:10px 15px}
+.dock input{flex:1;background:0;border:0;outline:0;color:#e3ebf5;font-size:14px}.dock input::placeholder{color:#5d6a82}
+</style></head><body><div class="app">
+<div class="rail"><div class="lg">J</div><div class="vtab on">TODAY</div><div class="vtab">MONEY</div><div class="vtab">AGENTS</div><div class="vtab">JOBS</div><div class="vtab" style="margin-top:auto">SETTINGS</div></div>
+<div class="main"><div class="hd">Today · Tue Jun 09</div><div class="t">Good evening, <b>Shay</b>.</div>
+<div class="cards">
+<div class="c"><div class="cl">Needs you · 3</div><div class="row"><span class="rk">CRIT</span>Invoice → 14<span class="go">Approve</span></div><div class="row"><span class="rk h">HIGH</span>Publish starter<span class="go">Approve</span></div><div class="row"><span class="rk h">HIGH</span>Deploy API<span class="go">Approve</span></div></div>
+<div class="c"><div class="cl">Money · month</div><div class="big">$3,840</div><div style="font-size:13px;color:#46dca0;margin-top:6px">▲18% · ROI 4.2×</div></div>
+<div class="c"><div class="cl">Jobs</div><div style="font-size:13px">habit-tracker 72%<div class="bar"><i style="width:72%"></i></div></div><div style="font-size:13px;margin-top:10px">research 40%<div class="bar"><i style="width:40%"></i></div></div></div>
+</div></div>
+<div class="dock"><span style="color:#5fb8ff">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#5d6a82;font-size:12px">⌘K</span></div>
+</div></body></html>

@@ -1,0 +1,48 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T185</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf6;background:#080b12}
+.top{display:flex;align-items:center;gap:14px;padding:22px 40px}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#7cc4ff}.st{font-size:12px;color:#5f7488}.r{margin-left:auto;font-size:13px;color:#8a98a4}
+.hd{padding:0 40px}.hd h1{font-size:22px;font-weight:600}.hd h1 b{color:#7cc4ff}.hd p{font-size:13px;color:#5f7488;margin-top:4px}
+.plot{margin:14px 40px 0;background:#0c1119;border:1px solid #16202c;border-radius:16px;padding:18px 18px 8px;height:calc(100vh - 250px)}
+.lg{display:flex;gap:18px;font-size:12px;padding:0 6px 6px;color:#8a98a4}.lg span i{display:inline-block;width:18px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.bar{position:fixed;bottom:22px;left:40px;right:40px;display:flex;align-items:center;gap:12px;background:rgba(12,17,25,.9);border:1px solid #16202c;border-radius:13px;padding:11px 15px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e6edf6;font-size:14px}.bar input::placeholder{color:#5f7488}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · PARALLEL COORDS</div><div class="st">● ONLINE · OPUS · 20:34</div><div class="r">7 products · 5 dimensions</div></div>
+<div class="hd"><h1>Good evening, <b>Shay.</b></h1><p>each line is one product threading across revenue, traffic, conversion, cost and ROI</p></div>
+<div class="plot">
+<div class="lg"><span><i style="background:#46e0a0"></i>REST API guide (top)</span><span><i style="background:#7cc4ff"></i>SaaS starter</span><span><i style="background:#b48cff"></i>others</span></div>
+<svg viewBox="0 0 1180 470" style="width:100%;height:calc(100% - 24px)">
+<!-- 5 axes -->
+<g stroke="#22303e" stroke-width="2">
+<line x1="120" y1="40" x2="120" y2="420"/><line x1="370" y1="40" x2="370" y2="420"/><line x1="620" y1="40" x2="620" y2="420"/><line x1="870" y1="40" x2="870" y2="420"/><line x1="1120" y1="40" x2="1120" y2="420"/>
+</g>
+<g fill="#5f7488" font-size="11" text-anchor="middle"><text x="120" y="445">Revenue</text><text x="370" y="445">Visitors</text><text x="620" y="445">Conversion</text><text x="870" y="445">AI cost</text><text x="1120" y="445">ROI</text></g>
+<g fill="#5f7488" font-size="9" text-anchor="end">
+<text x="112" y="48">$1.2k</text><text x="112" y="416">$0</text>
+<text x="362" y="48">12k</text><text x="362" y="416">0</text>
+<text x="612" y="48">6%</text><text x="612" y="416">0%</text>
+<text x="862" y="48">$20</text><text x="862" y="416">$0</text>
+<text x="1112" y="48">6×</text><text x="1112" y="416">0×</text></g>
+<!-- ticks -->
+<g stroke="#22303e"><line x1="116" y1="140" x2="124" y2="140"/><line x1="116" y1="240" x2="124" y2="240"/><line x1="116" y1="340" x2="124" y2="340"/></g>
+<!-- polylines: x fixed at 120/370/620/870/1120 ; y=40(top)..420(bottom) -->
+<g fill="none" stroke-width="2" stroke-linejoin="round" opacity=".5">
+<polyline points="120,150 370,170 620,200 870,150 1120,180" stroke="#b48cff"/>
+<polyline points="120,230 370,250 620,210 870,260 1120,230" stroke="#b48cff"/>
+<polyline points="120,300 370,290 620,310 870,300 1120,290" stroke="#b48cff"/>
+<polyline points="120,350 370,330 620,360 870,340 1120,350" stroke="#b48cff"/>
+<polyline points="120,200 370,210 620,180 870,220 1120,200" stroke="#b48cff"/>
+</g>
+<g fill="none" stroke-width="3" stroke-linejoin="round">
+<polyline points="120,260 370,240 620,150 870,300 1120,130" stroke="#7cc4ff"/>
+<polyline points="120,60 370,80 620,90 870,140 1120,70" stroke="#46e0a0"/>
+</g>
+<!-- node dots on highlighted -->
+<g fill="#46e0a0"><circle cx="120" cy="60" r="4"/><circle cx="370" cy="80" r="4"/><circle cx="620" cy="90" r="4"/><circle cx="870" cy="140" r="4"/><circle cx="1120" cy="70" r="4"/></g>
+<text x="135" y="52" fill="#cfe" font-size="11" font-weight="700">"REST API + auth" · ROI 5.8×</text>
+</svg>
+</div>
+<div class="bar"><span style="color:#7cc4ff">🎙</span><input placeholder="Ask Jarvis which product to double down on…"><span style="color:#5f7488;font-size:12px">⌘K</span></div>
+</body></html>

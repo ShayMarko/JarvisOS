@@ -1,0 +1,41 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T236</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf6;background:radial-gradient(900px 700px at 50% 30%,#0a1a26,#05090f 70%)}
+.top{display:flex;align-items:center;gap:14px;padding:22px 40px;position:relative;z-index:2}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#5fd9e0}.st{font-size:12px;color:#4f7884}.r{margin-left:auto;font-size:13px;color:#4f7884}
+.stage{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.listening{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#5fd9e0;font-weight:700;display:flex;align-items:center;gap:9px}
+.listening .pulse{width:9px;height:9px;border-radius:50%;background:#5fd9e0;box-shadow:0 0 0 0 rgba(95,217,224,.5)}
+.orb{position:relative;width:240px;height:240px;margin:18px 0 6px}
+.ring{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(95,217,224,.25)}
+.ring.r2{inset:24px;border-color:rgba(95,217,224,.18)}
+.ring.r3{inset:54px;border-color:rgba(95,217,224,.12)}
+.mic{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:96px;height:96px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#6ff0f6,#2a9aa6);display:flex;align-items:center;justify-content:center;font-size:34px;color:#04181c;box-shadow:0 0 60px rgba(95,217,224,.45)}
+.wave{display:flex;align-items:center;justify-content:center;gap:5px;height:130px;margin:6px 0 4px}
+.wave i{width:6px;border-radius:4px;background:linear-gradient(180deg,#6ff0f6,#2a9aa6)}
+.transcript{width:680px;text-align:center;margin-top:8px}
+.transcript .live{font-size:26px;font-weight:600;line-height:1.35}
+.transcript .live .gh{color:#3f5f68}
+.transcript .live b{color:#5fd9e0}
+.transcript .prev{font-size:14px;color:#4f7884;margin-top:14px;line-height:1.7}
+.transcript .prev .you{color:#7ea6b0}
+.chips{display:flex;gap:10px;justify-content:center;margin-top:24px}
+.chip{font-size:12px;padding:8px 15px;border-radius:22px;border:1px solid #1c3640;color:#7ea6b0;background:rgba(10,26,38,.6)}
+.bar{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;font-size:12px;color:#4f7884}
+.bar .kbd{font-family:ui-monospace,monospace;background:#0e2028;border:1px solid #1c3640;border-radius:6px;padding:3px 8px;color:#7ea6b0}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · VOICE</div><div class="st">● Online · Opus</div><div class="r">20:34 · Tue Jun 09</div></div>
+<div class="stage">
+<div class="listening"><span class="pulse"></span> Listening…</div>
+<div class="orb"><div class="ring"></div><div class="ring r2"></div><div class="ring r3"></div><div class="mic">🎙</div></div>
+<div class="wave">
+<i style="height:24%"></i><i style="height:46%"></i><i style="height:70%"></i><i style="height:38%"></i><i style="height:88%"></i><i style="height:54%"></i><i style="height:96%"></i><i style="height:62%"></i><i style="height:100%"></i><i style="height:50%"></i><i style="height:80%"></i><i style="height:34%"></i><i style="height:66%"></i><i style="height:44%"></i><i style="height:90%"></i><i style="height:30%"></i><i style="height:58%"></i><i style="height:72%"></i><i style="height:40%"></i><i style="height:84%"></i><i style="height:52%"></i><i style="height:28%"></i><i style="height:64%"></i>
+</div>
+<div class="transcript">
+<div class="live">"Hey Jarvis, <b>send the invoice</b> to all fourteen customers<span class="gh"> and tell me the net…</span>"</div>
+<div class="prev"><span class="you">You · 20:33 —</span> "What needs me right now?"<br>Jarvis — Three things: a critical invoice for 14 customers worth $1,240, publishing the SaaS starter, and deploying the micro-API.</div>
+</div>
+<div class="chips"><span class="chip">⏸ Pause</span><span class="chip">⌨ Type instead</span><span class="chip">✕ Cancel</span></div>
+</div>
+<div class="bar">Say <span class="kbd">Hey Jarvis</span> anytime · hold <span class="kbd">Space</span> to push-to-talk</div>
+</body></html>

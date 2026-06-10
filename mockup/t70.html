@@ -1,0 +1,29 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T70</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e7ecf6;background:#0a0c12}
+.top{display:flex;align-items:center;gap:14px;padding:18px 32px}.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#6db0ff}.st{font-size:12px;color:#6a768c}.r{margin-left:auto;font-size:13px;color:#8a96ad}
+.matrix{position:relative;margin:6px 70px 0 90px;height:calc(100vh - 150px);display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:14px}
+.axis-y{position:absolute;left:-70px;top:0;bottom:0;display:flex;align-items:center}.axis-y span{writing-mode:vertical-rl;transform:rotate(180deg);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#5d6680}
+.axis-x{position:absolute;left:0;right:0;bottom:-26px;display:flex;justify-content:space-between;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#5d6680;padding:0 30%}
+.q{border-radius:16px;padding:16px;border:1px solid #1c2433}
+.q1{background:rgba(255,107,129,.07);border-color:rgba(255,107,129,.25)}
+.q2{background:rgba(255,200,90,.06);border-color:rgba(255,200,90,.2)}
+.q3{background:rgba(98,196,255,.06);border-color:rgba(98,196,255,.2)}
+.q4{background:rgba(120,130,150,.05)}
+.qh{font-size:11px;letter-spacing:1.3px;text-transform:uppercase;color:#8a96ad;margin-bottom:10px}
+.item{display:flex;align-items:center;gap:9px;font-size:13px;padding:7px 0;border-top:1px solid rgba(255,255,255,.05)}.item:first-of-type{border:0}
+.dot{width:8px;height:8px;border-radius:50%}.r1d{background:#ff6b81}.r2d{background:#ffc85a}.r3d{background:#62c4ff}
+.go{margin-left:auto;font-size:10px;font-weight:700;color:#0a0c12;background:#fff;border-radius:7px;padding:4px 9px;opacity:.85}
+.bar{position:fixed;bottom:18px;left:90px;right:70px;display:flex;align-items:center;gap:12px;background:#0e1320;border:1px solid #19202e;border-radius:13px;padding:10px 15px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e7ecf6;font-size:14px}.bar input::placeholder{color:#5d6680}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · PRIORITY</div><div class="st">● Opus</div><div class="r">Evening, Shay · what to do first</div></div>
+<div class="matrix">
+<div class="axis-y"><span>← Urgent · · · Later →</span></div><div class="axis-x"><span>Important</span><span>Less important</span></div>
+<div class="q q1"><div class="qh">Do now · urgent + important</div><div class="item"><span class="dot r1d"></span>Approve invoice → 14<span class="go">Do</span></div><div class="item"><span class="dot r1d"></span>Deploy micro-API<span class="go">Do</span></div></div>
+<div class="q q2"><div class="qh">Decide · urgent</div><div class="item"><span class="dot r2d"></span>Publish SaaS starter</div><div class="item"><span class="dot r2d"></span>Reply to 3 emails</div></div>
+<div class="q q3"><div class="qh">Schedule · important</div><div class="item"><span class="dot r3d"></span>Write 2 follow-up articles</div><div class="item"><span class="dot r3d"></span>Newsletter issue #15</div></div>
+<div class="q q4"><div class="qh">Delegate / later</div><div class="item">POD trend designs → Jarvis</div><div class="item">Tidy KB tags</div></div>
+</div>
+<div class="bar"><span style="color:#6db0ff">🎙</span><input placeholder="Ask Jarvis what to prioritise… · say “Hey Jarvis”"><span style="color:#5d6680;font-size:12px">⌘K</span></div>
+</body></html>

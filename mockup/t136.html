@@ -1,0 +1,53 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T136</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e8edf4;background:#0a0c11}
+.top{display:flex;align-items:center;gap:14px;padding:16px 28px}
+.wm{font-size:17px;font-weight:800;letter-spacing:3px;color:#7c9cff}.st{font-size:12px;color:#5b6678}.r{margin-left:auto;font-size:13px;color:#8a96a8}
+.stages{display:grid;grid-template-columns:140px repeat(4,1fr);gap:12px;padding:4px 28px 8px}
+.stages .sp{}
+.sh{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:#5b6678;text-align:center;padding:8px 0;border-bottom:1px solid #1a212c}
+.lanes{display:flex;flex-direction:column;gap:12px;padding:8px 28px 24px;height:calc(100vh - 110px)}
+.lane{display:grid;grid-template-columns:140px repeat(4,1fr);gap:12px;flex:1;background:#0d1118;border:1px solid #161d27;border-radius:16px;overflow:hidden}
+.lhead{display:flex;flex-direction:column;justify-content:center;padding:0 18px;border-right:1px solid #161d27}
+.lhead .lt{font-size:15px;font-weight:800}.lhead .ls{font-size:11px;color:#6b7888;margin-top:2px}
+.cell{padding:12px;display:flex;flex-direction:column;gap:10px;border-right:1px solid #11161f}
+.card{background:#141a24;border:1px solid #222b39;border-radius:11px;padding:11px 12px;border-left:3px solid #7c9cff}
+.card.g{border-left-color:#46e0a0}.card.a{border-left-color:#f5b34a}.card.v{border-left-color:#b18cff}.card.r{border-left-color:#ff5a6e}
+.ct{font-size:13px;font-weight:600}.cs{font-size:11px;color:#6b7888;margin-top:2px}
+.meta{display:flex;align-items:center;gap:6px;margin-top:8px}
+.amt{font-size:12px;color:#46e0a0;font-weight:700}
+.bar{flex:1;height:5px;border-radius:4px;background:#222b39;overflow:hidden}.bar i{display:block;height:100%;background:#7c9cff}
+.pill{font-size:8px;font-weight:700;padding:1px 6px;border-radius:8px;background:rgba(255,90,110,.18);color:#ff7a8c}
+.lane-money .lhead{border-left:3px solid #46e0a0}
+.lane-build .lhead{border-left:3px solid #7c9cff}
+.lane-pub .lhead{border-left:3px solid #b18cff}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS</div><div class="st">● Online · Opus · 20:34 · Tue Jun 09</div><div class="r">Board · flow left → right</div></div>
+<div class="stages">
+  <div class="sp"></div>
+  <div class="sh">Idea</div><div class="sh">In progress</div><div class="sh">Review · needs you</div><div class="sh">Shipped</div>
+</div>
+<div class="lanes">
+  <div class="lane lane-money">
+    <div class="lhead"><div class="lt">Money</div><div class="ls">$3,840 net · ▲18%</div></div>
+    <div class="cell"><div class="card g"><div class="ct">POD trend engine</div><div class="cs">scout flagged niche</div></div></div>
+    <div class="cell"><div class="card g"><div class="ct">Newsletter #14</div><div class="cs">drafting</div><div class="meta"><div class="bar"><i style="width:60%;background:#46e0a0"></i></div></div></div></div>
+    <div class="cell"><div class="card r"><div class="ct">Send invoice → 14 <span class="pill">CRIT</span></div><div class="cs">EA via Resend</div><div class="meta"><span class="amt">$1,240</span></div></div></div>
+    <div class="cell"><div class="card g"><div class="ct">Stripe subs renewed</div><div class="cs">14 customers</div><div class="meta"><span class="amt">$1,240</span></div></div></div>
+  </div>
+  <div class="lane lane-build">
+    <div class="lhead"><div class="lt">Build</div><div class="ls">2 jobs running</div></div>
+    <div class="cell"><div class="card"><div class="ct">research note-taking niche</div><div class="cs">Scout</div><div class="meta"><div class="bar"><i style="width:40%"></i></div></div></div></div>
+    <div class="cell"><div class="card"><div class="ct">habit-tracker app</div><div class="cs">Code agent</div><div class="meta"><div class="bar"><i style="width:72%"></i></div><span class="amt" style="color:#7c9cff">72%</span></div></div></div>
+    <div class="cell"><div class="card a"><div class="ct">Deploy micro-API</div><div class="cs">green-gate passed → Cloudflare</div></div></div>
+    <div class="cell"><div class="card"><div class="ct">REST API + auth guide</div><div class="cs">drove 61% traffic</div></div></div>
+  </div>
+  <div class="lane lane-pub">
+    <div class="lhead"><div class="lt">Publish</div><div class="ls">7 products live</div></div>
+    <div class="cell"><div class="card v"><div class="ct">SEO double-down posts</div><div class="cs">2 planned</div></div></div>
+    <div class="cell"><div class="card v"><div class="ct">SaaS starter packaging</div><div class="cs">zip + landing</div><div class="meta"><div class="bar"><i style="width:90%;background:#b18cff"></i></div></div></div></div>
+    <div class="cell"><div class="card a"><div class="ct">Publish SaaS starter</div><div class="cs">→ Gumroad</div><div class="meta"><span class="amt">$39</span></div></div></div>
+    <div class="cell"><div class="card v"><div class="ct">Trading research note</div><div class="cs">live</div></div><div class="card v"><div class="ct">Ebook → KDP</div><div class="cs">live</div></div></div>
+  </div>
+</div>
+</body></html>

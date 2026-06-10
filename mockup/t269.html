@@ -1,0 +1,42 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T269</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;background:#05080c}
+/* night road through windshield */
+.scene{position:absolute;inset:0;background:linear-gradient(#0a1424 0%,#0c1830 38%,#0a0f1a 60%,#070a10 100%)}
+.road{position:absolute;left:0;right:0;bottom:0;height:46%;background:linear-gradient(#10141c,#05070b);clip-path:polygon(38% 0,62% 0,100% 100%,0 100%)}
+.lane{position:absolute;left:50%;bottom:0;width:6px;height:46%;transform:translateX(-50%);background:repeating-linear-gradient(#cfe6ff55 0 32px,transparent 32px 70px);clip-path:polygon(40% 0,60% 0,100% 100%,0 100%);opacity:.5}
+.tail{position:absolute;width:14px;height:6px;border-radius:3px;background:#ff4a3d;box-shadow:0 0 14px #ff4a3d}
+.t1{left:46%;top:46%}.t2{left:53%;top:46%}.t3{left:41%;top:52%}.t4{left:57%;top:52%}
+.glow{position:absolute;left:0;right:0;bottom:0;height:60%;background:radial-gradient(60% 80% at 50% 120%,rgba(80,170,255,.16),transparent 70%)}
+/* HUD — projected, slight green-cyan, faint glow, no boxes */
+.hud{position:absolute;inset:0;color:#9ff0d8;text-shadow:0 0 10px rgba(80,240,200,.55);font-variant-numeric:tabular-nums}
+.spd{position:absolute;left:80px;bottom:130px}
+.spd .v{font-size:78px;font-weight:300;letter-spacing:-2px;line-height:.9}
+.spd .u{font-size:15px;letter-spacing:4px;opacity:.8;margin-top:4px}
+.route{position:absolute;left:50%;top:120px;transform:translateX(-50%);text-align:center}
+.route .arrow{font-size:60px;line-height:1}
+.route .turn{font-size:26px;font-weight:600;margin-top:4px}
+.route .in{font-size:14px;letter-spacing:2px;opacity:.85;margin-top:2px}
+.right{position:absolute;right:80px;bottom:130px;text-align:right}
+.right .row{display:flex;justify-content:flex-end;align-items:baseline;gap:10px;margin-top:14px}
+.right .lb{font-size:12px;letter-spacing:2px;opacity:.7}.right .vv{font-size:30px;font-weight:400}
+.right .vv b{color:#7df0c0}
+.wm{position:absolute;top:34px;left:80px;font-size:13px;letter-spacing:5px;font-weight:700;color:#7fe8cf;text-shadow:0 0 10px rgba(80,240,200,.5)}
+.jcard{position:absolute;left:50%;bottom:48px;transform:translateX(-50%);display:flex;align-items:center;gap:14px;color:#bff5e3;font-size:14px;opacity:.92;border:1px solid rgba(120,240,200,.3);border-radius:30px;padding:9px 22px;background:rgba(10,30,26,.35);text-shadow:0 0 8px rgba(80,240,200,.5)}
+.jcard .d{width:8px;height:8px;border-radius:50%;background:#7df0c0;box-shadow:0 0 10px #7df0c0}
+.time{position:absolute;top:34px;right:80px;font-size:13px;letter-spacing:2px;color:#7fe8cf;text-shadow:0 0 10px rgba(80,240,200,.5)}
+</style></head><body>
+<div class="scene"></div><div class="road"></div><div class="lane"></div><div class="glow"></div>
+<span class="tail t1"></span><span class="tail t2"></span><span class="tail t3"></span><span class="tail t4"></span>
+<div class="hud">
+<div class="wm">JARVIS · DRIVE</div><div class="time">20:34 · TUE JUN 09</div>
+<div class="route"><div class="arrow">↰</div><div class="turn">Turn left · Market St</div><div class="in">in 400 m · ETA 20:51</div></div>
+<div class="spd"><div class="v">64</div><div class="u">KM / H</div></div>
+<div class="right">
+<div class="row"><span class="lb">NET · MONTH</span><span class="vv"><b>$3,840</b></span></div>
+<div class="row"><span class="lb">JOBS</span><span class="vv">2 running</span></div>
+<div class="row"><span class="lb">NEEDS YOU</span><span class="vv">3</span></div>
+</div>
+<div class="jcard"><span class="d"></span>“Hey Jarvis” · Send invoice → 14 customers? Say yes to approve</div>
+</div>
+</body></html>

@@ -1,0 +1,69 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T131</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e8edf4;background:#0a0c11;display:flex}
+.rail{width:68px;background:#0c1017;border-right:1px solid #161d27;display:flex;flex-direction:column;align-items:center;padding:18px 0;gap:6px}
+.logo{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#7c9cff,#46e0a0);display:flex;align-items:center;justify-content:center;font-weight:900;color:#0a1020;font-size:16px;margin-bottom:14px}
+.ri{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#6b7888;position:relative}
+.ri.on{background:rgba(124,156,255,.16);color:#7c9cff}
+.ri .badge{position:absolute;top:4px;right:4px;width:7px;height:7px;border-radius:50%;background:#ff5a6e}
+.ri.bot{margin-top:auto}
+.flyout{width:300px;background:#0e131b;border-right:1px solid #161d27;padding:22px 20px;overflow:hidden}
+.fk{font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:#5b6678}
+.ft{font-size:20px;font-weight:800;margin:4px 0 2px}.ft b{color:#7c9cff}
+.fsub{font-size:12px;color:#6b7888}
+.card{background:#11161f;border:1px solid #1d2533;border-radius:14px;padding:14px;margin-top:16px}
+.net{font-size:34px;font-weight:800;letter-spacing:-1px}.nsub{color:#46e0a0;font-size:12px;font-weight:600;margin-top:1px}
+.bar{height:7px;border-radius:5px;background:#1a212c;overflow:hidden;margin-top:12px}.bar i{display:block;height:100%;background:linear-gradient(90deg,#7c9cff,#46e0a0)}
+.item{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid #1a2230}.item:last-child{border:0}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.item .t{font-size:13px;font-weight:600}.item .s{font-size:11px;color:#6b7888}
+.item .amt{margin-left:auto;font-size:12px;color:#46e0a0;font-weight:700}
+.pill{font-size:8px;font-weight:700;padding:1px 6px;border-radius:9px;background:rgba(255,90,110,.18);color:#ff7a8c}
+.main{flex:1;padding:30px 40px;background:radial-gradient(700px 500px at 80% -10%,rgba(124,156,255,.08),transparent)}
+.mh{font-size:30px;font-weight:800;letter-spacing:-1px}.mh b{color:#7c9cff}
+.mst{font-size:13px;color:#6b7888;margin-top:4px}
+.kpis{display:flex;gap:14px;margin-top:26px}
+.kpi{flex:1;background:#11161f;border:1px solid #1d2533;border-radius:14px;padding:16px 18px}
+.kl{font-size:10px;letter-spacing:1.3px;text-transform:uppercase;color:#5b6678}.kv{font-size:26px;font-weight:800;margin-top:6px}.kd{font-size:12px;margin-top:2px;color:#46e0a0}
+.placeholder{margin-top:18px;height:260px;background:#11161f;border:1px solid #1d2533;border-radius:16px;position:relative;overflow:hidden;padding:18px}
+.spark{position:absolute;left:0;right:0;bottom:0;height:160px}
+</style></head><body>
+<div class="rail">
+  <div class="logo">J</div>
+  <div class="ri on">◎</div>
+  <div class="ri">$</div>
+  <div class="ri">▤<span class="badge"></span></div>
+  <div class="ri">⊞</div>
+  <div class="ri">⇄</div>
+  <div class="ri">✉<span class="badge"></span></div>
+  <div class="ri bot">◐</div>
+</div>
+<div class="flyout">
+  <div class="fk">Today</div>
+  <div class="ft">Good evening, <b>Shay.</b></div>
+  <div class="fsub">● Online · Opus · 20:34 · Tue Jun 09</div>
+  <div class="card">
+    <div class="net">$3,840</div><div class="nsub">▲18% net · ROI 4.2×</div>
+    <div class="bar"><i style="width:72%"></i></div>
+    <div style="font-size:11px;color:#5b6678;margin-top:6px">AI cost $58 / $80</div>
+  </div>
+  <div class="fk" style="margin-top:20px">Needs you · 3</div>
+  <div class="item"><div class="dot" style="background:#ff5a6e"></div><div><div class="t">Send invoice → 14 <span class="pill">CRIT</span></div><div class="s">EA via Resend</div></div><span class="amt">$1,240</span></div>
+  <div class="item"><div class="dot" style="background:#5fc7ff"></div><div><div class="t">Publish SaaS starter</div><div class="s">Gumroad</div></div><span class="amt">$39</span></div>
+  <div class="item"><div class="dot" style="background:#b18cff"></div><div><div class="t">Deploy micro-API</div><div class="s">Cloudflare</div></div></div>
+</div>
+<div class="main">
+  <div class="mh">Money <b>overview</b></div>
+  <div class="mst">Revenue this month across all lanes · last 30 days</div>
+  <div class="kpis">
+    <div class="kpi"><div class="kl">Net</div><div class="kv">$3,840</div><div class="kd">▲18%</div></div>
+    <div class="kpi"><div class="kl">ROI</div><div class="kv">4.2×</div><div class="kd">▲0.4</div></div>
+    <div class="kpi"><div class="kl">Products</div><div class="kv">7</div><div class="kd" style="color:#8a96a8">+2</div></div>
+    <div class="kpi"><div class="kl">Stripe subs</div><div class="kv">$1,240</div><div class="kd" style="color:#8a96a8">recurring</div></div>
+  </div>
+  <div class="placeholder">
+    <div class="kl">Revenue · daily</div>
+    <svg class="spark" viewBox="0 0 900 160" preserveAspectRatio="none"><defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#46e0a0" stop-opacity=".3"/><stop offset="1" stop-color="#46e0a0" stop-opacity="0"/></linearGradient></defs><path d="M0,130 L120,110 L240,118 L360,80 L480,92 L600,50 L720,62 L840,24 L900,16 L900,160 L0,160 Z" fill="url(#g)"/><path d="M0,130 L120,110 L240,118 L360,80 L480,92 L600,50 L720,62 L840,24 L900,16" fill="none" stroke="#46e0a0" stroke-width="2.5"/></svg>
+  </div>
+</div>
+</body></html>

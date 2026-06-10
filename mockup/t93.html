@@ -1,0 +1,50 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T93</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;color:#d6e0dc;background:#10120f}
+.titlebar{display:flex;align-items:center;gap:12px;padding:8px 14px;background:#1b2b22;border-bottom:1px solid #0c3a26}
+.titlebar .wm{font-weight:800;letter-spacing:2px;color:#46e0a0;font-size:13px}
+.titlebar .doc{font-size:13px;color:#bcd}.titlebar .st{margin-left:auto;font-size:11px;color:#5f8278}
+.ribbon{display:flex;gap:18px;padding:6px 14px;background:#161a14;border-bottom:1px solid #232c20;font-size:11px;color:#9aa6ac}
+.ribbon span{padding:3px 0}.ribbon .a{color:#46e0a0}
+.fbar{display:flex;align-items:center;gap:10px;padding:6px 14px;background:#12150f;border-bottom:1px solid #232c20;font-family:ui-monospace,'SF Mono',monospace;font-size:12px}
+.fbar .cell{color:#5f8278;width:34px;text-align:center}.fbar .fx{color:#8a98a4;font-style:italic}.fbar .formula{color:#e6edf6}.fbar .formula b{color:#46e0a0}
+table{border-collapse:collapse;width:100%;font-size:12.5px;table-layout:fixed}
+th,td{border:1px solid #232c20;padding:6px 9px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+thead th{background:#1b2118;color:#7f9488;font-weight:600;text-align:center;height:24px}
+.rownum{background:#1b2118;color:#7f9488;text-align:center;width:42px;font-variant-numeric:tabular-nums}
+th:first-child{width:42px;background:#1b2118}
+td.num{font-variant-numeric:tabular-nums;text-align:right;font-family:ui-monospace,monospace}
+.up{color:#46e0a0}.dn{color:#ff8c8c}.crit{color:#ffb454;font-weight:700}
+tr.sel td{background:rgba(70,224,160,.06)}
+td.act{outline:2px solid #46e0a0;outline-offset:-2px;background:rgba(70,224,160,.1)}
+.colA{width:170px}.colB{width:120px}
+.statusbar{position:fixed;bottom:0;left:0;right:0;display:flex;align-items:center;gap:18px;padding:6px 14px;background:#1b2b22;border-top:1px solid #0c3a26;font-size:11px;color:#9aa6ac}
+.statusbar .r{margin-left:auto;color:#5f8278}
+.tabs{display:flex;gap:2px;padding:4px 14px 0;background:#12150f}
+.tab{font-size:11px;padding:5px 14px;border-radius:6px 6px 0 0;background:#1b2118;color:#7f9488;border:1px solid #232c20;border-bottom:0}
+.tab.on{background:#10120f;color:#46e0a0;font-weight:700}
+</style></head><body>
+<div class="titlebar"><div class="wm">JARVIS</div><div class="doc">money_q2.xlsx — Net this month</div><div class="st">● Online · Opus · 20:34 · Tue Jun 09</div></div>
+<div class="ribbon"><span class="a">Home</span><span>Insert</span><span>Formulas</span><span>Data</span><span>Forecast</span><span style="margin-left:auto">∑ AutoSum · Σ ROI 4.2× · ▲18%</span></div>
+<div class="fbar"><div class="cell">B7</div><div class="fx">fx</div><div class="formula">=SUM(B2:B5)<b> → 2,840</b> · revenue rollup</div></div>
+<table>
+<thead><tr><th></th><th class="colA">A · Source</th><th class="colB">B · Revenue</th><th>C · Δ MoM</th><th>D · Connector</th><th>E · Status</th><th>F · Note</th></tr></thead>
+<tbody>
+<tr><td class="rownum">1</td><td><b>Revenue sources</b></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td class="rownum">2</td><td>Stripe subs</td><td class="num">$1,240</td><td class="num up">▲ 22%</td><td>Stripe</td><td class="up">live</td><td>14 active subs</td></tr>
+<tr><td class="rownum">3</td><td>Gumroad</td><td class="num">$890</td><td class="num up">▲ 9%</td><td>Gumroad</td><td class="up">live</td><td>SaaS starter pending</td></tr>
+<tr><td class="rownum">4</td><td>Lemon Squeezy</td><td class="num">$310</td><td class="num dn">▼ 3%</td><td>Lemon Sq</td><td class="up">live</td><td>MoR tax handled</td></tr>
+<tr class="sel"><td class="rownum">5</td><td>Newsletter</td><td class="num">$400</td><td class="num up">▲ 41%</td><td>Resend</td><td class="up">live</td><td>#14 queued</td></tr>
+<tr><td class="rownum">6</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td class="rownum">7</td><td><b>Gross revenue</b></td><td class="num act"><b>$2,840</b></td><td class="num up">▲ 18%</td><td>—</td><td></td><td>=SUM(B2:B5)</td></tr>
+<tr><td class="rownum">8</td><td>AI cost</td><td class="num dn">($58)</td><td class="num">of $80</td><td>OpenRouter</td><td class="up">72% budget</td><td>cost-aware planner</td></tr>
+<tr><td class="rownum">9</td><td>Tax set-aside ~28%</td><td class="num dn">($1,075)</td><td class="num"></td><td>—</td><td></td><td>auto-reserve</td></tr>
+<tr><td class="rownum">10</td><td><b>Net this month</b></td><td class="num up"><b>$3,840</b></td><td class="num up">▲ 18%</td><td>—</td><td></td><td>ROI 4.2×</td></tr>
+<tr><td class="rownum">11</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td class="rownum">12</td><td class="crit">⚑ Send invoice → 14 customers</td><td class="num">$1,240</td><td class="num"></td><td>Resend · EA</td><td class="crit">NEEDS YOU</td><td>CRITICAL approval</td></tr>
+<tr><td class="rownum">13</td><td>Publish SaaS starter</td><td class="num">$39</td><td class="num"></td><td>Gumroad</td><td style="color:#ffb454">HIGH</td><td>ready to ship</td></tr>
+<tr><td class="rownum">14</td><td>Deploy micro-API</td><td class="num">—</td><td class="num"></td><td>Cloudflare</td><td style="color:#ffb454">HIGH</td><td>green-gate cleared</td></tr>
+</tbody></table>
+<div class="tabs"><div class="tab on">Money</div><div class="tab">Jobs</div><div class="tab">Agents</div><div class="tab">Connectors</div></div>
+<div class="statusbar"><span>Ready</span><span>Sum: $3,840</span><span>Count: 14 rows</span><span class="up">ROI 4.2×</span><div class="r">51 agents · 26 connectors (9 live) · 7 products live · 100%</div></div>
+</body></html>

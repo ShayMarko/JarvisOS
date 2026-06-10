@@ -1,0 +1,52 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T103</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;color:#fff;background:linear-gradient(150deg,#0a1520,#06101a)}
+.app{height:100vh;display:flex}
+.rail{width:120px;flex:none;background:rgba(0,0,0,.3);display:flex;flex-direction:column;align-items:center;padding:22px 0;gap:0}
+.clock{font-size:30px;font-weight:300;letter-spacing:1px}
+.ampm{font-size:13px;color:#9fb2c2;margin-bottom:2px}
+.date{font-size:12px;color:#9fb2c2;margin-bottom:auto}
+.rail .wm{writing-mode:vertical-rl;transform:rotate(180deg);font-size:14px;font-weight:800;letter-spacing:4px;color:#5fd0c0;margin:24px 0}
+.rico{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;margin:8px 0;background:rgba(255,255,255,.06)}
+.rail .bot{margin-top:auto;font-size:11px;color:#46e0a0;text-align:center}
+.grid{flex:1;padding:26px 30px;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr);gap:18px}
+.tile{border-radius:26px;padding:18px 20px;display:flex;flex-direction:column;color:#fff;position:relative;overflow:hidden}
+.tile .ico{font-size:30px}
+.tile .nm{margin-top:auto;font-size:18px;font-weight:700}
+.tile .sub{font-size:13px;opacity:.85;margin-top:2px}
+.wide{grid-column:span 2}
+.t-money{background:linear-gradient(150deg,#0e5c3e,#0a3d2a)}
+.t-needs{background:linear-gradient(150deg,#7a2230,#4a141c)}
+.t-jobs{background:linear-gradient(150deg,#2a3a7a,#16224a)}
+.t-news{background:linear-gradient(150deg,#7a5210,#4a3208)}
+.t-agents{background:linear-gradient(150deg,#1f4a52,#12303a)}
+.t-conn{background:linear-gradient(150deg,#3a2a6a,#241a44)}
+.t-voice{background:linear-gradient(150deg,#0d4a52,#08303a)}
+.t-suggest{background:linear-gradient(150deg,#155a4a,#0a3a30)}
+.badge{position:absolute;top:14px;right:16px;background:#fff;color:#7a2230;font-size:12px;font-weight:800;border-radius:12px;padding:2px 9px}
+.big{font-size:34px;font-weight:800;letter-spacing:-1px}
+.pill{display:inline-block;font-size:11px;background:rgba(255,255,255,.18);border-radius:10px;padding:2px 8px;margin-top:6px}
+</style></head><body>
+<div class="app">
+<div class="rail">
+<div class="ampm">PM</div><div class="clock">8:34</div><div class="date">Tue Jun 09</div>
+<div class="wm">JARVIS</div>
+<div class="rico">🎙️</div><div class="rico">🏠</div>
+<div class="bot">● Online<br>Opus</div>
+</div>
+<div class="grid">
+<div class="tile t-money wide"><span class="ico">💰</span><div style="margin-top:auto"><div class="big">$3,840</div><div class="nm" style="font-size:15px;font-weight:600">Net this month · ROI 4.2×</div><span class="pill">▲18% · AI cost $58/$80</span></div></div>
+<div class="tile t-needs"><span class="badge">3</span><span class="ico">⚡</span><div class="nm">Needs you</div><div class="sub">Invoice → 14 · $1,240</div></div>
+<div class="tile t-suggest"><span class="ico">💡</span><div class="nm">Double down</div><div class="sub">"REST API + auth" — 61% traffic</div></div>
+
+<div class="tile t-jobs"><span class="ico">🛠️</span><div class="nm">Jobs · 72%</div><div class="sub">habit-tracker app</div></div>
+<div class="tile t-news"><span class="ico">📣</span><div class="nm">Newsletter</div><div class="sub">#14 queued · $400</div></div>
+<div class="tile t-agents"><span class="ico">🤖</span><div class="nm">51 agents</div><div class="sub">all nominal</div></div>
+<div class="tile t-conn"><span class="ico">🔌</span><div class="nm">Connectors</div><div class="sub">26 · 9 live</div></div>
+
+<div class="tile t-voice wide"><span class="ico">🎙️</span><div class="nm" style="margin-top:auto">"Hey Jarvis"</div><div class="sub">Good evening, Shay. Ask Jarvis, or type a /command…</div></div>
+<div class="tile t-money"><span class="ico">📦</span><div class="nm">Products</div><div class="sub">7 live</div></div>
+<div class="tile t-jobs"><span class="ico">🔍</span><div class="nm">Scout · 40%</div><div class="sub">note-taking niche</div></div>
+</div>
+</div>
+</body></html>

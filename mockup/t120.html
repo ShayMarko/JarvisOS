@@ -1,0 +1,59 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T120</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,-apple-system,sans-serif}
+body{height:100vh;overflow:hidden;color:#eaf2fb;background:linear-gradient(160deg,#0e2a4a,#0a1424 55%,#0a0f1a)}
+.bg{position:fixed;inset:0;background:radial-gradient(circle at 78% 18%,rgba(255,200,80,.16),transparent 45%)}
+.top{position:relative;display:flex;align-items:center;gap:14px;padding:22px 38px}
+.wm{font-size:17px;font-weight:800;letter-spacing:3px;color:#ffd166}
+.sub{font-size:12px;color:#8fa6c0}
+.r{margin-left:auto;font-size:12px;color:#8fa6c0}.r b{color:#ffd166}
+.now{position:relative;display:flex;align-items:center;gap:30px;padding:8px 44px 22px}
+.bigicon{font-size:78px;filter:drop-shadow(0 6px 16px rgba(255,209,102,.4))}
+.nowtxt .loc{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#8fa6c0}
+.nowtxt .deg{font-size:64px;font-weight:800;line-height:1;margin:2px 0}
+.nowtxt .cond{font-size:16px;color:#cfe0f2}
+.nowstats{margin-left:auto;display:flex;gap:34px;text-align:center}
+.ns .l{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#8fa6c0}
+.ns .v{font-size:24px;font-weight:800;margin-top:4px}
+.ns .up{color:#46e0a0;font-size:12px}
+.fc{position:relative;display:flex;gap:14px;padding:0 38px}
+.day{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:18px 12px;text-align:center;backdrop-filter:blur(4px)}
+.day.today{background:rgba(255,209,102,.12);border-color:rgba(255,209,102,.4)}
+.dn{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:#9fb4cc}
+.di{font-size:38px;margin:12px 0 8px}
+.dc{font-size:11px;color:#9fb4cc;height:26px}
+.dt{font-size:17px;font-weight:700;margin-top:6px}
+.dt small{color:#7f96b0;font-weight:500}
+.drev{font-size:12px;color:#46e0a0;margin-top:8px;font-weight:600}
+.chartwrap{position:relative;margin:18px 38px 0;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px 8px 8px}
+.cl{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#9fb4cc;padding:0 12px;display:flex;justify-content:space-between}
+.alert{position:relative;margin:14px 38px 0;display:flex;align-items:center;gap:12px;background:rgba(255,179,71,.12);border:1px solid rgba(255,179,71,.35);border-radius:14px;padding:13px 18px;font-size:14px;color:#ffe0b0}
+.alert b{color:#ffd166}
+</style></head><body><div class="bg"></div>
+<div class="top"><div class="wm">JARVIS</div><div class="sub">FORECAST · workload & revenue</div><div class="r">● Online · <b>Opus</b> · 20:34 Tue Jun 09</div></div>
+<div class="now">
+<div class="bigicon">⛅</div>
+<div class="nowtxt"><div class="loc">Today · Shay's OS</div><div class="deg">$3,840</div><div class="cond">Mostly productive · 3 tasks need you · 2 jobs running</div></div>
+<div class="nowstats">
+<div class="ns"><div class="l">ROI</div><div class="v">4.2×</div><div class="up">▲18%</div></div>
+<div class="ns"><div class="l">Cost</div><div class="v">$58</div><div class="up" style="color:#8fa6c0">/$80</div></div>
+<div class="ns"><div class="l">Live</div><div class="v">7</div><div class="up">+2</div></div>
+</div>
+</div>
+<div class="fc">
+<div class="day today"><div class="dn">Today</div><div class="di">⛅</div><div class="dc">3 need you · invoices due</div><div class="dt">Heavy <small>· high load</small></div><div class="drev">+$1,240</div></div>
+<div class="day"><div class="dn">Wed</div><div class="di">🌦</div><div class="dc">publish + deploy</div><div class="dt">Busy <small>· med</small></div><div class="drev">+$429</div></div>
+<div class="day"><div class="dn">Thu</div><div class="di">☀️</div><div class="dc">newsletter #14 sends</div><div class="dt">Clear <small>· low</small></div><div class="drev">+$400</div></div>
+<div class="day"><div class="dn">Fri</div><div class="di">🌤</div><div class="dc">SEO double-down</div><div class="dt">Light <small>· low</small></div><div class="drev">+$240</div></div>
+<div class="day"><div class="dn">Sat</div><div class="di">⛅</div><div class="dc">habit-tracker ships</div><div class="dt">Mild <small>· med</small></div><div class="drev">+$310</div></div>
+<div class="day"><div class="dn">Sun</div><div class="di">☀️</div><div class="dc">POD trend engine</div><div class="dt">Calm <small>· low</small></div><div class="drev">+$180</div></div>
+</div>
+<div class="chartwrap"><div class="cl"><span>5-day revenue outlook</span><span>projected · $2,799 incoming</span></div>
+<svg viewBox="0 0 1200 150" style="width:100%;height:130px" preserveAspectRatio="none">
+<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd166" stop-opacity=".4"/><stop offset="1" stop-color="#ffd166" stop-opacity="0"/></linearGradient></defs>
+<g stroke="rgba(255,255,255,.08)"><line x1="0" y1="50" x2="1200" y2="50"/><line x1="0" y1="100" x2="1200" y2="100"/></g>
+<path d="M0,30 L240,70 L480,75 L720,95 L960,85 L1200,105 L1200,150 L0,150 Z" fill="url(#g)"/>
+<path d="M0,30 L240,70 L480,75 L720,95 L960,85 L1200,105" fill="none" stroke="#ffd166" stroke-width="2.5"/>
+<circle cx="0" cy="30" r="4" fill="#ffd166"/><circle cx="240" cy="70" r="4" fill="#ffd166"/><circle cx="480" cy="75" r="4" fill="#ffd166"/><circle cx="720" cy="95" r="4" fill="#ffd166"/><circle cx="960" cy="85" r="4" fill="#ffd166"/><circle cx="1200" cy="105" r="4" fill="#ffd166"/>
+</svg></div>
+<div class="alert">⚠️ <span><b>Storm warning:</b> 14 invoices due today → $1,240 at risk if unsent. Proactive: double down on "REST API + auth" guide — drove 61% of traffic.</span></div>
+</body></html>

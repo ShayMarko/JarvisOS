@@ -1,0 +1,52 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T234</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf6;background:#06080d}
+.top{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;gap:14px;padding:20px 36px;z-index:2}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#c9a8ff}.st{font-size:12px;color:#6a6080}.r{margin-left:auto;font-size:13px;color:#6a6080}
+.grid{position:absolute;inset:64px 36px 24px;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr);gap:16px;filter:blur(2px) brightness(.45)}
+.cell{border-radius:14px;border:1px solid #20203a;overflow:hidden;position:relative;background:linear-gradient(160deg,#141229,#0d0c1c)}
+.cell .grad{position:absolute;inset:0}
+.cell .cl{position:absolute;left:12px;bottom:10px;font-size:11px;color:#bcb2d6;font-weight:600}
+.scrim{position:fixed;inset:0;background:rgba(4,4,10,.7);z-index:5}
+.light{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:880px;z-index:6;display:flex;gap:0;align-items:stretch}
+.lframe{width:620px;height:560px;border-radius:18px 0 0 18px;background:linear-gradient(150deg,#1a1635,#100d20);border:1px solid #2c2750;border-right:0;position:relative;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,.6)}
+.lframe .art{position:absolute;inset:0;background:
+radial-gradient(500px 360px at 30% 30%,rgba(201,168,255,.4),transparent 60%),
+radial-gradient(440px 320px at 75% 75%,rgba(95,208,192,.32),transparent 60%),
+linear-gradient(135deg,#241d4a,#13112a)}
+.lframe .chip{position:absolute;left:22px;top:20px;font-size:10px;letter-spacing:1.4px;text-transform:uppercase;font-weight:700;color:#0a0814;background:#c9a8ff;padding:5px 11px;border-radius:20px}
+.lframe .num{position:absolute;left:24px;bottom:80px;font-size:64px;font-weight:800;letter-spacing:-2px}
+.lframe .nl{position:absolute;left:26px;bottom:54px;font-size:13px;color:#bcb2d6;letter-spacing:1px}
+.panel{width:300px;background:#100d1d;border:1px solid #2c2750;border-radius:0 18px 18px 0;padding:26px 24px;box-shadow:0 40px 100px rgba(0,0,0,.6)}
+.panel .k{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#c9a8ff;font-weight:700}
+.panel h2{font-size:24px;font-weight:800;margin-top:8px;line-height:1.15}
+.panel p{font-size:13px;color:#9990b3;margin-top:12px;line-height:1.6}
+.meta{margin-top:20px}.meta div{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #1d1a30;font-size:12px}.meta .mk{color:#6a6080}.meta .mv{font-weight:600}
+.nav{position:absolute;top:50%;width:46px;height:46px;border-radius:50%;background:rgba(20,16,40,.9);border:1px solid #2c2750;display:flex;align-items:center;justify-content:center;color:#c9a8ff;font-size:18px;transform:translateY(-50%);z-index:7}
+.prev{left:calc(50% - 488px)}.next{right:calc(50% - 488px)}
+.count{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);font-size:12px;color:#6a6080;z-index:7;letter-spacing:1px}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · GALLERY</div><div class="st">● Opus</div><div class="r">Good evening, Shay · 7 products live</div></div>
+<div class="grid">
+<div class="cell"><div class="grad" style="background:linear-gradient(135deg,#2a3a6a,#16203c)"></div><div class="cl">Habit Tracker</div></div>
+<div class="cell"><div class="grad" style="background:linear-gradient(135deg,#1d4a42,#102a26)"></div><div class="cl">REST API Guide</div></div>
+<div class="cell"><div class="grad" style="background:linear-gradient(135deg,#4a2d2d,#2a1818)"></div><div class="cl">SaaS Starter</div></div>
+<div class="cell"><div class="grad" style="background:linear-gradient(135deg,#3a2d5a,#201838)"></div><div class="cl">Newsletter #13</div></div>
+<div class="cell"><div class="grad" style="background:linear-gradient(135deg,#0d0c1c,#0d0c1c)"></div></div>
+<div class="cell"><div class="grad" style="background:linear-gradient(135deg,#0d0c1c,#0d0c1c)"></div></div>
+<div class="cell"><div class="grad" style="background:linear-gradient(135deg,#0d0c1c,#0d0c1c)"></div></div>
+<div class="cell"><div class="grad" style="background:linear-gradient(135deg,#4a4022,#2a2414)"></div><div class="cl">Micro-API</div></div>
+<div class="cell"><div class="grad" style="background:linear-gradient(135deg,#0d0c1c,#0d0c1c)"></div></div>
+<div class="cell"><div class="grad" style="background:linear-gradient(135deg,#0d0c1c,#0d0c1c)"></div></div>
+<div class="cell"><div class="grad" style="background:linear-gradient(135deg,#22425a,#142a3a)"></div><div class="cl">POD Trend</div></div>
+<div class="cell"><div class="grad" style="background:linear-gradient(135deg,#0d0c1c,#0d0c1c)"></div></div>
+</div>
+<div class="scrim"></div>
+<div class="nav prev">‹</div><div class="nav next">›</div>
+<div class="light">
+<div class="lframe"><div class="art"></div><span class="chip">Best seller · Gumroad</span><div class="num">$890</div><div class="nl">revenue · last 30 days</div></div>
+<div class="panel"><div class="k">Product · 03 of 07</div><h2>SaaS Starter Kit</h2><p>Auth, billing and a deploy script in one zip. Built by the Product agent, published to Gumroad at $39 — the next $39 listing is drafted and awaiting your word.</p>
+<div class="meta"><div><span class="mk">Price</span><span class="mv">$39</span></div><div><span class="mk">Sales</span><span class="mv">23</span></div><div><span class="mk">Revenue</span><span class="mv" style="color:#5fd0c0">$890</span></div><div><span class="mk">Status</span><span class="mv" style="color:#46e0a0">● Live</span></div></div></div>
+</div>
+<div class="count">‹ 03 / 07 ›   ·   use ← → to browse</div>
+</body></html>

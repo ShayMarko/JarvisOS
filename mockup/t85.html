@@ -1,0 +1,44 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T85</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;color:#e6edf6;background:radial-gradient(1100px 800px at 30% 10%,#0d1622,#070a10)}
+.top{display:flex;align-items:center;gap:14px;padding:20px 36px}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#5fb8ff}.st{font-size:12px;color:#5f7a96}.r{margin-left:auto;font-size:13px;color:#8a98a4}
+.cap{padding:0 36px 4px}.cap h1{font-size:22px;font-weight:600}.cap h1 b{color:#5fb8ff}.cap p{color:#6f8696;font-size:13px;margin-top:3px}
+.stream{margin:4px 36px 0;height:calc(100vh - 168px);position:relative}
+.legend{position:absolute;top:10px;left:18px;display:flex;gap:18px;z-index:2}
+.lg{font-size:12px;color:#aab8c6}.lg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
+.bar{position:fixed;bottom:20px;left:36px;right:36px;display:flex;align-items:center;gap:12px;background:rgba(13,22,34,.85);border:1px solid #1a2735;border-radius:13px;padding:11px 15px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#e6edf6;font-size:14px}.bar input::placeholder{color:#5f7a96}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · STREAM</div><div class="st">● Online · Opus · 20:34</div><div class="r">Revenue $3,840 · 4 sources</div></div>
+<div class="cap"><h1>How the money flows, <b>Shay</b>.</h1><p>stacked revenue streams over the last 12 weeks · band thickness ∝ source</p></div>
+<div class="stream">
+<div class="legend">
+<span class="lg"><i style="background:#5fb8ff"></i>Stripe subs $1,240</span>
+<span class="lg"><i style="background:#46e0a0"></i>Gumroad $890</span>
+<span class="lg"><i style="background:#ffc46b"></i>Newsletter $400</span>
+<span class="lg"><i style="background:#ff8cc0"></i>Lemon Sq $310</span>
+</div>
+<svg viewBox="0 0 1360 660" style="width:100%;height:100%" preserveAspectRatio="none">
+<defs>
+<linearGradient id="s1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7ccaff"/><stop offset="1" stop-color="#3d8fd9"/></linearGradient>
+<linearGradient id="s2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5fe8b0"/><stop offset="1" stop-color="#2fb585"/></linearGradient>
+<linearGradient id="s3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd690"/><stop offset="1" stop-color="#e0a040"/></linearGradient>
+<linearGradient id="s4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffa6cf"/><stop offset="1" stop-color="#e060a0"/></linearGradient>
+</defs>
+<!-- bottom stream: Lemon Sq -->
+<path d="M0,420 C170,415 220,425 340,418 C490,408 540,422 680,410 C830,398 880,415 1020,402 C1170,392 1230,405 1360,398 L1360,460 C1230,470 1170,452 1020,465 C880,478 830,458 680,472 C540,484 490,466 340,478 C220,486 170,472 0,480 Z" fill="url(#s4)" opacity=".92"/>
+<!-- Newsletter -->
+<path d="M0,340 C170,332 220,348 340,338 C490,326 540,344 680,330 C830,316 880,338 1020,322 C1170,308 1230,328 1360,316 L1360,398 C1230,405 1170,392 1020,402 C880,415 830,398 680,410 C540,422 490,408 340,418 C220,425 170,415 0,420 Z" fill="url(#s3)" opacity=".92"/>
+<!-- Gumroad -->
+<path d="M0,212 C170,200 220,228 340,214 C490,196 540,224 680,205 C830,186 880,222 1020,200 C1170,178 1230,212 1360,192 L1360,316 C1230,328 1170,308 1020,322 C880,338 830,316 680,330 C540,344 490,326 340,338 C220,348 170,332 0,340 Z" fill="url(#s2)" opacity=".94"/>
+<!-- Stripe (top, biggest) -->
+<path d="M0,96 C170,78 220,118 340,90 C490,58 540,108 680,78 C830,46 880,104 1020,72 C1170,40 1230,96 1360,64 L1360,192 C1230,212 1170,178 1020,200 C880,222 830,186 680,205 C540,224 490,196 340,214 C220,228 170,200 0,212 Z" fill="url(#s1)" opacity=".94"/>
+<!-- week ticks -->
+<g fill="#5f7a96" font-size="10" font-family="monospace">
+<text x="2" y="650">W14</text><text x="328" y="650">W18</text><text x="668" y="650">W22</text><text x="1008" y="650">W26</text><text x="1310" y="650">now</text>
+</g>
+</svg>
+</div>
+<div class="bar"><span style="color:#5fb8ff">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#5f7a96;font-size:12px">⌘K</span></div>
+</body></html>

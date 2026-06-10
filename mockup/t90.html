@@ -1,0 +1,64 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T90</title><style>
+*{margin:0;box-sizing:border-box;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+body{height:100vh;overflow:hidden;color:#efeaf6;background:radial-gradient(900px 700px at 50% 46%,#1a1230,#08060f)}
+.top{display:flex;align-items:center;gap:14px;padding:20px 36px}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#c8a8ff}.st{font-size:12px;color:#7c6fa6}.r{margin-left:auto;font-size:13px;color:#9a8fc4}
+.cap{padding:0 36px 0}.cap h1{font-size:22px;font-weight:600}.cap h1 b{color:#c8a8ff}.cap p{color:#8479ad;font-size:13px;margin-top:3px}
+.wrap{display:flex;align-items:center;justify-content:center;gap:46px;height:calc(100vh - 168px)}
+.legend{display:flex;flex-direction:column;gap:11px;min-width:210px}
+.lg b{font-size:13px;display:flex;align-items:center;gap:8px}.lg i{width:11px;height:11px;border-radius:3px}
+.lg s{text-decoration:none;display:block;font-size:11px;color:#8479ad;margin:3px 0 0 19px}
+.bar{position:fixed;bottom:20px;left:36px;right:36px;display:flex;align-items:center;gap:12px;background:rgba(26,18,48,.8);border:1px solid #2c2350;border-radius:13px;padding:11px 15px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#efeaf6;font-size:14px}.bar input::placeholder{color:#7c6fa6}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS · SUNBURST</div><div class="st">● Online · Opus · 20:34</div><div class="r">Revenue $3,840 · 4 categories</div></div>
+<div class="cap"><h1>Revenue, ring by ring, <b>Shay</b>.</h1><p>inner = source · outer = product — arc sweep ∝ dollars</p></div>
+<div class="wrap">
+<svg viewBox="0 0 520 520" width="500" height="500">
+<g transform="translate(260,260)">
+<!-- center -->
+<circle r="58" fill="#1c1438" stroke="#3a2d63" stroke-width="1.5"/>
+<text x="0" y="-4" text-anchor="middle" font-size="20" font-weight="800" fill="#efeaf6">$3,840</text>
+<text x="0" y="14" text-anchor="middle" font-size="10" fill="#9a8fc4">net · month</text>
+<!-- INNER RING (r 58->118) sources, sweeps proportional: Stripe 32%=115°, Gumroad 23%=83°, Newsletter 10%=36°, Lemon 8%=29°, POD 7%=25°, others 20%=72° ->  total approx. Use cumulative angles from -90 -->
+<!-- arc helper paths drawn manually -->
+<!-- Stripe: 0 to 115deg -->
+<path d="M0,-118 A118,118 0 0 1 106.9,49.9 L52.6,24.5 A58,58 0 0 0 0,-58 Z" fill="#7c5cff"/>
+<!-- Gumroad: 115 to 198 -->
+<path d="M106.9,49.9 A118,118 0 0 1 -36.5,112.2 L-17.9,55.2 A58,58 0 0 0 52.6,24.5 Z" fill="#9d7bff"/>
+<!-- Newsletter: 198 to 234 -->
+<path d="M-36.5,112.2 A118,118 0 0 1 -95.4,69.3 L-46.9,34.1 A58,58 0 0 0 -17.9,55.2 Z" fill="#b69dff"/>
+<!-- Lemon: 234 to 263 -->
+<path d="M-95.4,69.3 A118,118 0 0 1 -117.1,14.4 L-57.6,7.1 A58,58 0 0 0 -46.9,34.1 Z" fill="#c8a8ff"/>
+<!-- POD/others: 263 to 360 -->
+<path d="M-117.1,14.4 A118,118 0 0 1 0,-118 L0,-58 A58,58 0 0 0 -57.6,7.1 Z" fill="#5e4a9e"/>
+<!-- OUTER RING (r 118->190) products -->
+<!-- under Stripe: SaaS A 0-70, SaaS B 70-115 -->
+<path d="M0,-190 A190,190 0 0 1 178.5,65.0 L106.9,49.9 A118,118 0 0 0 0,-118 Z" fill="#46e0a0" opacity=".88"/>
+<path d="M178.5,65.0 A190,190 0 0 1 172.1,80.6 L106.9,49.9 Z" fill="#3fc890" opacity=".8"/>
+<!-- under Gumroad: starter, template -->
+<path d="M172.1,80.6 A190,190 0 0 1 -58.7,180.7 L-36.5,112.2 A118,118 0 0 0 106.9,49.9 Z" fill="#5fd0c0" opacity=".85"/>
+<!-- under Newsletter -->
+<path d="M-58.7,180.7 A190,190 0 0 1 -153.6,111.6 L-95.4,69.3 A118,118 0 0 0 -36.5,112.2 Z" fill="#ffc46b" opacity=".85"/>
+<!-- under Lemon -->
+<path d="M-153.6,111.6 A190,190 0 0 1 -188.5,23.2 L-117.1,14.4 A118,118 0 0 0 -95.4,69.3 Z" fill="#ffa6cf" opacity=".82"/>
+<!-- under POD/others -->
+<path d="M-188.5,23.2 A190,190 0 0 1 0,-190 L0,-118 A118,118 0 0 0 -117.1,14.4 Z" fill="#7c9bff" opacity=".78"/>
+<!-- labels on outer arcs -->
+<g font-size="9.5" fill="#1a0f2e" font-weight="700" text-anchor="middle">
+<text x="95" y="-130">SaaS Pro</text>
+<text x="120" y="120">Templates</text>
+<text x="-100" y="155">News #14</text>
+</g>
+</g>
+</svg>
+<div class="legend">
+<div class="lg"><b><i style="background:#7c5cff"></i>Stripe subs</b><s>$1,240 · 32% — SaaS Pro, SaaS Lite</s></div>
+<div class="lg"><b><i style="background:#9d7bff"></i>Gumroad</b><s>$890 · 23% — Starter, Template pack</s></div>
+<div class="lg"><b><i style="background:#b69dff"></i>Newsletter</b><s>$400 · 10% — issue #14 sponsor</s></div>
+<div class="lg"><b><i style="background:#c8a8ff"></i>Lemon Squeezy</b><s>$310 · 8% — MoR resale</s></div>
+<div class="lg"><b><i style="background:#5e4a9e"></i>POD + other</b><s>$1,000 · 27% — print-on-demand</s></div>
+</div>
+</div>
+<div class="bar"><span style="color:#c8a8ff">🎙</span><input placeholder="Ask Jarvis, or type a /command…"><span style="color:#7c6fa6;font-size:12px">⌘K</span></div>
+</body></html>

@@ -1,0 +1,36 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T23</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#e3ecf7;background:#080b12}
+.top{display:flex;align-items:center;gap:14px;padding:18px 26px;border-bottom:1px solid #18202e}
+.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#5fd0c8}.st{font-size:12px;color:#5f7a8a}
+.greet{margin-left:auto;font-size:13px;color:#8fa3b8}.greet b{color:#e3ecf7}
+.board{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:20px 26px;height:calc(100vh - 140px)}
+.col{background:#0c1018;border:1px solid #18202e;border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.ch{display:flex;align-items:center;justify-content:space-between;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:#6a8294;padding:4px 4px 8px}
+.ch b{color:#cfe0ee}.cnt{font-size:11px;background:#16202e;border-radius:99px;padding:2px 8px;color:#8fa3b8}
+.card{background:#111824;border:1px solid #1d2735;border-left:3px solid #5fd0c8;border-radius:11px;padding:12px}
+.card.b{border-left-color:#f5c451}.card.c{border-left-color:#ff6b81}.card.d{border-left-color:#9b8cff}
+.ct{font-size:13.5px;font-weight:600}.cm{font-size:12px;color:#7e93a8;margin-top:5px;display:flex;justify-content:space-between}
+.bar{height:5px;border-radius:5px;background:#1d2735;margin-top:8px}.bar i{display:block;height:100%;border-radius:5px;background:#5fd0c8}
+.dock{display:flex;align-items:center;gap:12px;background:#0c1018;border-top:1px solid #18202e;padding:12px 26px}
+.dock input{flex:1;background:0;border:0;outline:0;color:#e3ecf7;font-size:14px}.dock input::placeholder{color:#5f7a8a}
+.snd{width:34px;height:34px;border-radius:9px;background:#5fd0c8;display:grid;place-items:center;color:#080b12}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS</div><div class="st">● Opus · product board</div><div class="greet">Evening, <b>Shay</b> · 7 live · net $3,840 · ROI 4.2×</div></div>
+<div class="board">
+<div class="col"><div class="ch"><b>Ideas</b><span class="cnt">4</span></div>
+<div class="card d"><div class="ct">AI note-taking niche</div><div class="cm"><span>Scout</span><span>GO</span></div></div>
+<div class="card d"><div class="ct">Hebrew utilities API</div><div class="cm"><span>Scout</span><span>maybe</span></div></div></div>
+<div class="col"><div class="ch"><b>Building</b><span class="cnt">2</span></div>
+<div class="card"><div class="ct">Habit-tracker app</div><div class="cm"><span>Code</span><span>72%</span></div><div class="bar"><i style="width:72%"></i></div></div>
+<div class="card b"><div class="ct">SaaS starter zip</div><div class="cm"><span>Product</span><span>needs approve</span></div></div></div>
+<div class="col"><div class="ch"><b>Listed</b><span class="cnt">3</span></div>
+<div class="card c"><div class="ct">Invoice → 14 cust.</div><div class="cm"><span>critical</span><span>approve</span></div></div>
+<div class="card"><div class="ct">SEO guide pack</div><div class="cm"><span>Gumroad</span><span>$29</span></div></div></div>
+<div class="col"><div class="ch"><b>Earning</b><span class="cnt">7</span></div>
+<div class="card"><div class="ct">REST+auth boilerplate</div><div class="cm"><span>Gumroad</span><span>+$890</span></div></div>
+<div class="card"><div class="ct">Micro-API · weather</div><div class="cm"><span>Stripe sub</span><span>+$1,240</span></div></div>
+<div class="card"><div class="ct">Newsletter sponsor</div><div class="cm"><span>Resend</span><span>+$400</span></div></div></div>
+</div>
+<div class="dock"><span style="color:#5fd0c8">🎙</span><input placeholder="Ask Jarvis, or drag a card… · say “Hey Jarvis”"><div class="snd">➤</div></div>
+</body></html>

@@ -1,0 +1,69 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T167</title><style>
+/* RISOGRAPH — paper white, 3 spot inks: riso blue #2f5fe0, fluoro pink #ff4f9a, yellow #ffc400 */
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,-apple-system,sans-serif}
+body{height:100vh;overflow:hidden;color:#1e2240;background:#f3efe4}
+.grain{position:fixed;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:multiply;
+  background-image:radial-gradient(rgba(0,0,0,.14) .6px,transparent .7px);background-size:3px 3px}
+.wrap{height:100vh;display:grid;grid-template-rows:auto 1fr auto;padding:44px 60px}
+.top{display:flex;justify-content:space-between;align-items:baseline}
+.wm{font-size:18px;font-weight:900;letter-spacing:5px;color:#2f5fe0;position:relative}
+.wm::after{content:"JARVIS";position:absolute;left:2px;top:1.5px;color:#ff4f9a;mix-blend-mode:multiply;letter-spacing:5px;z-index:-1}
+.st{font-size:11px;letter-spacing:1px;color:#5a5e78}
+.mid{display:grid;grid-template-columns:1.3fr 1fr;gap:46px;align-content:center}
+.greet{font-size:40px;font-weight:800;line-height:1.05;color:#1e2240}
+.greet b{color:#ff4f9a}
+.bignum{font-size:88px;font-weight:900;letter-spacing:-3px;line-height:.95;margin:18px 0 2px;color:#2f5fe0;position:relative}
+.bignum::after{content:"$3,840";position:absolute;left:3px;top:2px;color:#ff4f9a;mix-blend-mode:multiply;z-index:-1}
+.biglbl{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#5a5e78}
+.tag-y{display:inline-block;background:#ffc400;color:#1e2240;font-weight:800;padding:2px 8px;mix-blend-mode:multiply}
+.bars{margin-top:30px;max-width:420px}
+.brow{display:flex;align-items:center;gap:12px;font-size:13px;margin:9px 0}
+.brow .lb{width:80px}
+.pb{flex:1;height:13px;background:#e3ddcd}
+.pf{height:100%;background:#2f5fe0;mix-blend-mode:multiply}
+.pf.p{background:#ff4f9a}
+.col{display:flex;flex-direction:column;gap:0}
+.card{border:2px solid #1e2240;padding:16px 18px;margin-bottom:16px;position:relative;background:#f3efe4}
+.card::before{content:"";position:absolute;inset:0;transform:translate(4px,4px);background:#ff4f9a;mix-blend-mode:multiply;z-index:-1;opacity:.55}
+.k{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#5a5e78;margin-bottom:10px}
+.li{display:flex;justify-content:space-between;font-size:14px;padding:7px 0;border-bottom:1px solid rgba(30,34,64,.15)}
+.li:last-child{border:0}
+.crit{color:#ff4f9a;font-weight:800}.amt{font-weight:800;color:#2f5fe0}
+.bar{display:flex;align-items:center;gap:14px;border:2px solid #1e2240;padding:13px 17px;position:relative}
+.bar::before{content:"";position:absolute;inset:0;transform:translate(4px,4px);background:#2f5fe0;mix-blend-mode:multiply;z-index:-1;opacity:.5}
+.bar input{flex:1;background:0;border:0;outline:0;color:#1e2240;font-size:14px}.bar input::placeholder{color:#8a8ea4}
+.bar .km{font-size:11px;color:#5a5e78}
+</style></head><body>
+<div class="grain"></div>
+<div class="wrap">
+<div class="top"><div class="wm">JARVIS</div><div class="st">● Online · Opus · 20:34 · Tue Jun 09</div></div>
+<div class="mid">
+<div>
+<div class="greet">Good evening, <b>Shay.</b></div>
+<div class="bignum">$3,840</div>
+<div class="biglbl">Net this month · ROI 4.2× · <span class="tag-y">▲18%</span> · AI $58 / $80</div>
+<div class="bars">
+<div class="brow"><span class="lb">Stripe subs</span><div class="pb"><div class="pf" style="width:55%"></div></div><span>$1,240</span></div>
+<div class="brow"><span class="lb">Gumroad</span><div class="pb"><div class="pf" style="width:40%"></div></div><span>$890</span></div>
+<div class="brow"><span class="lb">Lemon Sq</span><div class="pb"><div class="pf p" style="width:14%"></div></div><span>$310</span></div>
+<div class="brow"><span class="lb">Newsletter</span><div class="pb"><div class="pf p" style="width:18%"></div></div><span>$400</span></div>
+</div>
+</div>
+<div class="col">
+<div class="card"><div class="k">Needs you · 3</div>
+<div class="li"><span><span class="crit">!!</span> Send invoice → 14 customers</span><span class="amt">$1,240</span></div>
+<div class="li"><span>Publish SaaS starter → Gumroad</span><span class="amt">$39</span></div>
+<div class="li"><span>Deploy micro-API → Cloudflare</span><span style="color:#8a8ea4">queued</span></div>
+</div>
+<div class="card"><div class="k">Jobs running · 2</div>
+<div class="li"><span>habit-tracker app · Code</span><span class="amt">72%</span></div>
+<div class="li"><span>research note-taking · Scout</span><span class="amt">40%</span></div>
+<div class="li"><span>newsletter #14</span><span style="color:#8a8ea4">queued</span></div>
+</div>
+<div class="card"><div class="k">System</div>
+<div class="li"><span>51 agents · 7 products live</span><span class="amt">26 · 9 live</span></div>
+</div>
+</div>
+</div>
+<div class="bar">🎙<input placeholder="Ask Jarvis, or type a /command…"><span class="km">say “Hey Jarvis” · ⌘K</span></div>
+</div></body></html>

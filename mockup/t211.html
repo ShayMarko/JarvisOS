@@ -1,0 +1,57 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T211</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Helvetica Neue','Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#1a1a1c;background:#0b0b0c;display:flex;align-items:center;justify-content:center}
+.page{width:700px;height:860px;background:#ffffff;box-shadow:0 30px 90px rgba(0,0,0,.6);padding:54px 56px;position:relative;color:#26282e}
+.head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #1a1d24;padding-bottom:22px}
+.brand{font-size:26px;font-weight:800;letter-spacing:4px}
+.brand i{font-style:normal;color:#2563eb}
+.from{font-size:11px;line-height:1.7;color:#6b7280;margin-top:6px}
+.inv{text-align:right}
+.inv .t{font-size:30px;font-weight:300;letter-spacing:8px;color:#9aa0aa}
+.inv .meta{font-size:11.5px;line-height:1.8;color:#4b5563;margin-top:10px;font-variant-numeric:tabular-nums}
+.inv .meta b{color:#1a1d24}
+.bill{display:flex;justify-content:space-between;margin-top:30px}
+.lab{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#9aa0aa;font-weight:700;margin-bottom:6px}
+.bill .v{font-size:13px;line-height:1.7;color:#374151}
+.bill .v b{color:#1a1d24;font-size:14px}
+.due{text-align:right}
+.due .amt{font-size:34px;font-weight:800;color:#2563eb;letter-spacing:-1px}
+table{width:100%;border-collapse:collapse;margin-top:30px}
+th{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#9aa0aa;text-align:left;padding:0 0 11px;border-bottom:2px solid #1a1d24}
+th.r,td.r{text-align:right}
+td{font-size:13px;padding:13px 0;border-bottom:1px solid #eef0f3;color:#374151;vertical-align:top}
+td b{color:#1a1d24}
+td .sub{font-size:11px;color:#9aa0aa;margin-top:2px}
+.tot{margin-top:18px;margin-left:auto;width:300px}
+.tr{display:flex;justify-content:space-between;font-size:13px;padding:7px 0;color:#4b5563;font-variant-numeric:tabular-nums}
+.tr.g{border-top:2px solid #1a1d24;margin-top:6px;padding-top:13px;font-size:20px;font-weight:800;color:#1a1d24}
+.tr.g span:last-child{color:#2563eb}
+.note{position:absolute;bottom:46px;left:56px;right:56px;border-top:1px solid #eef0f3;padding-top:16px;font-size:11px;line-height:1.7;color:#9aa0aa}
+.note b{color:#374151}
+.paid{position:absolute;top:300px;right:60px;border:3px solid #d1d5db;color:#d1d5db;font-size:14px;font-weight:800;letter-spacing:3px;padding:6px 16px;transform:rotate(-14deg);border-radius:6px}
+.mono{font-family:ui-monospace,'SF Mono',monospace}
+</style></head><body><div class="page">
+<div class="head">
+<div><div class="brand">JAR<i>VIS</i></div><div class="from">Local AI OS · Executive Assistant<br>billing@jarvis.os · via Resend<br>Tue Jun 09 2026 · 20:34</div></div>
+<div class="inv"><div class="t">INVOICE</div><div class="meta">No. <b>JV-2026-0614</b><br>Issued <b>Jun 09 2026</b><br>Due <b>Jun 23 2026</b></div></div>
+</div>
+<div class="bill">
+<div><div class="lab">Billed To</div><div class="v"><b>14 Active Customers</b><br>Stripe subscription cohort<br>Net-30 · auto-reconciled</div></div>
+<div class="due"><div class="lab">Amount Due</div><div class="amt">$1,240.00</div><div class="v mono" style="margin-top:4px">USD · ● awaiting approval</div></div>
+</div>
+<table>
+<thead><tr><th>Description</th><th class="r">Qty</th><th class="r">Rate</th><th class="r">Amount</th></tr></thead>
+<tbody>
+<tr><td><b>Stripe subscription — monthly</b><div class="sub">Recurring access · cohort billing</div></td><td class="r">12</td><td class="r">$59.00</td><td class="r">$708.00</td></tr>
+<tr><td><b>SaaS starter — REST API + auth</b><div class="sub">One-time license · Gumroad lane</div></td><td class="r">8</td><td class="r">$39.00</td><td class="r">$312.00</td></tr>
+<tr><td><b>Newsletter — premium tier</b><div class="sub">Issue #14 · annual prorated</div></td><td class="r">5</td><td class="r">$36.00</td><td class="r">$180.00</td></tr>
+<tr><td><b>Micro-API — Cloudflare deploy</b><div class="sub">Setup · one-time</div></td><td class="r">1</td><td class="r">$40.00</td><td class="r">$40.00</td></tr>
+</tbody></table>
+<div class="tot">
+<div class="tr"><span>Subtotal</span><span>$1,240.00</span></div>
+<div class="tr"><span>Tax (0%)</span><span>$0.00</span></div>
+<div class="tr g"><span>Total Due</span><span>$1,240.00</span></div>
+</div>
+<div class="paid">PENDING</div>
+<div class="note"><b>Payment terms.</b> Net-30 via Stripe. This invoice was drafted by the JARVIS Executive Assistant and queued for one-tap approval — sending bills the full cohort. Questions reply to this thread; "Hey Jarvis" to steer. Net this month <b>$3,840</b> · ROI 4.2× · ▲18%.</div>
+</div></body></html>

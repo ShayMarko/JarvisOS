@@ -1,0 +1,29 @@
+<!doctype html><html><head><meta charset="utf-8"><title>T47</title><style>
+*{margin:0;box-sizing:border-box;font-family:'Inter',system-ui,sans-serif}
+body{height:100vh;overflow:hidden;color:#eceff8;background:radial-gradient(900px 700px at 30% 10%,#1c1640,#07060f)}
+.top{display:flex;justify-content:space-between;padding:24px 40px}.wm{font-size:18px;font-weight:800;letter-spacing:3px;color:#b79bff}.st{font-size:12px;color:#8378b0}
+.greet{padding:6px 40px 0}.greet h1{font-size:28px;font-weight:600}.greet h1 b{color:#b79bff}.greet p{color:#8378b0;font-size:13px;margin-top:4px}
+.deck{position:relative;height:calc(100vh - 230px);display:grid;place-items:center}
+.stack{position:relative;width:560px;height:340px}
+.card{position:absolute;inset:0;border-radius:24px;padding:26px;border:1px solid rgba(170,150,255,.2);backdrop-filter:blur(16px);box-shadow:0 30px 70px rgba(0,0,0,.5)}
+.c3{background:rgba(40,30,70,.5);transform:translateY(54px) scale(.9);opacity:.5}
+.c2{background:rgba(48,34,82,.6);transform:translateY(28px) scale(.95);opacity:.8}
+.c1{background:linear-gradient(160deg,rgba(70,44,110,.85),rgba(30,20,54,.9));z-index:3}
+.k{font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:#c9bdf0;font-weight:700}
+.rk{font-size:9px;font-weight:700;padding:3px 8px;border-radius:6px;background:rgba(255,90,120,.25);margin-left:8px}
+.ct{font-size:26px;font-weight:700;margin:14px 0 8px}
+.cd{font-size:14px;color:#cabfee;line-height:1.6}
+.go{margin-top:20px;display:inline-block;font-size:13px;font-weight:700;color:#07060f;background:linear-gradient(135deg,#b79bff,#7fb0ff);border-radius:12px;padding:11px 18px}
+.dots{position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);display:flex;gap:6px}.dots span{width:7px;height:7px;border-radius:50%;background:#3a3358}.dots .on{background:#b79bff;width:20px;border-radius:4px}
+.bar{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);width:500px;display:flex;align-items:center;gap:12px;background:rgba(28,20,52,.8);border:1px solid rgba(170,150,255,.3);border-radius:14px;padding:11px 15px}
+.bar input{flex:1;background:0;border:0;outline:0;color:#eceff8;font-size:14px}.bar input::placeholder{color:#6f659a}
+</style></head><body>
+<div class="top"><div class="wm">JARVIS</div><div class="st">● Online · Opus</div></div>
+<div class="greet"><h1>Good evening, <b>Shay</b>.</h1><p>3 cards need you — here's the top of the stack.</p></div>
+<div class="deck"><div class="stack">
+<div class="card c3"></div><div class="card c2"></div>
+<div class="card c1"><div><span class="k">Needs you · 1 of 3</span><span class="rk">CRITICAL</span></div><div class="ct">Send invoice → 14 customers</div><div class="cd">Executive Assistant drafted it via Resend. One tap to bill this month — about $1,240 on the line.</div><span class="go">Review &amp; approve →</span></div>
+<div class="dots"><span class="on"></span><span></span><span></span></div>
+</div></div>
+<div class="bar"><span style="color:#b79bff">🎙</span><input placeholder="Ask Jarvis, or swipe the stack…"><span style="color:#6f659a;font-size:12px">⌘K</span></div>
+</body></html>
