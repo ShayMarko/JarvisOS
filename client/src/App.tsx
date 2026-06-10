@@ -7,17 +7,15 @@ import type {
   ChatResponse, CommandDefinition, CommandResult, MonitorSnapshot, NotificationItem, SettingsView, Step,
 } from './api'
 import type { Turn, Win, WinKind } from './types'
-import { ago, gb, isHtmlish, looksLikeRawTool, pct, rate } from './lib/format'
+import { ago, isHtmlish, looksLikeRawTool } from './lib/format'
 import { pref } from './lib/prefs'
 import { SR, speak, speakSmart, stopSpeaking, takeLongSpeech, wantsContinue } from './lib/voice'
 import { SLASH_TAB, SLASH_WINDOW, WIN_META, matchWindowOpen } from './lib/windows'
 import { ApprovalActions } from './components/ApprovalActions'
-import { Clock } from './components/Clock'
 import { CommandPalette } from './components/CommandPalette'
 import { FloatingWindow } from './components/FloatingWindow'
-import { Sphere } from './components/Sphere'
+import { MvpShell } from './components/MvpShell'
 import { WindowBody } from './components/WindowBody'
-import { ConversationWindow } from './components/windows/ConversationWindow'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -38,6 +36,8 @@ export default function App() {
   const [notifExpanded, setNotifExpanded] = useState<string | null>(null)
   const zRef = useRef(30)
   const wakeRef = useRef<any>(null)
+  const pttRef = useRef<any>(null)
+  const pttTextRef = useRef('')
   const esRef = useRef<EventSource | null>(null)   // current streamInput connection
   const ttsOn = pref('jarvis.tts', 'system') !== 'off'
 
@@ -149,7 +149,6 @@ export default function App() {
   // All exchanges accumulate in ONE Conversation window (a running transcript).
   const askInput = useCallback((raw: string, spoken = false) => {
     setBusy(true)
-    openWindow('conversation')              // singleton — reused for every turn
     esRef.current?.close()                  // close any prior stream before starting a new one
     const id = `t-${++zRef.current}`
     setTurns((ts) => [...ts, { id, prompt: raw, loading: true, steps: [], startedAt: Date.now() }])
@@ -206,14 +205,29 @@ export default function App() {
   }, [askInput, openWindow, ttsOn])
 
   // --- Voice -------------------------------------------------------------
+  // Mic toggle: click once to start listening, click again to stop & send to Jarvis.
   const startPTT = useCallback(() => {
+    if (pttRef.current) {                       // already listening → stop; onend sends
+      const r = pttRef.current; pttRef.current = null
+      try { r.stop() } catch { /* ignore */ }
+      return
+    }
     if (!SR) { alert('Voice input needs a Chromium-based browser (Web Speech API).'); return }
-    stopSpeaking()   // barge-in: pressing the mic cuts off whatever Jarvis is saying
-    const r = new SR(); r.lang = pref('jarvis.lang', 'en-US'); r.interimResults = false; r.maxAlternatives = 1
-    r.onresult = (e: any) => { const t = e.results[0][0].transcript as string; submit(t, true) }
-    r.onend = () => setListening(false)
-    r.onerror = () => setListening(false)
-    try { r.start(); setListening(true) } catch { setListening(false) }
+    stopSpeaking()                              // barge-in: cut off whatever Jarvis is saying
+    const r = new SR(); r.lang = pref('jarvis.lang', 'en-US'); r.continuous = true; r.interimResults = true
+    pttTextRef.current = ''
+    r.onresult = (e: any) => {
+      let finalText = ''
+      for (let i = 0; i < e.results.length; i++) if (e.results[i].isFinal) finalText += e.results[i][0].transcript + ' '
+      if (finalText) pttTextRef.current = finalText
+    }
+    r.onerror = () => { pttRef.current = null; setListening(false) }
+    r.onend = () => {
+      pttRef.current = null; setListening(false)
+      const t = pttTextRef.current.trim(); pttTextRef.current = ''
+      if (t) submit(t, true)
+    }
+    try { r.start(); pttRef.current = r; setListening(true) } catch { setListening(false) }
   }, [submit])
 
   const toggleWake = useCallback(() => {
@@ -230,7 +244,7 @@ export default function App() {
     try { r.start(); wakeRef.current = r; setWake(true) } catch { setWake(false) }
   }, [submit])
 
-  const uiProvider = settings ? (settings.provider === 'claude' || settings.provider === 'anthropic' ? 'anthropic' : settings.provider) : 'mock'
+  const uiProvider = settings ? (settings.provider === 'claude' || settings.provider === 'anthropic' ? 'anthropic' : settings.provider) : 'ollama'
   const pickProvider = useCallback((ui: string) => {
     const backend = ui === 'anthropic' ? 'claude' : ui   // UI label "anthropic" → backend provider "claude"
     apiSetProvider(backend).then(setSettings).catch(() => {})
@@ -246,87 +260,26 @@ export default function App() {
     }
   }, [])
 
-  const cpu = pct(snap?.cpu.systemCpuLoad)
-  const memPctV = snap ? Math.round((snap.memory.usedPhysicalBytes / snap.memory.totalPhysicalBytes) * 100) : 0
-  const caption = busy ? 'Processing' : 'Online · Standby'
-
   return (
     <>
-      {/* centerpiece */}
-      <div className="stage"><Sphere kind="gyro" busy={busy} caption={caption} /></div>
-
-      {/* HUD corners */}
-      <div className="hud">
-        <div className="hud-tl">
-          <div className="wordmark"><span className="pip" /><b>J.A.R.V.I.S</b></div>
-          <div className="tagline">JUST A RATHER VERY INTELLIGENT SYSTEM</div>
-          <div className="tele">
-            <span className="k">STATUS</span><span className="v good">{snap?.jarvisHealth === 'OK' ? 'OPERATIONAL' : 'BOOTING'}</span>
-            <span className="k">CPU</span><span className="v">{cpu}%</span>
-            <span className="k">MEMORY</span><span className="v">{snap ? `${gb(snap.memory.usedPhysicalBytes)}/${gb(snap.memory.totalPhysicalBytes)}G (${memPctV}%)` : '—'}</span>
-            <span className="k">LOAD</span><span className="v">{snap?.cpu.systemLoadAverage?.toFixed(2) ?? '—'}</span>
-            <span className="k">DISK</span><span className="v">{snap ? `${gb(snap.disk.freeBytes)}G free` : '—'}</span>
-            <span className="k">AGENTS</span><span className="v">{snap?.runtime.registeredAgents ?? '—'}</span>
-            <span className="k">NETWORK</span><span className="v">{snap?.network ? `↓${rate(snap.network.rxBytesPerSec)} ↑${rate(snap.network.txBytesPerSec)}` : 'LAN'}</span>
-          </div>
-          <div className="telemetry-flag"><span className="pip" />TELEMETRY ACTIVE</div>
-        </div>
-
-        <div className="hud-tr">
-          <Clock />
-          <div className="row2">
-            <button className="iconbtn" title="Chat history" onClick={() => openWindow('conversation')}>💬</button>
-            <button className="iconbtn" title="Notifications" onClick={() => setNotifOpen((o) => {
-              const next = !o
-              if (next) { setNotifExpanded(null); getNotifications().then(setNotifItems).catch(() => {}) }
-              return next
-            })}>
-              🔔{unread > 0 && <span className="count">{unread}</span>}</button>
-          </div>
-        </div>
-
-        <div className="hud-bl">
-          <button className="userchip" title="Open settings" onClick={() => openWindow('settings')}>
-            <span className="av">S</span>
-            <span className="nm">Shay <span className="caret">⌄</span></span>
-          </button>
-        </div>
-
-        <div className="hud-br">
-          <div className="providers">
-            {(['ollama', 'openai', 'anthropic'] as const).map((p) => (
-              <button key={p} className={uiProvider === p ? 'on' : ''} onClick={() => pickProvider(p)} title="Switch AI provider"><span className="pip" />{p.toUpperCase()}</button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* bottom command dock */}
-      <div className="dock">
-        <div className="bar">
-          <button className={`mic${listening ? ' live' : ''}`} title="Push to talk" onClick={startPTT}>{listening ? '◉' : '🎙'}</button>
-          <input placeholder={listening ? 'Listening…' : 'Ask Jarvis, or type a /command…'} value={input}
-            onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') submit(input) }} />
-          <button className="go" onClick={() => submit(input)}>{busy ? <span className="spin-fast">◠</span> : '➤'}</button>
-        </div>
-        <div className="hintrow">
-          <button className={`wake${wake ? ' on' : ''}`} onClick={toggleWake} title='Say "Jarvis …" to command hands-free'><span className="sw" />WAKE WORD</button>
-          <button className="hint" onClick={() => openWindow('activity')}>Activity</button>
-          <button className="hint" onClick={() => openWindow('capabilities')}>Capabilities</button>
-          <button className="hint" onClick={() => openWindow('files')}>Files</button>
-          <button className="hint" onClick={() => openWindow('backups')}>Backups</button>
-          <button className="hint" onClick={() => openWindow('usage')}>Usage</button>
-          <button className="hint" onClick={() => setCmdkOpen(true)}>⌘K</button>
-        </div>
-      </div>
+      {/* MVP main shell — organized menu + chat + neural-brain stage (opens existing windows) */}
+      <MvpShell
+        snap={snap} settings={settings} turns={turns} input={input} busy={busy}
+        listening={listening} unread={unread} wins={wins}
+        onInput={setInput} onSubmit={submit} onMic={startPTT}
+        onOpen={(k, p) => openWindow(k, p)}
+        onBell={() => { setNotifExpanded(null); getNotifications().then(setNotifItems).catch(() => {}); setNotifOpen(true) }}
+        onFocusWin={(key) => { const w = wins.find((x) => x.key === key); if (w?.minimized) restoreWin(key); else focusWin(key) }}
+        onCmdk={() => setCmdkOpen(true)}
+        wake={wake} onToggleWake={toggleWake}
+        uiProvider={uiProvider} onProvider={pickProvider}
+      />
 
       {/* floating windows */}
       <div className="winlayer">
         {wins.filter((w) => !w.minimized).map((w) => (
           <FloatingWindow key={w.key} win={w} onClose={() => closeWin(w.key)} onFocus={() => focusWin(w.key)} onMinimize={() => minimizeWin(w.key)}>
-            {w.kind === 'conversation'
-              ? <ConversationWindow turns={turns} onClear={() => setTurns([])} />
-              : <WindowBody win={w} />}
+            <WindowBody win={w} />
           </FloatingWindow>
         ))}
       </div>

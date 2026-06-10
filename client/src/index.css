@@ -4,24 +4,24 @@
    ========================================================================== */
 
 :root {
-  --bg-0: #03060d;
-  --bg-1: #060b16;
-  --line: rgba(90, 150, 210, 0.06);
-  --hud: rgba(150, 200, 240, 0.45);
-  --hud-dim: rgba(150, 200, 240, 0.28);
-  --text: #cfe2f2;
-  --muted: #5d6b82;
-  --accent: #5ccde0;
-  --accent-2: #3a86d8;
-  --good: #3ad29f;
-  --warn: #f5c451;
+  --bg-0: #04130d;
+  --bg-1: #06190f;
+  --line: rgba(53, 224, 140, 0.06);
+  --hud: rgba(120, 220, 170, 0.5);
+  --hud-dim: rgba(120, 220, 170, 0.3);
+  --text: #e8f3ec;
+  --muted: #6f8c80;
+  --accent: #35e08c;
+  --accent-2: #2bb886;
+  --good: #46e0a0;
+  --warn: #e8c06a;
   --bad: #ff6b81;
-  --win: rgba(9, 15, 28, 0.94);
-  --win-border: rgba(90, 200, 255, 0.22);
+  --win: rgba(6, 22, 14, 0.94);
+  --win-border: rgba(70, 224, 160, 0.22);
   /* Shared card/panel surfaces (one source of truth for the dark glass fills). */
-  --surface: rgba(8, 16, 30, 0.5);
-  --surface-strong: rgba(8, 16, 30, 0.6);
-  --surface-soft: rgba(8, 16, 30, 0.4);
+  --surface: rgba(8, 26, 17, 0.5);
+  --surface-strong: rgba(8, 26, 17, 0.62);
+  --surface-soft: rgba(8, 26, 17, 0.4);
   --font: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
   --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 }
