@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { getRoi, logRevenue } from '../../api'
 import type { RoiSnapshot } from '../../api'
+import { CostValueBars, Waterfall } from '../charts'
 
 const KINDS = [
   { v: 'REVENUE', label: 'Revenue', hint: 'Money earned ($)', unit: '$' },
@@ -77,6 +78,19 @@ export function RevenueWindow() {
             <div className="scard"><div className="lbl">MONTHLY COST</div><div className="big">{usd(data.monthlyCost)}</div><div className="sub">{usd(data.monthlyAiCost)} AI · {usd(data.monthlyBaseCost)} base</div></div>
             <div className="scard"><div className="lbl">ROI</div><div className="big">{data.roi.toLocaleString()}×</div><div className="sub">{covers ? 'covers its cost' : 'below break-even'}</div></div>
           </div>
+
+          {/* ---- cost ↔ value relation (t10) ---- */}
+          <div className="dv-sec-title" style={{ marginTop: 16 }}>Cost vs value <span className="note">· what it earns against what it costs</span></div>
+          <CostValueBars cost={data.monthlyCost} value={data.valueGenerated} fmt={usd} />
+
+          {/* ---- gross → net waterfall (t51) ---- */}
+          <div className="dv-sec-title" style={{ marginTop: 16 }}>Gross → net</div>
+          <Waterfall fmt={usd} items={[
+            { label: 'Gross value', delta: data.valueGenerated },
+            { label: 'AI cost', delta: -data.monthlyAiCost },
+            { label: 'Base cost', delta: -data.monthlyBaseCost },
+            { label: 'Net', total: true },
+          ]} />
 
           {/* ---- breakdown ---- */}
           <div className="dv-sec-title" style={{ marginTop: 16 }}>This month's breakdown</div>

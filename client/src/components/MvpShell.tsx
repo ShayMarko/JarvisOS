@@ -1,20 +1,101 @@
 import { useEffect, useMemo, useState } from 'react'
 import '../mvp.css'
-import { getAgents, getApprovals, getConnectors, getInstalledPlugins, getMemoryList, getRoi } from '../api'
-import type { AgentDef, ConnectorInfo, MonitorSnapshot, SettingsView, Step } from '../api'
+import { getAgents, getApprovals, getConnectors, getInstalledPlugins, getMemoryList, getNotifications, getRoi, getTokenDashboard } from '../api'
+import type { AgentDef, ConnectorInfo, MonitorSnapshot, NotificationItem, SettingsView, Step, TokenDashboard } from '../api'
 import type { Turn, Win, WinKind } from '../types'
 import { gb, pct } from '../lib/format'
 import { useFetch } from '../lib/useFetch'
+import { WIN_META } from '../lib/windows'
+import { CostValueBars } from './charts'
+import { Markdown } from '../lib/markdown'
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-interface MenuItem { t: string; ic: string; kind: WinKind; tab?: string; cnt?: string; cntKind?: 'crit' | 'good'; flyout?: boolean }
+// Monochrome glyph per window kind for the Windows-mode launcher grid.
+const WIN_ICONS: Partial<Record<WinKind, string>> = {
+  conversation: '❝', activity: '◷', settings: '⚙', capabilities: '⬡', logs: '≣',
+  files: '▤', backups: '⤓', usage: '$', approvals: '!', undo: '↺', vision: '◉',
+  discord: '◆', notifications: '◔',
+}
+// Every window that can be opened (the dynamic result/response panels are excluded — they need a payload).
+const ALL_WINDOWS = (Object.keys(WIN_META) as WinKind[]).filter((k) => k !== 'result' && k !== 'response')
 
-const MENU: { grp: string; items: MenuItem[] }[] = [
-  { grp: 'Workspace', items: [
-    { t: 'Timeline', ic: '◷', kind: 'activity', tab: 'timeline' },
-  ] },
-]
+/** "monthlyAiCost" → "Monthly Ai Cost"; "roi" → "Roi". */
+function humanize(key: string): string {
+  return key.replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/[_-]/g, ' ').replace(/^./, (c) => c.toUpperCase())
+}
+/** Pretty single value for stat grids / tables. */
+function fmtVal(v: unknown): string {
+  if (v == null) return '—'
+  if (typeof v === 'boolean') return v ? '✓' : '✗'
+  if (typeof v === 'number') return Number.isInteger(v) ? v.toLocaleString() : v.toLocaleString(undefined, { maximumFractionDigits: 4 })
+  if (typeof v === 'string') return v
+  return JSON.stringify(v)
+}
+const isPrimitive = (v: unknown) => v == null || typeof v !== 'object'
+
+/** Render a command result's structured `data` inline as a polished card/table — not raw JSON. */
+function renderCmdData(data: unknown): React.ReactNode {
+  if (data == null) return null
+  if (Array.isArray(data)) {
+    if (data.length === 0) return null
+    const first = data[0]
+    // /help → array of { slash, description, category } — group by category.
+    if (typeof first === 'object' && first !== null && 'slash' in (first as any)) {
+      const cmds = data as { slash: string; description: string; category?: string }[]
+      const groups = new Map<string, typeof cmds>()
+      cmds.forEach((c) => { const g = (c.category || 'OTHER').toString(); if (!groups.has(g)) groups.set(g, []); groups.get(g)!.push(c) })
+      return (
+        <div className="mvp-cmdhelp">
+          {[...groups.entries()].map(([g, list]) => (
+            <div className="mvp-cmdgrp" key={g}>
+              <div className="mvp-cmdcat">{g}</div>
+              {list.map((c) => (
+                <div className="mvp-cmdrow" key={c.slash}><span className="mvp-cmdslash">{c.slash}</span><span className="mvp-cmddesc">{c.description}</span></div>
+              ))}
+            </div>
+          ))}
+        </div>
+      )
+    }
+    // array of objects → compact table
+    if (typeof first === 'object' && first !== null) {
+      const rows = data as Record<string, unknown>[]
+      const cols = [...new Set(rows.flatMap((r) => Object.keys(r)))].slice(0, 6)
+      return (
+        <div className="mvp-dtwrap">
+          <table className="mvp-dtable">
+            <thead><tr>{cols.map((c) => <th key={c}>{humanize(c)}</th>)}</tr></thead>
+            <tbody>{rows.slice(0, 40).map((r, i) => <tr key={i}>{cols.map((c) => <td key={c}>{fmtVal(r[c])}</td>)}</tr>)}</tbody>
+          </table>
+          {rows.length > 40 && <div className="mvp-dtmore">+{rows.length - 40} more</div>}
+        </div>
+      )
+    }
+    // array of primitives → bullet list
+    return <ul className="mvp-bullets">{data.map((d, i) => <li key={i}>{String(d)}</li>)}</ul>
+  }
+  if (typeof data === 'object') {
+    // object → stat grid (primitives as cells, nested values shown compactly)
+    const entries = Object.entries(data as Record<string, unknown>)
+    return (
+      <div className="mvp-statgrid">
+        {entries.map(([k, v]) => (
+          <div className={`mvp-statcell${isPrimitive(v) ? '' : ' wide'}`} key={k}>
+            <div className="sk">{humanize(k)}</div>
+            <div className="sv">{fmtVal(v)}</div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+  return <div className="mvp-cmddesc" style={{ marginTop: 6 }}>{String(data)}</div>
+}
+
+/** Does this prompt ask about money / tokens / ROI? → attach a live ROI mini-card inline. */
+function moneyIntent(text: string): boolean {
+  return /\b(budget|tokens?|cost|costs|spend|spending|roi|usage|revenue|money|earn|earnings|profit|net)\b/i.test(text || '')
+}
 
 // ---- live-flow brain graph -------------------------------------------------
 type GType = 'orch' | 'intent' | 'hub' | 'agent' | 'conn' | 'cap' | 'memory' | 'plugin'
@@ -84,11 +165,11 @@ function layout(agents: AgentDef[], connectors: ConnectorInfo[], caps: string[],
     nodes.push({ id: cl.hub, x: cl.ax, y: cl.ay, type: 'hub', label: cl.label, hub: cl.hub, kind: 'capabilities', tab: cl.tab })
     edges.push(['orch', cl.hub])
     // cluster the dots in a disc around THIS hub (radius scales with count) so each lobe reads as a group
-    const R = Math.min(300, 70 + cl.items.length * 9)
+    const R = Math.min(345, 76 + cl.items.length * 10)
     for (const it of cl.items) {
       let x = cl.ax, y = cl.ay, ok = false
-      for (let tries = 0; tries < 420; tries++) {
-        const min = tries < 260 ? 37 : tries < 350 ? 29 : 22
+      for (let tries = 0; tries < 480; tries++) {
+        const min = tries < 300 ? 43 : tries < 400 ? 34 : 27
         const a = rnd() * Math.PI * 2, rr = Math.sqrt(rnd()) * R
         const px = cl.ax + rr * Math.cos(a), py = cl.ay + rr * Math.sin(a)
         if (inBrain(px, py) && nearestId(px, py) === cl.hub && Math.abs(px - cx) > 12 && ((px - cx) ** 2 + (py - cy) ** 2) > 54 * 54 && far(px, py, min)) { x = px; y = py; ok = true; break }
@@ -111,22 +192,43 @@ function layout(agents: AgentDef[], connectors: ConnectorInfo[], caps: string[],
 }
 
 /** Map a streamed step → the node id it lights up. */
+/**
+ * Map a streamed Step to the specific brain node it lit up. Steps only arrive as
+ * intent|agent|tool|answer, so a connector / plugin / memory / capability call all come through as a
+ * `tool` step — we resolve which exact entity by matching the step's label+detail against node
+ * labels/ids. Falls back to the lobe hub only when no specific entity matches.
+ */
 function stepToId(step: Step | null | undefined, nodes: GNode[]): string | null {
   if (!step) return null
   const lab = (step.label || '').toLowerCase().trim()
-  if (step.kind === 'agent') {
-    const m = nodes.find((n) => n.type === 'agent' && (n.label.toLowerCase() === lab || n.id.slice(2) === lab || lab.includes(n.label.toLowerCase()) || n.label.toLowerCase().includes(lab)))
-    return m?.id || 'h-agents'
+  const hay = `${lab} ${(step.detail || '').toLowerCase()}`.trim()
+  const toks = new Set(hay.split(/[^a-z0-9]+/).filter(Boolean))
+
+  // Does this node's identity appear in the step? (exact label, id token, all label words, or substring)
+  const matches = (n: GNode): boolean => {
+    const nl = n.label.toLowerCase()
+    const nid = n.id.slice(2)                 // strip the 'a:'/'c:'/'p:'/'i:'/'m:'/'t:' prefix
+    if (nl === lab || lab === nid) return true
+    if (nid.length >= 3 && toks.has(nid)) return true
+    const words = nl.split(/[^a-z0-9]+/).filter(Boolean)
+    if (words.length && words.every((w) => toks.has(w))) return true
+    if (nl.length >= 4 && hay.includes(nl)) return true
+    return false
   }
+  const find = (type: GType) => nodes.find((n) => n.type === type && matches(n))
+
+  if (step.kind === 'agent') return find('agent')?.id || 'h-agents'
+  if (step.kind === 'intent') return find('intent')?.id || 'h-intent'
   if (step.kind === 'tool') {
-    const p = nodes.find((n) => n.type === 'plugin' && (n.label.toLowerCase() === lab || lab.includes(n.label.toLowerCase()) || n.label.toLowerCase().includes(lab)))
-    if (p) return p.id
+    // A tool is a connector call, a plugin, a memory op, or a generic capability — resolve the exact one.
+    const conn = find('conn'); if (conn) return conn.id
+    const plug = find('plugin'); if (plug) return plug.id
+    const mem = find('memory'); if (mem) return mem.id
     const cat = capCategory(lab)
-    if (cat === 'Memory') return 'h-memory'
-    const m = nodes.find((n) => n.type === 'cap' && n.id === 't:' + cat)
-    return m?.id || 'h-caps'
+    if (cat === 'Memory') return find('memory')?.id || 'h-memory'
+    const capNode = nodes.find((n) => n.type === 'cap' && n.id === 't:' + cat)
+    return capNode?.id || 'h-caps'
   }
-  if (step.kind === 'intent') return 'h-intent'
   return 'orch' // answer
 }
 
@@ -143,6 +245,7 @@ export interface MvpShellProps {
   onSubmit: (text: string) => void
   onMic: () => void
   onOpen: (kind: WinKind, payload?: unknown) => void
+  onOpenUnder: (kind: WinKind, anchor: DOMRect) => void
   onBell: () => void
   onFocusWin: (key: string) => void
   onCmdk: () => void
@@ -156,6 +259,22 @@ export function MvpShell(props: MvpShellProps) {
   const { snap, settings, turns, input, busy, listening, unread, wins } = props
   const [overview, setOverview] = useState(false)
   const [now, setNow] = useState(() => new Date())
+  const [peek, setPeek] = useState<null | 'recents' | 'alerts'>(null)   // t22/t77 info box above the chatbox
+  // Resizable chat ↔ brain split: drag the divider to grow/shrink the chat; the brain takes the rest.
+  const [chatW, setChatW] = useState<number>(() => {
+    const saved = Number(localStorage.getItem('mvp-chat-w'))
+    return saved >= 360 ? saved : 900
+  })
+  const [dragging, setDragging] = useState(false)
+  useEffect(() => { localStorage.setItem('mvp-chat-w', String(Math.round(chatW))) }, [chatW])
+  const clampW = (w: number) => Math.max(360, Math.min(window.innerWidth - 340, w))
+  const startDividerDrag = (e: React.PointerEvent) => {
+    e.preventDefault()
+    setDragging(true)
+    const move = (ev: PointerEvent) => setChatW(clampW(ev.clientX))
+    const up = () => { setDragging(false); window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up) }
+    window.addEventListener('pointermove', move); window.addEventListener('pointerup', up)
+  }
 
   const { data: agents } = useFetch(() => getAgents(), [], [])
   const { data: connectors } = useFetch(() => getConnectors(), [], [])
@@ -163,6 +282,8 @@ export function MvpShell(props: MvpShellProps) {
   const { data: roi } = useFetch(() => getRoi(), null, [])
   const { data: memories } = useFetch(() => getMemoryList(''), [], [])
   const { data: plugins } = useFetch(() => getInstalledPlugins(), [], [])
+  const { data: notifs } = useFetch(() => getNotifications(), [] as NotificationItem[], [])
+  const { data: tok } = useFetch(() => getTokenDashboard(200), null as TokenDashboard | null, [])
 
   useEffect(() => { const i = setInterval(() => setNow(new Date()), 30000); return () => clearInterval(i) }, [])
 
@@ -236,7 +357,7 @@ export function MvpShell(props: MvpShellProps) {
     const isEntity = n.type === 'agent' || n.type === 'conn' || n.type === 'cap' || n.type === 'intent' || n.type === 'memory' || n.type === 'plugin'
     const above = isEntity && (Math.round(n.x + n.y) % 2 === 0)
     const ly = n.type === 'orch' ? n.y + 30 : n.type === 'hub' ? n.y - 16 : (above ? n.y - 7 : n.y + 9)
-    const label = n.type === 'hub' ? `${n.label} · ${hubCount(n.id)}` : isEntity ? trunc(n.label, 14) : n.label
+    const label = n.type === 'hub' ? `${n.label} · ${hubCount(n.id)}` : isEntity ? trunc(n.label, 12) : n.label
     return { isEntity, ly, label }
   }
 
@@ -270,9 +391,26 @@ export function MvpShell(props: MvpShellProps) {
   const budPct = bud && bud.dailyTokenBudget > 0 ? Math.min(100, Math.round((bud.tokensToday / bud.dailyTokenBudget) * 100)) : 72
   const budLabel = bud && bud.dailyTokenBudget > 0 ? `${(bud.tokensToday / 1000).toFixed(0)}k/${(bud.dailyTokenBudget / 1000).toFixed(0)}k` : '$58/$80'
 
+  // ---- storm warnings (t120): surface critical state under the brain -------
+  type Storm = { sev: 'crit' | 'warn'; icon: string; msg: string; kind: WinKind; tab?: string }
+  const storms: Storm[] = []
+  if (bud?.paused) storms.push({ sev: 'crit', icon: '⛔', msg: 'AI is paused — kill-switch is on', kind: 'usage', tab: 'tokens' })
+  else if (bud && bud.dailyTokenBudget > 0 && budPct >= 100) storms.push({ sev: 'crit', icon: '⚡', msg: 'Daily token budget spent — Jarvis is throttled', kind: 'usage', tab: 'tokens' })
+  else if (bud && bud.dailyTokenBudget > 0 && budPct >= 90) storms.push({ sev: 'warn', icon: '⚡', msg: `Token budget almost gone · ${budPct}% used`, kind: 'usage', tab: 'tokens' })
+  if (pending >= 4) storms.push({ sev: 'warn', icon: '!', msg: `${pending} approvals waiting on you`, kind: 'approvals' })
+  if (unread >= 6) storms.push({ sev: 'warn', icon: '🔔', msg: `${unread} alerts you haven't read`, kind: 'notifications' })
+  const storm = storms.sort((a, b) => (a.sev === 'crit' ? -1 : 1) - (b.sev === 'crit' ? -1 : 1))[0] || null
+
+  const recentTurns = [...turns].slice(-6).reverse()
+  const recentAlerts = (notifs || []).slice(0, 8)
+
   return (
-    <div className="mvp">
+    <div className="mvp" style={{ ['--chat-w' as string]: `${chatW}px` }}>
       <div className="mvp-fr tl" /><div className="mvp-fr tr" /><div className="mvp-fr bl" /><div className="mvp-fr br" />
+      <div className={`mvp-divider${dragging ? ' drag' : ''}`} onPointerDown={startDividerDrag}
+        onDoubleClick={() => setChatW(clampW(900))} title="Drag to resize · double-click to reset">
+        <span className="grip"><i /><i /></span>
+      </div>
 
       {/* ZONE 1 — chat (now spans the old menu + chat columns) */}
       <section className="mvp-chat">
@@ -289,9 +427,9 @@ export function MvpShell(props: MvpShellProps) {
         <div className="mvp-thread">
           {turns.length === 0 ? (
             <div className="mvp-msg j"><div className="who">Jarvis</div>Good {part}, Shay. {pending} things need you, net is ${revenue.toLocaleString()} ({roiX}×). Ask me anything — watch the brain light up as I work.</div>
-          ) : turns.map((t) => (
+          ) : turns.map((t, ti) => (
             <div key={t.id}>
-              <div className="mvp-msg u"><div className="who">Shay</div>{t.prompt}</div>
+              {t.prompt && <div className="mvp-msg u"><div className="who">Shay</div>{t.prompt}</div>}
               {((t.steps && t.steps.length > 0) || t.loading) && (
                 <div className="mvp-steps">
                   {(t.steps || []).map((s, i) => (
@@ -304,13 +442,75 @@ export function MvpShell(props: MvpShellProps) {
                 </div>
               )}
               {(t.resp?.answer || t.commandResult?.message) && (
-                <div className="mvp-msg j" style={{ marginTop: 8 }}><div className="who">Jarvis</div>{t.resp?.answer || t.commandResult?.message}</div>
+                <div className="mvp-msg j" style={{ marginTop: 8 }}>
+                  <div className="who">Jarvis</div>
+                  <Markdown text={t.resp?.answer || t.commandResult?.message || ''} />
+                  {t.commandResult?.data ? renderCmdData(t.commandResult.data) : null}
+                  {/* split-by-purpose: rich results answer inline, but can be promoted to a resizable window */}
+                  {(t.reopen || (t.commandResult?.data != null && typeof t.commandResult.data === 'object')) && (
+                    <button className="mvp-openwin" title="Open as a movable, resizable window"
+                      onClick={() => t.reopen
+                        ? props.onOpen(t.reopen.kind, t.reopen.payload)
+                        : props.onOpen('result', { status: t.commandResult?.status, message: t.commandResult?.message, data: t.commandResult?.data })}>
+                      open in window ↗
+                    </button>
+                  )}
+                </div>
+              )}
+              {/* money/token question → live ROI mini-card inline (the Usage window's visual, in the chat) */}
+              {moneyIntent(t.prompt) && ti === turns.length - 1 && (roi || tok) && (
+                <div className="mvp-msg j" style={{ marginTop: 6 }}>
+                  <div className="mvp-money">
+                    <div className="mvp-moneyrow">
+                      <div className="mvp-mc"><div className="k">Spend</div><div className="v">{tok ? '$' + tok.totalCost.toFixed(2) : '—'}</div></div>
+                      <div className="mvp-mc"><div className="k">Tokens</div><div className="v">{tok ? tok.totalTokens.toLocaleString() : '—'}</div></div>
+                      <div className="mvp-mc"><div className="k">Value</div><div className="v">{roi ? '$' + Math.round(roi.valueGenerated).toLocaleString() : '—'}</div></div>
+                      <div className="mvp-mc"><div className="k">ROI</div><div className="v good">{roi ? roi.roi.toFixed(1) + '×' : '—'}</div></div>
+                    </div>
+                    {roi && <CostValueBars cost={roi.monthlyCost} value={roi.valueGenerated} fmt={(n) => '$' + n.toLocaleString(undefined, { maximumFractionDigits: 2 })} />}
+                    <button className="mvp-openwin" onClick={() => props.onOpen('usage', 'revenue')}>open Usage window ↗</button>
+                  </div>
+                </div>
               )}
             </div>
           ))}
         </div>
         <div className="mvp-box">
+          {peek && (
+            <div className="mvp-peek">
+              <div className="mvp-peektabs">
+                <button className={peek === 'recents' ? 'on' : ''} onClick={() => setPeek('recents')}>Recents</button>
+                <button className={peek === 'alerts' ? 'on' : ''} onClick={() => setPeek('alerts')}>Alerts{unread > 0 ? ` · ${unread}` : ''}</button>
+                <span className="grow" />
+                <button className="mvp-peekx" onClick={() => setPeek(null)} title="Close">✕</button>
+              </div>
+              <div className="mvp-peeklist">
+                {peek === 'recents' ? (
+                  recentTurns.length === 0
+                    ? <div className="mvp-peekempty">No chats yet — ask Jarvis anything.</div>
+                    : recentTurns.map((t) => (
+                        <button key={t.id} className="mvp-peekrow" onClick={() => { props.onInput(t.prompt); setPeek(null) }} title="Reuse this prompt">
+                          <span className="ic">↻</span>
+                          <span className="tx"><b>{t.prompt}</b>{(t.resp?.answer || t.commandResult?.message) ? <span className="sub"> · {trunc(t.resp?.answer || t.commandResult?.message || '', 64)}</span> : null}</span>
+                        </button>
+                      ))
+                ) : (
+                  recentAlerts.length === 0
+                    ? <div className="mvp-peekempty">No alerts — you're all caught up.</div>
+                    : recentAlerts.map((n) => (
+                        <button key={n.id} className="mvp-peekrow" onClick={() => { props.onOpen('notifications'); setPeek(null) }}>
+                          <span className={`dotk ${n.type === 'error' ? 'bad' : n.type === 'warning' ? 'warn' : 'ok'}`} />
+                          <span className="tx"><b>{n.title}</b>{n.risk ? <span className={`risk-badge r-${n.risk.toLowerCase()}`}>{n.risk}</span> : null}</span>
+                        </button>
+                      ))
+                )}
+              </div>
+            </div>
+          )}
           <div className="mvp-boxin">
+            <button className={`mvp-peektog${peek ? ' on' : ''}`} onClick={() => setPeek((p) => (p ? null : 'recents'))} title="Recents & alerts" aria-label="Recents and alerts">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d={peek ? 'M6 9l6 6 6-6' : 'M6 15l6-6 6 6'} /></svg>
+            </button>
             <button className={`mvp-mic${listening ? ' live' : ''}`} onClick={props.onMic} title={listening ? 'Stop & send' : 'Speak to Jarvis'} aria-label="Voice">
               {listening
                 ? <svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="3" /></svg>
@@ -332,7 +532,7 @@ export function MvpShell(props: MvpShellProps) {
             ))}
           </div>
           <div className="mvp-topr">
-            <button className="mvp-bell" onClick={() => props.onOpen('notifications')} title="Notifications">
+            <button className="mvp-bell" onClick={(e) => props.onOpenUnder('notifications', e.currentTarget.getBoundingClientRect())} title="Notifications">
               <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.7 21a2 2 0 0 1-3.4 0" /></svg>
               {unread > 0 && <span className="mvp-bellc">{unread}</span>}
             </button>
@@ -389,21 +589,13 @@ export function MvpShell(props: MvpShellProps) {
                 )}
               </svg>
             </div>
-            <div className="mvp-telebox">
-              <div className="mvp-tele">
-                <span className="k">Status</span><span className="v good">{busy ? 'WORKING' : (snap?.jarvisHealth === 'OK' ? 'OPERATIONAL' : 'ONLINE')}</span>
-                <span className="k">CPU</span><span className="v">{cpu}%</span>
-                <span className="k">Memory</span><span className="v">{mem}{snap ? ` / ${gb(snap.memory.totalPhysicalBytes)}G` : ''}</span>
-                <span className="k">Load</span><span className="v">{snap?.cpu.systemLoadAverage?.toFixed(2) ?? '—'}</span>
-                <span className="k">Disk</span><span className="v">{snap ? `${gb(snap.disk.freeBytes)}G free` : '—'}</span>
-                <span className="k clk" onClick={() => props.onOpen('capabilities', 'agents')}>Agents</span><span className="v clk" onClick={() => props.onOpen('capabilities', 'agents')}>{agentCount}</span>
-                <span className="k clk" onClick={() => props.onOpen('capabilities', 'connectors')}>Connectors</span><span className="v clk" onClick={() => props.onOpen('capabilities', 'connectors')}>{liveConn}/{totalConn} live</span>
-                <span className="k clk" onClick={() => props.onOpen('activity', 'runs')}>Jobs</span><span className="v clk" onClick={() => props.onOpen('activity', 'runs')}>{runningJobs} running</span>
-                <span className="k">Model</span><span className="v">{model}</span>
-                <span className="k clk" onClick={() => props.onOpen('usage', 'revenue')}>Budget</span><span className="v clk" onClick={() => props.onOpen('usage', 'revenue')}>{budLabel}</span>
-              </div>
-              <div className="mvp-budbar2"><i style={{ width: budPct + '%' }} /></div>
-            </div>
+            {storm && (
+              <button className={`mvp-storm ${storm.sev}`} onClick={() => props.onOpen(storm.kind, storm.tab)} title="Open">
+                <span className="bolt">{storm.icon}</span>
+                <span className="msg">{storm.msg}</span>
+                <span className="go">→</span>
+              </button>
+            )}
           </>
         ) : (
           <div className="mvp-overview">
@@ -420,17 +612,37 @@ export function MvpShell(props: MvpShellProps) {
                 ))}
               </div>
             )}
-            <div className="mvp-ovsec">All windows · open one</div>
+            <div className="mvp-ovsec">All windows · {ALL_WINDOWS.length} · open one</div>
             <div className="mvp-ovgrid">
-              {MENU.flatMap((g) => g.items).map((it) => (
-                <button key={'space-' + it.t} className="mvp-ovcard" onClick={() => props.onOpen(it.kind, it.tab)}>
-                  <div className="mvp-ovtt"><span className="ic">{it.ic}</span> {it.t}</div>
-                  <div className="mvp-ovbd">Open the {it.t} space</div>
-                </button>
-              ))}
+              {ALL_WINDOWS.map((k) => {
+                const open = wins.some((w) => w.kind === k)
+                return (
+                  <button key={'space-' + k} className={`mvp-ovcard${open ? ' isopen' : ''}`} onClick={() => props.onOpen(k)}>
+                    <div className="mvp-ovtt"><span className="ic">{WIN_ICONS[k] ?? '▢'}</span> {WIN_META[k].title}{open ? <span className="live">open</span> : null}</div>
+                    <div className="mvp-ovbd">{WIN_META[k].subtitle || `Open the ${WIN_META[k].title} window`}</div>
+                  </button>
+                )
+              })}
             </div>
           </div>
         )}
+
+        {/* Machine stats — always visible (brain view AND windows view) */}
+        <div className="mvp-telebox">
+          <div className="mvp-tele">
+            <span className="k">Status</span><span className="v good">{busy ? 'WORKING' : (snap?.jarvisHealth === 'OK' ? 'OPERATIONAL' : 'ONLINE')}</span>
+            <span className="k">CPU</span><span className="v">{cpu}%</span>
+            <span className="k">Memory</span><span className="v">{mem}{snap ? ` / ${gb(snap.memory.totalPhysicalBytes)}G` : ''}</span>
+            <span className="k">Load</span><span className="v">{snap?.cpu.systemLoadAverage?.toFixed(2) ?? '—'}</span>
+            <span className="k">Disk</span><span className="v">{snap ? `${gb(snap.disk.freeBytes)}G free` : '—'}</span>
+            <span className="k clk" onClick={() => props.onOpen('capabilities', 'agents')}>Agents</span><span className="v clk" onClick={() => props.onOpen('capabilities', 'agents')}>{agentCount}</span>
+            <span className="k clk" onClick={() => props.onOpen('capabilities', 'connectors')}>Connectors</span><span className="v clk" onClick={() => props.onOpen('capabilities', 'connectors')}>{liveConn}/{totalConn} live</span>
+            <span className="k clk" onClick={() => props.onOpen('activity', 'runs')}>Jobs</span><span className="v clk" onClick={() => props.onOpen('activity', 'runs')}>{runningJobs} running</span>
+            <span className="k">Model</span><span className="v">{model}</span>
+            <span className="k clk" onClick={() => props.onOpen('usage', 'revenue')}>Budget</span><span className="v clk" onClick={() => props.onOpen('usage', 'revenue')}>{budLabel}</span>
+          </div>
+          <div className="mvp-budbar2"><i style={{ width: budPct + '%' }} /></div>
+        </div>
       </main>
     </div>
   )

@@ -40,7 +40,12 @@ public class InputController {
 
     @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter stream(@RequestParam String input, @RequestParam(required = false) String sessionId) {
-        SseEmitter emitter = new SseEmitter(180_000L);
+        // 30 min — long local-model / multi-tool agent runs must not be cut off mid-stream.
+        SseEmitter emitter = new SseEmitter(1_800_000L);
+        // Complete gracefully on timeout/error so the framework doesn't try to serialise an
+        // ApiError as text/event-stream (which throws HttpMessageNotWritableException).
+        emitter.onTimeout(emitter::complete);
+        emitter.onError(err -> emitter.complete());
         String session = sessionId == null || sessionId.isBlank() ? "default" : sessionId;
         exec.submit(() -> {
             try {

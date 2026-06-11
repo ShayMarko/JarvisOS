@@ -32,9 +32,17 @@ public class NotificationService {
      * Approve/Decline buttons. Mirrors to Discord/Telegram like any other notification.
      */
     public Notification notify(String type, String title, String body, String source, String actionId) {
+        return notify(type, title, body, source, actionId, null);
+    }
+
+    /**
+     * As above, additionally tagging the notification with a risk level (LOW/MEDIUM/HIGH/CRITICAL) so the
+     * Notification Center can render a colour badge. Used by approval notifications.
+     */
+    public Notification notify(String type, String title, String body, String source, String actionId, String risk) {
         Notification saved = repository.save(new Notification(
                 Ids.generate("ntf"),
-                type, title, body, source, actionId));
+                type, title, body, source, actionId, risk));
         // Heartbeat to your phone: mirror every notification to the private Discord channel (and Telegram
         // if that bridge is on). Both are dormant until configured, so this is a no-op by default.
         String line = "🔔 " + title + (body == null || body.isBlank() ? "" : "\n" + body);

@@ -340,6 +340,8 @@ export interface NotificationItem {
   source: string | null
   /** When source === 'approval', the ApprovalRequest id — lets the bell render inline Approve/Decline. */
   actionId: string | null
+  /** Risk level for approval notifications — drives the colour badge (LOW/MEDIUM/HIGH/CRITICAL). Null otherwise. */
+  risk: RiskLevel | null
   read: boolean
   createdAt: string
 }

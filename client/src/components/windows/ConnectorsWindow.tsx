@@ -1,71 +1,79 @@
-import { useCallback, useEffect, useState } from 'react'
-import { createSecret, deleteSecret, getConnectors, getSecrets } from '../../api'
-import type { ConnectorInfo, SecretView } from '../../api'
+import { getConnectors } from '../../api'
+import type { ConnectorInfo } from '../../api'
+import { useFetch } from '../../lib/useFetch'
 
-const DOT: Record<string, string> = { CONNECTED: 'ok', DISCONNECTED: 'warn', ERROR: 'bad' }
+/** What each connector is for — shown so you know its purpose at a glance. Keyed by connector id. */
+const PURPOSE: Record<string, string> = {
+  ayrshare: 'Publish & schedule posts across your social accounts.',
+  calcom: 'Scheduling links and bookings via Cal.com.',
+  calendar: 'Read & create events on your Google Calendar.',
+  cloudflare: 'DNS, CDN and edge hosting on Cloudflare.',
+  etsy: 'List and manage products on your Etsy shop.',
+  github: 'Repos, issues, pull requests and commits on GitHub.',
+  gmail: 'Read, search and send mail from Gmail.',
+  gdrive: 'Browse and manage files in Google Drive.',
+  gumroad: 'Sell digital products and read sales on Gumroad.',
+  lemonsqueezy: 'Sell products and read orders on Lemon Squeezy.',
+  maps: 'Location, places and directions.',
+  mongo: 'Query and write to your MongoDB database.',
+  mysql: 'Query and write to your MySQL database.',
+  netlify: 'Deploy and host sites on Netlify.',
+  notion: 'Read and build pages & databases in Notion.',
+  plausible: 'Privacy-friendly website analytics.',
+  printful: 'Print-on-demand fulfilment for merch.',
+  reddit: 'Read posts and trends from Reddit.',
+  resend: 'Send transactional & marketing email.',
+  rss: 'Pull headlines from RSS / news feeds.',
+  shopify: 'Manage products and orders on your Shopify store.',
+  slack: 'Post and read messages in Slack.',
+  stripe: 'Payments, customers and revenue via Stripe.',
+  telegram: 'Send & receive messages via your Telegram bot.',
+  twilio: 'Send SMS / WhatsApp messages via Twilio.',
+  youtube: 'Read videos, stats and transcripts from YouTube.',
+}
+
+const STATUS: Record<string, { cls: string; label: string }> = {
+  CONNECTED: { cls: 'ok', label: 'Connected' },
+  DISCONNECTED: { cls: 'warn', label: 'Not connected' },
+  ERROR: { cls: 'bad', label: 'Error' },
+}
+
+/** How the credential is supplied — always the backend, never typed here. */
+function credLabel(secret: string | null): string {
+  if (!secret) return 'No credential required'
+  if (secret.startsWith('oauth:')) return `🔐 ${secret.slice(6)} OAuth — set in backend`
+  return `🔑 ${secret} — set in backend (application.yml)`
+}
 
 export function ConnectorsWindow() {
-  const [conns, setConns] = useState<ConnectorInfo[] | null>(null)
-  const [secrets, setSecrets] = useState<SecretView[]>([])
-  const [draft, setDraft] = useState<Record<string, string>>({})
-  const [busy, setBusy] = useState<string | null>(null)
-
-  const refresh = useCallback(() => {
-    getConnectors().then(setConns).catch(() => setConns([]))
-    getSecrets().then(setSecrets).catch(() => {})
-  }, [])
-  useEffect(() => { refresh() }, [refresh])
-
-  const secretFor = (name: string | null) => (name ? secrets.find((s) => s.name === name) : undefined)
-
-  const save = (c: ConnectorInfo) => {
-    const value = (draft[c.id] || '').trim()
-    if (!c.requiredSecret || !value) return
-    setBusy(c.id)
-    createSecret({ name: c.requiredSecret, connector: c.id, value })
-      .then(() => { setDraft((d) => ({ ...d, [c.id]: '' })); refresh() })
-      .finally(() => setBusy(null))
-  }
-
-  const clear = (s: SecretView) => { setBusy(s.id); deleteSecret(s.id).then(refresh).finally(() => setBusy(null)) }
-
+  const { data: conns, refresh } = useFetch(getConnectors, [])
   if (!conns) return <div className="w-empty"><span className="spin-fast">◠</span></div>
+
+  const live = conns.filter((c) => c.status === 'CONNECTED').length
 
   return (
     <>
       <div className="files-bar">
         <button className="hint" onClick={refresh}>⟳ Refresh</button>
         <span className="grow" />
-        <span className="note">{conns.filter((c) => c.status === 'CONNECTED').length}/{conns.length} connected</span>
+        <span className="note">{live}/{conns.length} connected</span>
       </div>
-      <div className="rows">
-        {conns.map((c) => {
-          const sec = secretFor(c.requiredSecret)
+      <div className="conn-note">🔒 Credentials are configured in the backend (application.yml / secrets vault) — never entered here.</div>
+      <div className="conn-grid">
+        {conns.map((c: ConnectorInfo) => {
+          const st = STATUS[c.status] ?? STATUS.DISCONNECTED
           return (
-            <div className="appr-card" key={c.id}>
-              <div className="appr-head">
-                <span className={`dot-s ${DOT[c.status] ?? 'warn'}`} />
-                <span className="appr-title">{c.name} <span className="dim" style={{ fontSize: 11 }}>· {c.category}</span></span>
-                <span className="when">{c.status.toLowerCase()}</span>
+            <div className={`conn-card ${st.cls}`} key={c.id}>
+              <div className="conn-top">
+                <span className={`conn-pill ${st.cls}`}><i className={`dot-s ${st.cls}`} />{st.label}</span>
+                <span className="conn-cat">{c.category}</span>
               </div>
-              {c.requiredSecret ? (
-                sec ? (
-                  <div className="appr-actions">
-                    <span className="dim" style={{ fontSize: 12 }}>🔑 {c.requiredSecret}: {sec.masked}</span>
-                    <button className="appr-btn no" disabled={busy === sec.id} onClick={() => clear(sec)}>Remove</button>
-                  </div>
-                ) : (
-                  <div className="rev-form">
-                    <input className="rev-in grow" type="password" placeholder={`Paste ${c.requiredSecret}…`}
-                      value={draft[c.id] || ''} onChange={(e) => setDraft((d) => ({ ...d, [c.id]: e.target.value }))}
-                      onKeyDown={(e) => { if (e.key === 'Enter') save(c) }} />
-                    <button className="hint" disabled={busy === c.id} onClick={() => save(c)}>{busy === c.id ? '…' : 'Connect'}</button>
-                  </div>
-                )
-              ) : <div className="appr-desc">No credential required.</div>}
-              {c.actions.length > 0 && (
-                <div className="appr-desc">Actions: {c.actions.map((a) => a.id).join(', ')}</div>
-              )}
+              <div className="conn-name">{c.name}</div>
+              <div className="conn-desc">{PURPOSE[c.id] ?? `${c.category} connector.`}</div>
+              <div className="conn-foot">
+                <span className="conn-cred">{credLabel(c.requiredSecret)}</span>
+                {c.actions.length > 0 && <span className="conn-acts">{c.actions.length} action{c.actions.length === 1 ? '' : 's'}</span>}
+              </div>
             </div>
           )
         })}

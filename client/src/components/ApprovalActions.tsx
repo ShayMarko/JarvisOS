@@ -6,7 +6,12 @@ import { approveRequest, denyRequest } from '../api'
  * (bell popover + Notifications window) and in the Approval Center. Calls the approval REST endpoints
  * and reports the decision back via onDone so the host can refresh.
  */
-export function ApprovalActions({ id, onDone }: { id: string; onDone?: (decision: 'approved' | 'denied') => void }) {
+export function ApprovalActions({ id, onDone, approveLabel = 'Approve', denyLabel = 'Decline' }: {
+  id: string
+  onDone?: (decision: 'approved' | 'denied') => void
+  approveLabel?: string
+  denyLabel?: string
+}) {
   const [busy, setBusy] = useState<null | 'approve' | 'deny'>(null)
   const [remember, setRemember] = useState(false)
   const [done, setDone] = useState<null | string>(null)
@@ -26,10 +31,10 @@ export function ApprovalActions({ id, onDone }: { id: string; onDone?: (decision
   return (
     <div className="appr-actions" onClick={(e) => e.stopPropagation()}>
       <button className="appr-btn ok" disabled={busy !== null} onClick={() => decide('approve')}>
-        {busy === 'approve' ? '…' : 'Approve'}
+        {busy === 'approve' ? '…' : approveLabel}
       </button>
       <button className="appr-btn no" disabled={busy !== null} onClick={() => decide('deny')}>
-        {busy === 'deny' ? '…' : 'Decline'}
+        {busy === 'deny' ? '…' : denyLabel}
       </button>
       <label className="appr-remember" title="Remember this decision for the same kind of action">
         <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} /> remember

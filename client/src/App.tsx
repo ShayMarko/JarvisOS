@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   fetchCommands, getConversation, getNotifications, getSettings, getStatus, getUnreadCount,
-  markNotificationRead, runCommand, setProvider as apiSetProvider, streamInput,
+  markNotificationRead, setProvider as apiSetProvider, streamInput,
 } from './api'
 import type {
   ChatResponse, CommandDefinition, CommandResult, MonitorSnapshot, NotificationItem, SettingsView, Step,
@@ -114,24 +114,54 @@ export default function App() {
     })
   }, [])
 
-  const openWindow = useCallback((kind: WinKind, payload?: unknown, titleOverride?: string) => {
+  const openWindow = useCallback((kind: WinKind, payload?: unknown, titleOverride?: string, pos?: { x: number; y: number }) => {
     const meta = WIN_META[kind]
     const singleton = kind !== 'result' && kind !== 'response'
     setWins((ws) => {
       if (singleton) {
         const existing = ws.find((w) => w.kind === kind)
-        if (existing) return ws.map((w) => w.key === existing.key ? { ...w, z: ++zRef.current } : w)
+        // Re-focus an already-open singleton — but if an anchor was given (e.g. opened from the bell),
+        // also snap it back under that anchor so it reappears where you expect.
+        if (existing) return ws.map((w) => w.key === existing.key ? { ...w, z: ++zRef.current, ...(pos ?? {}) } : w)
       }
       const n = ws.length
       const key = singleton ? kind : `${kind}-${zRef.current}`
       const win: Win = {
         key, kind, title: titleOverride ?? meta.title, subtitle: meta.subtitle, dim: meta.dim,
-        x: 320 + (n % 4) * 36, y: 150 + (n % 4) * 30, z: ++zRef.current, payload,
+        x: pos?.x ?? 320 + (n % 4) * 36, y: pos?.y ?? 150 + (n % 4) * 30, z: ++zRef.current, payload,
       }
       return [...ws, win]
     })
     return singleton ? kind : `${kind}-${zRef.current}`
   }, [])
+
+  // Open a window anchored under a clicked control (e.g. the notification bell): right-aligned to the
+  // anchor, just below it, clamped on-screen. It stays fully draggable/resizable afterward.
+  const openWindowUnder = useCallback((kind: WinKind, anchor: DOMRect) => {
+    const [w] = (WIN_META[kind].dim || '520×520').split('×').map(Number)
+    const width = w || 520
+    const x = Math.max(12, Math.min(window.innerWidth - width - 12, anchor.right - width))
+    const y = Math.min(window.innerHeight - 120, anchor.bottom + 10)
+    openWindow(kind, undefined, undefined, { x, y })
+  }, [openWindow])
+
+  // Reverse of "open in window ↗": collapse a floating window back into the chat as an inline turn.
+  // Data windows (result/response) bring their content with them; tool windows leave a breadcrumb.
+  // Either way a "open in window ↗" chip on the turn reopens the exact window.
+  const collapseToChat = useCallback((win: Win) => {
+    const p = win.payload as { status?: string; message?: string; data?: unknown } | undefined
+    const isData = win.kind === 'result' || win.kind === 'response'
+    const cr = isData
+      ? { status: p?.status ?? 'OK', message: p?.message ?? win.title, data: p?.data }
+      : { status: 'OK', message: `${win.title} — moved back to chat.` }
+    setTurns((ts) => [...ts, {
+      id: `clps-${Date.now()}-${ts.length}`,
+      prompt: '', loading: false, steps: [],
+      commandResult: cr,
+      reopen: { kind: win.kind, payload: win.payload },
+    }])
+    closeWin(win.key)
+  }, [closeWin])
 
   // Cmd-` / Ctrl-` — Alt-Tab style window cycling.
   useEffect(() => {
@@ -170,18 +200,15 @@ export default function App() {
     })
   }, [openWindow, updateTurn, ttsOn])
 
-  const runCmd = useCallback(async (slash: string) => {
+  const runCmd = useCallback((slash: string) => {
     setCmdkOpen(false)
     const slash0 = slash.split(' ')[0]
     const win = SLASH_WINDOW[slash0]
     if (win) { openWindow(win, SLASH_TAB[slash0]); return }
-    try {
-      const res = await runCommand(slash)
-      openWindow('result', { status: res.status, message: res.message, data: res.data }, slash.split(' ')[0])
-    } catch (e) {
-      openWindow('result', { status: 'ERROR', message: (e as Error).message }, slash)
-    }
-  }, [openWindow])
+    // Non-window commands answer inline in the chat (same cognitive door as typing them),
+    // instead of popping a separate Result window. You can still promote any result to a window.
+    askInput(slash)
+  }, [openWindow, askInput])
 
   const submit = useCallback((text: string, spoken = false) => {
     const t = text.trim(); if (!t) return
@@ -268,6 +295,7 @@ export default function App() {
         listening={listening} unread={unread} wins={wins}
         onInput={setInput} onSubmit={submit} onMic={startPTT}
         onOpen={(k, p) => openWindow(k, p)}
+        onOpenUnder={openWindowUnder}
         onBell={() => { setNotifExpanded(null); getNotifications().then(setNotifItems).catch(() => {}); setNotifOpen(true) }}
         onFocusWin={(key) => { const w = wins.find((x) => x.key === key); if (w?.minimized) restoreWin(key); else focusWin(key) }}
         onCmdk={() => setCmdkOpen(true)}
@@ -278,7 +306,7 @@ export default function App() {
       {/* floating windows */}
       <div className="winlayer">
         {wins.filter((w) => !w.minimized).map((w) => (
-          <FloatingWindow key={w.key} win={w} onClose={() => closeWin(w.key)} onFocus={() => focusWin(w.key)} onMinimize={() => minimizeWin(w.key)}>
+          <FloatingWindow key={w.key} win={w} onClose={() => closeWin(w.key)} onFocus={() => focusWin(w.key)} onMinimize={() => minimizeWin(w.key)} onCollapse={() => collapseToChat(w)}>
             <WindowBody win={w} />
           </FloatingWindow>
         ))}
@@ -319,7 +347,7 @@ export default function App() {
                       <div key={n.id}>
                         <button className={`item ${n.read ? 'read' : 'unread'}`} onClick={() => toggleNotif(n)}>
                           <span className={`dot-s ${n.type === 'error' ? 'bad' : n.type === 'warning' ? 'warn' : 'ok'}`} style={{ marginTop: 5 }} />
-                          <span className="body"><div className="ttl">{n.title}</div>{!open && n.body && <div className="sub">{n.body}</div>}</span>
+                          <span className="body"><div className="ttl">{n.title}{n.risk && <span className={`risk-badge r-${n.risk.toLowerCase()}`}>{n.risk}</span>}</div>{!open && n.body && <div className="sub">{n.body}</div>}</span>
                           <span className="when">{ago(n.createdAt)}</span>
                         </button>
                         {n.source === 'approval' && n.actionId && (

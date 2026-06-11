@@ -38,6 +38,9 @@ public class Notification {
     @Column(name = "action_id")
     private String actionId;
 
+    /** Risk level (LOW/MEDIUM/HIGH/CRITICAL) when this came from an approval — drives the colour badge in the center. Null otherwise. */
+    private String risk;
+
     @Setter
     private boolean read;
 
@@ -53,12 +56,17 @@ public class Notification {
     }
 
     public Notification(String id, String type, String title, String body, String source, String actionId) {
+        this(id, type, title, body, source, actionId, null);
+    }
+
+    public Notification(String id, String type, String title, String body, String source, String actionId, String risk) {
         this.id = id;
         this.type = type;
         this.title = title;
         this.body = body;
         this.source = source;
         this.actionId = actionId;
+        this.risk = risk;
         this.read = false;
         this.createdAt = Instant.now();
     }

@@ -31,4 +31,6 @@ export interface Turn {
   startedAt?: number   // epoch ms when the turn began — drives the live elapsed timer
   resp?: ChatResponse
   commandResult?: { status?: string; message?: string; data?: unknown }
+  /** Set when this turn is a window collapsed back into the chat — the "open in window ↗" chip reopens it. */
+  reopen?: { kind: WinKind; payload?: unknown }
 }

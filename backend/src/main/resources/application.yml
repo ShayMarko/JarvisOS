@@ -172,6 +172,33 @@ jarvis:
         command: npx
         args: ["-y", "@kimtaeyoon83/mcp-server-youtube-transcript"]
         enabled: ${JARVIS_MCP_YT_TRANSCRIPT_ENABLED:false}
+  # Connector credentials — injected from the backend (never typed in the client). Each value is
+  # seeded into the encrypted Secrets Vault on startup (only if not already set). Blank = skipped,
+  # so this is inert until you set the matching env var. Map key = the connector's vault secret name.
+  connector-secrets:
+    tokens:
+      "[github-token]": ${GITHUB_TOKEN:}
+      "[slack-token]": ${SLACK_TOKEN:}
+      "[notion-token]": ${NOTION_TOKEN:}
+      "[stripe-token]": ${STRIPE_TOKEN:}
+      "[shopify-token]": ${SHOPIFY_TOKEN:}
+      "[gumroad-token]": ${GUMROAD_TOKEN:}
+      "[lemonsqueezy-token]": ${LEMONSQUEEZY_TOKEN:}
+      "[etsy-token]": ${ETSY_TOKEN:}
+      "[printful-token]": ${PRINTFUL_TOKEN:}
+      "[netlify-token]": ${NETLIFY_TOKEN:}
+      "[cloudflare-token]": ${CLOUDFLARE_TOKEN:}
+      "[resend-token]": ${RESEND_TOKEN:}
+      "[ayrshare-token]": ${AYRSHARE_TOKEN:}
+      "[plausible-token]": ${PLAUSIBLE_TOKEN:}
+      "[twilio-token]": ${TWILIO_TOKEN:}
+      "[telegram-bot-token]": ${JARVIS_TELEGRAM_BOT_TOKEN:}
+      "[youtube-token]": ${YOUTUBE_TOKEN:}
+      "[calcom-token]": ${CALCOM_TOKEN:}
+      "[google-calendar-token]": ${GOOGLE_CALENDAR_TOKEN:}
+      "[mongo-uri]": ${MONGO_URI:}
+      "[mysql-url]": ${MYSQL_URL:}
+
   # OAuth providers (see JarvisOAuthProperties). Tokens are stored encrypted in the vault
   # and auto-refreshed. Empty by default; add a provider's client id/secret to enable.
   oauth:

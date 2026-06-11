@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { Win } from '../types'
 
 /** A draggable, resizable HUD window shell. */
-export function FloatingWindow({ win, onClose, onFocus, onMinimize, children }: { win: Win; onClose: () => void; onFocus: () => void; onMinimize?: () => void; children: React.ReactNode }) {
+export function FloatingWindow({ win, onClose, onFocus, onMinimize, onCollapse, children }: { win: Win; onClose: () => void; onFocus: () => void; onMinimize?: () => void; onCollapse?: () => void; children: React.ReactNode }) {
   const [pos, setPos] = useState({ x: win.x, y: win.y })
   const [w0, h0] = win.dim.split('×').map(Number)
   const [size, setSize] = useState({ w: w0 || 720, h: h0 || 520 })
@@ -46,6 +46,7 @@ export function FloatingWindow({ win, onClose, onFocus, onMinimize, children }: 
         <span className="title">{win.title}</span>
         <span className="subtitle">{win.subtitle}</span>
         <span className="dim">{Math.round(size.w)}×{Math.round(size.h)}</span>
+        {onCollapse && <button className="close tochat" title="Collapse into the chat" onClick={(e) => { e.stopPropagation(); onCollapse() }}>⤵</button>}
         {onMinimize && <button className="close minimize" title="Minimize to dock" onClick={(e) => { e.stopPropagation(); onMinimize() }}>—</button>}
         <button className="close" onClick={onClose}>✕</button>
       </div>
