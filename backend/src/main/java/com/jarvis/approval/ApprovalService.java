@@ -68,8 +68,7 @@ public class ApprovalService {
         repository.save(req);
         pendingActions.put(req.getId(), action);
         audit.record("APPROVAL", actionType, title, "PENDING", "risk=" + risk + "; id=" + req.getId());
-        notifications.notify("warning", "Approval needed", title + " (risk " + risk + ")", "approval", req.getId(),
-                risk == null ? null : risk.name());
+        notifications.notifyApproval(title, actionType, description, risk == null ? null : risk.name(), preview, req.getId());
         return new ApprovalResult(req, null);
     }
 

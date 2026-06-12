@@ -26,6 +26,8 @@ public class CommandRegistry {
             Map.entry("/history", "/tasks"),
             Map.entry("/integrations", "/connectors"),
             Map.entry("/automations", "/workflows"),
+            Map.entry("/deny", "/decline"),
+            Map.entry("/reject", "/decline"),
             Map.entry("/search", "/searchall"));
 
     private final Map<String, CommandHandler> bySlash = new LinkedHashMap<>();
