@@ -20,7 +20,9 @@ public class MemoryWriteTool implements Tool {
     @Override
     public ToolSpec spec() {
         return new ToolSpec("memory_write",
-                "Save a durable fact about the user so you remember it in future conversations.",
+                "Save a durable fact about the user so you remember it in future conversations. "
+                + "Convert relative dates to absolute ones using today's date before saving "
+                + "(e.g. 'started a month ago' → 'started around <month> <year>'), so the fact stays correct later.",
                 "{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\"},"
                 + "\"content\":{\"type\":\"string\"},\"category\":{\"type\":\"string\",\"description\":\"e.g. preference, fact, project\"}},"
                 + "\"required\":[\"title\",\"content\"]}");

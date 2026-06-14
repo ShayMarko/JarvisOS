@@ -90,6 +90,14 @@ public class AgentRuntime {
                     + "answer questions about them, e.g. their name; don't say you don't know what's stated here):\n"
                     + context;
         }
+        // Ground the model in "now" so it can resolve relative dates/times ("in an hour", "next week",
+        // "a month ago") to absolute values for memory, reminders and scheduling.
+        java.time.ZonedDateTime now = java.time.ZonedDateTime.now();
+        system += "\n\nCurrent date & time: "
+                + now.format(java.time.format.DateTimeFormatter.ofPattern("EEEE, yyyy-MM-dd HH:mm"))
+                + " (" + now.getZone() + ", ISO " + now.toInstant() + "). "
+                + "Always resolve relative dates/times to absolute ones using this — never store or schedule "
+                + "a relative phrase like 'in an hour' or 'a month ago' verbatim.";
         messages.add(ChatMessage.system(system));
         if (history != null) {
             messages.addAll(history); // prior conversation turns for continuity
