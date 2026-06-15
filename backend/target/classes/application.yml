@@ -1,0 +1,396 @@
+spring:
+  application:
+    name: jarvis-core
+
+  datasource:
+    # Local-first SQLite database. File lives under ./data relative to the working dir.
+    url: jdbc:sqlite:${JARVIS_DB_PATH:./data/jarvis.db}
+    driver-class-name: org.sqlite.JDBC
+
+  jpa:
+    hibernate:
+      # Flyway owns the schema; Hibernate neither creates nor validates it.
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.community.dialect.SQLiteDialect
+    open-in-view: false
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+server:
+  port: ${JARVIS_PORT:8088}
+  # Local-first: only listen on the loopback interface so other machines can't reach Jarvis.
+  address: ${JARVIS_BIND:127.0.0.1}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+
+# --- Jarvis-specific configuration -------------------------------------------
+# Mirrors Appendix B of the spec: a virtual Jarvis Explorer root plus an
+# allow-list of external folders. Blocked paths are always denied.
+jarvis:
+  security:
+    # SAFE = read-only, ASSISTED = mutate but confirm deletes, AUTONOMOUS = mutate freely (spec §11.1)
+    permission-mode: ${JARVIS_PERMISSION_MODE:ASSISTED}
+    # Passphrase to derive the Secrets Vault AES key. Override in production.
+    vault-key: ${JARVIS_VAULT_KEY:jarvis-dev-vault-key-change-me}
+    # Optional API token. Blank = open (loopback only). Set before exposing Jarvis off-box; then every
+    # /api/** call must send it (X-Jarvis-Token header, Authorization: Bearer, or ?token=).
+    api-token: ${JARVIS_API_TOKEN:}
+  # Backups (see JarvisBackupProperties). cloud-dir = a folder a cloud client syncs; encrypted backups land there.
+  backup:
+    cloud-dir: ${JARVIS_BACKUP_CLOUD_DIR:}
+  # RevenueOS ROI dashboard (see JarvisRevenueProperties).
+  revenue:
+    hourly-rate: ${JARVIS_HOURLY_RATE:50}            # your $/hour — turns saved hours into value
+    monthly-base-cost-usd: ${JARVIS_MONTHLY_BASE_COST:0}  # fixed subscription cost added to measured AI cost
+  monitor:
+    # How often the live System Monitor stream (SSE) pushes a snapshot.
+    stream-interval-ms: ${JARVIS_MONITOR_INTERVAL:2000}
+  # Jarvis Brain / model adapter (spec §15). Default is the offline mock model.
+  ai:
+    provider: ${JARVIS_AI_PROVIDER:ollama}    # mock | claude | ollama | openai (defaults to local Ollama; falls back to mock if down)
+    anthropic-api-key: ${ANTHROPIC_API_KEY:}
+    # Anthropic Model-Router tiers — ALL controlled here (ModelCatalog reads these, no hard-coded IDs):
+    model: ${JARVIS_AI_MODEL:claude-opus-4-8}                          # HEAVY tier / default Anthropic model
+    claude-standard-model: ${JARVIS_AI_CLAUDE_STANDARD:claude-sonnet-4-8}  # STANDARD tier
+    planner-model-claude: ${JARVIS_AI_PLANNER_CLAUDE:claude-3-5-haiku-latest}  # LIGHT tier + the cheap planner call
+    planner-model-openai: ${JARVIS_AI_PLANNER_OPENAI:gpt-4o-mini}
+    ollama-model: ${JARVIS_AI_OLLAMA_MODEL:qwen2.5-coder:14b}  # local Ollama model (best fit for 16GB M1)
+    ollama-timeout-seconds: ${JARVIS_AI_OLLAMA_TIMEOUT:300}  # read timeout per generation (big models are slow)
+    ollama-num-predict: ${JARVIS_AI_OLLAMA_NUM_PREDICT:8192}  # local max output tokens (free; must fit whole files)
+    openai-api-key: ${OPENAI_API_KEY:}
+    openai-model: ${JARVIS_AI_OPENAI_MODEL:gpt-4o-mini}  # OpenAI model
+    max-tokens: 8192        # paid-provider completion CAP (not forced spend) — high enough that big builds don't truncate
+    max-steps: 12      # tool-loop iterations per agent run (enough to write a multi-file project)
+    # Safety net for PAID providers (Claude/OpenAI): hard cap on tokens/day. 0 = unlimited.
+    # Ollama + mock are never metered. Adjustable live in Settings; pause = kill-switch.
+    daily-token-budget: ${JARVIS_AI_DAILY_TOKEN_BUDGET:0}
+    # Hard cap on PAID spend per calendar month, in USD (the Opus bill). 0 = unlimited.
+    # At >=80% Jarvis auto-downshifts to free local Ollama; at 100% paid calls are refused
+    # until the 1st of next month (Ollama + mock keep working). Default: $80/month.
+    monthly-budget-usd: ${JARVIS_AI_MONTHLY_BUDGET_USD:80}
+    privacy: ${JARVIS_AI_PRIVACY:BALANCED}   # BALANCED | PRIVATE | QUALITY | CHEAP
+    privacy-guard: ${JARVIS_AI_PRIVACY_GUARD:true}  # keep sensitive content on the local model, never cloud
+  # Global JARVIS personality, prepended to every agent's system prompt.
+  persona:
+    enabled: ${JARVIS_PERSONA_ENABLED:true}
+    # Uses the built-in British/dry-wit default (see JarvisPersonaProperties).
+    # Override the whole voice by setting `prompt:` to a block scalar here.
+  # Declarative restrictions policy (see JarvisPolicyProperties). Hard floor under the
+  # Approval Center: a denied command NEVER runs, even if the user would approve it.
+  policy:
+    # Case-insensitive regex patterns for commands that are forbidden outright.
+    denied-commands:
+      - "\\brm\\s+-rf?\\s+/(\\s|$)"          # rm -rf / (wipe root)
+      - ":\\(\\)\\s*\\{.*\\};"                  # fork bomb
+      - "\\bmkfs\\b"                            # format a filesystem
+      - ">\\s*/dev/(disk|sd|rdisk)"            # overwrite a raw disk device
+    # Host substrings that web fetch/search must refuse.
+    denied-hosts: []
+    #   - internal-admin.local
+    # Extra risk rules merged on top of the built-in classifier set.
+    risk-rules: []
+    #   - pattern: "\\bgit\\s+push\\s+--force\\b"
+    #     level: HIGH
+  # MCP servers (see JarvisMcpProperties). Jarvis speaks JSON-RPC over stdio to each and
+  # exposes its tools to the agent loop. Empty by default — runs fine with none.
+  mcp:
+    startup-timeout-seconds: 12
+    servers:
+      # Playwright browser automation (official MCP). OFF by default — set JARVIS_MCP_PLAYWRIGHT_ENABLED=true
+      # (needs Node/npx; first run downloads the browser). When on, its tools light up via mcp_call.
+      - name: playwright
+        command: npx
+        args: ["-y", "@playwright/mcp@latest", "--headless"]
+        enabled: ${JARVIS_MCP_PLAYWRIGHT_ENABLED:false}
+      # ---- Curated official MCP servers — each OFF by default (set its env var = true to enable). ----
+      # They're spawned at boot ONLY when enabled, so default-off keeps the headless box clean. Node ones
+      # need `npx`; Python ones need `uvx` (pip install uv). When on, their tools light up via mcp_call.
+      - name: filesystem                     # read/write files under a path (Node)
+        command: npx
+        args: ["-y", "@modelcontextprotocol/server-filesystem", "${JARVIS_MCP_FS_PATH:${HOME}/Desktop}"]
+        enabled: ${JARVIS_MCP_FILESYSTEM_ENABLED:false}
+      - name: memory                         # knowledge-graph memory (Node)
+        command: npx
+        args: ["-y", "@modelcontextprotocol/server-memory"]
+        enabled: ${JARVIS_MCP_MEMORY_ENABLED:false}
+      - name: sequential-thinking            # structured step-by-step reasoning tool (Node)
+        command: npx
+        args: ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+        enabled: ${JARVIS_MCP_SEQTHINKING_ENABLED:false}
+      - name: fetch                          # fetch a URL → clean markdown (Python/uvx)
+        command: uvx
+        args: ["mcp-server-fetch"]
+        enabled: ${JARVIS_MCP_FETCH_ENABLED:false}
+      - name: git                            # git status/log/diff/commit on a repo (Python/uvx)
+        command: uvx
+        args: ["mcp-server-git", "--repository", "${JARVIS_MCP_GIT_REPO:${HOME}}"]
+        enabled: ${JARVIS_MCP_GIT_ENABLED:false}
+      - name: time                           # current time + timezone conversion (Python/uvx)
+        command: uvx
+        args: ["mcp-server-time"]
+        enabled: ${JARVIS_MCP_TIME_ENABLED:false}
+      - name: sqlite                         # query a SQLite db (Python/uvx)
+        command: uvx
+        args: ["mcp-server-sqlite", "--db-path", "${JARVIS_MCP_SQLITE_DB:${HOME}/data.db}"]
+        enabled: ${JARVIS_MCP_SQLITE_ENABLED:false}
+      - name: brave-search                   # web search via Brave API (Node; needs BRAVE_API_KEY env)
+        command: npx
+        args: ["-y", "@modelcontextprotocol/server-brave-search"]
+        enabled: ${JARVIS_MCP_BRAVE_ENABLED:false}
+      # ---- Phase G: daily-driver + product MCP servers (each OFF by default). ----
+      # macOS-native personal assistant: Messages / Notes / Contacts / Calendar / Reminders (community
+      # 'apple-mcp', Node). THE big daily-driver unlock on the Mac mini. Grants Jarvis the system permissions
+      # the app already has — review before enabling. Set JARVIS_MCP_APPLE_ENABLED=true.
+      - name: apple
+        command: npx
+        args: ["-y", "apple-mcp"]
+        enabled: ${JARVIS_MCP_APPLE_ENABLED:false}
+      - name: notion                         # richer Notion than the connector (official; needs NOTION_TOKEN env)
+        command: npx
+        args: ["-y", "@notionhq/notion-mcp-server"]
+        enabled: ${JARVIS_MCP_NOTION_ENABLED:false}
+      - name: stripe                         # official Stripe MCP (needs STRIPE_API_KEY env)
+        command: npx
+        args: ["-y", "@stripe/mcp", "--tools=all"]
+        enabled: ${JARVIS_MCP_STRIPE_ENABLED:false}
+      - name: gdrive                         # Google Drive search/read (official; needs OAuth creds env)
+        command: npx
+        args: ["-y", "@modelcontextprotocol/server-gdrive"]
+        enabled: ${JARVIS_MCP_GDRIVE_ENABLED:false}
+      - name: youtube-transcript             # pull a video's transcript for repurposing (community, Node)
+        command: npx
+        args: ["-y", "@kimtaeyoon83/mcp-server-youtube-transcript"]
+        enabled: ${JARVIS_MCP_YT_TRANSCRIPT_ENABLED:false}
+  # Connector credentials — injected from the backend (never typed in the client). Each value is
+  # seeded into the encrypted Secrets Vault on startup (only if not already set). Blank = skipped,
+  # so this is inert until you set the matching env var. Map key = the connector's vault secret name.
+  connector-secrets:
+    tokens:
+      "[github-token]": ${GITHUB_TOKEN:}
+      "[slack-token]": ${SLACK_TOKEN:}
+      "[notion-token]": ${NOTION_TOKEN:}
+      "[stripe-token]": ${STRIPE_TOKEN:}
+      "[shopify-token]": ${SHOPIFY_TOKEN:}
+      "[gumroad-token]": ${GUMROAD_TOKEN:}
+      "[lemonsqueezy-token]": ${LEMONSQUEEZY_TOKEN:}
+      "[etsy-token]": ${ETSY_TOKEN:}
+      "[printful-token]": ${PRINTFUL_TOKEN:}
+      "[netlify-token]": ${NETLIFY_TOKEN:}
+      "[cloudflare-token]": ${CLOUDFLARE_TOKEN:}
+      "[resend-token]": ${RESEND_TOKEN:}
+      "[ayrshare-token]": ${AYRSHARE_TOKEN:}
+      "[plausible-token]": ${PLAUSIBLE_TOKEN:}
+      "[twilio-token]": ${TWILIO_TOKEN:}
+      "[telegram-bot-token]": ${JARVIS_TELEGRAM_BOT_TOKEN:}
+      "[youtube-token]": ${YOUTUBE_TOKEN:}
+      "[calcom-token]": ${CALCOM_TOKEN:}
+      "[google-calendar-token]": ${GOOGLE_CALENDAR_TOKEN:}
+      "[mongo-uri]": ${MONGO_URI:}
+      "[mysql-url]": ${MYSQL_URL:}
+
+  # OAuth providers (see JarvisOAuthProperties). Tokens are stored encrypted in the vault
+  # and auto-refreshed. Empty by default; add a provider's client id/secret to enable.
+  oauth:
+    base-url: ${JARVIS_BASE_URL:http://localhost:8088}
+    providers: {}
+    #   google:
+    #     auth-url: https://accounts.google.com/o/oauth2/v2/auth
+    #     token-url: https://oauth2.googleapis.com/token
+    #     client-id: ${GOOGLE_CLIENT_ID:}
+    #     client-secret: ${GOOGLE_CLIENT_SECRET:}
+    #     scopes: ["https://www.googleapis.com/auth/drive.readonly"]
+  # Project Intelligence (see JarvisProjectsProperties): scan dev folders, open in the right IDE.
+  projects:
+    scan-roots:
+      - ~/Projects
+      - ~/Developer
+      - ~/Code
+    max-depth: 2
+    default-ide: Visual Studio Code
+    ide-by-type:
+      maven: IntelliJ IDEA
+      gradle: IntelliJ IDEA
+      node: Visual Studio Code
+      python: Visual Studio Code
+      rust: Visual Studio Code
+      go: Visual Studio Code
+      xcode: Xcode
+  # Plugin SDK (see JarvisPluginProperties). Drops-in JARs that implement
+  # com.jarvis.plugin.spi.JarvisPlugin are loaded at startup; their tools are
+  # registered and granted to the General agent. The marketplace reads catalog.json.
+  plugins:
+    enabled: ${JARVIS_PLUGINS_ENABLED:true}
+    dir: ${JARVIS_PLUGINS_DIR:}          # blank ⇒ <jarvisRoot>/Plugins
+    catalog: ${JARVIS_PLUGINS_CATALOG:}  # blank ⇒ <dir>/catalog.json
+  # Optional Telegram phone bridge (see JarvisTelegramProperties). Dormant until a BotFather token is set:
+  # message @BotFather → /newbot → paste the token into JARVIS_TELEGRAM_BOT_TOKEN. Then you can text
+  # Jarvis from your phone and get notifications/digests pushed — no inbound port opened on the Mac.
+  telegram:
+    enabled: ${JARVIS_TELEGRAM_ENABLED:true}        # still inert without a token below
+    bot-token: ${JARVIS_TELEGRAM_BOT_TOKEN:}        # secret — from @BotFather
+    chat-id: ${JARVIS_TELEGRAM_CHAT_ID:}            # your chat id → where proactive pushes go
+    polling: ${JARVIS_TELEGRAM_POLLING:true}        # listen for inbound messages
+    push-notifications: ${JARVIS_TELEGRAM_PUSH:true} # mirror Notification Center to your phone
+    api-base-url: ${JARVIS_TELEGRAM_API_URL:https://api.telegram.org}
+    long-poll-seconds: 50          # getUpdates hold time
+    read-timeout-seconds: 65       # must exceed long-poll-seconds
+    connect-timeout-seconds: 5
+    max-message-chars: 4000        # Telegram hard-caps at 4096
+    idle-poll-ms: 1000             # breather between empty polls
+    error-backoff-ms: 3000         # back-off after a poll error
+  # Private Discord control channel (see JarvisDiscordProperties) — command Jarvis from your phone. Dormant
+  # until a bot token + channel id are set. Enable MESSAGE CONTENT intent on the bot in the dev portal.
+  discord:
+    enabled: ${JARVIS_DISCORD_ENABLED:true}          # still inert without a token + channel below
+    bot-token: ${JARVIS_DISCORD_BOT_TOKEN:}          # secret — Discord Developer Portal → Bot
+    channel-id: ${JARVIS_DISCORD_CHANNEL_ID:}        # the ONE private channel Jarvis listens/replies in
+    push-notifications: ${JARVIS_DISCORD_PUSH:true}  # mirror Notification Center + daily briefing here
+    voice-notes: ${JARVIS_DISCORD_VOICE_NOTES:false} # transcribe a voice note in the channel → run it like a typed msg (needs OpenAI key)
+    max-message-chars: 1900        # Discord hard-caps at 2000
+    reconnect-backoff-ms: 5000
+  # Daily morning briefing pushed to the Discord channel (see JarvisBriefingProperties).
+  briefing:
+    enabled: ${JARVIS_BRIEFING_ENABLED:true}
+    cron: ${JARVIS_BRIEFING_CRON:0 0 8 * * *}   # 08:00 daily (6-field Spring cron)
+    zone: ${JARVIS_BRIEFING_ZONE:}              # blank = server timezone
+    include-system: true
+    include-money: true                         # token spend + ROI line
+    ai-summary: true                            # prepend a short "what matters today" summary (free on Ollama)
+    weather-lat: ${JARVIS_BRIEFING_WEATHER_LAT:}   # set both lat+lon to add a keyless weather line (open-meteo)
+    weather-lon: ${JARVIS_BRIEFING_WEATHER_LON:}
+    weather-place: ${JARVIS_BRIEFING_WEATHER_PLACE:}
+    rss-feeds: ${JARVIS_BRIEFING_RSS:}          # comma-separated RSS/Atom feed URLs for the News section
+  # Watchdog / self-healing (see JarvisWatchdogProperties) — alerts the owner when a dependency breaks.
+  watchdog:
+    enabled: ${JARVIS_WATCHDOG_ENABLED:true}
+    check-interval-ms: 120000        # every 2 min
+    check-ollama: true
+    disk-critical-percent: 95
+    ollama-restart-command: ${JARVIS_WATCHDOG_OLLAMA_RESTART:}   # e.g. "brew services restart ollama"; blank = alert only
+    ollama-ping-timeout-ms: 3000
+  # Proactive watchers / heartbeat (see JarvisProactiveProperties). Background checks that PROPOSE
+  # actions via the Notification Center (also pushed to Telegram if configured) — never act unasked.
+  proactive:
+    enabled: ${JARVIS_PROACTIVE_ENABLED:true}
+    disk-percent-threshold: 90
+    check-interval-ms: 600000        # every 10 min
+    watch-folders: [Downloads, Screenshots, Generated]
+    initiative: ${JARVIS_PROACTIVE_INITIATIVE:true}   # LLM proactive "what should I flag" pass → Discord
+    initiative-cron: ${JARVIS_PROACTIVE_INITIATIVE_CRON:0 0 9,18 * * *}   # 09:00 & 18:00 daily
+  # Autonomous Coordinator / "CEO" loop (see JarvisCoordinatorProperties). DEFAULT OFF — arming it lets
+  # Jarvis pick ONE funnel action per cron (scout / build / market / analyze) toward the goal, dispatched
+  # through the Orchestrator. It never publishes/deploys/charges (owner's call) and is capped by the
+  # monthly USD budget. Flip enabled=true (or JARVIS_COORDINATOR_ENABLED=true) when you want it to run.
+  coordinator:
+    enabled: ${JARVIS_COORDINATOR_ENABLED:false}
+    cron: ${JARVIS_COORDINATOR_CRON:0 0 10 * * *}     # 10:00 daily when armed
+    max-actions-per-run: 1
+    goal: ${JARVIS_COORDINATOR_GOAL:Grow the product portfolio toward steady passive income — build small useful products, improve listings, and market what's already live.}
+  # SEO performance loop (see JarvisSeoPerformanceProperties). DEFAULT OFF. When armed, a weekly job reads
+  # real Plausible traffic and steers the SEO agent to compound winning pages + cut losers. Reads are free;
+  # any publish/deploy the agent triggers stays approval-gated.
+  seo-performance:
+    enabled: ${JARVIS_SEO_PERFORMANCE_ENABLED:false}
+    cron: ${JARVIS_SEO_PERFORMANCE_CRON:0 0 12 * * MON}   # Monday 12:00 when armed
+    site: ${JARVIS_SEO_PERFORMANCE_SITE:}                 # Plausible site domain (blank = skip)
+    period: ${JARVIS_SEO_PERFORMANCE_PERIOD:30d}
+    top-pages: 5
+  # Recurring newsletter income lane (see JarvisNewsletterProperties). DEFAULT OFF. When armed, dispatches
+  # the Newsletter Studio agent on a schedule to research + write (+ send, approval-gated) an issue.
+  newsletter:
+    enabled: ${JARVIS_NEWSLETTER_ENABLED:false}
+    cron: ${JARVIS_NEWSLETTER_CRON:0 0 9 * * TUE}        # Tuesday 09:00 when armed
+    topic: ${JARVIS_NEWSLETTER_TOPIC:}                   # the niche/theme (blank = skip)
+  # Nightly self-reflection (see JarvisReflectionProperties): review runs → distil durable lessons to memory.
+  reflection:
+    enabled: ${JARVIS_REFLECTION_ENABLED:true}
+    cron: ${JARVIS_REFLECTION_CRON:0 30 23 * * *}   # 23:30 daily
+    lookback-runs: 40
+    max-lessons: 3
+  # Server-side voice round-trip (see JarvisVoiceProperties): audio → Whisper STT → brain → optional TTS mp3.
+  # Uses OpenAI (the local model can't do audio); dormant-until-keyed. Works headless: /api/voice/{transcribe,ask,speak}.
+  voice:
+    tts-provider: ${JARVIS_VOICE_PROVIDER:local}          # local = FREE macOS `say` (default, no key) | openai = neural (needs key)
+    local-voice: ${JARVIS_VOICE_LOCAL:Jamie (Premium)}    # macOS say voice (British neural). Switch e.g. to "Ava (Premium)"; GET /api/voice/voices lists installed
+    local-rate: 170                                       # words/min — lower = more composed
+    stt-model: ${JARVIS_VOICE_STT_MODEL:whisper-1}        # transcription still needs an OpenAI key (no free local STT)
+    tts-model: ${JARVIS_VOICE_TTS_MODEL:gpt-4o-mini-tts}   # used only when tts-provider=openai; steerable (honours the persona)
+    tts-voice: ${JARVIS_VOICE_TTS_VOICE:fable}             # alloy|echo|fable|onyx|nova|shimmer (fable = British-leaning)
+    # voice-style (the ORIGINAL refined-British persona) defaults in JarvisVoiceProperties — NOT set here so an
+    # empty value can't blank it. Override the whole persona via env JARVIS_VOICE_VOICESTYLE if you want.
+    output-dir: Generated/voice
+  # Second-brain auto-index (see JarvisSecondBrainProperties). Keeps the Knowledge Base continuously
+  # in sync with notes/docs so the model's kb_search always has complete, current recall.
+  second-brain:
+    enabled: ${JARVIS_SECOND_BRAIN_ENABLED:true}
+    interval-ms: 900000              # sweep every 15 min
+    folders: [Documents, Notes]
+    extensions: [.txt, .md, .markdown, .text, .log, .csv, .json, .yml, .yaml, .rtf]
+    max-file-bytes: 1000000          # skip files > 1 MB
+    max-files-per-tick: 25
+    max-depth: 4
+    prune-deleted: true
+  # Preference-learning loop (see JarvisPreferenceProperties). Notices durable facts/preferences and
+  # OFFERS to save them to the About-Me profile via the Approval Center (consent) — judged on the local model.
+  preference-learning:
+    enabled: ${JARVIS_PREFERENCE_LEARNING_ENABLED:true}
+    min-message-chars: 12
+  # Tunable limits/sizes (see JarvisLimitsProperties).
+  limits:
+    conversation-history-turns: 6     # replayed to the model every call; lower = fewer input tokens
+    file-max-text-bytes: 2097152            # 2 MB — max file the text viewer loads
+    file-search-max-results: 200
+    kb-chunk-size: 1000                      # chars per KB chunk
+    kb-chunk-overlap: 150
+    kb-max-files-per-folder: 50
+    kb-search-top-k: 5
+    sandbox-timeout-seconds: 15
+    sandbox-max-output-chars: 100000
+    web-fetch-max-chars: 2000
+    web-fetch-timeout-seconds: 12
+    secret-hint-length: 4                    # trailing chars shown as ••••1234
+  filesystem:
+    # The virtual home of Jarvis ("C: drive"). Created on startup if missing.
+    jarvis-root: ${JARVIS_ROOT:~/Documents/jarvis_drive}
+    # Standard sub-folders created inside the Jarvis root.
+    explorer-folders:
+      - Downloads
+      - Documents
+      - Projects
+      - Media
+      - Notes
+      - Emails
+      - Generated
+      - Screenshots
+      - Logs
+    # Additional real folders Jarvis may read/write, each with a permission level.
+    # Surfaced as navigable entries at the Explorer root.
+    allowed-folders:
+      - name: Documents
+        path: ~/Documents
+        permission: READ_WRITE
+    #   - name: desktop
+    #     path: ~/Desktop
+    #     permission: READ_ONLY
+    blocked-paths:
+      - /System
+      - /Library
+      - /private
+      - ~/.ssh
+      - ~/.aws
+      - ~/.config/secrets
+
+logging:
+  level:
+    com.jarvis: INFO
