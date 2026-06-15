@@ -1,0 +1,8 @@
+# LOCAL, GIT-IGNORED override (Spring Boot loads ./config/application.yml over the classpath one).
+# Holds the live Discord bot token so it never touches the tracked application.yml. Reset the token
+# in the Discord Developer Portal when done testing.
+jarvis:
+  discord:
+    enabled: true
+    bot-token: MTUxMjExMjIwODU2ODY1MTgwNg.Gc_6R0.pGzJXW4_xIIeNt0G9U4An0_GQfSUjbw6bumTPY
+    channel-id: "1512095707572605182"
