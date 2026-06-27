@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   fetchCommands, getConversation, getNotifications, getSettings, getStatus, getUnreadCount,
-  markNotificationRead, setProvider as apiSetProvider, streamInput,
+  markNotificationRead, markNotificationsRead, setProvider as apiSetProvider, streamInput,
 } from './api'
 import type {
   ChatResponse, CommandDefinition, CommandResult, MonitorSnapshot, NotificationItem, SettingsView, Step,
@@ -116,6 +116,10 @@ export default function App() {
 
   const openWindow = useCallback((kind: WinKind, payload?: unknown, titleOverride?: string, pos?: { x: number; y: number }) => {
     const meta = WIN_META[kind]
+    // Opening the notification center = you've seen them → clear the bell badge.
+    if (kind === 'notifications') {
+      markNotificationsRead().then(() => setUnread(0)).catch(() => {})
+    }
     const singleton = kind !== 'result' && kind !== 'response'
     setWins((ws) => {
       if (singleton) {
@@ -341,7 +345,7 @@ export default function App() {
             <div className="list">
               {notifItems.length === 0
                 ? <div className="empty">Nothing yet — you’re all caught up.</div>
-                : notifItems.slice(0, 8).map((n) => {
+                : notifItems.filter((n) => !(n.source === 'approval' && n.read)).slice(0, 8).map((n) => {
                     const open = notifExpanded === n.id
                     return (
                       <div key={n.id}>

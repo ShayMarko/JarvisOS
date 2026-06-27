@@ -330,6 +330,16 @@ jarvis:
     # voice-style (the ORIGINAL refined-British persona) defaults in JarvisVoiceProperties — NOT set here so an
     # empty value can't blank it. Override the whole persona via env JARVIS_VOICE_VOICESTYLE if you want.
     output-dir: Generated/voice
+    # Headless, always-on voice loop (see JarvisVoiceDaemonProperties + VoiceDaemon) — lets the monitor-less
+    # mini run voice-first: listen → wake-word → LOCAL whisper.cpp → brain → speak aloud (say). OFF by default.
+    # To enable on the mini: brew install ffmpeg whisper-cpp; download a model (e.g. ggml-base.en.bin);
+    # grant Microphone permission to the JVM; then set JARVIS_VOICE_DAEMON=true (+ paths below).
+    daemon:
+      enabled: ${JARVIS_VOICE_DAEMON:false}
+      wake-word: ${JARVIS_VOICE_WAKE:jarvis}
+      window-seconds: 5
+      whisper-model: ${JARVIS_WHISPER_MODEL:models/ggml-base.en.bin}
+      # record-command / transcribe-command default to ffmpeg(avfoundation) + whisper-cli; override if your build differs.
   # Second-brain auto-index (see JarvisSecondBrainProperties). Keeps the Knowledge Base continuously
   # in sync with notes/docs so the model's kb_search always has complete, current recall.
   second-brain:

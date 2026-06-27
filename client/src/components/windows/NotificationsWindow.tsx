@@ -25,6 +25,11 @@ export function NotificationsWindow() {
         if (appr && appr.status === 'PENDING') {
           return <ApprovalCard key={n.id} a={appr} onDone={refresh} />
         }
+        // An approval notification with no live pending request = already approved/declined → resolved,
+        // so don't keep showing it as an actionable "Approval needed" message.
+        if (n.source === 'approval' && n.actionId) {
+          return null
+        }
         return (
           <div className="row" key={n.id} style={{ alignItems: 'flex-start', flexWrap: 'wrap' }}>
             <span className={`dot-s ${n.type === 'error' ? 'bad' : n.type === 'warning' ? 'warn' : 'ok'}`} style={{ marginTop: 5 }} />

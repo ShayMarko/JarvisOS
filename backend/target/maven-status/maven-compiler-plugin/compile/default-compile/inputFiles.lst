@@ -47,6 +47,9 @@
 /Users/shaymarko/Desktop/jarvis v3/backend/src/main/java/com/jarvis/ai/tools/DescribeImageTool.java
 /Users/shaymarko/Desktop/jarvis v3/backend/src/main/java/com/jarvis/ai/tools/FetchUrlTool.java
 /Users/shaymarko/Desktop/jarvis v3/backend/src/main/java/com/jarvis/ai/tools/GenerateImageTool.java
+/Users/shaymarko/Desktop/jarvis v3/backend/src/main/java/com/jarvis/ai/tools/GuiClickTool.java
+/Users/shaymarko/Desktop/jarvis v3/backend/src/main/java/com/jarvis/ai/tools/GuiKeyTool.java
+/Users/shaymarko/Desktop/jarvis v3/backend/src/main/java/com/jarvis/ai/tools/GuiTypeTool.java
 /Users/shaymarko/Desktop/jarvis v3/backend/src/main/java/com/jarvis/ai/tools/ImageConvertTool.java
 /Users/shaymarko/Desktop/jarvis v3/backend/src/main/java/com/jarvis/ai/tools/InstallAppTool.java
 /Users/shaymarko/Desktop/jarvis v3/backend/src/main/java/com/jarvis/ai/tools/KbSearchTool.java
@@ -67,6 +70,7 @@
 /Users/shaymarko/Desktop/jarvis v3/backend/src/main/java/com/jarvis/ai/tools/OcrImageTool.java
 /Users/shaymarko/Desktop/jarvis v3/backend/src/main/java/com/jarvis/ai/tools/OpenAppTool.java
 /Users/shaymarko/Desktop/jarvis v3/backend/src/main/java/com/jarvis/ai/tools/OpenProjectTool.java
+/Users/shaymarko/Desktop/jarvis v3/backend/src/main/java/com/jarvis/ai/tools/OpenUrlTool.java
 /Users/shaymarko/Desktop/jarvis v3/backend/src/main/java/com/jarvis/ai/tools/PackageProductTool.java
 /Users/shaymarko/Desktop/jarvis v3/backend/src/main/java/com/jarvis/ai/tools/ProductPortfolioTool.java
 /Users/shaymarko/Desktop/jarvis v3/backend/src/main/java/com/jarvis/ai/tools/ProfileSearchTool.java
@@ -371,6 +375,8 @@
 /Users/shaymarko/Desktop/jarvis v3/backend/src/main/java/com/jarvis/timeline/TimelineRepository.java
 /Users/shaymarko/Desktop/jarvis v3/backend/src/main/java/com/jarvis/timeline/TimelineService.java
 /Users/shaymarko/Desktop/jarvis v3/backend/src/main/java/com/jarvis/undo/UndoJournal.java
+/Users/shaymarko/Desktop/jarvis v3/backend/src/main/java/com/jarvis/voice/JarvisVoiceDaemonProperties.java
+/Users/shaymarko/Desktop/jarvis v3/backend/src/main/java/com/jarvis/voice/VoiceDaemon.java
 /Users/shaymarko/Desktop/jarvis v3/backend/src/main/java/com/jarvis/watchdog/JarvisWatchdogProperties.java
 /Users/shaymarko/Desktop/jarvis v3/backend/src/main/java/com/jarvis/watchdog/WatchdogService.java
 /Users/shaymarko/Desktop/jarvis v3/backend/src/main/java/com/jarvis/web/WebSearchService.java

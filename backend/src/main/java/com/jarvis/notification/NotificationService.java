@@ -104,4 +104,12 @@ public class NotificationService {
     public void markAllRead() {
         repository.markAllRead();
     }
+
+    /** Resolve any notifications tied to an action id (e.g. an approval just approved/declined). */
+    @Transactional
+    public void markHandled(String actionId) {
+        if (actionId != null && !actionId.isBlank()) {
+            repository.markReadByActionId(actionId);
+        }
+    }
 }

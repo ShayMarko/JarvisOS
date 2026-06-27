@@ -81,6 +81,7 @@ public class ApprovalService {
         if (remember) {
             remembered.put(req.getActionType(), ApprovalStatus.APPROVED);
         }
+        notifications.markHandled(id);   // the "Approval needed" notification is resolved now
         return runApproved(req, action, false);
     }
 
@@ -96,6 +97,7 @@ public class ApprovalService {
         req.setStatus(ApprovalStatus.DENIED);
         req.setDecidedAt(Instant.now());
         audit.record("APPROVAL", req.getActionType(), req.getTitle(), "DENIED", "id=" + id);
+        notifications.markHandled(id);   // the "Approval needed" notification is resolved now
         return repository.save(req);
     }
 

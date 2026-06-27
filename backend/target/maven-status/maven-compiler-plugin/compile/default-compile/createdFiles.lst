@@ -93,6 +93,7 @@ com/jarvis/coordinator/CoordinatorService$Decision.class
 com/jarvis/ai/tools/SayTool.class
 com/jarvis/api/ProfileController$ProfileRequest.class
 com/jarvis/oauth/JarvisOAuthProperties.class
+com/jarvis/ai/tools/GuiTypeTool.class
 com/jarvis/api/FilesController.class
 com/jarvis/undo/UndoJournal$Entry.class
 com/jarvis/api/TimelineController.class
@@ -114,8 +115,10 @@ com/jarvis/ai/tools/NorthStarTool.class
 com/jarvis/seo/SeoPerformanceService.class
 com/jarvis/project/ProjectScanner.class
 com/jarvis/kb/HashingEmbeddingModel.class
+com/jarvis/ai/tools/GuiClickTool.class
 com/jarvis/ai/VisionService.class
 com/jarvis/workflow/StepStatus.class
+com/jarvis/voice/JarvisVoiceDaemonProperties.class
 com/jarvis/explorer/FileNode.class
 com/jarvis/config/WebConfig.class
 com/jarvis/ai/AnthropicLanguageModel.class
@@ -322,6 +325,7 @@ com/jarvis/api/KbController.class
 com/jarvis/approval/ApprovalResult.class
 com/jarvis/ai/tools/RevealTool.class
 com/jarvis/ai/tools/TrackProductTool.class
+com/jarvis/ai/tools/OpenUrlTool.class
 com/jarvis/connectors/AyrshareConnector.class
 com/jarvis/api/RevenueController.class
 com/jarvis/security/ApiTokenFilter.class
@@ -340,6 +344,7 @@ com/jarvis/ai/tools/BackupListTool.class
 com/jarvis/api/SecretsController$CreateRequest.class
 com/jarvis/ai/ChatMessage.class
 com/jarvis/ai/tools/DescribeImageTool.class
+com/jarvis/ai/tools/GuiKeyTool.class
 com/jarvis/command/handlers/TasksHandler.class
 com/jarvis/reminder/ReminderService.class
 com/jarvis/api/ChatController$ChatRequest.class
@@ -429,6 +434,7 @@ com/jarvis/secrets/SecretsVaultService.class
 com/jarvis/command/handlers/SandboxHandler.class
 com/jarvis/brain/Planner.class
 com/jarvis/connectors/ConnectorSecretSeeder.class
+com/jarvis/voice/VoiceDaemon.class
 com/jarvis/brain/EvalCase.class
 com/jarvis/command/handlers/LocalActionHandlers$ClipboardHandler.class
 com/jarvis/api/JobController$JobRequest.class

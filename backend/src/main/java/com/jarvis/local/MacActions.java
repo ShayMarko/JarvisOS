@@ -10,7 +10,9 @@ import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.stereotype.Service;
@@ -123,6 +125,90 @@ public class MacActions {
             sb.append(lines[i]).append("\n");
         }
         return sb.toString().trim();
+    }
+
+    // ---- Hands-on-Mac actuators: drive the GUI directly (gated HIGH-risk at the tool layer) ----------
+
+    /** AppleScript key codes for common non-character keys. */
+    private static final Map<String, Integer> KEY_CODES = Map.ofEntries(
+            Map.entry("return", 36), Map.entry("enter", 36), Map.entry("tab", 48), Map.entry("space", 49),
+            Map.entry("delete", 51), Map.entry("backspace", 51), Map.entry("escape", 53), Map.entry("esc", 53),
+            Map.entry("left", 123), Map.entry("right", 124), Map.entry("down", 125), Map.entry("up", 126),
+            Map.entry("home", 115), Map.entry("end", 119), Map.entry("pageup", 116), Map.entry("pagedown", 121),
+            Map.entry("forwarddelete", 117));
+
+    /** Whether cliclick (coordinate clicks) is installed. */
+    public boolean cliclickAvailable() {
+        if (!mac) {
+            return false;
+        }
+        try {
+            return !run(List.of("/bin/sh", "-c", "command -v cliclick"), null).isBlank();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /** Move the cursor and click at absolute screen coordinates (via cliclick). */
+    public String clickAt(int x, int y) {
+        requireMac();
+        if (!cliclickAvailable()) {
+            return "cliclick isn't installed — run `brew install cliclick` to enable coordinate clicks.";
+        }
+        run(List.of("cliclick", "c:" + x + "," + y), null);
+        audit.record("LOCAL", "gui_click", x + "," + y, "OK", null);
+        return "🖱️ Clicked at (" + x + ", " + y + ").";
+    }
+
+    /** Type literal text into whatever has keyboard focus (via System Events keystroke). */
+    public String typeText(String text) {
+        requireMac();
+        run(List.of("osascript", "-e",
+                "tell application \"System Events\" to keystroke \"" + escapeAppleScript(text) + "\""), null);
+        audit.record("LOCAL", "gui_type", null, "OK", text.length() + " chars");
+        return "⌨️ Typed " + text.length() + " character(s).";
+    }
+
+    /** Press a key (named special key or single character), optionally with modifiers (cmd/shift/ctrl/opt). */
+    public String pressKey(String key, String modifiers) {
+        requireMac();
+        String mods = appleScriptModifiers(modifiers);
+        Integer code = KEY_CODES.get(key == null ? "" : key.toLowerCase().trim());
+        String script = code != null
+                ? "tell application \"System Events\" to key code " + code + mods
+                : "tell application \"System Events\" to keystroke \"" + escapeAppleScript(key) + "\"" + mods;
+        run(List.of("osascript", "-e", script), null);
+        audit.record("LOCAL", "gui_key", key, "OK", modifiers);
+        return "⌨️ Pressed " + (modifiers == null || modifiers.isBlank() ? "" : modifiers + "+") + key + ".";
+    }
+
+    /** Open a URL (or file/app argument) with the default handler. */
+    public String openUrl(String url) {
+        requireMac();
+        run(List.of("open", url), null);
+        audit.record("LOCAL", "open_url", url, "OK", null);
+        return "🌐 Opened " + url;
+    }
+
+    private static String escapeAppleScript(String s) {
+        return s == null ? "" : s.replace("\\", "\\\\").replace("\"", "\\\"");
+    }
+
+    private static String appleScriptModifiers(String modifiers) {
+        if (modifiers == null || modifiers.isBlank()) {
+            return "";
+        }
+        List<String> parts = new ArrayList<>();
+        for (String m : modifiers.toLowerCase().split("[+,\\s]+")) {
+            switch (m) {
+                case "cmd", "command", "meta" -> parts.add("command down");
+                case "shift" -> parts.add("shift down");
+                case "ctrl", "control" -> parts.add("control down");
+                case "opt", "option", "alt" -> parts.add("option down");
+                default -> { /* ignore unknown modifier */ }
+            }
+        }
+        return parts.isEmpty() ? "" : " using {" + String.join(", ", parts) + "}";
     }
 
     private void requireMac() {

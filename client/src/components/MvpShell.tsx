@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import '../mvp.css'
 import { getAgents, getApprovals, getConnectors, getInstalledPlugins, getMemoryList, getNotifications, getRoi, getTokenDashboard } from '../api'
 import type { AgentDef, ConnectorInfo, MonitorSnapshot, NotificationItem, SettingsView, Step, TokenDashboard } from '../api'
@@ -120,6 +120,7 @@ function capCategory(toolLower: string): string {
   if (/file|fs_|read|write|dir|path|explor/.test(t)) return 'Files'
   if (/web|http|url|fetch|search|browse|playwright/.test(t)) return 'Web'
   if (/shell|exec|run_|command|sandbox|terminal|process/.test(t)) return 'Shell'
+  if (/gui_|click|cursor|mouse|keystroke|press_key|actuat|operate/.test(t)) return 'Control'
   if (/image|vision|screenshot|sips|describe|photo/.test(t)) return 'Vision'
   if (/doc|pdf|markdown|report|book|article|page/.test(t)) return 'Docs'
   if (/memory|kb|knowledge|index|recall|embed|note/.test(t)) return 'Memory'
@@ -287,6 +288,23 @@ export function MvpShell(props: MvpShellProps) {
 
   useEffect(() => { const i = setInterval(() => setNow(new Date()), 30000); return () => clearInterval(i) }, [])
 
+  // Auto-scroll the chat to the newest message as answers stream in — but don't yank the user down
+  // if they've scrolled up to read history.
+  const threadRef = useRef<HTMLDivElement>(null)
+  const stick = useRef(true)
+  const onThreadScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const el = e.currentTarget
+    stick.current = el.scrollHeight - el.scrollTop - el.clientHeight < 80
+  }
+  useEffect(() => {
+    if (!stick.current) return
+    const toBottom = () => { const el = threadRef.current; if (el && stick.current) el.scrollTop = el.scrollHeight }
+    toBottom()                              // immediate
+    const r = requestAnimationFrame(toBottom)   // after the answer's Markdown/cards lay out
+    const t = setTimeout(toBottom, 120)         // and once more after any late-rendered content
+    return () => { cancelAnimationFrame(r); clearTimeout(t) }
+  }, [turns])
+
   const agentCount = agents && agents.length ? agents.length : (snap?.runtime.registeredAgents ?? 51)
   const liveConn = connectors ? connectors.filter((c) => c.status === 'CONNECTED').length : 9
   const totalConn = connectors && connectors.length ? connectors.length : 26
@@ -386,7 +404,12 @@ export function MvpShell(props: MvpShellProps) {
 
   const cpu = pct(snap?.cpu.systemCpuLoad)
   const mem = snap ? `${gb(snap.memory.usedPhysicalBytes)}G` : '6.1G'
-  const model = settings?.model ?? 'Opus'
+  // Show the model that the ACTIVE provider actually uses, so it stays in sync with the provider buttons up top
+  // (the backend keeps a separate model per provider; settings.model is only the Anthropic one).
+  const model = !settings ? '—'
+    : settings.provider === 'ollama' ? (settings.ollamaModel || settings.model)
+    : settings.provider === 'openai' ? (settings.openaiModel || settings.model)
+    : settings.model
   const bud = settings?.budget
   const budPct = bud && bud.dailyTokenBudget > 0 ? Math.min(100, Math.round((bud.tokensToday / bud.dailyTokenBudget) * 100)) : 72
   const budLabel = bud && bud.dailyTokenBudget > 0 ? `${(bud.tokensToday / 1000).toFixed(0)}k/${(bud.dailyTokenBudget / 1000).toFixed(0)}k` : '$58/$80'
@@ -424,7 +447,7 @@ export function MvpShell(props: MvpShellProps) {
           <h1>Good {part}, <b>Shay</b>.</h1>
           <div className="mvp-clk">{clock} · {date} · {pending} need you</div>
         </div>
-        <div className="mvp-thread">
+        <div className="mvp-thread" ref={threadRef} onScroll={onThreadScroll}>
           {turns.length === 0 ? (
             <div className="mvp-msg j"><div className="who">Jarvis</div>Good {part}, Shay. {pending} things need you, net is ${revenue.toLocaleString()} ({roiX}×). Ask me anything — watch the brain light up as I work.</div>
           ) : turns.map((t, ti) => (

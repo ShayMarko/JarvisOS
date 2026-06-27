@@ -107,6 +107,10 @@ public class Planner {
                 {"steps":[{"id":"s1","task":"...","agent":"<slug>","dependsOn":[]},{"id":"s2","task":"...","agent":"<slug>","dependsOn":["s1"]}]}
                 Rules: ids are s1,s2,...; dependsOn lists ids whose RESULTS this step needs; \
                 keep tasks self-contained imperatives; if the request is really one task, return a single step. \
+                If the request is about operating the Mac's GUI directly — clicking, typing on screen, using a \
+                visible app (Notes, TextEdit, browser, etc.), filling an on-screen form, or "operate my screen" — \
+                assign the WHOLE thing to the 'operator' agent as ONE step; never split it or hand note/file \
+                creation to a file agent (the user wants it done on the real screen, not saved as a file). \
                 Choose each agent from this roster (slug: role):
                 %s\
                 """.formatted(MAX_STEPS, selector.roster());
